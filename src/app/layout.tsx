@@ -45,6 +45,7 @@ export const metadata: Metadata = {
 };
 
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import ClientHeader from "@/components/ClientHeader";
 
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClientHeader />
         {children}
+        <Analytics />
       </body>
     </html>
   );
