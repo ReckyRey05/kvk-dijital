@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     // Zoho SMTP configuration
     // Şifre güvenliği için process.env üzerinden alacağız. Vercel paneline eklenecek.
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.zoho.com', // zoho.eu yerine genelde zoho.com kullanılır
+      host: process.env.EMAIL_HOST || 'smtp.zoho.eu', // Hollanda araması geldiği için hesap kesinlikle EU sunucusunda
       port: 465,
       secure: true, 
       auth: {
