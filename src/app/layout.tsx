@@ -116,7 +116,7 @@ export default function RootLayout({
                     "@type": "Person",
                     "name": "Ali Haydar Kavak",
                     "jobTitle": "Kurucu",
-                    "url": "https://kvkdijitalcozumler.com/hakkimda"
+                    "url": "https://kvkdijitalcozumler.com/hakkimizda"
                   },
                   "sameAs": [
                     "https://www.instagram.com/kvkdijital",

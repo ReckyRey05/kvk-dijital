@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Hakkımızda",
   description: "KvK Digital'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin. Sizi geleceğe taşıyan dijital partneriniz.",
   alternates: {
-    canonical: "https://kvkdijitalcozumler.com/hakkimda",
+    canonical: "https://kvkdijitalcozumler.com/hakkimizda",
   }
 };
 

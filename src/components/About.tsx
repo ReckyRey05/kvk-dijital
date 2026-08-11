@@ -45,7 +45,7 @@ export default function About() {
               </p>
               
               <div className="pt-4">
-                <Link href="/hakkimda" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+                <Link href="/hakkimizda" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
                   Hikayemi Oku 
                   <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
