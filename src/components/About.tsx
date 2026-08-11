@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Code2, Cpu, Layout, Zap } from "lucide-react";
 
@@ -40,14 +41,15 @@ export default function About() {
             </h2>
             <div className="text-foreground/70 text-lg leading-relaxed max-w-3xl space-y-6">
               <p>
-                Merhaba, ben <strong className="text-foreground font-medium">Ali Haydar Kavak</strong>. Çocukluk yıllarımda bilgisayar sistemlerine duyduğum merak, detaycı kişiliğimle birleşerek beni web teknolojilerinin dünyasına çekti. Kendi araştırmalarımla attığım bu ilk adımları, <strong>BTK Akademi</strong>'den aldığım eğitimler ve edindiğim sertifikalarla profesyonel bir temele oturttum. Sonrasında ise bitmek bilmeyen teknoloji tutkumla kendimi sürekli geliştirmeye devam ettim.
+                Merhaba, ben <strong className="text-foreground font-medium">Ali Haydar Kavak</strong>. Çocukluk yıllarımda bilgisayar sistemlerine duyduğum merak, detaycı kişiliğimle birleşerek beni web teknolojilerinin dünyasına çekti. KVK Digital'in kurucusu olarak amacım sadece estetik web siteleri teslim edip süreci bitirmek değil; aynı zamanda markanızın <strong>dijital büyüme danışmanı</strong> olmaktır.
               </p>
-              <p>
-                İşimdeki en büyük prensibim <strong>mükemmeliyetçilik ve dürüstlüktür.</strong> Her projeyi en ince detayına kadar kurgularım. Şeffaf ve hızlı iletişime inanırım; benim dünyamda "2 olan bir şeye asla 1 denmez", süreç neyi gerektiriyorsa odur. Samimi yaklaşımımla öncelikle insanların dertlerini dinler, sonra bu sorunlara nokta atışı dijital çözümler üretirim.
-              </p>
-              <p>
-                KVK Digital'i kurarken amacım sadece estetik web siteleri teslim edip süreci bitirmek değildi; aynı zamanda markaların <strong>dijital büyüme danışmanı</strong> olmaktı. İşinize sizin kadar değer veren, şeffaf ve teknolojiye tutkulu bir partner arıyorsanız, vizyonunuzu birlikte koda dökmeye hazırım.
-              </p>
+              
+              <div className="pt-4">
+                <Link href="/hakkimda" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+                  Hikayemi Oku 
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
+              </div>
             </div>
           </motion.div>
 
