@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Laptop, Code2, Sparkles, ShoppingCart } from "lucide-react";
 
 interface Service {
@@ -69,6 +70,13 @@ export default function Services({ services }: { services: Service[] }) {
               <p className="text-foreground/50">{service.description}</p>
             </motion.div>
           ))}
+        </div>
+        
+        <div className="mt-12 text-center">
+          <Link href="/hizmetler" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+            Tüm Detayları İncele 
+            <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
         </div>
       </div>
     </section>
