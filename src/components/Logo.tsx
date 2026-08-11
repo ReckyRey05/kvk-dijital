@@ -1,28 +1,37 @@
+import Image from "next/image";
+
 export function LogoIcon({ className = "w-10 h-10" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-      {/* K harfinin sol dikey çizgisi */}
-      <path d="M25 20V80" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
-      
-      {/* K harfinin üst çapraz çizgisi */}
-      <path d="M25 55L65 20" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-      
-      {/* K harfinin alt çapraz çizgisi */}
-      <path d="M45 40L65 80" stroke="currentColor" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-      
-      {/* V harfini oluşturan vurgu (Turkuaz) çapraz çizgi */}
-      <path d="M65 20L85 80" stroke="#00A6A6" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <Image 
+      src="/logos/KVK-Digital-Logo-Icon-Transparent.png" 
+      alt="KVK Digital Icon" 
+      width={100} 
+      height={100} 
+      className={`object-contain ${className}`}
+    />
   );
 }
 
 export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <LogoIcon className="h-full w-auto text-white" />
-      <span className="font-semibold text-xl tracking-tight text-white">
-        KvK <span className="font-normal text-white/80">Dijital</span>
-      </span>
-    </div>
+    <Image 
+      src="/logos/KVK-Digital-Logo-Horizontal-Transparent.png" 
+      alt="KVK Digital" 
+      width={300} 
+      height={80} 
+      className={`object-contain w-auto ${className}`}
+    />
+  );
+}
+
+export function LogoPrimary({ className = "h-16" }: { className?: string }) {
+  return (
+    <Image 
+      src="/logos/KVK-Digital-Logo-Primary-Transparent.png" 
+      alt="KVK Digital" 
+      width={400} 
+      height={200} 
+      className={`object-contain w-auto ${className}`}
+    />
   );
 }
