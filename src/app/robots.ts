@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/api'],
     },
-    sitemap: 'https://kvkdigital.com/sitemap.xml',
+    sitemap: 'https://kvkdijitalcozumler.com/sitemap.xml',
   };
 }
