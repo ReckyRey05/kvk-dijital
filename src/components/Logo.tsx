@@ -17,8 +17,10 @@ export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
     <Image 
       src="/logos/KVK-Digital-Logo-Horizontal-Transparent.png" 
       alt="KVK Digital" 
-      width={300} 
-      height={80} 
+      width={1200} 
+      height={320} 
+      quality={100}
+      priority
       className={`object-contain w-auto ${className}`}
     />
   );
@@ -29,8 +31,10 @@ export function LogoPrimary({ className = "h-16" }: { className?: string }) {
     <Image 
       src="/logos/KVK-Digital-Logo-Primary-Transparent.png" 
       alt="KVK Digital" 
-      width={400} 
-      height={200} 
+      width={1200} 
+      height={600} 
+      quality={100}
+      priority
       className={`object-contain w-auto ${className}`}
     />
   );
