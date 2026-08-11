@@ -2,6 +2,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight, Laptop, Code2, Sparkles, ShoppingCart, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hizmetlerimiz",
+  description: "Web Tasarımı, Özel Yazılım Geliştirme, E-Ticaret Çözümleri, Kurumsal Kimlik, Yapay Zeka Entegrasyonları ve SEO Danışmanlığı hizmetlerimiz.",
+  alternates: {
+    canonical: "https://kvkdijitalcozumler.com/hizmetler",
+  }
+};
 
 const detailedServices = [
   {

@@ -1,6 +1,16 @@
 import { LogoHorizontal } from "@/components/Logo";
 import { Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Yakında Buradayız",
+  description: "Büyük bir güncelleme üzerinde çalışıyoruz. Çok yakında muhteşem bir projeyle karşınızdayız.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
 
 export default function ComingSoon() {
   return (

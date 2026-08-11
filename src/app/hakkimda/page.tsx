@@ -2,6 +2,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hakkımızda",
+  description: "KvK Digital'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin. Sizi geleceğe taşıyan dijital partneriniz.",
+  alternates: {
+    canonical: "https://kvkdijitalcozumler.com/hakkimda",
+  }
+};
 
 export default function Hakkimda() {
   return (

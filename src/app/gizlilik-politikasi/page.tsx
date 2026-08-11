@@ -1,3 +1,15 @@
+import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gizlilik Politikası",
+  description: "KvK Digital Gizlilik Politikası ve çerez kullanımı hakkında bilgilendirme.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
+
 export default function GizlilikPolitikasi() {
   return (
     <main className="container mx-auto px-6 py-32 max-w-4xl">

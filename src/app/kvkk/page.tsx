@@ -1,3 +1,15 @@
+import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "KVKK Aydınlatma Metni",
+  description: "KvK Digital Kişisel Verilerin Korunması Kanunu (KVKK) aydınlatma metni ve gizlilik ilkeleri.",
+  robots: {
+    index: false,
+    follow: true,
+  }
+};
+
 export default function KVKK() {
   return (
     <main className="container mx-auto px-6 py-32 max-w-4xl">

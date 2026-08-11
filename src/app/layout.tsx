@@ -55,6 +55,37 @@ export default function RootLayout({
         {children}
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        
+        {/* Structured Data (JSON-LD) for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "KvK Digital",
+              "image": "https://kvkdijitalcozumler.com/icon.png",
+              "url": "https://kvkdijitalcozumler.com",
+              "telephone": "+905348914905",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Istanbul",
+                "addressCountry": "TR"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 40.8770,
+                "longitude": 29.2570
+              },
+              "url": "https://kvkdijitalcozumler.com",
+              "sameAs": [
+                "https://kvkdijitalcozumler.com"
+              ],
+              "description": "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz. Web tasarımı, özel yazılım ve yapay zeka çözümleri ile işletmenizi geleceğe taşıyın.",
+              "priceRange": "$$"
+            })
+          }}
+        />
       </body>
     </html>
   );

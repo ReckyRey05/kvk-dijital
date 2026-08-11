@@ -2,6 +2,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Örnek Projelerimiz",
+  description: "Farklı sektörler için özenle hazırladığımız, yüksek performanslı ve modern tasarımlı web site konseptleri ve referanslarımız.",
+  alternates: {
+    canonical: "https://kvkdijitalcozumler.com/projeler",
+  }
+};
 
 const allProjects = [
   {
