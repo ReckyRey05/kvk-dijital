@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname === '/coming-soon' ||
+    pathname === '/yakinda-buradayiz' ||
     pathname.match(/\.(png|jpg|jpeg|svg|ico)$/)
   ) {
     return NextResponse.next();
@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
 
   // Everyone else gets redirected to coming-soon
   const url = request.nextUrl.clone();
-  url.pathname = '/coming-soon';
+  url.pathname = '/yakinda-buradayiz';
   return NextResponse.redirect(url);
 }
 

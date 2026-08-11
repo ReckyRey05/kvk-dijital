@@ -7,7 +7,7 @@ export default function ClientHeader() {
   const pathname = usePathname();
 
   // Admin ve Yapım Aşamasında rotalarında Header'ı gizle
-  if (pathname?.startsWith("/admin") || pathname === "/coming-soon") {
+  if (pathname?.startsWith("/admin") || pathname === "/yakinda-buradayiz") {
     return null;
   }
 
