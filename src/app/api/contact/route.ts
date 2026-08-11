@@ -58,7 +58,7 @@ ${message}
   } catch (error: any) {
     console.error('Email sending error:', error);
     return NextResponse.json(
-      { error: 'Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.' },
+      { error: error.message || 'Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.' },
       { status: 500 }
     );
   }

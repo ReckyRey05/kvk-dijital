@@ -31,7 +31,8 @@ export default function Contact() {
       });
 
       if (!response.ok) {
-        throw new Error('Email API responded with an error');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Email API responded with an error');
       }
 
       // E-posta başarılıysa, arka planda Firebase'e de kaydedelim (Bunun için beklemeye gerek yok, asenkron devam edebilir)
@@ -47,9 +48,9 @@ export default function Contact() {
       
       setSuccess(true);
       setFormData({ name: "", phone: "", email: "", message: "" });
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error submitting form:", err);
-      setError(true);
+      setError(err.message || true);
     } finally {
       setLoading(false);
     }
@@ -161,7 +162,7 @@ export default function Contact() {
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     className="p-4 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-center text-sm"
                   >
-                    Bir hata oluştu. Lütfen tekrar deneyin.
+                    {typeof error === "string" ? error : "Bir hata oluştu. Lütfen tekrar deneyin."}
                   </motion.div>
                 )}
               </form>
