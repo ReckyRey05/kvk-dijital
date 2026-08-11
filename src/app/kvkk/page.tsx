@@ -1,24 +1,24 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "KvKK Aydınlatma Metni",
-  description: "KvK Digital Kişisel Verilerin Korunması Kanunu (KvKK) aydınlatma metni ve gizlilik ilkeleri.",
+  title: "KVKK Aydınlatma Metni",
+  description: "KvK Digital Kişisel Verilerin Korunması Kanunu (KVKK) aydınlatma metni ve gizlilik ilkeleri.",
   robots: {
     index: false,
     follow: true,
   }
 };
 
-export default function KvKK() {
+export default function KVKK() {
   return (
     <main className="container mx-auto px-6 py-32 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8">Kişisel Verilerin Korunması (KvKK) Aydınlatma Metni</h1>
+      <h1 className="text-4xl font-bold mb-8">Kişisel Verilerin Korunması (KVKK) Aydınlatma Metni</h1>
       
       <div className="prose prose-invert max-w-none text-foreground/80 space-y-6">
         <p>
           <strong>KvK Digital</strong> olarak, kişisel verilerinizin güvenliği hususuna azami hassasiyet göstermekteyiz. 
           Bu bilinçle, ürün ve hizmetlerimizden faydalanan kişiler dahil, bizimle ilişkili tüm şahıslara ait her türlü kişisel verilerin 
-          6698 sayılı Kişisel Verilerin Korunması Kanunu ("KvKK")'na uygun olarak işlenerek, muhafaza edilmesine büyük önem atfetmekteyiz.
+          6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK")'na uygun olarak işlenerek, muhafaza edilmesine büyük önem atfetmekteyiz.
         </p>
 
         <h3 className="text-xl font-semibold text-white mt-8 mb-4">1. Kişisel Verilerin Toplanması ve İşlenmesi</h3>
@@ -45,7 +45,7 @@ export default function KvKK() {
           altyapılarında (örn. Firebase, Vercel) şifrelenmiş olarak barındırılır.
         </p>
 
-        <h3 className="text-xl font-semibold text-white mt-8 mb-4">4. KvKK'nın 11. Maddesi Gereği Haklarınız</h3>
+        <h3 className="text-xl font-semibold text-white mt-8 mb-4">4. KVKK'nın 11. Maddesi Gereği Haklarınız</h3>
         <p>Kişisel veri sahipleri olarak, haklarınıza ilişkin taleplerinizi bize iletmeniz durumunda, talebin niteliğine göre en geç otuz gün içinde ücretsiz olarak sonuçlandırılacaktır. Haklarınız şunlardır:</p>
         <ul className="list-disc pl-6 space-y-2">
           <li>Kişisel veri işlenip işlenmediğini öğrenme,</li>
@@ -57,7 +57,7 @@ export default function KvKK() {
 
         <h3 className="text-xl font-semibold text-white mt-8 mb-4">5. İletişim</h3>
         <p>
-          KvKK kapsamındaki haklarınızı kullanmak veya kişisel verilerinizle ilgili bilgi almak için 
+          KVKK kapsamındaki haklarınızı kullanmak veya kişisel verilerinizle ilgili bilgi almak için 
           <strong> iletisim@kvkdijitalcozumler.com</strong> adresine e-posta göndererek bizimle iletişime geçebilirsiniz.
         </p>
         
