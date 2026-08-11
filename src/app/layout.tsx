@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     default: "KvK Digital | Premium Dijital Ajans",
     template: "%s | KvK Digital",
   },
-  description: "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz. Web tasarımı, özel yazılım ve yapay zeka çözümleri ile işletmenizi geleceğe taşıyın.",
-  keywords: ["dijital ajans", "web tasarım", "özel yazılım", "yapay zeka", "seo", "kurumsal kimlik", "KvK Digital"],
+  description: "İstanbul merkezli dijital ajans olarak Türkiye geneline modern, hızlı ve ölçeklenebilir web tasarım, özel yazılım ve yapay zeka çözümleri sunuyoruz.",
+  keywords: ["dijital ajans", "istanbul web tasarım", "istanbul dijital ajans", "özel yazılım", "yapay zeka", "seo", "kurumsal kimlik", "KvK Digital", "türkiye web ajansı"],
   authors: [{ name: "KvK Digital", url: "https://kvkdijitalcozumler.com" }],
   creator: "KvK Digital",
   openGraph: {
