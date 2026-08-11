@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://kvkdijitalcozumler.com",
   },
+  verification: {
+    google: "sANlbaocIrPcxx5Cbmgsxesn-zieUV1fUk5PaoqXpn0",
+  },
 };
 
 import { Inter } from "next/font/google";
