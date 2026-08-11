@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   description: "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz. Web tasarımı, özel yazılım ve yapay zeka çözümleri ile işletmenizi geleceğe taşıyın.",
   keywords: ["dijital ajans", "web tasarım", "özel yazılım", "yapay zeka", "seo", "kurumsal kimlik", "KvK Digital"],
-  authors: [{ name: "KvK Digital", url: "https://kvkdigital.com" }],
+  authors: [{ name: "KvK Digital", url: "https://kvkdijitalcozumler.com" }],
   creator: "KvK Digital",
   openGraph: {
     type: "website",
@@ -37,6 +37,7 @@ export const metadata: Metadata = {
 
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import ClientHeader from "@/components/ClientHeader";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
         <ClientHeader />
         {children}
         <Analytics />
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
       </body>
     </html>
   );

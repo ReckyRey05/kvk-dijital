@@ -28,6 +28,18 @@ export default function Contact() {
         createdAt: serverTimestamp()
       });
       
+      // E-posta gönderimi (API'yi çağırıyoruz)
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.phone ? `İletişim (Tel: ${formData.phone})` : 'Web Sitesi İletişim',
+          message: formData.message,
+        }),
+      });
+      
       setSuccess(true);
       setFormData({ name: "", phone: "", email: "", message: "" });
     } catch (err) {
@@ -64,7 +76,7 @@ export default function Contact() {
               <div className="space-y-6 text-foreground/70">
                 <div>
                   <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">E-mail</div>
-                  <a href="mailto:hello@kvkdigital.com" className="text-lg font-medium hover:text-accent transition-colors">hello@kvkdigital.com</a>
+                  <a href="mailto:iletisim@kvkdijitalcozumler.com" className="text-lg font-medium hover:text-accent transition-colors">iletisim@kvkdijitalcozumler.com</a>
                 </div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">KvK Digital</div>
