@@ -9,25 +9,25 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://kvkdijitalcozumler.com'),
   title: {
-    default: "KvK Digital | Premium Dijital Ajans",
-    template: "%s | KvK Digital",
+    default: "KVK Dijital Çözümler | İstanbul Web Tasarım & Dijital Ajans",
+    template: "%s | KVK Dijital Çözümler",
   },
-  description: "İstanbul merkezli dijital ajans olarak Türkiye geneline modern, hızlı ve ölçeklenebilir web tasarım, özel yazılım ve yapay zeka çözümleri sunuyoruz.",
-  keywords: ["dijital ajans", "istanbul web tasarım", "istanbul dijital ajans", "özel yazılım", "yapay zeka", "seo", "kurumsal kimlik", "KvK Digital", "türkiye web ajansı"],
-  authors: [{ name: "KvK Digital", url: "https://kvkdijitalcozumler.com" }],
-  creator: "KvK Digital",
+  description: "İstanbul merkezli KVK Dijital Çözümler olarak kurumsal web tasarım, e-ticaret ve yapay zeka destekli web sitesi çözümleri sunuyoruz. Kocaeli, Sakarya, Bursa ve Türkiye geneline profesyonel hizmet.",
+  keywords: ["istanbul web tasarım", "web tasarım istanbul", "istanbul web sitesi", "kurumsal web tasarım istanbul", "KVK Dijital Çözümler", "KVK Dijital", "e-ticaret sitesi istanbul", "web sitesi yaptırma istanbul"],
+  authors: [{ name: "KVK Dijital Çözümler", url: "https://kvkdijitalcozumler.com" }],
+  creator: "KVK Dijital Çözümler",
   openGraph: {
     type: "website",
     locale: "tr_TR",
     url: "https://kvkdijitalcozumler.com",
-    siteName: "KvK Digital",
-    title: "KvK Digital | Premium Dijital Ajans",
-    description: "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz.",
+    siteName: "KVK Dijital Çözümler",
+    title: "KVK Dijital Çözümler | İstanbul Web Tasarım",
+    description: "İstanbul merkezli profesyonel web tasarım, e-ticaret ve dijital dönüşüm ajansı.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "KvK Digital | Premium Dijital Ajans",
-    description: "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz.",
+    title: "KVK Dijital Çözümler | İstanbul Web Tasarım",
+    description: "İstanbul merkezli profesyonel web tasarım ve dijital dönüşüm ajansı.",
   },
   alternates: {
     canonical: "https://kvkdijitalcozumler.com",
@@ -61,26 +61,60 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "ProfessionalService",
-              "name": "KvK Digital",
-              "image": "https://kvkdijitalcozumler.com/icon.png",
-              "url": "https://kvkdijitalcozumler.com",
-              "telephone": "+905348914905",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Istanbul",
-                "addressCountry": "TR"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 40.8770,
-                "longitude": 29.2570
-              },
-              "sameAs": [
-                "https://kvkdijitalcozumler.com"
-              ],
-              "description": "Modern, hızlı ve ölçeklenebilir dijital çözümler üretiyoruz. Web tasarımı, özel yazılım ve yapay zeka çözümleri ile işletmenizi geleceğe taşıyın.",
-              "priceRange": "$$"
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://kvkdijitalcozumler.com/#website",
+                  "url": "https://kvkdijitalcozumler.com",
+                  "name": "KVK Dijital Çözümler",
+                  "description": "İstanbul merkezli web tasarım ve dijital ajans",
+                  "publisher": {
+                    "@id": "https://kvkdijitalcozumler.com/#organization"
+                  }
+                },
+                {
+                  "@type": "ProfessionalService",
+                  "@id": "https://kvkdijitalcozumler.com/#organization",
+                  "name": "KVK Dijital Çözümler",
+                  "url": "https://kvkdijitalcozumler.com",
+                  "logo": "https://kvkdijitalcozumler.com/icon.png",
+                  "image": "https://kvkdijitalcozumler.com/icon.png",
+                  "telephone": "+905348914905",
+                  "email": "iletisim@kvkdijitalcozumler.com",
+                  "priceRange": "$$",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "İstanbul",
+                    "addressCountry": "TR"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 40.8770,
+                    "longitude": 29.2570
+                  },
+                  "areaServed": [
+                    {
+                      "@type": "City",
+                      "name": "İstanbul"
+                    },
+                    {
+                      "@type": "City",
+                      "name": "Kocaeli"
+                    },
+                    {
+                      "@type": "City",
+                      "name": "Sakarya"
+                    },
+                    {
+                      "@type": "City",
+                      "name": "Bursa"
+                    }
+                  ],
+                  "sameAs": [
+                    "https://kvkdijitalcozumler.com"
+                  ]
+                }
+              ]
             })
           }}
         />

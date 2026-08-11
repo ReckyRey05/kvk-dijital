@@ -21,11 +21,10 @@ export default function Hero() {
           className="flex flex-col items-start gap-8"
         >
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] text-gradient">
-            Modern dijital <br /> deneyimler <br /> geliştiriyoruz.
+            İstanbul'un yeni nesil <br /> web tasarım ve <br /> yazılım ajansı.
           </h1>
           <p className="text-lg text-foreground/70 max-w-lg leading-relaxed">
-            KvK Digital, işletmeler için modern web siteleri, özel yazılımlar ve
-            yapay zeka destekli dijital çözümler üretir.
+            KVK Dijital Çözümler, işletmeniz için modern web siteleri, özel yazılımlar ve e-ticaret sistemleri geliştirerek markanızı büyütür.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">

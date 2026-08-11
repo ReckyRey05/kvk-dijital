@@ -41,7 +41,7 @@ export default function About() {
             </h2>
             <div className="text-foreground/70 text-lg leading-relaxed max-w-3xl space-y-6">
               <p>
-                Merhaba, ben <strong className="text-foreground font-medium">Ali Haydar Kavak</strong>. Çocukluk yıllarımda bilgisayar sistemlerine duyduğum merak, detaycı kişiliğimle birleşerek beni web teknolojilerinin dünyasına çekti. KVK Digital'in kurucusu olarak amacım sadece estetik web siteleri teslim edip süreci bitirmek değil; aynı zamanda markanızın <strong>dijital büyüme danışmanı</strong> olmaktır.
+                Merhaba, ben <strong className="text-foreground font-medium">Ali Haydar Kavak</strong>. Çocukluk yıllarımda bilgisayar sistemlerine duyduğum merak, detaycı kişiliğimle birleşerek beni web teknolojilerinin dünyasına çekti. <strong>KVK Dijital Çözümler'in</strong> kurucusu olarak amacım sadece estetik web siteleri teslim edip süreci bitirmek değil; aynı zamanda <strong>İstanbul, Kocaeli, Sakarya</strong> ve tüm Türkiye'deki işletmelerin <strong>dijital büyüme danışmanı</strong> olmaktır.
               </p>
               
               <div className="pt-4">

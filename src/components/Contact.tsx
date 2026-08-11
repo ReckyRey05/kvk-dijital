@@ -85,8 +85,8 @@ export default function Contact() {
                   <a href="mailto:iletisim@kvkdijitalcozumler.com" className="text-lg font-medium hover:text-accent transition-colors">iletisim@kvkdijitalcozumler.com</a>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">KvK Digital</div>
-                  <div className="text-lg">Premium Dijital Ajans</div>
+                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">KVK Dijital Çözümler</div>
+                  <div className="text-lg">İstanbul Web Tasarım & Dijital Ajans</div>
                 </div>
               </div>
             </motion.div>
