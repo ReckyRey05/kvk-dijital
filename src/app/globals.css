@@ -10,7 +10,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased selection:bg-accent/30;
+    @apply bg-background text-foreground antialiased select-none selection:bg-accent/30;
   }
 }
 
