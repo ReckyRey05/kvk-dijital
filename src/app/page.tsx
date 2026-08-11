@@ -10,6 +10,9 @@ import Footer from "@/components/Footer";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase/firestore";
 
+export const dynamic = 'force-static';
+export const revalidate = 3600; // Her saat başı arka planda yeniler
+
 export default async function Home() {
   // Fetch services
   const servicesRef = collection(db, "services");
