@@ -16,7 +16,7 @@ export default function GizlilikPolitikasi() {
       
       <div className="prose prose-invert max-w-none text-foreground/80 space-y-6">
         <p>
-          Bu Gizlilik Politikası, <strong>KVK Digital</strong> web sitesini ziyaret eden kullanıcıların 
+          Bu Gizlilik Politikası, <strong>KvK Digital</strong> web sitesini ziyaret eden kullanıcıların 
           kişisel ve kişisel olmayan verilerinin nasıl toplandığı, kullanıldığı, korunduğu ve işlendiği hakkında bilgi vermek amacıyla hazırlanmıştır.
         </p>
 
@@ -48,7 +48,7 @@ export default function GizlilikPolitikasi() {
         <h3 className="text-xl font-semibold text-white mt-8 mb-4">4. Üçüncü Taraf Bağlantıları</h3>
         <p>
           Web sitemiz, kontrolümüz dışında olan farklı web sitelerine bağlantılar (linkler) içerebilir. Bu sitelerin içeriklerinden 
-          veya gizlilik politikalarından KVK Digital sorumlu tutulamaz. Dış bağlantılara tıklarken o sitenin kendi gizlilik politikalarını 
+          veya gizlilik politikalarından KvK Digital sorumlu tutulamaz. Dış bağlantılara tıklarken o sitenin kendi gizlilik politikalarını 
           okumanız tavsiye edilir.
         </p>
 

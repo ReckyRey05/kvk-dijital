@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "E-Ticaret Web Sitesi",
-  description: "Ürünlerinizi 7/24 satabileceğiniz güvenli, hızlı ve SEO uyumlu e-ticaret web sitesi kurulumu. KVK Dijital Çözümler ile sanal mağazanızı hemen açın.",
+  description: "Ürünlerinizi 7/24 satabileceğiniz güvenli, hızlı ve SEO uyumlu e-ticaret web sitesi kurulumu. KvK Dijital Çözümler ile sanal mağazanızı hemen açın.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/e-ticaret-web-sitesi",
   }
@@ -26,7 +26,7 @@ export default function ETicaretWebSitesi() {
             E-Ticaret <span className="text-accent">Web Sitesi</span>
           </h1>
           <p className="text-xl text-foreground/70 leading-relaxed mb-6">
-            İşletmenizi dijitale taşıyarak ürünlerinizi tüm dünyaya 7/24 satın. KVK Dijital Çözümler olarak güvenli, hızlı ve kullanıcı dostu e-ticaret siteleri geliştiriyoruz.
+            İşletmenizi dijitale taşıyarak ürünlerinizi tüm dünyaya 7/24 satın. KvK Dijital Çözümler olarak güvenli, hızlı ve kullanıcı dostu e-ticaret siteleri geliştiriyoruz.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function ETicaretWebSitesi() {
             "serviceType": "E-Ticaret Yazılımı",
             "provider": {
               "@type": "Organization",
-              "name": "KVK Dijital Çözümler"
+              "name": "KvK Dijital Çözümler"
             },
             "description": "Güvenli ve SEO uyumlu e-ticaret web sitesi kurulum hizmetleri."
           })

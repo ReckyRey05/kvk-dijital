@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Kurumsal Web Tasarım",
-  description: "Şirketiniz için güven veren, profesyonel ve SEO uyumlu kurumsal web tasarım hizmeti. KVK Dijital Çözümler ile markanızı geleceğe taşıyın.",
+  description: "Şirketiniz için güven veren, profesyonel ve SEO uyumlu kurumsal web tasarım hizmeti. KvK Dijital Çözümler ile markanızı geleceğe taşıyın.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/kurumsal-web-tasarim",
   }
@@ -26,7 +26,7 @@ export default function KurumsalWebTasarim() {
             Kurumsal <span className="text-accent">Web Tasarım</span>
           </h1>
           <p className="text-xl text-foreground/70 leading-relaxed mb-6">
-            Şirketinizin dijital dünyadaki yüzü olan kurumsal web sitenizi, markanızın ciddiyetine ve prestijine yakışır şekilde tasarlıyoruz. KVK Dijital Çözümler olarak B2B ve B2C firmalarına özel web altyapıları kuruyoruz.
+            Şirketinizin dijital dünyadaki yüzü olan kurumsal web sitenizi, markanızın ciddiyetine ve prestijine yakışır şekilde tasarlıyoruz. KvK Dijital Çözümler olarak B2B ve B2C firmalarına özel web altyapıları kuruyoruz.
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export default function KurumsalWebTasarim() {
 
         <div className="text-center p-8 bg-accent/5 rounded-2xl border border-white/5">
           <h3 className="text-2xl font-semibold mb-4">Şirketinizi Dijitale Taşıyın</h3>
-          <p className="text-foreground/70 mb-6">Profesyonel kurumsal web tasarım çözümleri için KVK Dijital Çözümler ile iletişime geçin.</p>
+          <p className="text-foreground/70 mb-6">Profesyonel kurumsal web tasarım çözümleri için KvK Dijital Çözümler ile iletişime geçin.</p>
           <Link href="/#contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors">
             Teklif Alın
           </Link>
@@ -84,7 +84,7 @@ export default function KurumsalWebTasarim() {
             "serviceType": "Kurumsal Web Tasarım",
             "provider": {
               "@type": "Organization",
-              "name": "KVK Dijital Çözümler"
+              "name": "KvK Dijital Çözümler"
             },
             "description": "Şirketler için profesyonel ve güvenli kurumsal web tasarım çözümleri."
           })

@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "İstanbul Web Tasarım & Dijital Ajans",
-  description: "İstanbul web tasarım firması olarak işletmeniz için modern, kurumsal, mobil ve SEO uyumlu web sitesi yaptırma hizmeti sunuyoruz. KVK Dijital Çözümler.",
+  description: "İstanbul web tasarım firması olarak işletmeniz için modern, kurumsal, mobil ve SEO uyumlu web sitesi yaptırma hizmeti sunuyoruz. KvK Dijital Çözümler.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/istanbul-web-tasarim",
   }
@@ -26,12 +26,12 @@ export default function IstanbulWebTasarim() {
             İstanbul Web Tasarım <span className="text-accent">Firması</span>
           </h1>
           <p className="text-xl text-foreground/70 leading-relaxed mb-6">
-            KVK Dijital Çözümler olarak, <strong>İstanbul</strong> merkezli işletmelere profesyonel, mobil uyumlu ve SEO dostu web tasarım hizmetleri sunuyoruz. Avrupa ve Anadolu yakasındaki markaların dijital dönüşüm süreçlerini uçtan uca yönetiyoruz.
+            KvK Dijital Çözümler olarak, <strong>İstanbul</strong> merkezli işletmelere profesyonel, mobil uyumlu ve SEO dostu web tasarım hizmetleri sunuyoruz. Avrupa ve Anadolu yakasındaki markaların dijital dönüşüm süreçlerini uçtan uca yönetiyoruz.
           </p>
         </div>
 
         <div className="glass-panel p-8 md:p-10 mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Neden KVK Dijital Çözümler?</h2>
+          <h2 className="text-2xl font-semibold mb-4">Neden KvK Dijital Çözümler?</h2>
           <p className="text-foreground/70 mb-6 leading-relaxed">
             Sadece estetik bir web sitesi teslim etmekle kalmıyor, aynı zamanda hedef kitlenize ulaşmanızı sağlayacak altyapıyı kuruyoruz. Kocaeli, Sakarya, Yalova, Bursa ve Tekirdağ gibi İstanbul çevresindeki sanayi ve ticaret merkezlerine de kurumsal web tasarım desteği veriyoruz.
           </p>
@@ -70,7 +70,7 @@ export default function IstanbulWebTasarim() {
 
         <div className="text-center p-8 bg-accent/5 rounded-2xl border border-white/5">
           <h3 className="text-2xl font-semibold mb-4">Projenize Hemen Başlayın</h3>
-          <p className="text-foreground/70 mb-6">İstanbul web tasarım ajansı KVK Dijital Çözümler ile markanızı büyütün.</p>
+          <p className="text-foreground/70 mb-6">İstanbul web tasarım ajansı KvK Dijital Çözümler ile markanızı büyütün.</p>
           <Link href="/#contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors">
             İletişime Geçin
           </Link>
@@ -88,7 +88,7 @@ export default function IstanbulWebTasarim() {
             "serviceType": "Web Tasarım",
             "provider": {
               "@type": "LocalBusiness",
-              "name": "KVK Dijital Çözümler",
+              "name": "KvK Dijital Çözümler",
               "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "İstanbul",

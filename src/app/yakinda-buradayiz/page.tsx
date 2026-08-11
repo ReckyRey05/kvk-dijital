@@ -36,7 +36,7 @@ export default function ComingSoon() {
         </h1>
         
         <p className="text-lg text-foreground/70 mb-12 leading-relaxed">
-          KVK Digital olarak dijital altyapımızı ve projelerimizi tamamen yeniliyoruz. Yeni nesil web tasarım, özel yazılım ve yapay zeka çözümlerimizle çok yakında yayındayız.
+          KvK Digital olarak dijital altyapımızı ve projelerimizi tamamen yeniliyoruz. Yeni nesil web tasarım, özel yazılım ve yapay zeka çözümlerimizle çok yakında yayındayız.
         </p>
 
         <div className="w-full pt-8 border-t border-card-border/50">

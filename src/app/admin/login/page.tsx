@@ -59,7 +59,7 @@ export default function LoginPage() {
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Hoş Geldiniz</h1>
             <p className="text-foreground/50 text-sm flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-accent" /> KVK Dijital Yönetim Paneli
+              <ShieldCheck className="w-4 h-4 text-accent" /> KvK Dijital Yönetim Paneli
             </p>
           </div>
 

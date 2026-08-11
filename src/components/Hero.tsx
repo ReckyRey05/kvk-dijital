@@ -19,7 +19,7 @@ export default function Hero() {
             İstanbul'un yeni nesil <br /> web tasarım ve <br /> yazılım ajansı.
           </h1>
           <p className="text-lg text-foreground/70 max-w-lg leading-relaxed">
-            KVK Dijital Çözümler, işletmeniz için modern web siteleri, özel yazılımlar ve e-ticaret sistemleri geliştirerek markanızı büyütür.
+            KvK Dijital Çözümler, işletmeniz için modern web siteleri, özel yazılımlar ve e-ticaret sistemleri geliştirerek markanızı büyütür.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -116,7 +116,7 @@ export default function Hero() {
               <div className="space-y-1.5 font-mono text-xs">
                 <div className="text-blue-400">export default <span className="text-purple-400">function</span> <span className="text-yellow-200">App</span>() {'{'}</div>
                 <div className="text-foreground/70 pl-4">return (</div>
-                <div className="text-green-400 pl-8">&lt;KVKDigital /&gt;</div>
+                <div className="text-green-400 pl-8">&lt;KvKDigital /&gt;</div>
                 <div className="text-foreground/70 pl-4">);</div>
                 <div className="text-blue-400">{'}'}</div>
               </div>

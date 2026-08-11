@@ -53,7 +53,7 @@ export default function Hakkimda() {
             <section className="glass-panel p-8 md:p-12">
               <h2 className="text-2xl font-semibold mb-6 text-accent">Gelecek Hedefi</h2>
               <p className="text-foreground/70 leading-relaxed">
-                KVK Digital'i kurarken amacım sadece göze hitap eden, estetik web siteleri teslim edip süreci bitirmek değildi. Asıl hedefim, işletmelerin ve bireylerin <strong>dijital büyüme danışmanı</strong> olmaktı. Sadece kod yazan biri değil, markanızın potansiyelini teknolojinin gücüyle açığa çıkaran bir rehber olmayı amaçlıyorum.
+                KvK Digital'i kurarken amacım sadece göze hitap eden, estetik web siteleri teslim edip süreci bitirmek değildi. Asıl hedefim, işletmelerin ve bireylerin <strong>dijital büyüme danışmanı</strong> olmaktı. Sadece kod yazan biri değil, markanızın potansiyelini teknolojinin gücüyle açığa çıkaran bir rehber olmayı amaçlıyorum.
               </p>
             </section>
           </div>
