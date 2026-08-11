@@ -16,9 +16,27 @@ export default function Projects({ projects }: { projects: Project[] }) {
   const displayProjects = projects && projects.length > 0 ? projects : [
     {
       id: "demo-1",
-      title: "Luxury Barber Website",
-      category: "Business Website",
-      features: ["Responsive Design", "Modern UI", "Appointment System"],
+      title: "Lüks Kuaför & Güzellik Salonu",
+      category: "Hizmet Sektörü",
+      features: ["Randevu Alma Sistemi", "WhatsApp Entegrasyonu", "Google Maps Desteği", "Modern Arayüz"],
+    },
+    {
+      id: "demo-2",
+      title: "Premium Restoran & Kafe",
+      category: "Yeme İçme",
+      features: ["Dijital Menü Sistemi", "QR Menü Özelliği", "Online Rezervasyon", "Mobil Uyumluluk"],
+    },
+    {
+      id: "demo-3",
+      title: "Sanayi & İnşaat Şirketi",
+      category: "Kurumsal",
+      features: ["Gelişmiş İletişim Formları", "Detaylı Proje Sergileme", "Kurumsal Tasarım", "Hızlı Yükleme"],
+    },
+    {
+      id: "demo-4",
+      title: "Özel Anı & Sevgili Sitesi",
+      category: "Kişisel / Eğlence",
+      features: ["Romantik Tasarım", "Anı ve Fotoğraf Galerisi", "Özel Tarih Geri Sayımı", "Şifreli Erişim"],
     }
   ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Laptop, Code2, Sparkles, ShoppingCart } from "lucide-react";
 
 interface Service {
   id: string;
@@ -14,21 +15,25 @@ export default function Services({ services }: { services: Service[] }) {
       id: "demo-1",
       title: "Web Tasarım",
       description: "Modern, hızlı ve mobil uyumlu web siteleri.",
+      icon: Laptop
     },
     {
       id: "demo-2",
       title: "Özel Yazılım",
       description: "İşletmelere özel dijital sistemler.",
+      icon: Code2
     },
     {
       id: "demo-3",
       title: "AI Çözümleri",
       description: "Yapay zeka destekli otomasyon ve araçlar.",
+      icon: Sparkles
     },
     {
       id: "demo-4",
       title: "E-Ticaret",
       description: "Modern online satış deneyimleri.",
+      icon: ShoppingCart
     },
   ];
 
@@ -55,8 +60,9 @@ export default function Services({ services }: { services: Service[] }) {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="glass-panel p-8 group hover:-translate-y-2 transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-lg bg-accent/10 mb-6 relative overflow-hidden">
+              <div className="w-12 h-12 rounded-lg bg-accent/10 mb-6 relative overflow-hidden flex items-center justify-center text-accent">
                  <div className="absolute inset-0 bg-accent/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                 {service.icon ? <service.icon className="w-6 h-6 relative z-10" /> : null}
               </div>
               <h3 className="text-xl font-medium mb-3">{service.title}</h3>
               <p className="text-foreground/50">{service.description}</p>
