@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: "KVK Dijital Çözümler | İstanbul Web Tasarım & Dijital Ajans",
     template: "%s | KVK Dijital Çözümler",
   },
-  description: "İstanbul merkezli KVK Dijital Çözümler olarak kurumsal web tasarım, e-ticaret ve yapay zeka destekli web sitesi çözümleri sunuyoruz. Kocaeli, Sakarya, Bursa ve Türkiye geneline profesyonel hizmet.",
+  description: "İstanbul merkezli KVK Dijital Çözümler olarak kurumsal web tasarım, e-ticaret ve SEO uyumlu profesyonel web sitesi hizmetleri sunuyoruz.",
   keywords: ["istanbul web tasarım", "web tasarım istanbul", "istanbul web sitesi", "kurumsal web tasarım istanbul", "KVK Dijital Çözümler", "KVK Dijital", "e-ticaret sitesi istanbul", "web sitesi yaptırma istanbul"],
   authors: [{ name: "KVK Dijital Çözümler", url: "https://kvkdijitalcozumler.com" }],
   creator: "KVK Dijital Çözümler",
@@ -68,12 +68,14 @@ export default function RootLayout({
                   "url": "https://kvkdijitalcozumler.com",
                   "name": "KVK Dijital Çözümler",
                   "description": "İstanbul merkezli web tasarım ve dijital ajans",
+                  "datePublished": "2024-01-01T08:00:00+03:00",
+                  "dateModified": new Date().toISOString(),
                   "publisher": {
                     "@id": "https://kvkdijitalcozumler.com/#organization"
                   }
                 },
                 {
-                  "@type": "ProfessionalService",
+                  "@type": ["Organization", "LocalBusiness"],
                   "@id": "https://kvkdijitalcozumler.com/#organization",
                   "name": "KVK Dijital Çözümler",
                   "url": "https://kvkdijitalcozumler.com",
@@ -110,8 +112,16 @@ export default function RootLayout({
                       "name": "Bursa"
                     }
                   ],
+                  "founder": {
+                    "@type": "Person",
+                    "name": "Ali Haydar Kavak",
+                    "jobTitle": "Kurucu",
+                    "url": "https://kvkdijitalcozumler.com/hakkimda"
+                  },
                   "sameAs": [
-                    "https://kvkdijitalcozumler.com"
+                    "https://www.instagram.com/kvkdijital",
+                    "https://www.linkedin.com/company/kvkdijital",
+                    "https://github.com/ReckyRey05"
                   ]
                 }
               ]

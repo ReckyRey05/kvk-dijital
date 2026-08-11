@@ -5,33 +5,55 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const faqs = [
-  {
-    question: "Web sitesi süreci ne kadar sürüyor?",
-    answer: "Projenin kapsamına ve ihtiyaçlarına göre değişmekle birlikte, standart bir kurumsal web sitesi genellikle 1-2 hafta içerisinde teslim edilmektedir. Özel yazılım gerektiren projelerde bu süre detaylı bir analizle belirlenir."
-  },
-  {
-    question: "Fiyatlandırma nasıl yapılıyor?",
-    answer: "Fiyatlandırma; sitenin tasarımı, sayfa sayısı, e-ticaret altyapısı olup olmadığı ve ekstra yazılım ihtiyaçlarına (örn. rezervasyon sistemi, çoklu dil) göre proje bazlı olarak belirlenmektedir. Sürpriz maliyetler olmadan baştan net bir teklif sunuyoruz."
-  },
-  {
-    question: "Domain ve Hosting (Alan adı ve Barındırma) kime ait oluyor?",
-    answer: "Tüm domain ve hosting hesapları, ve sitenin tüm kaynak kodları tamamen sizin adınıza kaydedilir ve %100 sizin mülkiyetinizde olur. Biz sadece kurulum ve yönetim süreçlerini üstleniyoruz."
-  },
-  {
-    question: "Siteniz arama motorlarına (SEO) uyumlu mu?",
-    answer: "Evet, geliştirdiğimiz tüm web siteleri en güncel SEO (Arama Motoru Optimizasyonu) standartlarına uygun kodlanır. Hızlı yükleme süreleri, mobil uyumluluk ve temiz kod yapısı sayesinde Google'da daha kolay sıralama alırsınız."
-  },
-  {
-    question: "Mobil cihazlarda sorunsuz çalışıyor mu?",
-    answer: "Kesinlikle. Sitelerimiz 'Mobile First' (Önce Mobil) prensibiyle tasarlanır. Ziyaretçilerinizin çoğu mobil cihazlardan geleceği için telefon ve tabletlerde kusursuz bir deneyim sunar."
-  }
-];
+    {
+      question: "Web sitesi süreci ne kadar sürüyor?",
+      answer: "Projenin kapsamına ve ihtiyaçlarına göre değişmekle birlikte, standart bir kurumsal web sitesi genellikle 1-2 hafta içerisinde teslim edilmektedir. Özel yazılım gerektiren projelerde bu süre detaylı bir analizle belirlenir. Tasarım aşamasında sizin onayınız alındıktan sonra kodlama aşamasına geçilerek süreç hızlandırılır."
+    },
+    {
+      question: "Fiyatlandırma nasıl yapılıyor?",
+      answer: "Fiyatlandırma; sitenin tasarımı, sayfa sayısı, e-ticaret altyapısı olup olmadığı ve ekstra yazılım ihtiyaçlarına (örn. rezervasyon sistemi, çoklu dil) göre proje bazlı olarak belirlenmektedir. Sürpriz maliyetler olmadan baştan net bir teklif sunuyoruz ve tüm süreci şeffaf bir şekilde yönetiyoruz."
+    },
+    {
+      question: "Domain ve Hosting (Alan adı ve Barındırma) kime ait oluyor?",
+      answer: "Tüm domain ve hosting hesapları, ve sitenin tüm kaynak kodları tamamen sizin adınıza kaydedilir ve %100 sizin mülkiyetinizde olur. Biz sadece kurulum ve yönetim süreçlerini üstleniyoruz. Herhangi bir hizmet yenileme döneminde hiçbir şekilde yüksek yenileme bedelleri ile karşılaşmazsınız."
+    },
+    {
+      question: "Siteniz arama motorlarına (SEO) uyumlu mu?",
+      answer: "Evet, geliştirdiğimiz tüm web siteleri en güncel SEO (Arama Motoru Optimizasyonu) standartlarına uygun kodlanır. Hızlı yükleme süreleri, mobil uyumluluk ve temiz kod yapısı (Semantic HTML, JSON-LD) sayesinde Google'da daha kolay sıralama alırsınız."
+    },
+    {
+      question: "Mobil cihazlarda sorunsuz çalışıyor mu?",
+      answer: "Kesinlikle. Sitelerimiz 'Mobile First' (Önce Mobil) prensibiyle tasarlanır. Ziyaretçilerinizin çoğu mobil cihazlardan geleceği için telefon ve tabletlerde kusursuz bir kullanıcı deneyimi sunar."
+    },
+    {
+      question: "İstanbul dışındaki firmalara da hizmet veriyor musunuz?",
+      answer: "Merkezimiz İstanbul'da olmasına rağmen Kocaeli, Sakarya, Bursa, Yalova ve Türkiye'nin dört bir yanındaki markalara profesyonel web tasarım ve e-ticaret hizmetleri sunuyoruz. Toplantılarımızı online olarak yürüterek projenizi şeffaf bir biçimde tamamlıyoruz."
+    }
+  ];
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section className="w-full py-24 relative">
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs.map(faq => ({
+              "@type": "Question",
+              "name": faq.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer
+              }
+            }))
+          })
+        }}
+      />
       <div className="container mx-auto px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
@@ -39,7 +61,7 @@ export default function FAQ() {
               Sıkça Sorulan <span className="text-accent">Sorular</span>
             </h2>
             <p className="text-foreground/60 text-lg">
-              Süreçlerimiz ve çalışma prensiplerimiz hakkında merak ettikleriniz.
+              Süreçlerimiz, web tasarım standartlarımız ve çalışma prensiplerimiz hakkında merak ettikleriniz.
             </p>
           </div>
 
