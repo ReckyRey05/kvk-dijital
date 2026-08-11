@@ -29,7 +29,7 @@ export default function Hakkimda() {
 
         <div className="prose prose-invert prose-lg max-w-none">
           <p className="text-xl text-foreground/80 leading-relaxed font-medium mb-12">
-            Merhaba, ben Ali Haydar Kavak. KvK Digital'in kurucusu, detaylara aşık bir web tasarımcısı ve teknoloji tutkunuyum.
+            Merhaba, ben Ali Haydar Kavak. KvK Digital'in kurucusu, detaylara âşık bir web tasarımcısı ve teknoloji tutkunuyum.
           </p>
 
           <div className="space-y-12">
