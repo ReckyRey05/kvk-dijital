@@ -76,7 +76,6 @@ export default function RootLayout({
                 "latitude": 40.8770,
                 "longitude": 29.2570
               },
-              "url": "https://kvkdijitalcozumler.com",
               "sameAs": [
                 "https://kvkdijitalcozumler.com"
               ],
