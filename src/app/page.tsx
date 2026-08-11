@@ -1,8 +1,10 @@
 import Hero from "@/components/Hero";
+import TechStack from "@/components/TechStack";
 import About from "@/components/About";
 import Services from "@/components/Services";
 import Projects from "@/components/Projects";
 import Process from "@/components/Process";
+import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
@@ -24,10 +26,12 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden">
       <Hero />
+      <TechStack />
       <About />
       <Services services={services || []} />
       <Projects projects={projects || []} />
       <Process />
+      <FAQ />
       <Contact />
       <Footer />
     </main>
