@@ -23,7 +23,8 @@ const detailedServices = [
       "SEO Dostu Kod Mimarisi",
       "Yüksek Hız ve Performans Optimizasyonu",
       "Kolay Yönetilebilir İçerik Paneli (CMS)"
-    ]
+    ],
+    link: "/kurumsal-web-tasarim"
   },
   {
     id: "e-ticaret",
@@ -35,7 +36,8 @@ const detailedServices = [
       "Gelişmiş Ürün ve Stok Yönetimi",
       "Kargo Takip ve Sipariş Otomasyonu",
       "İndirim, Kupon ve Promosyon Modülleri"
-    ]
+    ],
+    link: "/e-ticaret-web-sitesi"
   },
   {
     id: "ozel-yazilim",
@@ -101,6 +103,14 @@ export default function Hizmetler() {
                   </li>
                 ))}
               </ul>
+              
+              {service.link && (
+                <div className="mt-8 pt-6 border-t border-white/5">
+                  <Link href={service.link} className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+                    Detaylı İncele <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+              )}
             </div>
           ))}
         </div>
