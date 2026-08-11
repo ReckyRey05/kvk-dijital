@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-white/5 py-12 relative z-10">
+    <footer className="w-full mt-32 border-t border-white/5 py-12 relative z-10">
       <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-xl font-medium tracking-tight">KvK Digital</div>
         
