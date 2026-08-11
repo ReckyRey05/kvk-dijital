@@ -12,9 +12,9 @@ export default function Header() {
           <Link href="/hakkimda" className="hover:text-accent transition-colors">Hakkımda</Link>
           <Link href="/hizmetler" className="hover:text-accent transition-colors">Hizmetler</Link>
           <Link href="/projeler" className="hover:text-accent transition-colors">Projeler</Link>
-          <button className="px-5 py-2.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20">
+          <Link href="/#contact" className="px-5 py-2.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20">
             İletişime Geç
-          </button>
+          </Link>
         </nav>
       </div>
     </header>
