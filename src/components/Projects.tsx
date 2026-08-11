@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 interface Project {
@@ -209,6 +210,13 @@ export default function Projects({ projects }: { projects: Project[] }) {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link href="/projeler" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+            Tüm Projeleri İncele 
+            <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
         </div>
       </div>
     </section>
