@@ -1,14 +1,12 @@
 import Hero from "@/components/Hero";
-import dynamic from "next/dynamic";
-
-const TechStack = dynamic(() => import("@/components/TechStack"));
-const About = dynamic(() => import("@/components/About"));
-const Services = dynamic(() => import("@/components/Services"));
-const Projects = dynamic(() => import("@/components/Projects"));
-const Process = dynamic(() => import("@/components/Process"));
-const FAQ = dynamic(() => import("@/components/FAQ"));
-const Contact = dynamic(() => import("@/components/Contact"));
-const Footer = dynamic(() => import("@/components/Footer"));
+import TechStack from "@/components/TechStack";
+import About from "@/components/About";
+import Services from "@/components/Services";
+import Projects from "@/components/Projects";
+import Process from "@/components/Process";
+import FAQ from "@/components/FAQ";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase/firestore";
 
