@@ -7,8 +7,8 @@ export default function Footer() {
         <div className="text-xl font-medium tracking-tight">KvK Digital</div>
         
         <div className="flex flex-wrap justify-center gap-8 text-sm text-foreground/70">
-          <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer">KVKK</Link>
-          <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer">Gizlilik Politikası</Link>
+          <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">KVKK</Link>
+          <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Gizlilik Politikası</Link>
         </div>
         
         <div className="text-xs text-foreground/50">

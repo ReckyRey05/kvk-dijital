@@ -100,8 +100,9 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-foreground/60 px-1">İsim</label>
+                    <label htmlFor="name" className="text-sm font-medium text-foreground/60 px-1">İsim</label>
                     <input 
+                      id="name"
                       type="text" 
                       required
                       value={formData.name}
@@ -110,8 +111,9 @@ export default function Contact() {
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-foreground/60 px-1">Telefon</label>
+                    <label htmlFor="phone" className="text-sm font-medium text-foreground/60 px-1">Telefon</label>
                     <input 
+                      id="phone"
                       type="tel" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
@@ -121,8 +123,9 @@ export default function Contact() {
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground/60 px-1">E-mail</label>
+                  <label htmlFor="email" className="text-sm font-medium text-foreground/60 px-1">E-mail</label>
                   <input 
+                    id="email"
                     type="email" 
                     required
                     value={formData.email}
@@ -132,8 +135,9 @@ export default function Contact() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-foreground/60 px-1">Mesaj</label>
+                  <label htmlFor="message" className="text-sm font-medium text-foreground/60 px-1">Mesaj</label>
                   <textarea 
+                    id="message"
                     rows={4}
                     required
                     value={formData.message}
