@@ -202,11 +202,13 @@ export default function Projects({ projects }: { projects: Project[] }) {
                 <button 
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    idx === currentIndex ? "w-6 bg-accent" : "bg-white/20 hover:bg-white/40"
-                  }`}
+                  className="w-10 h-10 flex items-center justify-center -mx-2"
                   aria-label={`Go to slide ${idx + 1}`}
-                />
+                >
+                  <div className={`h-2 rounded-full transition-all duration-300 ${
+                    idx === currentIndex ? "w-6 bg-accent" : "w-2 bg-white/20 group-hover:bg-white/40"
+                  }`} />
+                </button>
               ))}
             </div>
           )}

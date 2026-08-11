@@ -29,7 +29,7 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
-            <button className="px-6 py-3 rounded-full bg-accent text-white font-medium hover:bg-accent/90 transition-colors flex items-center gap-2">
+            <button className="px-6 py-3 rounded-full bg-accent text-[#050505] font-medium hover:bg-accent/90 transition-colors flex items-center gap-2">
               Projeleri İncele
               <ArrowRight className="w-4 h-4" />
             </button>
