@@ -35,14 +35,20 @@ export default function About() {
             className="mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-semibold mb-6">
-              Teknoloji ile fikirleri <br />
-              <span className="text-accent">dijitale dönüştürüyorum.</span>
+              Kodlara dökülen vizyon, <br />
+              <span className="text-accent">şeffaf ve kusursuz dijital deneyimler.</span>
             </h2>
-            <p className="text-foreground/60 text-lg leading-relaxed max-w-2xl">
-              Ben Ali Haydar Kavak. KvK Digital'in kurucusu olarak, işletmelerin dijital 
-              dünyada öne çıkması için modern teknolojilerle estetik ve işlevsel çözümler
-              geliştiriyorum. Yüksek performanslı ve ölçeklenebilir sistemler inşa etmek tutkum.
-            </p>
+            <div className="text-foreground/70 text-lg leading-relaxed max-w-3xl space-y-6">
+              <p>
+                Merhaba, ben <strong className="text-foreground font-medium">Ali Haydar Kavak</strong>. Çocukluk yıllarımda bilgisayar sistemlerine duyduğum merak, detaycı kişiliğimle birleşerek beni web teknolojilerinin dünyasına çekti. Kendi araştırmalarımla attığım bu ilk adımları, <strong>BTK Akademi</strong>'den aldığım eğitimler ve edindiğim sertifikalarla profesyonel bir temele oturttum. Sonrasında ise bitmek bilmeyen teknoloji tutkumla kendimi sürekli geliştirmeye devam ettim.
+              </p>
+              <p>
+                İşimdeki en büyük prensibim <strong>mükemmeliyetçilik ve dürüstlüktür.</strong> Her projeyi en ince detayına kadar kurgularım. Şeffaf ve hızlı iletişime inanırım; benim dünyamda "2 olan bir şeye asla 1 denmez", süreç neyi gerektiriyorsa odur. Samimi yaklaşımımla öncelikle insanların dertlerini dinler, sonra bu sorunlara nokta atışı dijital çözümler üretirim.
+              </p>
+              <p>
+                KVK Digital'i kurarken amacım sadece estetik web siteleri teslim edip süreci bitirmek değildi; aynı zamanda markaların <strong>dijital büyüme danışmanı</strong> olmaktı. İşinize sizin kadar değer veren, şeffaf ve teknolojiye tutkulu bir partner arıyorsanız, vizyonunuzu birlikte koda dökmeye hazırım.
+              </p>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
