@@ -36,7 +36,7 @@ export default function Process() {
                 <div className="hidden md:block absolute top-12 left-24 right-0 h-px bg-gradient-to-r from-card-border to-transparent" />
               )}
               
-              <div className="text-7xl font-light text-white/5 tracking-tighter">
+              <div className="text-7xl font-light text-white/20 tracking-tighter">
                 {step.num}
               </div>
               <h3 className="text-2xl font-medium text-foreground/90">
