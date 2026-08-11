@@ -30,7 +30,7 @@ export default function TechStack() {
           {technologies.map((tech, idx) => (
             <div 
               key={idx}
-              className="flex items-center justify-center text-xl md:text-2xl font-bold text-foreground/20 hover:text-accent transition-colors duration-300"
+              className="flex items-center justify-center text-xl md:text-2xl font-bold text-foreground/60 hover:text-accent transition-colors duration-300"
             >
               {tech}
             </div>
