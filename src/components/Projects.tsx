@@ -77,6 +77,11 @@ export default function Projects({ projects }: { projects: Project[] }) {
   const [activeCategory, setActiveCategory] = useState("Tümü");
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
   const filteredProjects = activeCategory === "Tümü" 
     ? allProjects 
     : allProjects.filter(p => p.category === activeCategory);
@@ -98,7 +103,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
   }, [activeCategory]);
 
   return (
-    <section className="w-full py-24 relative overflow-hidden">
+    <section id="projects" className="w-full py-24 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -115,12 +120,12 @@ export default function Projects({ projects }: { projects: Project[] }) {
           </div>
           
           {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex overflow-x-auto gap-2 pb-2 -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors border snap-start shrink-0 ${
                   activeCategory === category 
                     ? "bg-accent/20 border-accent/50 text-accent" 
                     : "bg-card border-card-border text-foreground/70 hover:text-foreground hover:border-foreground/20"
@@ -141,7 +146,18 @@ export default function Projects({ projects }: { projects: Project[] }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className="group relative w-full rounded-3xl overflow-hidden bg-card border border-card-border"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
+                  if (swipe < -swipeConfidenceThreshold) {
+                    setCurrentIndex((prev) => (prev + 1) % filteredProjects.length);
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    setCurrentIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
+                  }
+                }}
+                className="group relative w-full rounded-3xl overflow-hidden bg-card border border-card-border touch-pan-y"
               >
                 <div className="flex flex-col md:flex-row h-full">
                   {/* Content Side */}

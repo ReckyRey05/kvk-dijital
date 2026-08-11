@@ -57,7 +57,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="w-full py-32 relative">
+    <section id="contact" className="w-full py-32 relative">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto glass-panel p-8 md:p-16 rounded-[2.5rem]">
           <div className="grid lg:grid-cols-2 gap-16">
