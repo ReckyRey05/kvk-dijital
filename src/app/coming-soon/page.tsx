@@ -22,7 +22,7 @@ export default function ComingSoon() {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-          Sizin İçin Çok Daha İyisini <span className="text-accent">İnşa Ediyoruz</span>
+          Yakında <span className="text-accent">Buradayız</span>
         </h1>
         
         <p className="text-lg text-foreground/70 mb-12 leading-relaxed">
