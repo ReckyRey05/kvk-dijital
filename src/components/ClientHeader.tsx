@@ -6,8 +6,8 @@ import Header from "./Header";
 export default function ClientHeader() {
   const pathname = usePathname();
 
-  // Admin rotalarında Header'ı gizle
-  if (pathname?.startsWith("/admin")) {
+  // Admin ve Yapım Aşamasında rotalarında Header'ı gizle
+  if (pathname?.startsWith("/admin") || pathname === "/coming-soon") {
     return null;
   }
 
