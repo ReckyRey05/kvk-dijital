@@ -38,6 +38,36 @@ export default function Projects({ projects }: { projects: Project[] }) {
       title: "Özel Anı & Sevgili Sitesi",
       category: "Kişisel / Eğlence",
       features: ["Romantik Tasarım", "Anı ve Fotoğraf Galerisi", "Özel Tarih Geri Sayımı", "Şifreli Erişim"],
+    },
+    {
+      id: "demo-5",
+      title: "Modern E-Ticaret Platformu",
+      category: "E-Ticaret",
+      features: ["Sanal POS Entegrasyonu", "Gelişmiş Filtreleme", "Kargo Takip Sistemi", "İndirim Kuponları"],
+    },
+    {
+      id: "demo-6",
+      title: "Premium Diş Kliniği",
+      category: "Sağlık & Medikal",
+      features: ["Online Randevu Sistemi", "Öncesi/Sonrası Galerisi", "WhatsApp Danışma Hattı", "Doktor Profilleri"],
+    },
+    {
+      id: "demo-7",
+      title: "Lüks Gayrimenkul & Emlak",
+      category: "Emlak",
+      features: ["Gelişmiş İlan Filtreleme", "Harita Üzerinde Arama", "Sanal Tur Desteği", "Danışman Profilleri"],
+    },
+    {
+      id: "demo-8",
+      title: "Butik Otel Rezervasyon",
+      category: "Turizm",
+      features: ["Odalar ve Müsaitlik Takvimi", "Online Ödeme Altyapısı", "Çoklu Dil Desteği (TR/EN)", "Müşteri Yorumları"],
+    },
+    {
+      id: "demo-9",
+      title: "Online Akademi & Kurs",
+      category: "Eğitim",
+      features: ["Öğrenci Üyelik Paneli", "Video Ders İzleme Modülü", "Online Sınav/Test Sistemi", "Sertifika Üretimi"],
     }
   ];
 
