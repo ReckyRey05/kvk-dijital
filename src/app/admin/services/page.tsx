@@ -12,10 +12,6 @@ export default function ServicesAdmin() {
   
   const [newService, setNewService] = useState({ title: "", description: "" });
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
   const fetchServices = async () => {
     try {
       const snap = await getDocs(collection(db, "services"));
@@ -26,6 +22,10 @@ export default function ServicesAdmin() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (confirm("Bu hizmeti silmek istediğinize emin misiniz?")) {

@@ -10,10 +10,6 @@ export default function ProjectsAdmin() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
   const fetchProjects = async () => {
     try {
       const snap = await getDocs(collection(db, "projects"));
@@ -24,6 +20,10 @@ export default function ProjectsAdmin() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
