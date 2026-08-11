@@ -18,18 +18,8 @@ export default function Contact() {
     setError(false);
 
     try {
-      await addDoc(collection(db, "contactMessages"), {
-        name: formData.name, 
-        phone: formData.phone, 
-        email: formData.email, 
-        message: formData.message,
-        service: "Website Contact Form",
-        status: "new",
-        createdAt: serverTimestamp()
-      });
-      
-      // E-posta gönderimi (API'yi çağırıyoruz)
-      await fetch('/api/contact', {
+      // Önce E-posta gönderimini yapıyoruz (Çünkü asıl önemli olan size mail gelmesi)
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -39,6 +29,21 @@ export default function Contact() {
           message: formData.message,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Email API responded with an error');
+      }
+
+      // E-posta başarılıysa, arka planda Firebase'e de kaydedelim (Bunun için beklemeye gerek yok, asenkron devam edebilir)
+      addDoc(collection(db, "contactMessages"), {
+        name: formData.name, 
+        phone: formData.phone, 
+        email: formData.email, 
+        message: formData.message,
+        service: "Website Contact Form",
+        status: "new",
+        createdAt: serverTimestamp()
+      }).catch(e => console.error("Firebase kayıt hatası:", e));
       
       setSuccess(true);
       setFormData({ name: "", phone: "", email: "", message: "" });
