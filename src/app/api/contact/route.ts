@@ -14,30 +14,12 @@ export async function POST(request: Request) {
 
     // Zoho SMTP configuration
     // Şifre güvenliği için process.env üzerinden alacağız. Vercel paneline eklenecek.
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.zoho.eu', // Hollanda araması geldiği için hesap kesinlikle EU sunucusunda
-      port: 465,
-      secure: true, 
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Email content
     const mailOptions = {
-      from: process.env.EMAIL_USER, // Zoho requires the "from" to match the authenticated user
-      to: process.env.EMAIL_USER, // Bize gelecek
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
       replyTo: email,
       subject: `Yeni İletişim Formu Mesajı: ${subject || 'Konu Belirtilmedi'}`,
-      text: `
-İsim: ${name}
-E-posta: ${email}
-Konu: ${subject}
-
-Mesaj:
-${message}
-      `,
+      text: `İsim: ${name}\nE-posta: ${email}\nKonu: ${subject}\n\nMesaj:\n${message}`,
       html: `
         <div style="font-family: sans-serif; padding: 20px; color: #333;">
           <h2 style="color: #0070f3;">Yeni İletişim Formu Mesajı</h2>
@@ -51,10 +33,42 @@ ${message}
       `,
     };
 
-    // Send the email
-    await transporter.sendMail(mailOptions);
+    let errorObj: any = null;
 
-    return NextResponse.json({ success: true, message: 'Mesaj başarıyla gönderildi.' });
+    // Try zoho.com first
+    try {
+      const transporterCom = nodemailer.createTransport({
+        host: 'smtp.zoho.com',
+        port: 465,
+        secure: true, 
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      });
+      await transporterCom.sendMail(mailOptions);
+      return NextResponse.json({ success: true, message: 'Mesaj başarıyla gönderildi.' });
+    } catch (e: any) {
+      errorObj = e;
+      console.log('zoho.com failed, trying zoho.eu...', e.message);
+      
+      // If zoho.com fails, try zoho.eu
+      try {
+        const transporterEu = nodemailer.createTransport({
+          host: 'smtp.zoho.eu',
+          port: 465,
+          secure: true, 
+          auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+        });
+        await transporterEu.sendMail(mailOptions);
+        return NextResponse.json({ success: true, message: 'Mesaj başarıyla gönderildi.' });
+      } catch (e2: any) {
+        errorObj = e2;
+        console.log('zoho.eu also failed.', e2.message);
+      }
+    }
+
+    return NextResponse.json(
+      { error: errorObj?.message || 'Mesaj gönderilirken bir hata oluştu.' },
+      { status: 500 }
+    );
   } catch (error: any) {
     console.error('Email sending error:', error);
     return NextResponse.json(
