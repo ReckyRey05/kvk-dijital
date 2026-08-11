@@ -24,7 +24,7 @@ export default async function Home() {
   const projects = projectsSnapshot ? projectsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)) : [];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden">
+    <main className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden">
       <Hero />
       <TechStack />
       <About />
