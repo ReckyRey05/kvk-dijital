@@ -7,6 +7,7 @@ interface Service {
   id: string;
   title: string;
   description: string;
+  icon?: any;
 }
 
 export default function Services({ services }: { services: Service[] }) {
