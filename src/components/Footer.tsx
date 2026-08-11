@@ -6,12 +6,12 @@ export default function Footer() {
       <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-xl font-medium tracking-tight">KvK Digital</div>
         
-        <div className="flex flex-wrap justify-center gap-8 text-sm text-foreground/50">
+        <div className="flex flex-wrap justify-center gap-8 text-sm text-foreground/70">
           <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer">KVKK</Link>
           <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer">Gizlilik Politikası</Link>
         </div>
         
-        <div className="text-xs text-foreground/30">
+        <div className="text-xs text-foreground/50">
           &copy; {new Date().getFullYear()} KvK Digital. Tüm hakları saklıdır.
         </div>
       </div>

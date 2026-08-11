@@ -23,7 +23,7 @@ export default function Hero() {
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] text-gradient">
             Modern dijital <br /> deneyimler <br /> geliştiriyoruz.
           </h1>
-          <p className="text-lg text-foreground/60 max-w-lg leading-relaxed">
+          <p className="text-lg text-foreground/70 max-w-lg leading-relaxed">
             KvK Digital, işletmeler için modern web siteleri, özel yazılımlar ve
             yapay zeka destekli dijital çözümler üretir.
           </p>
