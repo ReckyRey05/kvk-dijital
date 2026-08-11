@@ -34,10 +34,10 @@ export default function ComingSoon() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
               href="mailto:iletisim@kvkdijitalcozumler.com" 
-              className="flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors"
+              className="flex items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors text-[11px] sm:text-base overflow-hidden"
             >
-              <Mail className="w-5 h-5" />
-              iletisim@kvkdijitalcozumler.com
+              <Mail className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <span className="truncate">iletisim@kvkdijitalcozumler.com</span>
             </Link>
           </div>
         </div>

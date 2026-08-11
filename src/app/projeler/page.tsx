@@ -62,7 +62,7 @@ const allProjects = [
 
 export default function Projeler() {
   return (
-    <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32 pb-16">
+    <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32">
       <Header />
       
       <div className="container mx-auto px-6 max-w-7xl">
@@ -135,7 +135,7 @@ export default function Projeler() {
           ))}
         </div>
 
-        <div className="glass-panel p-12 text-center border-card-border">
+        <div className="glass-panel p-12 text-center border-card-border mb-24">
           <h3 className="text-3xl font-semibold mb-6">Kendi sektörünüzü göremediniz mi?</h3>
           <p className="text-foreground/70 text-lg mb-8 max-w-2xl mx-auto">
             Hangi sektörde olursanız olun, işletmenize değer katacak özel bir dijital deneyim tasarlayabiliriz. 
