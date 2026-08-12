@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Layout, Type, Image as ImageIcon } from "lucide-react";
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
 // Yükleme sırasında (SSR) Quill'in hata vermesini önlemek için dinamik import yapıyoruz.
-const ReactQuill = dynamic(() => import('react-quill'), { 
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false, 
   loading: () => <div className="h-64 flex items-center justify-center text-foreground/50 border border-white/10 rounded-xl">Editör Yükleniyor...</div> 
 });
