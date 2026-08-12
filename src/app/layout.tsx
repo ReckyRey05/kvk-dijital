@@ -153,6 +153,7 @@ export default function RootLayout({
                     }
                   },
                   "sameAs": [
+                    "https://www.instagram.com/kvkdijitalcozumler/",
                     "https://github.com/ReckyRey05"
                   ]
                 }
