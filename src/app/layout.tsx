@@ -107,24 +107,25 @@ export default function RootLayout({
                   "@type": "WebSite",
                   "@id": "https://kvkdijitalcozumler.com/#website",
                   "url": "https://kvkdijitalcozumler.com",
-                  "name": "KvK Dijital Çözümler",
-                  "description": "İstanbul merkezli web tasarım ve dijital ajans",
-                  "datePublished": "2024-01-01T08:00:00+03:00",
-                  "dateModified": new Date().toISOString(),
+                  "name": "KVK Dijital Çözümler",
+                  "alternateName": "KVK Dijital",
+                  "description": "İstanbul merkezli profesyonel web tasarım, yazılım ve dijital ajans",
                   "publisher": {
                     "@id": "https://kvkdijitalcozumler.com/#organization"
                   }
                 },
                 {
-                  "@type": ["Organization", "LocalBusiness"],
+                  "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
                   "@id": "https://kvkdijitalcozumler.com/#organization",
-                  "name": "KvK Dijital Çözümler",
+                  "name": "KVK Dijital Çözümler",
+                  "alternateName": ["KVK Dijital", "KvK Dijital", "KvK Dijital Çözümler"],
                   "url": "https://kvkdijitalcozumler.com",
-                  "logo": "https://kvkdijitalcozumler.com/icon.png",
-                  "image": "https://kvkdijitalcozumler.com/icon.png",
+                  "logo": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp",
+                  "image": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp",
                   "telephone": "+905348914905",
                   "email": "iletisim@kvkdijitalcozumler.com",
                   "priceRange": "$$",
+                  "description": "KVK Dijital Çözümler, İstanbul merkezli kurumsal web tasarım, e-ticaret altyapısı, özel yazılım ve SEO hizmetleri sunan dijital ajanstır.",
                   "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "İstanbul",
@@ -143,13 +144,15 @@ export default function RootLayout({
                   ],
                   "founder": {
                     "@type": "Person",
+                    "@id": "https://kvkdijitalcozumler.com/#founder",
                     "name": "Ali Haydar Kavak",
-                    "jobTitle": "Kurucu",
-                    "url": "https://kvkdijitalcozumler.com/hakkimizda"
+                    "jobTitle": "Kurucu & Web Tasarımcı",
+                    "url": "https://kvkdijitalcozumler.com/hakkimizda",
+                    "worksFor": {
+                      "@id": "https://kvkdijitalcozumler.com/#organization"
+                    }
                   },
                   "sameAs": [
-                    "https://www.instagram.com/kvkdijital",
-                    "https://www.linkedin.com/company/kvkdijital",
                     "https://github.com/ReckyRey05"
                   ]
                 }
