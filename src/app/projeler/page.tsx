@@ -3,23 +3,29 @@ import Footer from "@/components/Footer";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { collection, getDocs, query, orderBy } from "firebase/firestore/lite";
-import { dbLite } from "@/lib/firebase/firestore";
+import { getAdminDb } from "@/lib/firebase/admin";
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Örnek Projelerimiz",
-  description: "Farklı sektörler için özenle hazırladığımız, yüksek performanslı ve modern tasarımlı web site konseptleri ve referanslarımız.",
+  title: "Projelerimiz",
+  description: "Web tasarım, e-ticaret, SEO ve dijital dönüşüm alanlarında tamamladığımız başarılı projelerimiz.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/projeler",
   }
 };
 
 export default async function Projeler() {
-  const projectsRef = collection(dbLite, "projects");
-  const snapshot = await getDocs(projectsRef).catch(() => null);
-  const projects = snapshot ? snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)) : [];
+  const projectsRef = getAdminDb().collection("projects");
+  const snapshot = await projectsRef.orderBy("createdAt", "desc").get().catch(() => null);
+  const projects = snapshot ? snapshot.docs.map(doc => {
+    const data = doc.data();
+    return { 
+      id: doc.id, 
+      ...data,
+      createdAt: data.createdAt ? { toDate: () => data.createdAt.toDate() } : null
+    } as any;
+  }) : [];
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32">

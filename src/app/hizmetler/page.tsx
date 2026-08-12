@@ -3,8 +3,7 @@ import Footer from "@/components/Footer";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { collection, getDocs, query, orderBy } from "firebase/firestore/lite";
-import { dbLite } from "@/lib/firebase/firestore";
+import { getAdminDb } from "@/lib/firebase/admin";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Hizmetler() {
-  const servicesRef = collection(dbLite, "services");
-  const snapshot = await getDocs(servicesRef).catch(() => null);
+  const servicesRef = getAdminDb().collection("services");
+  const snapshot = await servicesRef.get().catch(() => null);
   const services = snapshot ? snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)) : [];
 
   return (

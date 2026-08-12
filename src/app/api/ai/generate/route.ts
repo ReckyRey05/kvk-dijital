@@ -38,7 +38,7 @@ KURALLAR:
     if (!response.ok) {
       const errorData = await response.json();
       console.error('Gemini API Error:', errorData);
-      return NextResponse.json({ error: 'Yapay zeka yanıt veremedi.' }, { status: 500 });
+      return NextResponse.json({ error: `API Hatası: ${errorData?.error?.message || 'Yapay zeka yanıt veremedi.'}` }, { status: 500 });
     }
 
     const data = await response.json();

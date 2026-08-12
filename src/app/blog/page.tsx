@@ -1,5 +1,4 @@
-import { collection, getDocs, query, orderBy, where } from "firebase/firestore/lite";
-import { dbLite } from "@/lib/firebase/firestore";
+import { getAdminDb } from "@/lib/firebase/admin";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -19,18 +18,22 @@ export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
   // Fetch published blog posts
-  const postsRef = collection(dbLite, "blog_posts");
-  const postsQuery = query(
-    postsRef, 
-    where("isPublished", "==", true),
-    orderBy("createdAt", "desc")
-  );
-  
-  const snapshot = await getDocs(postsQuery).catch(() => null);
-  const posts: BlogPost[] = snapshot ? snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as BlogPost[] : [];
+  const postsRef = getAdminDb().collection("blog_posts");
+  const snapshot = await postsRef
+    .where("isPublished", "==", true)
+    .orderBy("createdAt", "desc")
+    .get()
+    .catch(() => null);
+    
+  const posts: BlogPost[] = snapshot ? snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      // admin sdk uses FirebaseFirestore.Timestamp
+      createdAt: data.createdAt ? { toDate: () => data.createdAt.toDate() } : null
+    };
+  }) as any : [];
 
   return (
     <main className="min-h-screen bg-[#050505] text-foreground selection:bg-accent/30 selection:text-accent font-sans overflow-x-hidden">
