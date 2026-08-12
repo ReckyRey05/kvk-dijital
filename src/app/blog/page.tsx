@@ -15,8 +15,7 @@ export const metadata: Metadata = {
   }
 };
 
-export const dynamic = 'force-static';
-export const revalidate = 3600; // Her saat başı arka planda yeniler
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
   // Fetch published blog posts
