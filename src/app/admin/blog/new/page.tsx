@@ -86,8 +86,7 @@ export default function NewBlogPostPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    // ... same as before
+  const handleSubmit = async (e: React.FormEvent, isPublished: boolean) => {
     e.preventDefault();
     if (!formData.title || !formData.slug || !formData.content) {
       alert("Lütfen zorunlu alanları (Başlık, URL, İçerik) doldurun.");
@@ -98,6 +97,7 @@ export default function NewBlogPostPage() {
     try {
       await addDoc(collection(db, "blog_posts"), {
         ...formData,
+        isPublished,
         createdAt: serverTimestamp(),
       });
       router.push("/admin/blog");
@@ -126,7 +126,7 @@ export default function NewBlogPostPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <form onSubmit={(e) => e.preventDefault()} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content Column */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
@@ -253,26 +253,26 @@ export default function NewBlogPostPage() {
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h2 className="text-lg font-medium text-white mb-6">Yayınla</h2>
             
-            <label className="flex items-center gap-3 cursor-pointer mb-6">
-              <input
-                type="checkbox"
-                checked={formData.isPublished}
-                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
-                className="w-5 h-5 rounded bg-[#050505] border-white/20 text-accent focus:ring-accent focus:ring-offset-0"
-              />
-              <span className="text-sm text-gray-300">
-                Herkese Açık Olarak Yayınla
-              </span>
-            </label>
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={(e) => handleSubmit(e, false)}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-white/5 text-gray-300 border border-white/10 px-6 py-4 rounded-xl font-medium hover:bg-white/10 transition-colors disabled:opacity-50"
+              >
+                Taslak Olarak Kaydet
+              </button>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-accent text-black px-6 py-4 rounded-xl font-bold hover:bg-accent/90 transition-colors disabled:opacity-50"
-            >
-              <Save className="w-5 h-5" />
-              {loading ? "Kaydediliyor..." : "Makaleyi Kaydet"}
-            </button>
+              <button
+                type="button"
+                onClick={(e) => handleSubmit(e, true)}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-accent text-black px-6 py-4 rounded-xl font-bold hover:bg-accent/90 transition-colors disabled:opacity-50"
+              >
+                <Save className="w-5 h-5" />
+                {loading ? "Kaydediliyor..." : "Yayına Al"}
+              </button>
+            </div>
           </div>
         </div>
       </form>
