@@ -146,6 +146,18 @@ export default function Contact() {
                   />
                 </div>
 
+                <div className="flex items-start gap-3 mt-2">
+                  <input
+                    type="checkbox"
+                    id="kvkk"
+                    required
+                    className="mt-0.5 w-4 h-4 rounded bg-[#050505] border-white/20 text-accent focus:ring-accent focus:ring-offset-0 shrink-0"
+                  />
+                  <label htmlFor="kvkk" className="text-xs text-foreground/60 leading-relaxed">
+                    <a href="/kvkk" target="_blank" className="text-accent hover:underline">KVKK Aydınlatma Metni</a>'ni ve <a href="/gizlilik-politikasi" target="_blank" className="text-accent hover:underline">Gizlilik Politikası</a>'nı okudum, kişisel verilerimin iletişim amacıyla işlenmesini onaylıyorum.
+                  </label>
+                </div>
+
                 <button 
                   disabled={loading}
                   className="w-full py-4 rounded-xl bg-foreground text-background font-medium mt-4 hover:bg-foreground/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
