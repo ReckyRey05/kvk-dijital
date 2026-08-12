@@ -14,7 +14,8 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const postsRef = collection(db, "blog_posts");
-  const q = query(postsRef, where("slug", "==", slug), limit(1));
+  const possibleSlugs = [slug, `/${slug}`, `/blog/${slug}`];
+  const q = query(postsRef, where("slug", "in", possibleSlugs), limit(1));
   const snapshot = await getDocs(q).catch(() => null);
   
   if (!snapshot || snapshot.empty) {
@@ -46,7 +47,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const postsRef = collection(db, "blog_posts");
-  const q = query(postsRef, where("slug", "==", slug), limit(1));
+  
+  // Kullanıcı slug'ı yanlışlıkla "/" veya "/blog/" ile kaydetmiş olabilir. Hepsini kontrol edelim.
+  const possibleSlugs = [slug, `/${slug}`, `/blog/${slug}`];
+  
+  const q = query(postsRef, where("slug", "in", possibleSlugs), limit(1));
   const snapshot = await getDocs(q).catch(() => null);
   
   if (!snapshot || snapshot.empty) {

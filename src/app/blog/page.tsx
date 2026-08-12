@@ -51,10 +51,12 @@ export default async function BlogPage() {
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.length > 0 ? (
-              posts.map((post, index) => (
+              posts.map((post, index) => {
+                const cleanSlug = post.slug.replace(/^\/?(blog\/)?/i, "").replace(/^\/+/, "");
+                return (
                 <Link 
                   key={post.id} 
-                  href={`/blog/${post.slug}`}
+                  href={`/blog/${cleanSlug}`}
                   className="group flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 hover:border-accent/30 transition-all duration-300"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
@@ -96,7 +98,8 @@ export default async function BlogPage() {
                     </div>
                   </div>
                 </Link>
-              ))
+                );
+              })
             ) : (
               <div className="col-span-full py-20 text-center border border-white/10 rounded-2xl bg-white/5">
                 <p className="text-foreground/50">Henüz yayınlanmış bir makale bulunmuyor.</p>

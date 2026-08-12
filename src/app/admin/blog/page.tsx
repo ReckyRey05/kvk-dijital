@@ -129,7 +129,7 @@ export default function AdminBlogPage() {
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Link 
-                        href={`/blog/${post.slug}`}
+                        href={`/blog/${post.slug.replace(/^\/?(blog\/)?/i, "").replace(/^\/+/, "")}`}
                         target="_blank"
                         className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                         title="Görüntüle"
