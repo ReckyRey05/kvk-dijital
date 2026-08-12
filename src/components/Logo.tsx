@@ -21,6 +21,7 @@ export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
       width={645}
       height={190}
       priority
+      fetchPriority="high"
       // sizes: Header'da h-14 gösteriliyor (~56px yükseklik), genişlik otomatik ~190px
       // 2x retina = ~380px, kaynak 645px yeterli
       sizes="(max-width: 768px) 160px, 220px"

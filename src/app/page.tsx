@@ -42,24 +42,36 @@ export default async function Home() {
       {/* Hero is NOT lazy — it's the LCP element */}
       <Hero />
       
-      {/* Below-the-fold sections are lazy-loaded but still SSR'd */}
+      {/* Below-the-fold sections are lazy-loaded and use content-visibility for initial render speed */}
       <TechStack />
-      <About />
-      <Suspense fallback={null}>
-        <Services services={services} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Projects projects={projects} />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Process />
-      </Suspense>
-      <Suspense fallback={null}>
-        <FAQ />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Contact />
-      </Suspense>
+      <div className="w-full cv-auto">
+        <About />
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <Services services={services} />
+        </Suspense>
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <Projects projects={projects} />
+        </Suspense>
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <Process />
+        </Suspense>
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <FAQ />
+        </Suspense>
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <Contact />
+        </Suspense>
+      </div>
       <Footer />
     </main>
   );

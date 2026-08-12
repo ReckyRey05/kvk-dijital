@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase/firestore";
 import { MessageSquare, Send, CheckCircle2, ArrowRight } from "lucide-react";
 
 const serviceOptions = [
@@ -47,15 +45,17 @@ export default function Contact() {
     setError(false);
 
     try {
-      // E-posta gönderimi
+      // Sunucu tarafına istek gönderimi (/api/contact üzerinden E-posta ve Firestore Admin kaydı)
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
           subject: `Teklif Talebi - ${formData.service} (${formData.phone || 'Tel Belirtilmedi'})`,
-          message: `Hizmet: ${formData.service}\n\nMesaj:\n${formData.message}`,
+          message: formData.message,
         }),
       });
 
@@ -63,17 +63,6 @@ export default function Contact() {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'İletişim isteği gönderilemedi');
       }
-
-      // Firebase kayıt
-      addDoc(collection(db, "contactMessages"), {
-        name: formData.name, 
-        phone: formData.phone, 
-        email: formData.email,
-        service: formData.service,
-        message: formData.message,
-        status: "new",
-        createdAt: serverTimestamp()
-      }).catch(e => console.error("Firebase kayıt hatası:", e));
       
       setSuccess(true);
       setFormData({ name: "", phone: "", email: "", service: "Web Tasarım", message: "" });

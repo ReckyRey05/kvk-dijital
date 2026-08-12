@@ -1,15 +1,32 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { getAdminDb } from '@/lib/firebase/admin';
 
 export async function POST(request: Request) {
   try {
-    const { name, email, subject, message } = await request.json();
+    const { name, email, phone, service, subject, message } = await request.json();
 
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'İsim, e-posta ve mesaj alanları zorunludur.' },
         { status: 400 }
       );
+    }
+
+    // Save to Firestore via Firebase Admin SDK in server route
+    try {
+      const db = getAdminDb();
+      await db.collection("contactMessages").add({
+        name,
+        email,
+        phone: phone || "",
+        service: service || "Web Tasarım",
+        message,
+        status: "new",
+        createdAt: new Date()
+      });
+    } catch (dbErr) {
+      console.error("Firestore Admin save notice:", dbErr);
     }
 
     // Zoho SMTP configuration
