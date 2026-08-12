@@ -1,18 +1,18 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { getAdminDb } from "@/lib/firebase/admin";
 
 // Fold altındaki ağır bileşenler lazy yükleniyor
 // Bu sayede Hero (LCP) önce render ediliyor, framer-motion dahil kütüphaneler sonra
-const TechStack = dynamic(() => import("@/components/TechStack"), { ssr: true });
-const About = dynamic(() => import("@/components/About"), { ssr: true });
-const Services = dynamic(() => import("@/components/Services"), { ssr: true });
-const Projects = dynamic(() => import("@/components/Projects"), { ssr: true });
-const Process = dynamic(() => import("@/components/Process"), { ssr: true });
-const FAQ = dynamic(() => import("@/components/FAQ"), { ssr: true });
-const Contact = dynamic(() => import("@/components/Contact"), { ssr: true });
+const TechStack = nextDynamic(() => import("@/components/TechStack"), { ssr: true });
+const About = nextDynamic(() => import("@/components/About"), { ssr: true });
+const Services = nextDynamic(() => import("@/components/Services"), { ssr: true });
+const Projects = nextDynamic(() => import("@/components/Projects"), { ssr: true });
+const Process = nextDynamic(() => import("@/components/Process"), { ssr: true });
+const FAQ = nextDynamic(() => import("@/components/FAQ"), { ssr: true });
+const Contact = nextDynamic(() => import("@/components/Contact"), { ssr: true });
 
 export const dynamic = 'force-static';
 export const revalidate = 3600; // Her saat başı arka planda yeniler
