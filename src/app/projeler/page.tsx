@@ -3,8 +3,8 @@ import Footer from "@/components/Footer";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase/firestore";
+import { collection, getDocs, query, orderBy } from "firebase/firestore/lite";
+import { dbLite } from "@/lib/firebase/firestore";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Projeler() {
-  const projectsRef = collection(db, "projects");
+  const projectsRef = collection(dbLite, "projects");
   const snapshot = await getDocs(projectsRef).catch(() => null);
   const projects = snapshot ? snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)) : [];
 

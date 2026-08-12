@@ -1,5 +1,5 @@
-import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
-import { db } from "@/lib/firebase/firestore";
+import { collection, getDocs, query, orderBy, where } from "firebase/firestore/lite";
+import { dbLite } from "@/lib/firebase/firestore";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
   // Fetch published blog posts
-  const postsRef = collection(db, "blog_posts");
+  const postsRef = collection(dbLite, "blog_posts");
   const postsQuery = query(
     postsRef, 
     where("isPublished", "==", true),

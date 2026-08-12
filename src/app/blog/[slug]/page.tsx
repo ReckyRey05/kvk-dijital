@@ -1,5 +1,5 @@
-import { collection, getDocs, query, where, limit } from "firebase/firestore";
-import { db } from "@/lib/firebase/firestore";
+import { collection, getDocs, query, where, limit } from "firebase/firestore/lite";
+import { dbLite } from "@/lib/firebase/firestore";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BlogPost } from "@/types/blog";
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 // SEO Metadata Generation
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const postsRef = collection(db, "blog_posts");
+  const postsRef = collection(dbLite, "blog_posts");
   let snapshot = await getDocs(query(postsRef, where("slug", "==", slug), limit(1))).catch(() => null);
   
   if (!snapshot || snapshot.empty) {
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const postsRef = collection(db, "blog_posts");
+  const postsRef = collection(dbLite, "blog_posts");
   
   let snapshot = await getDocs(query(postsRef, where("slug", "==", slug), limit(1))).catch(() => null);
   
