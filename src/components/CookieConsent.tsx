@@ -63,25 +63,25 @@ export default function CookieConsent() {
                 </div>
                 
                 <p className="text-xs text-gray-400 mb-4 leading-relaxed">
-                  Size daha iyi bir deneyim sunmak, site trafiğini analiz etmek ve içerikleri kişiselleştirmek için çerezleri (cookies) kullanıyoruz. Detaylı bilgi için{" "}
+                  Size daha iyi bir deneyim sunmak, site trafiğini analiz etmek ve içerikleri kişiselleştirmek için çerezleri (cookies) kullanıyoruz. Sitemizi kullanmaya devam ederek çerez kullanımını kabul etmiş olursunuz. Detaylı bilgi için{" "}
                   <Link href="/cerez-politikasi" className="text-accent hover:underline">
                     Çerez Politikamızı
                   </Link>{" "}
                   inceleyebilirsiniz.
                 </p>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2">
                   <button
                     onClick={acceptCookies}
-                    className="flex-1 bg-accent text-black text-xs font-bold py-2.5 px-4 rounded-xl hover:bg-accent/90 transition-colors"
+                    className="w-full bg-accent text-black text-sm font-bold py-3 px-4 rounded-xl hover:bg-accent/90 transition-colors shadow-[0_0_20px_rgba(var(--accent),0.3)]"
                   >
-                    Kabul Et
+                    Tümünü Kabul Et ve Devam Et
                   </button>
                   <button
                     onClick={declineCookies}
-                    className="flex-1 bg-white/5 text-gray-300 text-xs font-medium py-2.5 px-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors"
+                    className="w-full text-gray-500 text-xs font-medium py-2 px-4 rounded-xl hover:text-white transition-colors"
                   >
-                    Reddet
+                    Sadece Zorunlu Çerezler
                   </button>
                 </div>
               </div>
