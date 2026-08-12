@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { LogoIcon } from "./Logo";
 
@@ -26,6 +25,7 @@ export default function Hero() {
             <button 
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-6 py-3 rounded-full bg-accent text-[#050505] font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 cursor-pointer"
+              aria-label="Projeleri İncele bölümüne git"
             >
               Projeleri İncele
               <ArrowRight className="w-4 h-4" />
@@ -33,30 +33,23 @@ export default function Hero() {
             <button 
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-foreground hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="İletişim bölümüne git"
             >
               İletişime Geç
             </button>
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="relative lg:h-[600px] flex items-center justify-center perspective-[1000px]"
-        >
-          {/* Premium Animated Web Design Concept */}
+        {/* CSS animasyonlu kart — framer-motion kaldırıldı (LCP için) */}
+        <div className="relative lg:h-[600px] flex items-center justify-center" style={{ perspective: '1000px' }}>
           <div className="relative w-full max-w-lg aspect-square">
             {/* Background Glow */}
             <div className="absolute inset-0 rounded-full border border-white/5 bg-gradient-to-tr from-accent/20 to-transparent animate-[spin_15s_linear_infinite]" />
             <div className="absolute inset-4 rounded-full border border-white/5 bg-gradient-to-bl from-blue-500/10 to-transparent animate-[spin_20s_linear_infinite_reverse]" />
             
             {/* Main Central Dashboard Card */}
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col"
+            <div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
             >
               {/* Fake Browser Top Bar */}
               <div className="w-full h-12 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
@@ -100,15 +93,10 @@ export default function Hero() {
                   <div className="w-[60%] h-4 bg-accent/30 rounded-full" />
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Floating Element 1 - Code Snippet */}
-            <motion.div 
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-              className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl"
-            >
+            <div className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-accent" />
                 <span className="text-[10px] text-foreground/50 font-mono">React Component</span>
@@ -120,18 +108,13 @@ export default function Hero() {
                 <div className="text-foreground/70 pl-4">);</div>
                 <div className="text-blue-400">{'}'}</div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Floating Element 2 - SEO Score */}
-            <motion.div 
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 1, duration: 0.8 }}
-              className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4"
-            >
+            <div className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-bold">
                 100
-                <svg className="absolute inset-0 w-full h-full -rotate-90">
+                <svg className="absolute inset-0 w-full h-full -rotate-90" aria-hidden="true">
                   <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" fill="none" className="text-green-500/20" />
                   <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="138" strokeDashoffset="0" className="text-green-500" />
                 </svg>
@@ -140,21 +123,15 @@ export default function Hero() {
                 <div className="text-sm font-semibold text-white">SEO & Hız</div>
                 <div className="text-[10px] text-foreground/50">Lighthouse Skoru</div>
               </div>
-            </motion.div>
+            </div>
             
             {/* Floating Element 3 - Mobile Badge */}
-            <motion.div 
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              className="absolute right-12 -bottom-4 px-4 py-2 rounded-full bg-accent/10 backdrop-blur-xl border border-accent/20 text-accent text-xs font-semibold shadow-2xl flex items-center gap-2"
-            >
+            <div className="absolute right-12 -bottom-4 px-4 py-2 rounded-full bg-accent/10 backdrop-blur-xl border border-accent/20 text-accent text-xs font-semibold shadow-2xl flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
               <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               %100 Mobil Uyumlu
-            </motion.div>
-
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import ClientHeader from "@/components/ClientHeader";
 import CookieConsent from "@/components/CookieConsent";
@@ -71,7 +71,21 @@ export default function RootLayout({
         {children}
         <CookieConsent />
         <Analytics />
-        <GoogleAnalytics gaId="G-2REE90FKML" />
+        
+        {/* GTM: lazyOnload — kullanıcı etkileşiminde yüklenir, LCP'yi engellemez */}
+        <Script
+          id="gtm-script"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-2REE90FKML`}
+          strategy="lazyOnload"
+        />
+        <Script id="gtm-init" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2REE90FKML', { send_page_view: false });
+          `}
+        </Script>
         
         {/* Structured Data (JSON-LD) for SEO */}
         <script

@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 64, 96, 128, 256, 384],
   },
 
+  // Gereksiz polyfill'leri kaldırmak için modern tarayıcı transpile hedefi
+  // Array.prototype.at, Object.fromEntries, String.prototype.trimEnd gibi polyfill'ler ~14KB kurtarır
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+  },
+
   async redirects() {
     return [
       {
