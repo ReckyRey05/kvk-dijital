@@ -6,6 +6,14 @@ import { db } from "@/lib/firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Layout, Type, Image as ImageIcon } from "lucide-react";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+// Yükleme sırasında (SSR) Quill'in hata vermesini önlemek için dinamik import yapıyoruz.
+const ReactQuill = dynamic(() => import('react-quill'), { 
+  ssr: false, 
+  loading: () => <div className="h-64 flex items-center justify-center text-foreground/50 border border-white/10 rounded-xl">Editör Yükleniyor...</div> 
+});
 
 export default function NewBlogPostPage() {
   const router = useRouter();
@@ -139,17 +147,24 @@ export default function NewBlogPostPage() {
               Makale İçeriği *
             </h2>
             
-            <div>
+            <div className="text-black quill-wrapper">
               <p className="text-xs text-gray-500 mb-4">
-                Not: Şimdilik temel HTML etiketleri (veya metin) desteklenmektedir. Örn: &lt;h2&gt;Başlık&lt;/h2&gt;, &lt;strong&gt;Kalın&lt;/strong&gt;, &lt;p&gt;Paragraf&lt;/p&gt;
+                Not: Zengin metin editörü ile yazdığınız yazılar SEO uyumlu HTML formatına çevrilir.
               </p>
-              <textarea
-                required
-                rows={15}
+              <ReactQuill 
+                theme="snow"
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors font-mono text-sm"
-                placeholder="<p>Makale metnini buraya yazın...</p>"
+                onChange={(content) => setFormData({ ...formData, content })}
+                className="bg-white rounded-xl overflow-hidden min-h-[300px]"
+                modules={{
+                  toolbar: [
+                    [{ 'header': [2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{'list': 'ordered'}, {'list': 'bullet'}],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                  ]
+                }}
               />
             </div>
           </div>
