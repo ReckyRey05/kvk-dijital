@@ -8,8 +8,7 @@ import { Metadata } from "next";
 import { Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export const dynamic = 'force-static';
-export const revalidate = 60; // 1 dakikada bir önbelleği yenile (yeni yazılar hemen görünsün)
+export const dynamic = 'force-dynamic';
 
 // SEO Metadata Generation
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -38,19 +37,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       images: post.coverImage ? [post.coverImage] : [],
     },
   };
-}
-
-// Generate static params for all published posts
-export async function generateStaticParams() {
-  const postsRef = collection(db, "blog_posts");
-  const q = query(postsRef, where("isPublished", "==", true));
-  const snapshot = await getDocs(q).catch(() => null);
-  
-  if (!snapshot) return [];
-
-  return snapshot.docs.map((doc) => ({
-    slug: doc.data().slug,
-  }));
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
