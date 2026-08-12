@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useRef, useCallback } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Layout, Type, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Layout, Type, Image as ImageIcon, Sparkles } from "lucide-react";
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -60,6 +60,12 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
   }, [id, router]);
 
   const [generatingAI, setGeneratingAI] = useState(false);
+  const [generatingExcerpt, setGeneratingExcerpt] = useState(false);
+  const excerptDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function stripHtml(html: string): string {
+    return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  }
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // ... same as before
@@ -116,6 +122,49 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
       setGeneratingAI(false);
     }
   };
+
+  // İçerik değiştiğinde 2 saniyelik debounce ile özet üret (sadece excerpt boşsa)
+  const handleContentChange = useCallback((content: string) => {
+    setFormData(prev => ({ ...prev, content }));
+
+    if (excerptDebounceRef.current) clearTimeout(excerptDebounceRef.current);
+
+    excerptDebounceRef.current = setTimeout(async () => {
+      const plainText = stripHtml(content).trim();
+      if (!plainText || plainText.length < 20) return;
+
+      setFormData(prev => {
+        if (prev.excerpt.trim()) return prev;
+
+        (async () => {
+          setGeneratingExcerpt(true);
+          try {
+            const response = await fetch('/api/ai/generate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                topic: `Aşağıdaki makale metninden SEO uyumlu, bilgilendirici ve dikkat çekici bir kısa özet yaz. Maksimum 155 karakter olsun. Sadece özet metnini döndür:\n\n${plainText.slice(0, 1500)}`
+              })
+            });
+            if (response.ok) {
+              const data = await response.json();
+              const aiExcerpt = stripHtml(data.content || '').slice(0, 160).trim();
+              if (aiExcerpt) {
+                setFormData(p => p.excerpt.trim() ? p : { ...p, excerpt: aiExcerpt });
+                return;
+              }
+            }
+          } catch { /* fallback */ } finally {
+            setGeneratingExcerpt(false);
+          }
+          const fallback = plainText.slice(0, 155).trim();
+          setFormData(p => p.excerpt.trim() ? p : { ...p, excerpt: fallback });
+        })();
+
+        return prev;
+      });
+    }, 2000);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent, isPublished: boolean) => {
     e.preventDefault();
@@ -202,16 +251,25 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2">
+                <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                   Kısa Özet (SEO Description)
+                  {generatingExcerpt && (
+                    <span className="flex items-center gap-1 text-xs text-purple-400 animate-pulse">
+                      <Sparkles className="w-3 h-3" />
+                      AI ile özet oluşturuluyor...
+                    </span>
+                  )}
                 </label>
                 <textarea
                   rows={3}
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                   className="w-full bg-[#050505] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors resize-none"
-                  placeholder="Makalenin arama sonuçlarında görünecek kısa özeti..."
+                  placeholder="İçerik girildikten sonra otomatik oluşturulacak... veya kendiniz yazabilirsiniz."
                 />
+                <p className="text-xs text-gray-600 mt-1">
+                  İçerik kutusuna metin girildiğinde bu alan otomatik dolar. Elle yazarsanız üzerine yazılmaz.
+                </p>
               </div>
             </div>
           </div>
@@ -240,7 +298,7 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
               <ReactQuill 
                 theme="snow"
                 value={formData.content}
-                onChange={(content) => setFormData({ ...formData, content })}
+                onChange={handleContentChange}
                 className="bg-white rounded-xl overflow-hidden min-h-[300px]"
                 modules={{
                   toolbar: [
