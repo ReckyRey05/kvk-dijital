@@ -9,7 +9,8 @@ import {
   FolderKanban, 
   Layers, 
   MessageSquare, 
-  LogOut 
+  LogOut,
+  PenTool 
 } from "lucide-react";
 import { LogoHorizontal } from "@/components/Logo";
 
@@ -17,6 +18,7 @@ const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Projeler", href: "/admin/projects", icon: FolderKanban },
   { name: "Hizmetler", href: "/admin/services", icon: Layers },
+  { name: "Blog / Makaleler", href: "/admin/blog", icon: PenTool },
   { name: "Mesajlar", href: "/admin/messages", icon: MessageSquare },
 ];
 
