@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Blog gönderileri
+    match /blog_posts/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Projeler
+    match /projects/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Hizmetler
+    match /services/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // İletişim Mesajları
+    match /contactMessages/{document=**} {
+      // Herkes yeni mesaj oluşturabilir
+      allow create: if true;
+      // Sadece adminler mesajları okuyabilir, silebilir ve güncelleyebilir
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

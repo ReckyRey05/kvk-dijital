@@ -1,8 +1,12 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { ArrowRight, Laptop, Code2, Sparkles, ShoppingCart, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase/firestore";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Hizmetlerimiz",
@@ -12,60 +16,11 @@ export const metadata: Metadata = {
   }
 };
 
-const detailedServices = [
-  {
-    id: "web-tasarim",
-    title: "Kurumsal Web Tasarım",
-    description: "Markanızın dijital dünyadaki yüzünü, modern tasarım trendleri ve en güncel teknolojilerle inşa ediyoruz. Yalnızca estetik değil, aynı zamanda kullanıcı dostu (UX) ve dönüşüm odaklı web siteleri geliştiriyoruz.",
-    icon: Laptop,
-    features: [
-      "Mobil Uyumlu (Responsive) Tasarım",
-      "SEO Dostu Kod Mimarisi",
-      "Yüksek Hız ve Performans Optimizasyonu",
-      "Kolay Yönetilebilir İçerik Paneli (CMS)"
-    ],
-    link: "/kurumsal-web-tasarim"
-  },
-  {
-    id: "e-ticaret",
-    title: "E-Ticaret Sistemleri",
-    description: "Ürünlerinizi tüm dünyaya 7/24 satabileceğiniz, güvenli ve ölçeklenebilir online mağazalar kuruyoruz. Müşterilerinizin alışveriş deneyimini kusursuzlaştırarak satışlarınızı artırmanızı sağlıyoruz.",
-    icon: ShoppingCart,
-    features: [
-      "Sanal POS ve Güvenli Ödeme Entegrasyonu",
-      "Gelişmiş Ürün ve Stok Yönetimi",
-      "Kargo Takip ve Sipariş Otomasyonu",
-      "İndirim, Kupon ve Promosyon Modülleri"
-    ],
-    link: "/e-ticaret-web-sitesi"
-  },
-  {
-    id: "ozel-yazilim",
-    title: "Özel Yazılım Çözümleri",
-    description: "Hazır paketlerin yetersiz kaldığı durumlarda, tamamen işletmenizin iş akışlarına ve ihtiyaçlarına özel web tabanlı yazılımlar (CRM, ERP, B2B portalları) geliştiriyoruz.",
-    icon: Code2,
-    features: [
-      "Tamamen İhtiyaca Özel (Terzi İşi) Geliştirme",
-      "Üçüncü Parti API Entegrasyonları",
-      "Yüksek Güvenlik Standartları",
-      "Ölçeklenebilir Cloud (Bulut) Mimarisi"
-    ]
-  },
-  {
-    id: "ai-cozumleri",
-    title: "Yapay Zeka (AI) Entegrasyonları",
-    description: "İşletmenizi geleceğe taşıyacak yapay zeka araçlarını sistemlerinize entegre ediyoruz. Otomatik müşteri destek botlarından, akıllı içerik üretim sistemlerine kadar iş yükünüzü hafifletiyoruz.",
-    icon: Sparkles,
-    features: [
-      "Akıllı Chatbot (Müşteri Destek) Sistemleri",
-      "Veri Analizi ve Otomasyon",
-      "Kişiselleştirilmiş Kullanıcı Deneyimi",
-      "OpenAI / Claude API Entegrasyonları"
-    ]
-  }
-];
+export default async function Hizmetler() {
+  const servicesRef = collection(db, "services");
+  const snapshot = await getDocs(servicesRef).catch(() => null);
+  const services = snapshot ? snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)) : [];
 
-export default function Hizmetler() {
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32 pb-16">
       <Header />
@@ -84,35 +39,43 @@ export default function Hizmetler() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24">
-          {detailedServices.map((service) => (
-            <div key={service.id} className="glass-panel p-8 md:p-10 flex flex-col h-full group hover:border-accent/30 transition-colors duration-500">
-              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-8 group-hover:scale-110 transition-transform duration-500">
-                <service.icon className="w-8 h-8" />
-              </div>
-              
-              <h2 className="text-2xl font-semibold mb-4">{service.title}</h2>
-              <p className="text-foreground/70 leading-relaxed mb-8 flex-grow">
-                {service.description}
-              </p>
-              
-              <ul className="space-y-4">
-                {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-foreground/80">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              {service.link && (
-                <div className="mt-8 pt-6 border-t border-white/5">
-                  <Link href={service.link} className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
-                    Detaylı İncele <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              )}
+          {services.length === 0 ? (
+            <div className="col-span-full text-center text-foreground/50 py-12">
+              Henüz hizmet eklenmemiş.
             </div>
-          ))}
+          ) : (
+            services.map((service) => (
+              <div key={service.id} className="glass-panel p-8 md:p-10 flex flex-col h-full group hover:border-accent/30 transition-colors duration-500">
+                <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-accent mb-8 group-hover:scale-110 transition-transform duration-500">
+                  <Sparkles className="w-8 h-8" />
+                </div>
+                
+                <h2 className="text-2xl font-semibold mb-4">{service.title}</h2>
+                <p className="text-foreground/70 leading-relaxed mb-8 flex-grow">
+                  {service.description}
+                </p>
+                
+                {(service.features && service.features.length > 0) && (
+                  <ul className="space-y-4">
+                    {service.features.map((feature: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                        <span className="text-foreground/80">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                
+                {service.link && (
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <Link href={service.link} className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
+                      Detaylı İncele <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
 
         <div className="glass-panel p-12 text-center bg-accent/5 border-accent/20">

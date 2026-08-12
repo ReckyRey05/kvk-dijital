@@ -10,7 +10,7 @@ export default function ServicesAdmin() {
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   
-  const [newService, setNewService] = useState({ title: "", description: "" });
+  const [newService, setNewService] = useState({ title: "", description: "", features: "", link: "" });
 
   const fetchServices = async () => {
     try {
@@ -40,10 +40,13 @@ export default function ServicesAdmin() {
 
     try {
       await addDoc(collection(db, "services"), {
-        ...newService,
+        title: newService.title,
+        description: newService.description,
+        features: newService.features ? newService.features.split(",").map(f => f.trim()) : [],
+        link: newService.link,
         createdAt: serverTimestamp()
       });
-      setNewService({ title: "", description: "" });
+      setNewService({ title: "", description: "", features: "", link: "" });
       setIsAdding(false);
       fetchServices();
     } catch (error) {
@@ -77,6 +80,14 @@ export default function ServicesAdmin() {
           <div className="flex flex-col gap-2">
             <label className="text-sm text-foreground/60">Kısa Açıklama</label>
             <textarea required rows={2} value={newService.description} onChange={e => setNewService({...newService, description: e.target.value})} className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-accent outline-none resize-none" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm text-foreground/60">Özellikler (Virgülle Ayırın)</label>
+            <input type="text" value={newService.features} onChange={e => setNewService({...newService, features: e.target.value})} placeholder="Örn: SEO Uyumlu, Mobil Uyumlu, Hızlı" className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-accent outline-none" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm text-foreground/60">Detay Sayfası Linki (Opsiyonel)</label>
+            <input type="text" value={newService.link} onChange={e => setNewService({...newService, link: e.target.value})} placeholder="Örn: /kurumsal-web-tasarim" className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-accent outline-none" />
           </div>
           <div className="flex justify-end gap-3 mt-2">
             <button type="button" onClick={() => setIsAdding(false)} className="px-6 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">İptal</button>
