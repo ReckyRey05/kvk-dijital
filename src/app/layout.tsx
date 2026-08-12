@@ -41,6 +41,15 @@ export const metadata: Metadata = {
   verification: {
     google: "sANlbaocIrPcxx5Cbmgsxesn-zieUV1fUk5PaoqXpn0",
   },
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+    ],
+  },
 };
 
 // Font: display:swap + sadece Latin (Türkçe dahil) subset
