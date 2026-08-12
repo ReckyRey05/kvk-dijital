@@ -27,20 +27,28 @@ export default function NewBlogPostPage() {
     isPublished: true,
   });
 
-  // Automatically generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
-    const slug = title
-      .toLowerCase()
+    
+    // Türkçe karakterleri doğru şekilde dönüştür (Büyük harfleri önce çevirmeliyiz çünkü toLowerCase "İ" harfini bozar)
+    let slug = title
+      .replace(/Ğ/g, 'g')
+      .replace(/Ü/g, 'u')
+      .replace(/Ş/g, 's')
+      .replace(/I/g, 'i')
+      .replace(/İ/g, 'i')
+      .replace(/Ö/g, 'o')
+      .replace(/Ç/g, 'c')
       .replace(/ğ/g, 'g')
       .replace(/ü/g, 'u')
       .replace(/ş/g, 's')
       .replace(/ı/g, 'i')
       .replace(/ö/g, 'o')
       .replace(/ç/g, 'c')
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-') // Sadece harf ve rakamları tut, gerisini tireye çevir
+      .replace(/-+/g, '-') // Yan yana birden fazla tire varsa tek tireye düşür
+      .replace(/^-|-$/g, ''); // Başındaki ve sonundaki tireleri sil
       
     setFormData({ ...formData, title, slug });
   };
