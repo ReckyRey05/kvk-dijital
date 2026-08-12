@@ -23,13 +23,16 @@ export default function NotFound() {
         
         <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           
-          <div className="relative mb-8">
-            <h1 className="text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
-              404
-            </h1>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 md:w-32 md:h-32 bg-background/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center shadow-2xl">
-              <Compass className="w-10 h-10 md:w-14 md:h-14 text-accent animate-[spin_4s_linear_infinite]" />
+          <div className="flex items-center justify-center gap-2 md:gap-4 mb-8">
+            <span className="text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
+              4
+            </span>
+            <div className="w-24 h-24 md:w-32 md:h-32 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(var(--accent),0.1)] shrink-0">
+              <Compass className="w-12 h-12 md:w-16 md:h-16 text-accent animate-[spin_4s_linear_infinite]" />
             </div>
+            <span className="text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
+              4
+            </span>
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
