@@ -12,9 +12,10 @@ export const dynamic = 'force-static';
 export const revalidate = 3600; 
 
 // SEO Metadata Generation
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const postsRef = collection(db, "blog_posts");
-  const q = query(postsRef, where("slug", "==", params.slug), limit(1));
+  const q = query(postsRef, where("slug", "==", slug), limit(1));
   const snapshot = await getDocs(q).catch(() => null);
   
   if (!snapshot || snapshot.empty) {
@@ -52,9 +53,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const postsRef = collection(db, "blog_posts");
-  const q = query(postsRef, where("slug", "==", params.slug), limit(1));
+  const q = query(postsRef, where("slug", "==", slug), limit(1));
   const snapshot = await getDocs(q).catch(() => null);
   
   if (!snapshot || snapshot.empty) {
