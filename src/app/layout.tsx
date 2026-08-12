@@ -42,6 +42,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import ClientHeader from "@/components/ClientHeader";
+import CookieConsent from "@/components/CookieConsent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClientHeader />
         {children}
+        <CookieConsent />
         <Analytics />
         <GoogleAnalytics gaId="G-2REE90FKML" />
         
