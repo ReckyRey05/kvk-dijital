@@ -32,21 +32,21 @@ export default function NotFound() {
               {/* Outer Ring */}
               <div className="absolute inset-0 rounded-full border-2 border-white/10 flex items-center justify-center bg-[#050505]">
                 {/* Spinning Inner Compass */}
-                <Compass className="w-16 h-16 md:w-20 md:h-20 text-white/60 animate-[spin_6s_linear_infinite]" strokeWidth={1.5} />
+                <Compass className="w-16 h-16 md:w-20 md:h-20 text-accent animate-[spin_6s_linear_infinite]" strokeWidth={1.5} />
               </div>
 
               {/* N (Top) = K */}
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-white/80">
+              <span className="absolute -top-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-accent">
                 K
               </span>
               
               {/* E (Right) = V */}
-              <span className="absolute top-1/2 -right-4 -translate-y-1/2 font-bold text-lg md:text-xl text-white/80">
+              <span className="absolute top-1/2 -right-4 -translate-y-1/2 font-bold text-lg md:text-xl text-accent">
                 V
               </span>
               
               {/* S (Bottom) = K */}
-              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-white/80">
+              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-accent">
                 K
               </span>
               
@@ -54,7 +54,7 @@ export default function NotFound() {
               <img 
                 src="/logos/KvK-Digital-Logo-Icon-Transparent.png" 
                 alt="KvK Logo" 
-                className="absolute top-1/2 -left-6 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 object-contain opacity-80 drop-shadow-xl" 
+                className="absolute top-1/2 -left-6 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 object-contain opacity-90 drop-shadow-[0_0_15px_rgba(var(--accent),0.5)]" 
               />
             </div>
 
