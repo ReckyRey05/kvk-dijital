@@ -13,7 +13,7 @@ export default function Hero() {
       </div>
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
-        <div className="flex flex-col items-start gap-8 animate-fade-in-up">
+        <div className="flex flex-col items-start gap-8">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.1] text-gradient">
             İstanbul'un yeni nesil <br /> web tasarım ve <br /> yazılım ajansı.
           </h1>
