@@ -43,6 +43,24 @@ export default function AdminBlogPage() {
     }
   };
 
+  const handleTogglePublish = async (id: string, currentStatus: boolean) => {
+    try {
+      const newStatus = !currentStatus;
+      // Optimistic update
+      setPosts(posts.map(p => p.id === id ? { ...p, isPublished: newStatus } : p));
+      
+      import("firebase/firestore").then(async ({ updateDoc, doc }) => {
+        await updateDoc(doc(db, "blog_posts", id), {
+          isPublished: newStatus
+        });
+      });
+    } catch (error) {
+      console.error("Error toggling publish status:", error);
+      alert("Durum güncellenirken bir hata oluştu.");
+      fetchPosts(); // revert on error
+    }
+  };
+
   if (loading) {
     return <div className="p-8 text-white">Yükleniyor...</div>;
   }
@@ -88,15 +106,22 @@ export default function AdminBlogPage() {
                     <div className="text-xs text-gray-500">/{post.slug}</div>
                   </td>
                   <td className="p-4">
-                    {post.isPublished ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium border border-green-500/20">
-                        <Eye className="w-3.5 h-3.5" /> Yayında
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-xs font-medium border border-yellow-500/20">
-                        <EyeOff className="w-3.5 h-3.5" /> Taslak
-                      </span>
-                    )}
+                    <button
+                      onClick={() => post.id && handleTogglePublish(post.id, post.isPublished)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                        post.isPublished ? 'bg-accent' : 'bg-white/10'
+                      }`}
+                      title={post.isPublished ? "Yayından Kaldır" : "Yayına Al"}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          post.isPublished ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className="ml-3 text-xs text-gray-400 font-medium">
+                      {post.isPublished ? "Yayında" : "Taslak"}
+                    </span>
                   </td>
                   <td className="p-4 text-sm text-gray-400">
                     {post.createdAt?.toDate ? new Date(post.createdAt.toDate()).toLocaleDateString('tr-TR') : "-"}

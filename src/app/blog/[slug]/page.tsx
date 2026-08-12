@@ -23,6 +23,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const post = snapshot.docs[0].data() as BlogPost;
 
+  if (post.isPublished === false) {
+    return { title: "Makale Bulunamadı" };
+  }
+
   return {
     title: post.title,
     description: post.excerpt,
@@ -50,6 +54,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   }
 
   const post = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as BlogPost;
+
+  // Taslakları yayından gizle (isPublished false ise 404 ver)
+  if (post.isPublished === false) {
+    notFound();
+  }
 
   return (
     <main className="min-h-screen bg-[#050505] text-foreground selection:bg-accent/30 selection:text-accent font-sans">
