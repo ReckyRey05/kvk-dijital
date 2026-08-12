@@ -5,10 +5,15 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Hakkımızda",
-  description: "KvK Digital'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin. Sizi geleceğe taşıyan dijital partneriniz.",
+  title: "Hakkımızda | KVK Dijital Çözümler",
+  description: "KVK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/hakkimizda",
+  },
+  openGraph: {
+    title: "Hakkımızda | KVK Dijital Çözümler",
+    description: "KVK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
+    url: "https://kvkdijitalcozumler.com/hakkimizda",
   }
 };
 
@@ -70,6 +75,29 @@ export default function Hakkimda() {
         </div>
       </div>
 
+      {/* AboutPage & Person Schema for AI Search Engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "Hakkımızda - KVK Dijital Çözümler",
+            "url": "https://kvkdijitalcozumler.com/hakkimizda",
+            "mainEntity": {
+              "@type": "Person",
+              "@id": "https://kvkdijitalcozumler.com/#founder",
+              "name": "Ali Haydar Kavak",
+              "jobTitle": "Kurucu & Web Tasarımcı",
+              "worksFor": {
+                "@type": "Organization",
+                "@id": "https://kvkdijitalcozumler.com/#organization",
+                "name": "KVK Dijital Çözümler"
+              }
+            }
+          })
+        }}
+      />
       <Footer />
     </main>
   );

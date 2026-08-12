@@ -23,19 +23,19 @@ export default function Hero() {
 
           <div className="flex flex-wrap items-center gap-4">
             <button 
-              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-6 py-3 rounded-full bg-accent text-[#050505] font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 cursor-pointer"
-              aria-label="Projeleri İncele bölümüne git"
+              aria-label="Teklif Alın - İletişim bölümüne git"
             >
-              Projeleri İncele
+              Teklif Al
               <ArrowRight className="w-4 h-4" />
             </button>
             <button 
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-foreground hover:bg-white/10 transition-colors cursor-pointer"
-              aria-label="İletişim bölümüne git"
+              aria-label="Projeleri İncele bölümüne git"
             >
-              İletişime Geç
+              Projeleri İncele
             </button>
           </div>
         </div>

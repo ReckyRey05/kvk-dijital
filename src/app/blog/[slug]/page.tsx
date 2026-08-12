@@ -91,14 +91,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             "datePublished": post.createdAt?.toDate ? new Date(post.createdAt.toDate()).toISOString() : new Date().toISOString(),
             "author": {
               "@type": "Organization",
-              "name": "KvK Dijital Çözümler"
+              "name": "KVK Dijital Çözümler",
+              "url": "https://kvkdijitalcozumler.com"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "KvK Dijital Çözümler",
+              "name": "KVK Dijital Çözümler",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://kvkdijitalcozumler.com/icon.png"
+                "url": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp"
               }
             }
           })
