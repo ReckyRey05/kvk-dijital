@@ -99,11 +99,14 @@ export default function Contact() {
             <h3 className="text-2xl md:text-3xl font-bold mb-3">Hangi Hizmete İhtiyacınız Var?</h3>
             <p className="text-foreground/70 text-sm">Aşağıdaki hizmetlerden birini seçerek mesaj alanınızı otomatik oluşturabilirsiniz.</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" role="radiogroup" aria-label="Hizmet Türü Seçimi">
             {serviceOptions.map((opt) => (
               <button
                 key={opt}
                 type="button"
+                role="radio"
+                aria-checked={formData.service === opt}
+                aria-label={`Hizmet Seçimi: ${opt}`}
                 onClick={() => handleQuickSelect(opt)}
                 className={`p-4 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-2 ${
                   formData.service === opt
@@ -143,6 +146,7 @@ export default function Contact() {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="WhatsApp üzerinden anında iletişime geçin"
                     className="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold text-sm hover:bg-emerald-500/20 transition-all group"
                   >
                     <MessageSquare className="w-5 h-5 text-emerald-400" />
@@ -170,7 +174,7 @@ export default function Contact() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <form onSubmit={handleSubmit} role="form" aria-label="Teklif ve İletişim Formu" className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="name" className="text-sm font-medium text-foreground/70 px-1">İsim / Firma *</label>

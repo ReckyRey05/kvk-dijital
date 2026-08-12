@@ -6,10 +6,10 @@ import { LogoIcon } from "./Logo";
 export default function Hero() {
   return (
     <section className="relative w-full min-h-screen flex items-center pt-20 pb-16">
-      {/* Background gradients */}
+      {/* Background gradients - mobilde daha hafif blur GPU yükünü azaltır */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[120px]" />
-        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-accent/10 blur-[150px]" />
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[60px] md:blur-[120px]" />
+        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-accent/10 blur-[80px] md:blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
@@ -40,16 +40,16 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* CSS animasyonlu kart — framer-motion kaldırıldı (LCP için) */}
+        {/* CSS animasyonlu kart — mobilde hafifletilmiş GPU katmanı */}
         <div className="relative lg:h-[600px] flex items-center justify-center" style={{ perspective: '1000px' }}>
           <div className="relative w-full max-w-lg aspect-square">
             {/* Background Glow */}
-            <div className="absolute inset-0 rounded-full border border-white/5 bg-gradient-to-tr from-accent/20 to-transparent animate-[spin_15s_linear_infinite]" />
-            <div className="absolute inset-4 rounded-full border border-white/5 bg-gradient-to-bl from-blue-500/10 to-transparent animate-[spin_20s_linear_infinite_reverse]" />
+            <div className="absolute inset-0 rounded-full border border-white/5 bg-gradient-to-tr from-accent/20 to-transparent motion-reduce:animate-none animate-[spin_15s_linear_infinite]" />
+            <div className="absolute inset-4 rounded-full border border-white/5 bg-gradient-to-bl from-blue-500/10 to-transparent motion-reduce:animate-none animate-[spin_20s_linear_infinite_reverse]" />
             
             {/* Main Central Dashboard Card */}
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-background/60 backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-background/60 backdrop-blur-md md:backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
             >
               {/* Fake Browser Top Bar */}
               <div className="w-full h-12 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
@@ -96,7 +96,7 @@ export default function Hero() {
             </div>
 
             {/* Floating Element 1 - Code Snippet */}
-            <div className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-md md:backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-accent" />
                 <span className="text-[10px] text-foreground/50 font-mono">React Component</span>
@@ -111,7 +111,7 @@ export default function Hero() {
             </div>
 
             {/* Floating Element 2 - SEO Score */}
-            <div className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <div className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-md md:backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-bold">
                 100
                 <svg className="absolute inset-0 w-full h-full -rotate-90" aria-hidden="true">
@@ -126,8 +126,8 @@ export default function Hero() {
             </div>
             
             {/* Floating Element 3 - Mobile Badge */}
-            <div className="absolute right-12 -bottom-4 px-4 py-2 rounded-full bg-accent/10 backdrop-blur-xl border border-accent/20 text-accent text-xs font-semibold shadow-2xl flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <div className="absolute right-12 -bottom-4 px-4 py-2 rounded-full bg-accent/10 backdrop-blur-md md:backdrop-blur-xl border border-accent/20 text-accent text-xs font-semibold shadow-2xl flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-accent motion-reduce:animate-none animate-pulse" />
               %100 Mobil Uyumlu
             </div>
           </div>

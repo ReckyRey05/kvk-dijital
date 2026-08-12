@@ -4,10 +4,10 @@ import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { getAdminDb } from "@/lib/firebase/admin";
 
-// Fold altındaki ağır bileşenler lazy yükleniyor
-// Bu sayede Hero (LCP) önce render ediliyor, framer-motion dahil kütüphaneler sonra
-const TechStack = nextDynamic(() => import("@/components/TechStack"), { ssr: true });
-const About = nextDynamic(() => import("@/components/About"), { ssr: true });
+import TechStack from "@/components/TechStack";
+import About from "@/components/About";
+
+// Heavy below-the-fold components remain dynamic
 const Services = nextDynamic(() => import("@/components/Services"), { ssr: true });
 const Projects = nextDynamic(() => import("@/components/Projects"), { ssr: true });
 const Process = nextDynamic(() => import("@/components/Process"), { ssr: true });
@@ -43,12 +43,8 @@ export default async function Home() {
       <Hero />
       
       {/* Below-the-fold sections are lazy-loaded but still SSR'd */}
-      <Suspense fallback={null}>
-        <TechStack />
-      </Suspense>
-      <Suspense fallback={null}>
-        <About />
-      </Suspense>
+      <TechStack />
+      <About />
       <Suspense fallback={null}>
         <Services services={services} />
       </Suspense>
