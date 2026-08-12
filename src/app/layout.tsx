@@ -154,6 +154,7 @@ export default function RootLayout({
                   },
                   "sameAs": [
                     "https://www.instagram.com/kvkdijitalcozumler/",
+                    "https://www.linkedin.com/company/kvk-dijital-%C3%A7%C3%B6z%C3%BCmler/",
                     "https://github.com/ReckyRey05"
                   ]
                 }
