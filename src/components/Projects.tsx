@@ -110,7 +110,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6"
+          className="mb-12 flex flex-col gap-6"
         >
           <div>
             <h2 className="text-3xl md:text-4xl font-semibold mb-4">Seçkin Projeler</h2>
@@ -120,7 +120,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
           </div>
           
           {/* Category Tabs */}
-          <div className="flex overflow-x-auto gap-2 pb-2 -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+          <div className="flex overflow-x-auto gap-2 pb-2 -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:justify-start md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
             {categories.map((category) => (
               <button
                 key={category}
