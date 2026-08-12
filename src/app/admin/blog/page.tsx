@@ -111,6 +111,13 @@ export default function AdminBlogPage() {
                       >
                         <Eye className="w-4 h-4" />
                       </Link>
+                      <Link 
+                        href={`/admin/blog/${post.id}/edit`}
+                        className="p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors"
+                        title="Düzenle"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Link>
                       <button 
                         onClick={() => post.id && handleDelete(post.id)}
                         className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
