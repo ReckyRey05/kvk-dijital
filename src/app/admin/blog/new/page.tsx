@@ -27,7 +27,10 @@ export default function NewBlogPostPage() {
     isPublished: true,
   });
 
+  const [generatingAI, setGeneratingAI] = useState(false);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // ... same as before
     const title = e.target.value;
     
     // Türkçe karakterleri doğru şekilde dönüştür (Büyük harfleri önce çevirmeliyiz çünkü toLowerCase "İ" harfini bozar)
@@ -53,7 +56,38 @@ export default function NewBlogPostPage() {
     setFormData({ ...formData, title, slug });
   };
 
+  const handleGenerateAI = async () => {
+    const topic = window.prompt("Yapay zekanın makale yazması için bir konu veya taslak başlık girin:\n(Örn: 2026 E-ticaret trendleri ve dönüşüm oranları)");
+    if (!topic) return;
+
+    setGeneratingAI(true);
+    try {
+      const response = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic })
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Yapay zeka yanıt vermedi.');
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        content: prev.content ? prev.content + '<br><br>' + data.content : data.content
+      }));
+      
+    } catch (error: any) {
+      alert("Hata: " + error.message);
+    } finally {
+      setGeneratingAI(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
+    // ... same as before
     e.preventDefault();
     if (!formData.title || !formData.slug || !formData.content) {
       alert("Lütfen zorunlu alanları (Başlık, URL, İçerik) doldurun.");
@@ -150,10 +184,21 @@ export default function NewBlogPostPage() {
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h2 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
-              <Layout className="w-5 h-5 text-accent" />
-              Makale İçeriği *
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-medium text-white flex items-center gap-2">
+                <Layout className="w-5 h-5 text-accent" />
+                Makale İçeriği *
+              </h2>
+              <button
+                type="button"
+                onClick={handleGenerateAI}
+                disabled={generatingAI}
+                className="flex items-center gap-2 bg-purple-500/10 text-purple-400 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-500/20 transition-colors disabled:opacity-50"
+              >
+                <span className="text-lg">✨</span>
+                {generatingAI ? "Yazılıyor..." : "Yapay Zeka İle Yazdır"}
+              </button>
+            </div>
             
             <div className="text-black quill-wrapper">
               <p className="text-xs text-gray-500 mb-4">
