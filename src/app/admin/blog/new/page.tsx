@@ -112,8 +112,8 @@ export default function NewBlogPostPage() {
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   URL (Slug) *
                 </label>
-                <div className="flex items-center">
-                  <span className="bg-[#050505] border border-white/10 border-r-0 rounded-l-xl px-4 py-3 text-gray-500 text-sm">
+                <div className="flex items-center bg-[#050505] border border-white/10 rounded-xl focus-within:border-accent/50 transition-colors overflow-hidden">
+                  <span className="px-4 py-3 text-gray-500 text-sm border-r border-white/10 bg-white/5 select-none">
                     /blog/
                   </span>
                   <input
@@ -121,7 +121,7 @@ export default function NewBlogPostPage() {
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    className="flex-1 bg-[#050505] border border-white/10 rounded-r-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 transition-colors"
+                    className="flex-1 bg-transparent px-4 py-3 text-white focus:outline-none"
                   />
                 </div>
               </div>
