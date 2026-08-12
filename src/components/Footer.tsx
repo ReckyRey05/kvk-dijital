@@ -12,6 +12,8 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-8 text-sm text-foreground/70">
           <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">KVKK</Link>
           <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Gizlilik Politikası</Link>
+          <Link href="/cerez-politikasi" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Çerez Politikası</Link>
+          <Link href="/kullanim-kosullari" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Kullanım Koşulları</Link>
         </div>
         
         <div className="text-xs text-foreground/50">
