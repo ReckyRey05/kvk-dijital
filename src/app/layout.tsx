@@ -56,7 +56,7 @@ export default function RootLayout({
         <ClientHeader />
         {children}
         <Analytics />
-        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        <GoogleAnalytics gaId="G-2REE90FKML" />
         
         {/* Structured Data (JSON-LD) for SEO */}
         <script
