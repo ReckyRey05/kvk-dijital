@@ -9,7 +9,7 @@ import { Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = 'force-static';
-export const revalidate = 3600; 
+export const revalidate = 60; // 1 dakikada bir önbelleği yenile (yeni yazılar hemen görünsün)
 
 // SEO Metadata Generation
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
