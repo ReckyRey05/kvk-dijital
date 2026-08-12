@@ -23,14 +23,42 @@ export default function NotFound() {
         
         <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           
-          <div className="flex items-center justify-center gap-2 md:gap-4 mb-8">
-            <span className="text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
+          <div className="flex items-center justify-center gap-4 md:gap-8 mb-12">
+            <span className="text-[140px] md:text-[200px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
               4
             </span>
-            <div className="w-24 h-24 md:w-32 md:h-32 bg-[#050505] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(var(--accent),0.1)] shrink-0">
-              <Compass className="w-12 h-12 md:w-16 md:h-16 text-accent animate-[spin_4s_linear_infinite]" />
+            
+            <div className="relative w-28 h-28 md:w-36 md:h-36 shrink-0 mt-4">
+              {/* Outer Ring */}
+              <div className="absolute inset-0 rounded-full border-2 border-white/10 flex items-center justify-center bg-[#050505]">
+                {/* Spinning Inner Compass */}
+                <Compass className="w-16 h-16 md:w-20 md:h-20 text-white/60 animate-[spin_6s_linear_infinite]" strokeWidth={1.5} />
+              </div>
+
+              {/* N (Top) = K */}
+              <span className="absolute -top-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-white/80">
+                K
+              </span>
+              
+              {/* E (Right) = V */}
+              <span className="absolute top-1/2 -right-4 -translate-y-1/2 font-bold text-lg md:text-xl text-white/80">
+                V
+              </span>
+              
+              {/* S (Bottom) = K */}
+              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 font-bold text-lg md:text-xl text-white/80">
+                K
+              </span>
+              
+              {/* W (Left) = Logo */}
+              <img 
+                src="/logos/KvK-Digital-Logo-Icon-Transparent.png" 
+                alt="KvK Logo" 
+                className="absolute top-1/2 -left-6 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 object-contain opacity-80 drop-shadow-xl" 
+              />
             </div>
-            <span className="text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
+
+            <span className="text-[140px] md:text-[200px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 opacity-80 select-none">
               4
             </span>
           </div>
