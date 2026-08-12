@@ -1,4 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import "./globals.css";
+import ClientHeader from "@/components/ClientHeader";
+import CookieConsent from "@/components/CookieConsent";
 
 export const viewport: Viewport = {
   themeColor: "#050505",
@@ -37,14 +43,15 @@ export const metadata: Metadata = {
   },
 };
 
-import { Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { GoogleAnalytics } from "@next/third-parties/google";
-import "./globals.css";
-import ClientHeader from "@/components/ClientHeader";
-import CookieConsent from "@/components/CookieConsent";
-
-const inter = Inter({ subsets: ["latin"] });
+// Font: display:swap + sadece Latin (Türkçe dahil) subset
+// Kullanılmayan weight'leri (800,900) kaldırıldı
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  preload: true,
+  variable: "--font-inter",
+});
 
 export default function RootLayout({
   children,
@@ -52,7 +59,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="scroll-smooth">
+    <html lang="tr" className={`scroll-smooth ${inter.variable}`}>
+      <head>
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className={inter.className}>
         <ClientHeader />
         {children}
@@ -100,22 +113,10 @@ export default function RootLayout({
                     "longitude": 29.2570
                   },
                   "areaServed": [
-                    {
-                      "@type": "City",
-                      "name": "İstanbul"
-                    },
-                    {
-                      "@type": "City",
-                      "name": "Kocaeli"
-                    },
-                    {
-                      "@type": "City",
-                      "name": "Sakarya"
-                    },
-                    {
-                      "@type": "City",
-                      "name": "Bursa"
-                    }
+                    { "@type": "City", "name": "İstanbul" },
+                    { "@type": "City", "name": "Kocaeli" },
+                    { "@type": "City", "name": "Sakarya" },
+                    { "@type": "City", "name": "Bursa" }
                   ],
                   "founder": {
                     "@type": "Person",

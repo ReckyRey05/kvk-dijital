@@ -76,6 +76,8 @@ export default function FAQ() {
                 <button
                   className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  aria-expanded={openIndex === index}
+                  aria-label={`${faq.question} - ${openIndex === index ? 'Kapat' : 'Aç'}`}
                 >
                   <span className="font-medium text-lg">{faq.question}</span>
                   <ChevronDown 
