@@ -56,7 +56,8 @@ export default function CookieConsent() {
                   <h3 className="text-white font-semibold text-sm">Çerez Tercihleri</h3>
                   <button 
                     onClick={declineCookies}
-                    className="text-gray-500 hover:text-white transition-colors"
+                    aria-label="Çerez tercihlerini kapat"
+                    className="text-gray-500 hover:text-white transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
