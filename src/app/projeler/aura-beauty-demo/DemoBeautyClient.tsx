@@ -4,11 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { 
   Sparkles, 
-  Calendar, 
+  Calendar as CalendarIcon, 
   Clock, 
   ArrowRight, 
   ChevronDown, 
-  Info
+  Info,
+  Check
 } from "lucide-react";
 
 interface TreatmentItem {
@@ -58,10 +59,22 @@ const treatments: TreatmentItem[] = [
     category: "Saç Terapileri",
     name: "Derin Nem & Keratin Yükleme",
     duration: "60 dk",
-    price: "60 dk",
+    price: "700 ₺",
     description: "Isı ve dış etkenlerden koruyan, saç tellerini içeriden dışarıya pürüzsüzleştiren özel terapi."
   }
 ];
+
+const availableDays = [
+  { day: 14, name: "Cuma", available: true },
+  { day: 15, name: "Cumartesi", available: true },
+  { day: 16, name: "Pazar", available: false },
+  { day: 17, name: "Pazartesi", available: true },
+  { day: 18, name: "Salı", available: true },
+  { day: 19, name: "Çarşamba", available: true },
+  { day: 20, name: "Perşembe", available: true },
+];
+
+const timeSlots = ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"];
 
 const faqs = [
   {
@@ -80,13 +93,18 @@ const faqs = [
 
 export default function DemoBeautyClient() {
   const [activeTab, setActiveTab] = useState<string>("t1");
+  const [selectedDay, setSelectedDay] = useState<number>(15);
+  const [selectedTime, setSelectedTime] = useState<string>("14:00");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
+  const selectedDayObj = availableDays.find(d => d.day === selectedDay);
+  const selectedTreatment = treatments.find(t => t.id === activeTab) || treatments[0];
+
   const triggerDemoToast = (e: React.FormEvent) => {
     e.preventDefault();
-    setToastMsg("Bu bir konsept demo çalışmadır. Gerçek güzellik salonunuz için bu randevu formu WhatsApp veya SMS onay sistemine bağlanır.");
-    setTimeout(() => setToastMsg(null), 5000);
+    setToastMsg(`Demo Randevu Alındı: ${selectedTreatment.name} — ${selectedDay} Ağustos ${selectedDayObj?.name}, Saat ${selectedTime}`);
+    setTimeout(() => setToastMsg(null), 6000);
   };
 
   return (
@@ -125,8 +143,8 @@ export default function DemoBeautyClient() {
               href="#booking"
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2 border border-[#3b384a] text-[#d4af37] text-xs uppercase tracking-widest hover:border-[#d4af37] transition-all cursor-pointer"
             >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Demo Randevu</span>
+              <CalendarIcon className="w-3.5 h-3.5" />
+              <span>Takvim Randevu</span>
             </a>
             <Link 
               href="/#contact"
@@ -140,8 +158,8 @@ export default function DemoBeautyClient() {
 
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 bg-[#14131d] border border-[#d4af37]/40 text-[#f5f2eb] text-xs leading-relaxed shadow-2xl flex items-start gap-3">
-          <Info className="w-5 h-5 text-[#d4af37] shrink-0 mt-0.5" />
+        <div className="fixed bottom-6 right-6 z-50 max-w-md p-5 bg-[#14131d] border border-[#d4af37] text-[#f5f2eb] text-xs leading-relaxed shadow-2xl flex items-start gap-3 rounded-lg">
+          <Check className="w-5 h-5 text-[#d4af37] shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-[#d4af37] mb-1">Demo Bilgilendirmesi</p>
             <p>{toastMsg}</p>
@@ -193,7 +211,7 @@ export default function DemoBeautyClient() {
                   href="#booking"
                   className="px-8 py-4 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all inline-flex items-center gap-2 shadow-xl shadow-[#d4af37]/10"
                 >
-                  <Calendar className="w-4 h-4" /> Randevu Deneyimini Keşfet
+                  <CalendarIcon className="w-4 h-4" /> Randevu Takvimini Aç
                 </a>
                 <a 
                   href="#treatments"
@@ -208,7 +226,7 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 4. BRAND PHILOSOPHY & CLEAN STANDARDS (3-COLUMN MINIMALIST TEXT LIST - NO CARDS) */}
+      {/* 4. BRAND PHILOSOPHY & CLEAN STANDARDS */}
       <section id="philosophy" className="py-24 bg-[#0e0e13] border-b border-[#1c1b26]">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
@@ -244,24 +262,27 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 5. TREATMENT PORTFOLIO (EDITORIAL FULL-WIDTH ACCORDION LIST) */}
+      {/* 5. TREATMENT PORTFOLIO */}
       <section id="treatments" className="py-24 border-b border-[#1c1b26]">
         <div className="container mx-auto px-6 max-w-5xl">
           
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-[#d4af37] text-xs font-medium tracking-widest uppercase block">Terapi Kataloğu</span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#f5f2eb]">Öne Çıkan Bakımlarımız</h2>
+            <span className="text-[#d4af37] text-xs font-medium tracking-widest uppercase block">Bakım Hizmetleri</span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#f5f2eb]">Öne Çıkan Terapilerimiz</h2>
           </div>
 
           <div className="space-y-6">
             {treatments.map(t => (
               <div 
                 key={t.id}
-                className="p-8 border border-[#21202b] bg-[#111017] hover:border-[#d4af37]/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 group"
+                className={`p-8 border bg-[#111017] transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer ${
+                  activeTab === t.id ? "border-[#d4af37]" : "border-[#21202b] hover:border-[#d4af37]/40"
+                }`}
+                onClick={() => setActiveTab(t.id)}
               >
                 <div className="space-y-2 max-w-2xl">
                   <span className="text-[10px] tracking-widest uppercase text-[#d4af37] font-semibold block">{t.category}</span>
-                  <h3 className="font-serif text-xl text-[#f5f2eb] group-hover:text-[#d4af37] transition-colors">{t.name}</h3>
+                  <h3 className="font-serif text-xl text-[#f5f2eb]">{t.name}</h3>
                   <p className="text-xs text-[#9e978c] leading-relaxed">{t.description}</p>
                 </div>
                 <div className="flex items-center gap-6 justify-between md:justify-end border-t md:border-t-0 pt-4 md:pt-0 border-[#21202b]">
@@ -313,52 +334,113 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 7. MINIMALIST APPOINTMENT SELECTOR (DEMO WIDGET) */}
+      {/* 7. HIGH-END INTERACTIVE CALENDAR & APPOINTMENT SELECTOR */}
       <section id="booking" className="py-24 border-b border-[#1c1b26]">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <div className="p-8 sm:p-12 border border-[#2d2b3b] bg-[#100f16]">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="p-8 sm:p-12 border border-[#2d2b3b] bg-[#100f16] shadow-2xl">
+            
             <div className="text-center space-y-3 mb-10">
-              <span className="text-[#d4af37] text-xs font-medium tracking-widest uppercase block">Demo Modülü</span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-light text-[#f5f2eb]">Online Randevu Talebi</h2>
+              <span className="text-[#d4af37] text-xs font-medium tracking-widest uppercase block">İnteraktif Randevu Modülü</span>
+              <h2 className="font-serif text-3xl font-light text-[#f5f2eb]">Online Bakım Randevusu</h2>
               <p className="text-xs text-[#9e978c]">
-                Müşterilerinizin web siteniz üzerinden saniyeler içinde randevu oluşturabileceği arayüz simülasyonu.
+                Aşağıdaki takvimden tarih ve saat seçerek demo randevunuzu simüle edin.
               </p>
             </div>
 
-            <form onSubmit={triggerDemoToast} className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#d4af37] mb-2 font-medium">Hizmet Seçiniz</label>
-                  <select 
-                    value={activeTab}
-                    onChange={(e) => setActiveTab(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#181722] border border-[#2e2c3d] text-[#f5f2eb] text-xs focus:outline-none focus:border-[#d4af37]"
-                  >
-                    {treatments.map(t => (
-                      <option key={t.id} value={t.id} className="bg-[#0a0a0d] text-[#f5f2eb]">
-                        {t.name} — {t.price}
-                      </option>
-                    ))}
-                  </select>
+            <form onSubmit={triggerDemoToast} className="space-y-8">
+              
+              {/* Service Selection */}
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-semibold">
+                  1. Bakım Hizmeti Seçiniz
+                </label>
+                <select 
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                  className="w-full px-5 py-3.5 bg-[#181722] border border-[#2e2c3d] text-[#f5f2eb] text-xs focus:outline-none focus:border-[#d4af37] cursor-pointer"
+                >
+                  {treatments.map(t => (
+                    <option key={t.id} value={t.id} className="bg-[#0a0a0d] text-[#f5f2eb]">
+                      {t.name} — {t.price} ({t.duration})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Interactive Calendar Selection (Ağustos 2026) */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-xs uppercase tracking-widest text-[#d4af37] font-semibold">
+                    2. Tarih Seçiniz (Ağustos 2026)
+                  </label>
+                  <span className="text-[11px] text-[#807b71]">Pazar Günleri Kapalıdır</span>
                 </div>
 
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-[#d4af37] mb-2 font-medium">Uygun Zaman</label>
-                  <select className="w-full px-4 py-3 bg-[#181722] border border-[#2e2c3d] text-[#f5f2eb] text-xs focus:outline-none focus:border-[#d4af37]">
-                    <option className="bg-[#0a0a0d] text-[#f5f2eb]">Yarın — 11:00</option>
-                    <option className="bg-[#0a0a0d] text-[#f5f2eb]">Yarın — 14:30</option>
-                    <option className="bg-[#0a0a0d] text-[#f5f2eb]">Cuma — 16:00</option>
-                  </select>
+                <div className="grid grid-cols-7 gap-2">
+                  {availableDays.map(item => (
+                    <button
+                      key={item.day}
+                      type="button"
+                      disabled={!item.available}
+                      onClick={() => setSelectedDay(item.day)}
+                      className={`p-3 border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                        !item.available 
+                          ? "opacity-30 border-[#1f1e28] bg-[#0c0b10] cursor-not-allowed text-[#635f56]" 
+                          : selectedDay === item.day
+                            ? "bg-[#d4af37] text-[#0a0a0d] border-[#d4af37] font-bold shadow-lg shadow-[#d4af37]/20 scale-105"
+                            : "bg-[#181722] border-[#2e2c3d] text-[#f5f2eb] hover:border-[#d4af37] cursor-pointer"
+                      }`}
+                    >
+                      <span className="text-[10px] tracking-wider uppercase opacity-80">{item.name.slice(0, 3)}</span>
+                      <span className="font-serif text-lg">{item.day}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
+              {/* Interactive Time Slot Selection */}
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-semibold">
+                  3. Saat Seçiniz
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  {timeSlots.map(time => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => setSelectedTime(time)}
+                      className={`py-3 border text-xs font-mono text-center transition-all cursor-pointer ${
+                        selectedTime === time
+                          ? "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37] font-bold"
+                          : "bg-[#181722] border-[#2e2c3d] text-[#a69f92] hover:border-[#d4af37]/50"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Selected Summary Bar */}
+              <div className="p-4 bg-[#181724] border border-[#2e2c3d] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+                <div className="space-y-1">
+                  <span className="text-[#807b71] block">Seçilen Randevu Özeti:</span>
+                  <span className="font-serif text-sm text-[#f5f2eb] font-medium">
+                    {selectedTreatment.name} — <strong className="text-[#d4af37]">{selectedDay} Ağustos {selectedDayObj?.name}, {selectedTime}</strong>
+                  </span>
+                </div>
+                <span className="font-serif text-lg font-bold text-[#d4af37]">{selectedTreatment.price}</span>
+              </div>
+
+              {/* Submit Button */}
               <button 
                 type="submit"
-                className="w-full py-4 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all cursor-pointer"
+                className="w-full py-4 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all cursor-pointer shadow-xl shadow-[#d4af37]/10"
               >
-                Demo Randevuyu Onayla
+                Randevu Talebini Onayla (Demo)
               </button>
             </form>
+
           </div>
         </div>
       </section>
@@ -393,7 +475,7 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 9. LEAD CONVERSION FOOTER */}
+      {/* 9. LEAD CONVERSION BANNER & FOOTER */}
       <footer className="py-16 bg-[#060608] text-center space-y-6 text-[#f5f2eb]">
         <div className="container mx-auto px-6 max-w-3xl space-y-6">
           <h2 className="font-serif text-3xl font-light text-[#f5f2eb]">
