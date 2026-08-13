@@ -1,30 +1,24 @@
 import { MetadataRoute } from 'next';
-import { getAdminDb } from "@/lib/firebase/admin";
+import { getAllBlogPosts } from "@/lib/blogPosts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://kvkdijitalcozumler.com';
 
-  // Fetch dynamic blog posts for sitemap via Admin SDK
+  // Fetch all published blog posts (initial static posts + Firestore posts)
   let blogUrls: MetadataRoute.Sitemap = [];
   try {
-    const db = getAdminDb();
-    const snapshot = await db.collection("blog_posts").where("isPublished", "==", true).get();
-    blogUrls = snapshot.docs.map(doc => {
-      const data = doc.data();
-      const rawSlug = data.slug || "";
-      const cleanSlug = rawSlug.replace(/^\/?(blog\/)?/i, "").replace(/^\/+/, "");
-      return {
-        url: `${baseUrl}/blog/${cleanSlug}`,
-        lastModified: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-      };
-    });
+    const posts = await getAllBlogPosts();
+    blogUrls = posts.map(post => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: post.createdAt?.toDate ? post.createdAt.toDate() : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
   } catch {
     blogUrls = [];
   }
 
-  // Only include public indexable pages (exclude noindex legal/private pages)
+  // Public indexable static pages
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -82,6 +76,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/ozel-yazilim`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/iletisim`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.8,
