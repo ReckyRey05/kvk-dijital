@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { getAdminDb } from "@/lib/firebase/admin";
@@ -8,8 +8,8 @@ import { getAdminDb } from "@/lib/firebase/admin";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Projelerimiz",
-  description: "Web tasarım, e-ticaret, SEO ve dijital dönüşüm alanlarında tamamladığımız başarılı projelerimiz.",
+  title: "Projelerimiz & Sektörel Demolar",
+  description: "Web tasarım, e-ticaret, SEO ve dijital dönüşüm alanlarında tamamladığımız örnek projelerimiz ve sektörlere özel konsept demolarımız.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/projeler",
   }
@@ -28,7 +28,7 @@ export default async function Projeler() {
   }) : [];
 
   return (
-    <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32">
+    <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32 bg-background">
       <Header />
       
       <div className="container mx-auto px-6 max-w-7xl">
@@ -37,202 +37,176 @@ export default async function Projeler() {
             <ArrowRight className="w-4 h-4 rotate-180" /> Ana Sayfaya Dön
           </Link>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Örnek <span className="text-accent">Projelerimiz</span>
+            Örnek <span className="text-accent">Projelerimiz & Demolar</span>
           </h1>
           <p className="text-xl text-foreground/70 leading-relaxed">
-            Farklı sektörler için özenle hazırladığımız, yüksek performanslı ve modern tasarımlı web site konseptleri.
+            Farklı sektörlerin gerçek kullanıcı ihtiyaçlarına göre özenle tasarladığımız yüksek performanslı web site konseptleri.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-          {/* Static Concept Demo #1 Card */}
-          <div className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-amber-500/30 hover:border-amber-500/60 transition-all duration-500 relative">
-            <div className="absolute top-4 right-4 z-10 bg-amber-500/20 border border-amber-500/40 text-amber-300 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">
+          
+          {/* Static Concept Demo #1 Card — Pendik Sahil Bistro */}
+          <div className="group flex flex-col rounded-3xl overflow-hidden bg-[#faf8f5] text-[#1f1c19] border border-[#d6cbba] hover:border-[#b89562] transition-all duration-500 relative">
+            <div className="absolute top-4 right-4 z-10 bg-[#1f1c19]/90 text-[#faf8f5] border border-[#1f1c19] px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase backdrop-blur-md">
               Konsept Demo
             </div>
             
-            <div className="w-full h-64 bg-gradient-to-br from-amber-950/40 via-black to-[#050505] relative overflow-hidden flex items-center justify-center p-6 border-b border-card-border/50">
-              <div className="w-full h-full rounded-lg border border-amber-500/20 bg-black/60 shadow-2xl overflow-hidden p-6 flex flex-col justify-between group-hover:scale-105 transition-transform duration-700">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-xs">
-                    ☕
-                  </div>
-                  <span className="text-white font-bold text-sm">Pendik Sahil Bistro</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="w-full h-2 bg-amber-500/30 rounded-full" />
-                  <div className="w-2/3 h-2 bg-white/10 rounded-full" />
-                </div>
+            <div className="w-full h-64 bg-slate-900 relative overflow-hidden border-b border-[#d6cbba]">
+              <img 
+                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
+                alt="Pendik Sahil Bistro & Kafe" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-xs uppercase tracking-widest font-semibold text-[#c8a97e]">Restoran & Kafe Gastronomi</span>
+                <span className="text-xl font-bold font-serif text-[#faf8f5]">Pendik Sahil Bistro & Kafe</span>
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
-              <span className="text-amber-400 text-xs font-medium tracking-wider uppercase mb-3 block">
-                Restoran & Kafe Gastronomi
-              </span>
-              <h3 className="text-xl font-semibold mb-3">Pendik Sahil Bistro & Kafe</h3>
-              <p className="text-foreground/70 text-xs mb-6 leading-relaxed">
-                Restoran ve kafeler için hazırlanmış mobil öncelikli, dijital menülü ve hızlı konsept web tasarımı.
+            <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+              <p className="text-xs text-[#524d45] leading-relaxed">
+                Restoran ve kafeler için hazırlanmış editoryal gastronomi tasarımı, dijital menülü ve hızlı konsept web sitesi.
               </p>
 
-              <ul className="space-y-2 mb-8">
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                  <span>İnteraktif Dijital Menü</span>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-xs font-medium text-[#38332d]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#b89562] shrink-0" />
+                  <span>İnteraktif Dijital Menü Listesi</span>
                 </li>
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                  <span>Mobil Öncelikli & Ultra Hızlı</span>
+                <li className="flex items-center gap-2 text-xs font-medium text-[#38332d]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#b89562] shrink-0" />
+                  <span>Editoryal Gastronomi Düzeni</span>
                 </li>
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                  <span>Çalışma Saatleri & Konum</span>
+                <li className="flex items-center gap-2 text-xs font-medium text-[#38332d]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#b89562] shrink-0" />
+                  <span>Ziyaret Saatleri & Konum</span>
                 </li>
               </ul>
 
-              <Link 
-                href="/projeler/pendik-sahil-bistro-demo" 
-                className="flex items-center justify-between w-full pt-6 border-t border-card-border text-foreground font-medium group-hover:text-amber-400 transition-colors mt-auto"
-              >
-                Demoyu İncele
-                <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-amber-400 group-hover:bg-amber-500/10 transition-colors">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </div>
-              </Link>
+              <div className="pt-6 border-t border-[#d6cbba]">
+                <Link 
+                  href="/projeler/pendik-sahil-bistro-demo" 
+                  className="flex items-center justify-between w-full font-bold text-xs uppercase tracking-wider text-[#1f1c19] group-hover:text-[#b89562] transition-colors mt-auto"
+                >
+                  Demoyu Detaylı İncele
+                  <div className="w-8 h-8 rounded-full border border-[#1f1c19]/30 flex items-center justify-center group-hover:border-[#b89562] group-hover:bg-[#b89562]/10 transition-colors">
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
 
-          {/* Static Concept Demo #2 Card */}
-          <div className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-rose-500/30 hover:border-rose-500/60 transition-all duration-500 relative">
-            <div className="absolute top-4 right-4 z-10 bg-rose-500/20 border border-rose-500/40 text-rose-300 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">
+          {/* Static Concept Demo #2 Card — Aura Beauty */}
+          <div className="group flex flex-col rounded-3xl overflow-hidden bg-[#0d0d12] text-[#f5f2eb] border border-[#262433] hover:border-[#d4af37]/60 transition-all duration-500 relative">
+            <div className="absolute top-4 right-4 z-10 bg-[#d4af37]/20 border border-[#d4af37]/40 text-[#d4af37] px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase backdrop-blur-md">
               Konsept Demo
             </div>
             
-            <div className="w-full h-64 bg-gradient-to-br from-rose-950/40 via-black to-[#050505] relative overflow-hidden flex items-center justify-center p-6 border-b border-card-border/50">
-              <div className="w-full h-full rounded-lg border border-rose-500/20 bg-black/60 shadow-2xl overflow-hidden p-6 flex flex-col justify-between group-hover:scale-105 transition-transform duration-700">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300 font-bold text-xs">
-                    ✨
-                  </div>
-                  <span className="text-white font-bold text-sm">Aura Beauty</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="w-full h-2 bg-rose-500/30 rounded-full" />
-                  <div className="w-2/3 h-2 bg-white/10 rounded-full" />
-                </div>
+            <div className="w-full h-64 bg-slate-900 relative overflow-hidden border-b border-[#262433]">
+              <img 
+                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" 
+                alt="Aura Beauty & Güzellik Merkezi" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0d]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-xs uppercase tracking-widest font-semibold text-[#d4af37]">Güzellik & Bakım Salonu</span>
+                <span className="text-xl font-bold font-serif text-white">Aura Beauty & Güzellik</span>
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
-              <span className="text-rose-400 text-xs font-medium tracking-wider uppercase mb-3 block">
-                Güzellik & Bakım Salonu
-              </span>
-              <h3 className="text-xl font-semibold mb-3">Aura Beauty & Güzellik Merkezi</h3>
-              <p className="text-foreground/70 text-xs mb-6 leading-relaxed">
-                Güzellik salonları ve kişisel bakım merkezleri için hazırlanmış online randevu modüllü konsept web tasarımı.
+            <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+              <p className="text-xs text-[#9e978c] leading-relaxed">
+                Güzellik salonları ve bakım merkezleri için tasarlanmış online randevu modüllü lüks konsept web sitesi.
               </p>
 
-              <ul className="space-y-2 mb-8">
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
-                  <span>Online Randevu Modülü</span>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-xs font-medium text-[#d4af37]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0" />
+                  <span>Online Randevu Modülü Simülasyonu</span>
                 </li>
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
-                  <span>Hizmet & Fiyat Listesi</span>
+                <li className="flex items-center gap-2 text-xs font-medium text-[#d4af37]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0" />
+                  <span>Hizmet & Terapi Kataloğu</span>
                 </li>
-                <li className="flex items-center gap-2 text-foreground/70 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
-                  <span>Mobil Öncelikli Şık Tasarım</span>
+                <li className="flex items-center gap-2 text-xs font-medium text-[#d4af37]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] shrink-0" />
+                  <span>Minimalist Moda Dergisi Düzeni</span>
                 </li>
               </ul>
 
-              <Link 
-                href="/projeler/aura-beauty-demo" 
-                className="flex items-center justify-between w-full pt-6 border-t border-card-border text-foreground font-medium group-hover:text-rose-400 transition-colors mt-auto"
-              >
-                Demoyu İncele
-                <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-rose-400 group-hover:bg-rose-500/10 transition-colors">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </div>
-              </Link>
+              <div className="pt-6 border-t border-[#1c1b26]">
+                <Link 
+                  href="/projeler/aura-beauty-demo" 
+                  className="flex items-center justify-between w-full font-bold text-xs uppercase tracking-wider text-white group-hover:text-[#d4af37] transition-colors mt-auto"
+                >
+                  Demoyu Detaylı İncele
+                  <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#d4af37] group-hover:bg-[#d4af37]/10 transition-colors">
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
 
-          {projects.length === 0 ? null : (
-            projects.map((project, index) => (
-              <div
-                key={project.id}
-                className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-card-border hover:border-accent/30 transition-colors duration-500"
-              >
-                {/* Image Placeholder Side */}
-                <div className="w-full h-64 bg-gradient-to-br from-[#0a0f0f] to-[#050505] relative overflow-hidden flex items-center justify-center p-6 border-b border-card-border/50">
-                  {project.coverImage ? (
-                    <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover absolute inset-0 group-hover:scale-105 transition-transform duration-700 ease-out" />
-                  ) : (
-                    <div className="w-full h-full rounded-lg border border-white/10 bg-black/50 shadow-2xl overflow-hidden relative group-hover:scale-[1.05] transition-transform duration-700 ease-out">
-                      <div className="w-full h-6 bg-white/5 border-b border-white/10 flex items-center px-3 gap-1.5">
-                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                      </div>
-                      <div className="p-4 w-full h-full relative">
-                        <div className="w-3/4 h-8 bg-white/5 rounded-md mb-3" />
-                        <div className="w-1/2 h-4 bg-white/5 rounded-sm mb-6" />
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="w-full h-16 bg-white/5 rounded-md" />
-                          <div className="w-full h-16 bg-accent/10 rounded-md border border-accent/20" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+          {/* Dynamic Customer Projects (if any exist in Firestore) */}
+          {projects.map((project: any) => (
+            <div
+              key={project.id}
+              className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-card-border hover:border-accent/30 transition-all duration-500"
+            >
+              <div className="w-full h-64 bg-slate-900 relative overflow-hidden flex items-center justify-center border-b border-card-border/50">
+                {project.coverImage ? (
+                  <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#0a0f0f] to-[#050505] p-6 flex flex-col justify-between">
+                    <span className="text-accent text-xs font-bold uppercase">{project.category}</span>
+                    <span className="text-white font-bold text-lg">{project.title}</span>
+                  </div>
+                )}
+              </div>
 
-                {/* Content Side */}
-                <div className="p-8 flex flex-col flex-grow">
-                  <span className="text-accent text-xs font-medium tracking-wider uppercase mb-3 block">
-                    {project.category}
-                  </span>
-                  <h3 className="text-xl font-semibold mb-6 flex-grow">{project.title}</h3>
-                  
-                  <ul className="space-y-2 mb-8">
+              <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+                <div>
+                  <span className="text-accent text-xs font-medium tracking-wider uppercase mb-2 block">{project.category}</span>
+                  <h3 className="text-xl font-semibold mb-3">{project.title}</h3>
+                  <ul className="space-y-2 mb-4">
                     {(project.features || []).slice(0, 3).map((f: string) => (
-                      <li key={f} className="flex items-center gap-2 text-foreground/70 text-sm">
+                      <li key={f} className="flex items-center gap-2 text-foreground/70 text-xs">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent/50 shrink-0" />
                         <span className="truncate">{f}</span>
                       </li>
                     ))}
-                    {(project.features || []).length > 3 && (
-                      <li className="flex items-center gap-2 text-foreground/50 text-xs italic">
-                        + {(project.features || []).length - 3} özellik daha
-                      </li>
-                    )}
                   </ul>
-
-                  {(project.demoUrl || project.githubUrl) && (
-                    <a href={project.demoUrl || project.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full pt-6 border-t border-card-border text-foreground font-medium group-hover:text-accent transition-colors">
-                      Canlı Demoyu Gör
-                      <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-colors">
-                         <ArrowUpRight className="w-3.5 h-3.5" />
-                      </div>
-                    </a>
-                  )}
                 </div>
+
+                {(project.demoUrl || project.githubUrl) && (
+                  <a href={project.demoUrl || project.githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full pt-6 border-t border-card-border text-foreground font-medium group-hover:text-accent transition-colors">
+                    Canlı Projeyi İncele
+                    <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-colors">
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </div>
+                  </a>
+                )}
               </div>
-            ))
-          )}
+            </div>
+          ))}
+
         </div>
 
-        <div className="glass-panel p-12 text-center border-card-border mb-24">
-          <h3 className="text-3xl font-semibold mb-6">Kendi sektörünüzü göremediniz mi?</h3>
-          <p className="text-foreground/70 text-lg mb-8 max-w-2xl mx-auto">
-            Hangi sektörde olursanız olun, işletmenize değer katacak özel bir dijital deneyim tasarlayabiliriz. 
+        <div className="glass-panel p-12 text-center border-card-border mb-24 rounded-3xl">
+          <h3 className="text-3xl font-semibold mb-6">Kendi sektörünüz için özel bir tasarım mı arıyorsunuz?</h3>
+          <p className="text-foreground/70 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+            Hangi sektörde olursanız olun, işletmenizin prestijini artıracak ve müşteri dönüştürecek özel web sitenizi tasarlayabiliriz. 
           </p>
           <Link 
             href="/#contact" 
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-white/90 transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-white/90 transition-colors shadow-lg"
           >
-            Bize Ulaşın
+            KvK Dijital'den Teklif Alın
           </Link>
         </div>
       </div>

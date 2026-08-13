@@ -1,241 +1,165 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Sparkles, Utensils, Info } from "lucide-react";
 
-interface Project {
+interface ConceptCardProps {
   id: string;
   title: string;
   category: string;
+  description: string;
   features: string[];
-  demo_url?: string;
+  href: string;
+  imageSrc: string;
+  theme: "bistro" | "beauty";
 }
 
-export default function Projects({ projects }: { projects: Project[] }) {
-  // Use fallback if database is empty or not configured yet
-  const allProjects = projects && projects.length > 0 ? projects : [
-    {
-      id: "demo-1",
-      title: "Lüks Kuaför & Güzellik Salonu",
-      category: "Hizmet Sektörü",
-      features: ["Randevu Alma Sistemi", "WhatsApp Entegrasyonu", "Google Maps Desteği", "Modern Arayüz"],
-    },
-    {
-      id: "demo-2",
-      title: "Premium Restoran & Kafe",
-      category: "Yeme İçme",
-      features: ["Dijital Menü Sistemi", "QR Menü Özelliği", "Online Rezervasyon", "Mobil Uyumluluk"],
-    },
-    {
-      id: "demo-3",
-      title: "Sanayi & İnşaat Şirketi",
-      category: "Kurumsal",
-      features: ["Gelişmiş İletişim Formları", "Detaylı Proje Sergileme", "Kurumsal Tasarım", "Hızlı Yükleme"],
-    },
-    {
-      id: "demo-4",
-      title: "Özel Anı & Sevgili Sitesi",
-      category: "Kişisel / Eğlence",
-      features: ["Romantik Tasarım", "Anı ve Fotoğraf Galerisi", "Özel Tarih Geri Sayımı", "Şifreli Erişim"],
-    },
-    {
-      id: "demo-5",
-      title: "Modern E-Ticaret Platformu",
-      category: "E-Ticaret",
-      features: ["Sanal POS Entegrasyonu", "Gelişmiş Filtreleme", "Kargo Takip Sistemi", "İndirim Kuponları"],
-    },
-    {
-      id: "demo-6",
-      title: "Premium Diş Kliniği",
-      category: "Sağlık & Medikal",
-      features: ["Online Randevu Sistemi", "Öncesi/Sonrası Galerisi", "WhatsApp Danışma Hattı", "Doktor Profilleri"],
-    },
-    {
-      id: "demo-7",
-      title: "Lüks Gayrimenkul & Emlak",
-      category: "Emlak",
-      features: ["Gelişmiş İlan Filtreleme", "Harita Üzerinde Arama", "Sanal Tur Desteği", "Danışman Profilleri"],
-    },
-    {
-      id: "demo-8",
-      title: "Butik Otel Rezervasyon",
-      category: "Turizm",
-      features: ["Odalar ve Müsaitlik Takvimi", "Online Ödeme Altyapısı", "Çoklu Dil Desteği (TR/EN)", "Müşteri Yorumları"],
-    },
-    {
-      id: "demo-9",
-      title: "Online Akademi & Kurs",
-      category: "Eğitim",
-      features: ["Öğrenci Üyelik Paneli", "Video Ders İzleme Modülü", "Online Sınav/Test Sistemi", "Sertifika Üretimi"],
-    }
-  ];
+const conceptDemos: ConceptCardProps[] = [
+  {
+    id: "demo-bistro",
+    title: "Pendik Sahil Bistro & Kafe",
+    category: "Restoran & Kafe Gastronomi",
+    description: "Restoran ve kafeler için hazırlanmış editoryal tasarımı, dijital menülü ve hızlı konsept web sitesi.",
+    features: ["İnteraktif Dijital Menü", "Mobil Öncelikli Editoryal Düzen", "Ziyaret Saatleri & Konum"],
+    href: "/projeler/pendik-sahil-bistro-demo",
+    imageSrc: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+    theme: "bistro"
+  },
+  {
+    id: "demo-beauty",
+    title: "Aura Beauty & Güzellik Merkezi",
+    category: "Güzellik & Bakım Salonu",
+    description: "Güzellik salonları ve bakım merkezleri için tasarlanmış online randevu modüllü lüks konsept web sitesi.",
+    features: ["Online Randevu Modülü", "Hizmet & Terapi Kataloğu", "Minimalist Moda Dergisi Düzeni"],
+    href: "/projeler/aura-beauty-demo",
+    imageSrc: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80",
+    theme: "beauty"
+  }
+];
 
-  const categories = ["Tümü", ...Array.from(new Set(allProjects.map(p => p.category)))];
-  
-  const [activeCategory, setActiveCategory] = useState("Tümü");
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity;
-  };
-
-  const filteredProjects = activeCategory === "Tümü" 
-    ? allProjects 
-    : allProjects.filter(p => p.category === activeCategory);
-
-  // Auto-slide effect
-  useEffect(() => {
-    if (filteredProjects.length <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % filteredProjects.length);
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, [filteredProjects.length, currentIndex]);
-
-  // Reset index when category changes
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [activeCategory]);
-
+export default function Projects({ projects }: { projects?: any[] }) {
   return (
-    <section id="projects" className="w-full py-24 relative overflow-hidden">
-      <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 flex flex-col gap-6"
-        >
+    <section id="projects" className="w-full py-24 relative overflow-hidden bg-background border-t border-card-border/50">
+      <div className="container mx-auto px-6 max-w-7xl">
+        
+        {/* Section Header */}
+        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h2 className="text-3xl md:text-4xl font-semibold mb-4">Seçkin Projeler</h2>
-            <p className="text-foreground/50 max-w-md">
-              Her detayı özenle tasarlanmış, yüksek performanslı dijital deneyimler.
-            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold uppercase tracking-wider mb-4">
+              <Sparkles className="w-3.5 h-3.5" />
+              Sektörel Portföy Sunumları
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Seçkin Konsept Projelerimiz</h2>
           </div>
-          
-          {/* Category Tabs */}
-          <div className="flex overflow-x-auto gap-2 pb-2 -mx-6 px-6 md:mx-0 md:px-0 md:flex-wrap md:justify-start md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors border snap-start shrink-0 ${
-                  activeCategory === category 
-                    ? "bg-accent/20 border-accent/50 text-accent" 
-                    : "bg-card border-card-border text-foreground/70 hover:text-foreground hover:border-foreground/20"
+          <p className="text-foreground/70 text-sm max-w-md leading-relaxed">
+            Farklı sektörlerin gerçek ihtiyaçlarına ve tasarım dillerine özel olarak hazırladığımız yüksek dönüşümlü demo çalışmalarımız.
+          </p>
+        </div>
+
+        {/* Concept Demos Grid Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+          {conceptDemos.map((demo) => {
+            const isBistro = demo.theme === "bistro";
+
+            return (
+              <div 
+                key={demo.id}
+                className={`group rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col justify-between relative ${
+                  isBistro 
+                    ? "bg-[#faf8f5] text-[#1f1c19] border-[#d6cbba] hover:border-[#b89562]" 
+                    : "bg-[#0d0d12] text-[#f5f2eb] border-[#262433] hover:border-[#d4af37]/60"
                 }`}
               >
-                {category}
-              </button>
-            ))}
-          </div>
-        </motion.div>
+                {/* Top Disclaimer Badge */}
+                <div className="absolute top-4 right-4 z-10">
+                  <span className={`px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase backdrop-blur-md border ${
+                    isBistro 
+                      ? "bg-[#1f1c19]/80 text-[#faf8f5] border-[#1f1c19]" 
+                      : "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37]/40"
+                  }`}>
+                    Konsept Demo
+                  </span>
+                </div>
 
-        <div className="relative w-full">
-          <AnimatePresence mode="wait">
-            {filteredProjects.length > 0 && (
-              <motion.div
-                key={filteredProjects[currentIndex].id || filteredProjects[currentIndex].title}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4 }}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={1}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipe = swipePower(offset.x, velocity.x);
-                  if (swipe < -swipeConfidenceThreshold) {
-                    setCurrentIndex((prev) => (prev + 1) % filteredProjects.length);
-                  } else if (swipe > swipeConfidenceThreshold) {
-                    setCurrentIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
-                  }
-                }}
-                className="group relative w-full rounded-3xl overflow-hidden bg-card border border-card-border touch-pan-y"
-              >
-                <div className="flex flex-col md:flex-row h-full">
-                  {/* Content Side */}
-                  <div className="p-8 md:p-12 md:w-1/3 flex flex-col justify-between border-b md:border-b-0 md:border-r border-card-border/50">
-                    <div>
-                      <span className="text-accent text-sm font-medium tracking-wider uppercase mb-4 block">
-                        {filteredProjects[currentIndex].category}
-                      </span>
-                      <h3 className="text-3xl font-semibold mb-8">{filteredProjects[currentIndex].title}</h3>
-                      
-                      <ul className="space-y-3 mb-12">
-                        {filteredProjects[currentIndex].features.map(f => (
-                          <li key={f} className="flex items-center gap-3 text-foreground/70 text-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-accent/50" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <button className="flex items-center gap-3 text-foreground font-medium group-hover:text-accent transition-colors w-fit">
-                      Canlı Demoyu Gör
-                      <div className="w-10 h-10 rounded-full border border-card-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-colors">
-                         <ArrowUpRight className="w-4 h-4" />
-                      </div>
-                    </button>
-                  </div>
-
-                  {/* Image Placeholder Side */}
-                  <div className="md:w-2/3 min-h-[400px] md:min-h-[500px] bg-gradient-to-br from-[#0a0f0f] to-[#050505] relative overflow-hidden flex items-center justify-center p-12">
-                     <div className="w-full max-w-2xl aspect-[16/10] rounded-xl border border-white/10 bg-black/50 shadow-2xl overflow-hidden relative group-hover:scale-[1.02] transition-transform duration-700 ease-out">
-                        {/* Web UI Mockup placeholder */}
-                        <div className="w-full h-8 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
-                        </div>
-                        <div className="p-8 w-full h-full relative">
-                          <div className="w-3/4 h-12 bg-white/5 rounded-lg mb-4" />
-                          <div className="w-1/2 h-6 bg-white/5 rounded-md mb-12" />
-                          <div className="grid grid-cols-3 gap-4">
-                            <div className="w-full h-32 bg-white/5 rounded-lg" />
-                            <div className="w-full h-32 bg-white/5 rounded-lg" />
-                            <div className="w-full h-32 bg-accent/10 rounded-lg border border-accent/20" />
-                          </div>
-                        </div>
-                     </div>
+                {/* Imagery Showcase */}
+                <div className="w-full h-72 relative overflow-hidden bg-slate-900 border-b border-black/10">
+                  <img 
+                    src={demo.imageSrc} 
+                    alt={demo.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${
+                    isBistro 
+                      ? "from-[#1f1c19]/80 via-transparent to-transparent" 
+                      : "from-[#0a0a0d]/90 via-transparent to-transparent"
+                  } p-6 flex flex-col justify-end`}>
+                    <span className={`text-xs uppercase tracking-widest font-semibold ${
+                      isBistro ? "text-[#c8a97e]" : "text-[#d4af37]"
+                    }`}>
+                      {demo.category}
+                    </span>
+                    <h3 className={`text-2xl font-bold ${isBistro ? "font-serif text-[#faf8f5]" : "font-serif text-white"}`}>
+                      {demo.title}
+                    </h3>
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          {/* Slider Indicators */}
-          {filteredProjects.length > 1 && (
-            <div className="flex justify-center gap-2 mt-8">
-              {filteredProjects.map((_, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  className="w-10 h-10 flex items-center justify-center -mx-2"
-                  aria-label={`Go to slide ${idx + 1}`}
-                >
-                  <div className={`h-2 rounded-full transition-all duration-300 ${
-                    idx === currentIndex ? "w-6 bg-accent" : "w-2 bg-white/20 group-hover:bg-white/40"
-                  }`} />
-                </button>
-              ))}
-            </div>
-          )}
+
+                {/* Content Side */}
+                <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+                  <p className={`text-xs leading-relaxed ${isBistro ? "text-[#524d45]" : "text-[#9e978c]"}`}>
+                    {demo.description}
+                  </p>
+
+                  <ul className="space-y-2">
+                    {demo.features.map(f => (
+                      <li key={f} className={`flex items-center gap-2.5 text-xs font-medium ${
+                        isBistro ? "text-[#38332d]" : "text-[#d4af37]"
+                      }`}>
+                        <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                          isBistro ? "bg-[#b89562]" : "bg-[#d4af37]"
+                        }`} />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className={`pt-6 border-t ${isBistro ? "border-[#d6cbba]" : "border-[#1c1b26]"}`}>
+                    <Link 
+                      href={demo.href}
+                      className={`inline-flex items-center justify-between w-full font-bold text-xs uppercase tracking-wider transition-colors ${
+                        isBistro ? "text-[#1f1c19] group-hover:text-[#b89562]" : "text-white group-hover:text-[#d4af37]"
+                      }`}
+                    >
+                      <span>Demoyu Detaylı İncele</span>
+                      <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+                        isBistro 
+                          ? "border-[#1f1c19]/30 group-hover:border-[#b89562] group-hover:bg-[#b89562]/10" 
+                          : "border-white/20 group-hover:border-[#d4af37] group-hover:bg-[#d4af37]/10"
+                      }`}>
+                        <ArrowUpRight className="w-4 h-4" />
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
+              </div>
+            );
+          })}
         </div>
 
-        <div className="mt-16 text-center">
-          <Link href="/projeler" className="inline-flex items-center gap-2 text-accent font-medium hover:text-white transition-colors group">
-            Tüm Projeleri İncele 
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
+        {/* View All Projects Link */}
+        <div className="text-center">
+          <Link 
+            href="/projeler" 
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-card-border text-foreground font-semibold text-sm hover:border-accent hover:text-accent transition-all group"
+          >
+            Tüm Örnek Portföyü İncele 
+            <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </Link>
         </div>
+
       </div>
     </section>
   );
