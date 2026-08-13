@@ -23,7 +23,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Restoran ve kafeler için hazırlanmış editoryal tasarımı, dijital menülü ve hızlı konsept web sitesi.",
     features: ["İnteraktif Dijital Menü", "Mobil Öncelikli Editoryal Düzen", "Ziyaret Saatleri & Konum"],
     href: "/projeler/pendik-sahil-bistro-demo",
-    imageSrc: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+    imageSrc: "/images/demos/pendik-bistro/hero.jpg",
     theme: "bistro"
   },
   {
@@ -33,7 +33,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Güzellik salonları ve bakım merkezleri için tasarlanmış online randevu modüllü lüks konsept web sitesi.",
     features: ["Online Randevu Modülü", "Hizmet & Terapi Kataloğu", "Minimalist Moda Dergisi Düzeni"],
     href: "/projeler/aura-beauty-demo",
-    imageSrc: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80",
+    imageSrc: "/images/demos/aura-beauty/hero.jpg",
     theme: "beauty"
   }
 ];

@@ -54,10 +54,12 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-slate-900 relative overflow-hidden border-b border-[#d6cbba]">
               <img 
-                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
-                alt="Pendik Sahil Bistro & Kafe" 
+                src="/images/demos/pendik-bistro/hero.jpg" 
+                alt="Pendik Sahil Bistro & Kafe ahşap masa ve sıcak mekan düzeni" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
+                width={800}
+                height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-[#c8a97e]">Restoran & Kafe Gastronomi</span>
@@ -107,10 +109,12 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-slate-900 relative overflow-hidden border-b border-[#262433]">
               <img 
-                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" 
-                alt="Aura Beauty & Güzellik Merkezi" 
+                src="/images/demos/aura-beauty/hero.jpg" 
+                alt="Aura Beauty & Güzellik Merkezi medikal cilt bakımı uygulaması" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
+                width={800}
+                height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0d]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-[#d4af37]">Güzellik & Bakım Salonu</span>

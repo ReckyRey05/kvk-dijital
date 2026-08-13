@@ -158,9 +158,12 @@ export default function DemoBeautyClient() {
             <div className="lg:col-span-5 relative order-2 lg:order-1">
               <div className="relative border border-[#2b2a3a] shadow-2xl bg-[#14131b] h-[520px] overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1000&q=80" 
-                  alt="Medikal Cilt Bakım ve Estetik Terapisi"
+                  src="/images/demos/aura-beauty/hero.jpg" 
+                  alt="Ferah salonda medikal cilt bakımı ve kolajen yüz terapisi uygulaması"
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  width={1000}
+                  height={800}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0d]/90 via-transparent to-transparent p-8 flex flex-col justify-end">
                   <span className="font-serif italic text-[#f5f2eb] text-lg">"Doğal denge, derin ışıltı."</span>
@@ -279,9 +282,12 @@ export default function DemoBeautyClient() {
             
             <div className="h-[460px] border border-[#262433] relative bg-[#14131c] overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1512290900673-0306e93ffdf6?auto=format&fit=crop&w=1000&q=80" 
-                alt="Aromaterapi ve Spa Bakım Terapisi"
+                src="/images/demos/aura-beauty/spa-oil.jpg" 
+                alt="Aromaterapi spa yağları ve sakinleştirici masaj ortamı"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                width={800}
+                height={600}
               />
             </div>
 

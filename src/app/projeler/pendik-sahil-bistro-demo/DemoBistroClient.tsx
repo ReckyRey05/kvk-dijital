@@ -197,9 +197,12 @@ export default function DemoBistroClient() {
             <div className="lg:col-span-5 relative">
               <div className="relative rounded border border-[#d6cbba] shadow-2xl bg-[#e8e2d8] h-[480px] overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80" 
-                  alt="Pendik Sahil Bistro Kahve ve Mutfak"
+                  src="/images/demos/pendik-bistro/hero.jpg" 
+                  alt="Pendik Sahil Bistro sıcak akşam atmosferi ve ahşap masa düzeni"
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  width={1000}
+                  height={800}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/90 via-transparent to-transparent p-8 flex flex-col justify-end">
                   <span className="font-serif italic text-[#f4efe6] text-xl">"Taze malzemeler, uzun sohbetler."</span>
@@ -297,9 +300,12 @@ export default function DemoBistroClient() {
             
             <div className="h-[400px] rounded overflow-hidden border border-[#d6cbba] relative bg-[#e8e2d8]">
               <img 
-                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1000&q=80" 
-                alt="Özel Reçeteli Taş Fırın Lezzeti"
+                src="/images/demos/pendik-bistro/food-signature.jpg" 
+                alt="Odun ateşinde pişirilmiş özel reçeteli taş fırın gurme lezzeti"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                width={800}
+                height={600}
               />
             </div>
 
@@ -337,9 +343,12 @@ export default function DemoBistroClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group">
               <img 
-                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
-                alt="Nitelikli Kahve Sunumu"
+                src="/images/demos/pendik-bistro/coffee.jpg" 
+                alt="Nitelikli taze demlenmiş espresso ve filtre kahve sunumu"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                width={800}
+                height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/80 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="font-serif text-base text-[#faf8f5]">Nitelikli Kahve Terapisi</span>
@@ -348,9 +357,12 @@ export default function DemoBistroClient() {
 
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group">
               <img 
-                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" 
-                alt="Bistro Masa Düzeni"
+                src="/images/demos/pendik-bistro/atmosphere.jpg" 
+                alt="Bistro iç mekanında sıcak aydınlatma ve restoran masa düzeni"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                width={800}
+                height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/80 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="font-serif text-base text-[#faf8f5]">Sıcak & Editorial Mekan</span>
@@ -359,9 +371,12 @@ export default function DemoBistroClient() {
 
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group sm:col-span-2 lg:col-span-1">
               <img 
-                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" 
-                alt="Gurme Lezzet Sunumu"
+                src="/images/demos/pendik-bistro/food-signature.jpg" 
+                alt="Taze malzemelerle hazırlanan günün lezzet tabağı"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                width={800}
+                height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f1c19]/80 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="font-serif text-base text-[#faf8f5]">Günlük Taze Gurme Lezzetler</span>
