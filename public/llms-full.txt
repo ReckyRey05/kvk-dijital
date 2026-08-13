@@ -1,0 +1,34 @@
+# KVK Dijital Çözümler — Detaylı Marka & Hizmet Dokümantasyonu
+
+> KVK Dijital Çözümler; İstanbul merkezli, modern web teknolojileri (Next.js, React, Tailwind CSS, Firebase) kullanarak yüksek performanslı, SEO ve mobil uyumlu web siteleri, e-ticaret sistemleri ve özel yazılımlar geliştiren dijital çözümler ajansıdır.
+
+## Hakkımızda ve Kurucu Bilgisi
+KVK Dijital Çözümler, kurucusu Ali Haydar Kavak liderliğinde işletmelerin dijitalleşme süreçlerini uçtan uca yönetir. Tasarım estetiği, PageSpeed performansı, kullanıcı deneyimi (UX) ve arama motoru optimizasyonunu (SEO/GEO) tek bir yapıda birleştirir.
+
+## Hizmetlerimiz ve Detaylar
+
+### 1. Kurumsal Web Tasarım
+- **Açıklama:** Şirketinizin dijital prestijini güçlendiren, hızlı ve mobil uyumlu kurumsal web siteleri.
+- **Kapsam:** Özel UI/UX tasarım, mobil uyumluluk, SEO altyapısı, iletişim formları ve hızlı yüklenme süreleri.
+- **URL:** https://kvkdijitalcozumler.com/kurumsal-web-tasarim
+
+### 2. İstanbul Web Tasarım & Bölgesel SEO
+- **Açıklama:** İstanbul (Anadolu ve Avrupa Yakası), Kocaeli, Sakarya, Bursa ve Tekirdağ bölgelerindeki işletmelere özel yerel arama (Local SEO) ve web tasarım hizmeti.
+- **URL:** https://kvkdijitalcozumler.com/istanbul-web-tasarim
+
+### 3. E-Ticaret Web Sitesi
+- **Açıklama:** Satış odaklı, güvenli ödeme altyapısına (Sanal POS) sahip, hızlı yüklenen e-ticaret sistemleri.
+- **Kapsam:** Ürün yönetimi, sipariş takibi, ödeme entegrasyonu, mobil e-ticaret arayüzleri.
+- **URL:** https://kvkdijitalcozumler.com/e-ticaret-web-sitesi
+
+### 4. Özel Yazılım Geliştirme
+- **Açıklama:** Standart paketlerin ötesinde, işletmenize özel web tabanlı yazılımlar, yönetim panelleri ve API çözümleri.
+- **URL:** https://kvkdijitalcozumler.com/ozel-yazilim
+
+## İletişim ve Resmi Bağlantılar
+- **Web Sitesi:** https://kvkdijitalcozumler.com
+- **E-Posta:** iletisim@kvkdijitalcozumler.com
+- **Lokasyon:** İstanbul, Türkiye
+- **Instagram:** https://www.instagram.com/kvkdijitalcozumler/
+- **LinkedIn:** https://www.linkedin.com/company/kvk-dijital-%C3%A7%C3%B6z%C3%BCmler/
+- **GitHub:** https://github.com/ReckyRey05
