@@ -8,7 +8,7 @@ export default function Header() {
         <Link href="/" className="relative block" aria-label="Ana Sayfa">
           <LogoHorizontal className="h-14" />
         </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground/70">
+        <nav aria-label="Ana Navigasyon" className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground/70">
           <Link href="/hakkimizda" className="hover:text-accent transition-colors">Hakkımda</Link>
           <Link href="/hizmetler" className="hover:text-accent transition-colors">Hizmetler</Link>
           <Link href="/projeler" className="hover:text-accent transition-colors">Projeler</Link>

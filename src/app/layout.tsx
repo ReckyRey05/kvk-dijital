@@ -70,10 +70,8 @@ export default function RootLayout({
   return (
     <html lang="tr" className={`scroll-smooth ${inter.variable}`}>
       <head>
-        {/* DNS prefetch for external resources */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        {/* DNS prefetch for GTM tracking */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={inter.className}>
         <ClientHeader />
