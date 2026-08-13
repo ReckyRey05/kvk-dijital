@@ -102,6 +102,63 @@ export default async function Projeler() {
             </div>
           </div>
 
+          {/* Static Concept Demo #2 Card */}
+          <div className="group flex flex-col rounded-3xl overflow-hidden bg-card border border-rose-500/30 hover:border-rose-500/60 transition-all duration-500 relative">
+            <div className="absolute top-4 right-4 z-10 bg-rose-500/20 border border-rose-500/40 text-rose-300 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">
+              Konsept Demo
+            </div>
+            
+            <div className="w-full h-64 bg-gradient-to-br from-rose-950/40 via-black to-[#050505] relative overflow-hidden flex items-center justify-center p-6 border-b border-card-border/50">
+              <div className="w-full h-full rounded-lg border border-rose-500/20 bg-black/60 shadow-2xl overflow-hidden p-6 flex flex-col justify-between group-hover:scale-105 transition-transform duration-700">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300 font-bold text-xs">
+                    ✨
+                  </div>
+                  <span className="text-white font-bold text-sm">Aura Beauty</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="w-full h-2 bg-rose-500/30 rounded-full" />
+                  <div className="w-2/3 h-2 bg-white/10 rounded-full" />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-8 flex flex-col flex-grow">
+              <span className="text-rose-400 text-xs font-medium tracking-wider uppercase mb-3 block">
+                Güzellik & Bakım Salonu
+              </span>
+              <h3 className="text-xl font-semibold mb-3">Aura Beauty & Güzellik Merkezi</h3>
+              <p className="text-foreground/70 text-xs mb-6 leading-relaxed">
+                Güzellik salonları ve kişisel bakım merkezleri için hazırlanmış online randevu modüllü konsept web tasarımı.
+              </p>
+
+              <ul className="space-y-2 mb-8">
+                <li className="flex items-center gap-2 text-foreground/70 text-sm">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                  <span>Online Randevu Modülü</span>
+                </li>
+                <li className="flex items-center gap-2 text-foreground/70 text-sm">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                  <span>Hizmet & Fiyat Listesi</span>
+                </li>
+                <li className="flex items-center gap-2 text-foreground/70 text-sm">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                  <span>Mobil Öncelikli Şık Tasarım</span>
+                </li>
+              </ul>
+
+              <Link 
+                href="/projeler/aura-beauty-demo" 
+                className="flex items-center justify-between w-full pt-6 border-t border-card-border text-foreground font-medium group-hover:text-rose-400 transition-colors mt-auto"
+              >
+                Demoyu İncele
+                <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-rose-400 group-hover:bg-rose-500/10 transition-colors">
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </div>
+              </Link>
+            </div>
+          </div>
+
           {projects.length === 0 ? null : (
             projects.map((project, index) => (
               <div
