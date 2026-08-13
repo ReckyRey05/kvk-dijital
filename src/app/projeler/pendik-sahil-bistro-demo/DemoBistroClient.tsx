@@ -281,6 +281,58 @@ export default function DemoBistroClient() {
         </div>
       </section>
 
+      {/* PHOTO SHOWCASE GALLERY SECTION */}
+      <section className="py-20 bg-slate-950/40 border-b border-white/5">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block mb-2">Bistro Deneyimi</span>
+            <h2 className="text-3xl font-bold text-white mb-4">Atmosfer & Sunumlarımız</h2>
+            <p className="text-slate-400 text-xs">Pendik sahilinde huzurlu anlar ve özenle hazırlanan gastronomik lezzetler.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+              <img 
+                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
+                alt="Bistro İç Mekan ve Kahve Sunumu"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Nitelikli Kahve Deneyimi</span>
+                <span className="text-amber-300 text-xs">Taze çekilmiş %100 Arabica harmanı</span>
+              </div>
+            </div>
+
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+              <img 
+                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" 
+                alt="Bistro Restoran Masası ve Atmosfer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Sıcak & Editorial Ortam</span>
+                <span className="text-amber-300 text-xs">Akşam yemekleri ve toplantılar için ideal</span>
+              </div>
+            </div>
+
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900 sm:col-span-2 lg:col-span-1">
+              <img 
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" 
+                alt="Özel Reçeteli Taş Fırın Pizzası"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Günlük Taze Üretim</span>
+                <span className="text-amber-300 text-xs">Doğal malzemeli özel gurme lezzetler</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. SEKTÖREL AYRICALIKLAR */}
       <section id="features" className="py-20">
         <div className="container mx-auto px-6 max-w-6xl">

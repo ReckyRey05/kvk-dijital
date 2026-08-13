@@ -251,6 +251,58 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
+      {/* BEAUTY SHOWCASE GALLERY SECTION */}
+      <section className="py-20 bg-rose-950/10 border-b border-white/5">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-rose-400 text-xs font-bold uppercase tracking-widest block mb-2">Aura Salon Deneyimi</span>
+            <h2 className="text-3xl font-bold text-white mb-4">Huzurlu & Lüks Terapiler</h2>
+            <p className="text-rose-200/60 text-xs">Cildiniz ve bakımlarınız için hijyenik, dingin ve özel hazırlanmış salon alanları.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+              <img 
+                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" 
+                alt="Medikal Cilt Bakım Terapisi"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Medikal & Hydrafacial Bakım</span>
+                <span className="text-rose-300 text-xs">Derinlemesine temizleme ve vitamin yüklemesi</span>
+              </div>
+            </div>
+
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+              <img 
+                src="https://images.unsplash.com/photo-1512290900673-0306e93ffdf6?auto=format&fit=crop&w=800&q=80" 
+                alt="Doğal Aromaterapi Yağları ve Masaj"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Aromaterapi Terapisi</span>
+                <span className="text-rose-300 text-xs">Bitkisel özlü doğal yağlarla rahatlatıcı bakım</span>
+              </div>
+            </div>
+
+            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900 sm:col-span-2 lg:col-span-1">
+              <img 
+                src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=800&q=80" 
+                alt="Steril Manikür & Tırnak Bakımı"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-white font-semibold text-sm">Medikal Manikür & Oje</span>
+                <span className="text-rose-300 text-xs">Steril ekipman ve tırnak güçlendirici terapiler</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. INTERAKTİF DEMO RANDEVU MODÜLÜ */}
       <section id="appointment" className="py-20">
         <div className="container mx-auto px-6 max-w-4xl">
