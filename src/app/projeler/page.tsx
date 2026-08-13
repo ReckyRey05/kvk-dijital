@@ -207,7 +207,7 @@ export default async function Projeler() {
             Hangi sektörde olursanız olun, işletmenizin prestijini artıracak ve müşteri dönüştürecek özel web sitenizi tasarlayabiliriz. 
           </p>
           <Link 
-            href="/#contact" 
+            href="/#iletisim" 
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-white/90 transition-colors shadow-lg"
           >
             KvK Dijital'den Teklif Alın

@@ -115,7 +115,7 @@ export default function DemoBeautyClient() {
         <Info className="w-4 h-4 text-[#d4af37] shrink-0" />
         <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından güzellik & bakım salonları için hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
         <Link 
-          href="/#contact" 
+          href="/#iletisim" 
           className="ml-2 font-semibold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-[#d4af37]/20 px-2.5 py-0.5 rounded"
         >
           Salonunuz İçin Teklif Alın <ArrowRight className="w-3 h-3" />
@@ -147,7 +147,7 @@ export default function DemoBeautyClient() {
               <span>Takvim Randevu</span>
             </a>
             <Link 
-              href="/#contact"
+              href="/#iletisim"
               className="px-5 py-2.5 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all"
             >
               Teklif Al

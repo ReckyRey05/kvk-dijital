@@ -106,7 +106,7 @@ export default function DemoBistroClient() {
         <Info className="w-4 h-4 text-[#c8a97e] shrink-0" />
         <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından restoran & kafeler için hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
         <Link 
-          href="/#contact" 
+          href="/#iletisim" 
           className="ml-2 font-semibold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-[#c8a97e]/20 px-2.5 py-0.5 rounded"
         >
           İşletmeniz İçin Teklif Alın <ArrowRight className="w-3 h-3" />
@@ -139,7 +139,7 @@ export default function DemoBistroClient() {
               <span>Masa Rezerve Et</span>
             </button>
             <Link 
-              href="/#contact"
+              href="/#iletisim"
               className="px-5 py-2.5 rounded bg-[#1f1c19] text-[#faf8f5] font-semibold text-xs tracking-widest uppercase hover:bg-[#38332d] transition-all"
             >
               Teklif Al
@@ -421,7 +421,7 @@ export default function DemoBistroClient() {
           </p>
           <div>
             <Link 
-              href="/#contact"
+              href="/#iletisim"
               className="px-8 py-3.5 rounded bg-[#c8a97e] text-[#1c1815] font-bold text-xs tracking-widest uppercase hover:bg-[#d8b98e] transition-all inline-flex items-center gap-2"
             >
               KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />

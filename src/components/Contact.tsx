@@ -78,7 +78,8 @@ export default function Contact() {
   const whatsappUrl = `https://wa.me/905348914905?text=${whatsappMessage}`;
 
   return (
-    <section id="contact" className="w-full py-32 relative">
+    <section id="iletisim" className="w-full py-32 relative">
+      <div id="contact" className="absolute -top-32" />
       <div className="container mx-auto px-6">
 
         {/* Mini Proje Ön Değerlendirme Aracı */}
