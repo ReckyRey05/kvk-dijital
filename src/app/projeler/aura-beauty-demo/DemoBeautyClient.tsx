@@ -4,357 +4,332 @@ import { useState } from "react";
 import Link from "next/link";
 import { 
   Sparkles, 
-  Scissors, 
   Calendar, 
   Clock, 
-  MapPin, 
-  CheckCircle2, 
   ArrowRight, 
   ChevronDown, 
-  Info, 
-  Heart,
-  Star,
-  ShieldCheck,
-  UserCheck
+  Info,
+  Check
 } from "lucide-react";
 
-interface BeautyService {
+interface TreatmentItem {
   id: string;
   category: string;
-  title: string;
+  name: string;
   duration: string;
   price: string;
   description: string;
-  popular?: boolean;
 }
 
-const beautyServices: BeautyService[] = [
+const treatments: TreatmentItem[] = [
   {
-    id: "s1",
-    category: "Cilt Bakımı",
-    title: "Medikal & Hydrafacial Cilt Bakımı",
+    id: "t1",
+    category: "Cilt Terapileri",
+    name: "Medikal & Hydrafacial Cilt Bakımı",
     duration: "60 dk",
     price: "650 ₺",
-    description: "Cildin derinlemesine temizlenmesi, ölü hücrelerin arındırılması ve vitamin serum yüklemesi.",
-    popular: true
+    description: "Cildin gözenek düzeyinde arındırılması, ölü hücre temizliği ve yoğun hyalüronik serum yüklemesi."
   },
   {
-    id: "s2",
-    category: "Cilt Bakımı",
-    title: "Anti-Aging & Kolajen Bakımı",
+    id: "t2",
+    category: "Cilt Terapileri",
+    name: "Anti-Aging & Kolajen Terapisi",
     duration: "75 dk",
     price: "850 ₺",
-    description: "İnce çizgi görünümünü azaltmaya yardımcı yoğun kolajen ve lüks nem maskesi uygulaması."
+    description: "Cildin esneklik dengesini destekleyen kolajen kompleks maske ve soğuk pres yüz masajı."
   },
   {
-    id: "s3",
-    category: "Kirpik & Kaş",
-    title: "Kaş Laminasyonu & İpek Kirpik",
-    duration: "90 dk",
+    id: "t3",
+    category: "Kaş & Kirpik",
+    name: "Kaş Laminasyonu & Vitamin Bakımı",
+    duration: "60 dk",
     price: "550 ₺",
-    description: "Doğal kaş ve kirpikleri daha dolgun, kavisli ve hacimli gösteren vitamin destekli bakım."
+    description: "Doğal kaş formunu besleyici keratin kompleksleri ile şekillendiren hacim terapisi."
   },
   {
-    id: "s4",
-    category: "Manikür & Pedikür",
-    title: "Kalıcı Oje & Medikal Manikür",
+    id: "t4",
+    category: "Tırnak Bakımı",
+    name: "Medikal Manikür & Kalıcı Bakım",
     duration: "45 dk",
     price: "380 ₺",
-    description: "Steril ekipmanlarla yapılan tırnak et bakımı, şekillendirme ve 3 hafta kalıcı oje uygulaması.",
-    popular: true
+    description: "Steril hijyen standartlarında yapılan tırnak et bakımı, besleyici yağlar ve kalıcı uygulama."
   },
   {
-    id: "s5",
-    category: "Saç Bakımı",
-    title: "Keratin Yükleme & Özel Nem Maskesi",
+    id: "t5",
+    category: "Saç Terapileri",
+    name: "Derin Nem & Keratin Yükleme",
     duration: "60 dk",
     price: "700 ₺",
-    description: "Yıpranmış saç tellerini onaran, parlaklık ve pürüzsüzlük kazandıran nem terapisidir."
-  },
-  {
-    id: "s6",
-    category: "Vücut Bakımı",
-    title: "Bölgesel Sıkılaşma & Detoks Masajı",
-    duration: "50 dk",
-    price: "600 ₺",
-    description: "Lenf drenaj ve bitkisel yağlar eşliğinde vücut hatlarını rahatlatıcı profesyonel bakım."
+    description: "Isı ve dış etkenlerden koruyan, saç tellerini içeriden dışarıya pürüzsüzleştiren özel terapi."
   }
 ];
 
 const faqs = [
   {
     q: "Online randevu sistemi nasıl çalışır?",
-    a: "Web sitenize entegre edilecek randevu modülü sayesinde müşterileriniz istediği hizmeti, uzmanı, tarihi ve saati seçerek 7/24 randevu oluşturabilir."
-  },
-  {
-    q: "Web sitesi mobil cihazlara tam uyumlu mu?",
-    a: "Evet, tüm tasarımlarımız telefon ve tablet ekranlarında ultra hızlı açılacak ve akıcı kullanılacak şekilde mobil öncelikli geliştirilir."
-  },
-  {
-    q: "WhatsApp ile doğrudan randevu iletişimi eklenebilir mi?",
-    a: "Kesinlikle! Müşterileriniz tek bir tıkla işletmenizin resmi WhatsApp hattına bağlanarak hizmetler ve müsaitlik hakkında bilgi alabilir."
+    a: "Web sitenize entegre edilecek randevu modülü sayesinde müşterileriniz istediği hizmeti, tarihi ve saati seçerek 7/24 randevu talebinde bulunabilir."
   },
   {
     q: "Güzellik salonum için kendi yönetim panelim olacak mı?",
-    a: "Evet, kolay kullanımlı yönetim paneli üzerinden hizmetlerinizi, fiyatlarınızı ve fotoğraflarınızı dilediğiniz an güncelleyebilirsiniz."
+    a: "Evet, Türkçe yönetim paneli üzerinden hizmetlerinizi, fiyatlarınızı ve fotoğraflarınızı dilediğiniz an güncelleyebilirsiniz."
+  },
+  {
+    q: "WhatsApp ile doğrudan iletişim eklenebilir mi?",
+    a: "Kesinlikle! Müşterileriniz tek bir tıkla işletmenizin resmi WhatsApp hattına bağlanarak doğrudan bilgi alabilir."
   }
 ];
 
 export default function DemoBeautyClient() {
-  const [selectedService, setSelectedService] = useState<string>("s1");
-  const [selectedDate, setSelectedDate] = useState<string>("Yarın — 14:30");
+  const [activeTab, setActiveTab] = useState<string>("t1");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
-  const triggerDemoAppointment = (e: React.FormEvent) => {
+  const triggerDemoToast = (e: React.FormEvent) => {
     e.preventDefault();
     setToastMsg("Bu bir konsept demo çalışmadır. Gerçek güzellik salonunuz için bu randevu formu WhatsApp veya SMS onay sistemine bağlanır.");
-    setTimeout(() => setToastMsg(null), 6000);
+    setTimeout(() => setToastMsg(null), 5000);
   };
 
   return (
-    <div className="min-h-screen bg-[#0d070b] text-rose-50 flex flex-col font-sans selection:bg-rose-500/30 selection:text-rose-200">
+    <div className="min-h-screen bg-[#08080a] text-[#f5f2eb] flex flex-col font-sans selection:bg-[#c9b49a]/30 selection:text-white">
       
-      {/* 1. ÜST KONSEPT DEMO UYARI BARI */}
-      <div className="w-full bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-rose-500/20 border-b border-rose-500/30 py-2.5 px-4 text-center text-xs sm:text-sm text-rose-200 flex flex-wrap items-center justify-center gap-2 relative z-50">
-        <Info className="w-4 h-4 text-rose-400 shrink-0" />
-        <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından güzellik salonları için hazırlanmış <strong>Konsept Demo</strong> projedir.</span>
+      {/* 1. KONSEPT DEMO BARI */}
+      <div className="w-full bg-[#121216] border-b border-[#2a2933] py-2.5 px-4 text-center text-xs text-[#c9b49a] flex flex-wrap items-center justify-center gap-2 relative z-50">
+        <Info className="w-4 h-4 text-[#c9b49a] shrink-0" />
+        <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından güzellik & bakım salonları için hazırlanmış <strong>Konsept Demo</strong> projedir.</span>
         <Link 
           href="/#contact" 
-          className="ml-2 font-bold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-rose-500/30 px-2.5 py-0.5 rounded-full"
+          className="ml-2 font-semibold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-[#c9b49a]/20 px-2.5 py-0.5 rounded"
         >
           Salonunuz İçin Teklif Alın <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
-      {/* 2. HEADER */}
-      <header className="sticky top-0 z-40 bg-[#0d070b]/90 backdrop-blur-md border-b border-white/10">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500/30 to-pink-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-white block">Aura Beauty</span>
-              <span className="text-[10px] uppercase tracking-widest text-rose-400 font-semibold block">Güzellik & Estetik</span>
-            </div>
+      {/* 2. MINIMALIST LUXURY HEADER */}
+      <header className="sticky top-0 z-40 bg-[#08080a]/95 backdrop-blur-md border-b border-[#1a1921]">
+        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
+          <div className="flex items-baseline gap-3">
+            <span className="font-serif text-2xl font-light tracking-wide text-[#f5f2eb]">AURA</span>
+            <span className="text-[10px] uppercase tracking-widest text-[#c9b49a] font-medium">Beauty & Spa</span>
           </div>
 
-          <nav aria-label="Demo Beauty Navigasyon" className="hidden md:flex items-center gap-8 text-sm text-rose-200/70">
-            <a href="#hero" className="hover:text-rose-300 transition-colors">Ana Sayfa</a>
-            <a href="#services" className="hover:text-rose-300 transition-colors">Hizmetlerimiz</a>
-            <a href="#appointment" className="hover:text-rose-300 transition-colors">Randevu Modülü</a>
-            <a href="#faq" className="hover:text-rose-300 transition-colors">SSS</a>
+          <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#9e9a91]">
+            <a href="#philosophy" className="hover:text-[#c9b49a] transition-colors">Felsefe</a>
+            <a href="#treatments" className="hover:text-[#c9b49a] transition-colors">Terapiler</a>
+            <a href="#experience" className="hover:text-[#c9b49a] transition-colors">Ritüeller</a>
+            <a href="#booking" className="hover:text-[#c9b49a] transition-colors">Randevu</a>
+            <a href="#faq" className="hover:text-[#c9b49a] transition-colors">SSS</a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <a 
-              href="#appointment"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/40 bg-rose-500/10 text-rose-300 text-xs font-semibold hover:bg-rose-500/20 transition-all cursor-pointer"
+              href="#booking"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 border border-[#3b3846] text-[#c9b49a] text-xs uppercase tracking-widest hover:border-[#c9b49a] transition-all cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>Demo Randevu</span>
             </a>
             <Link 
               href="/#contact"
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-xs hover:opacity-90 transition-all shadow-lg shadow-rose-500/25"
+              className="px-5 py-2.5 bg-[#c9b49a] text-[#08080a] font-bold text-xs tracking-widest uppercase hover:bg-[#d8c5ad] transition-all"
             >
-              Proje Teklifi Al
+              Teklif Al
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Toast Alert Notification */}
+      {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 rounded-2xl bg-rose-950/95 border border-rose-500/40 text-rose-100 text-xs leading-relaxed shadow-2xl backdrop-blur-xl animate-fade-in-up flex items-start gap-3">
-          <Info className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 bg-[#14131a] border border-[#c9b49a]/40 text-[#f5f2eb] text-xs leading-relaxed shadow-2xl flex items-start gap-3">
+          <Info className="w-5 h-5 text-[#c9b49a] shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-rose-300 mb-1">Demo Bilgilendirmesi</p>
+            <p className="font-semibold text-[#c9b49a] mb-1">Demo Bilgilendirmesi</p>
             <p>{toastMsg}</p>
           </div>
         </div>
       )}
 
-      {/* 3. HERO SECTION */}
-      <section id="hero" className="relative py-24 md:py-32 overflow-hidden flex items-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-500/10 rounded-full blur-[140px] pointer-events-none" />
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-rose-400" />
-              Güzellik Salonu & Bakım Merkezi Konsept Tasarımı
-            </span>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
-              Bakım ve Güzelliğin <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-300 via-pink-200 to-rose-400">Modern Adresi.</span>
-            </h1>
-            <p className="text-lg text-rose-100/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Uzman dokunuşlar, hijyenik ekipmanlar ve cildinize özel bakım terapileri ile ışıltınızı yeniden keşfedin.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <a 
-                href="#appointment"
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm hover:opacity-95 transition-all flex items-center gap-2 shadow-xl shadow-rose-500/25 cursor-pointer"
-              >
-                <Calendar className="w-4 h-4" /> Online Randevu Al
-              </a>
-              <a 
-                href="#services"
-                className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-all cursor-pointer"
-              >
-                Hizmetleri İncele
-              </a>
+      {/* 3. MINIMALIST CENTERED PORTRAIT HERO (EDITORIAL MAGAZINE STYLE) */}
+      <section className="py-24 md:py-32 border-b border-[#1a1921] relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-4xl text-center space-y-8">
+          
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#16151c] border border-[#2a2836] text-[#c9b49a] text-[11px] tracking-widest uppercase">
+            <Sparkles className="w-3.5 h-3.5" />
+            Güzellik Salonu & Estetik Konsept Tasarımı
+          </div>
+
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-light text-[#f5f2eb] leading-[1.15] tracking-tight">
+            Zamansız Güzellik & <br />
+            <em className="italic font-serif text-[#c9b49a] font-normal">Derin Cilt Terapileri.</em>
+          </h1>
+
+          <p className="text-base sm:text-lg text-[#a8a398] font-light max-w-2xl mx-auto leading-relaxed">
+            Uzman cilt terapistleri, steril ekipmanlar ve kişiye özel ritüeller ile cildinizin doğal canlılığını ortaya çıkarın.
+          </p>
+
+          <div className="pt-4 flex flex-wrap items-center justify-center gap-6">
+            <a 
+              href="#booking"
+              className="px-8 py-4 bg-[#c9b49a] text-[#08080a] font-bold text-xs tracking-widest uppercase hover:bg-[#d8c5ad] transition-all inline-flex items-center gap-2 shadow-xl shadow-[#c9b49a]/10"
+            >
+              <Calendar className="w-4 h-4" /> Randevu Seçimi Yap
+            </a>
+            <a 
+              href="#treatments"
+              className="px-8 py-4 border border-[#3b3846] text-[#f5f2eb] font-semibold text-xs tracking-widest uppercase hover:border-[#c9b49a] transition-all"
+            >
+              Bakım Kataloğu
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. PHILOSOPHY & CLEAN STANDARDS (3-COLUMN MINIMALIST TEXT - NO CARDS) */}
+      <section id="philosophy" className="py-24 bg-[#0c0b0e] border-b border-[#1a1921]">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <span className="text-[#c9b49a] text-xs font-medium tracking-widest uppercase block">Yaklaşımımız</span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#f5f2eb]">Sağlıklı Cilt, Doğal Işıltı</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+            <div className="space-y-4">
+              <span className="font-serif text-3xl font-light text-[#c9b49a]">01.</span>
+              <h3 className="font-serif text-xl font-normal text-[#f5f2eb]">Kişiye Özel Analiz</h3>
+              <p className="text-xs text-[#9c978c] leading-relaxed">
+                Her cilt tipi farklıdır. Bakım öncesinde cildin nem ve hassasiyet dengesi değerlendirilerek uygun protokol belirlenir.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <span className="font-serif text-3xl font-light text-[#c9b49a]">02.</span>
+              <h3 className="font-serif text-xl font-normal text-[#f5f2eb]">Steril & Yüksek Hijyen</h3>
+              <p className="text-xs text-[#9c978c] leading-relaxed">
+                Tüm uygulama ekipmanları tek kullanımlık veya otoklav sterilizasyon süreçlerinden geçirilerek güvenle kullanılır.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <span className="font-serif text-3xl font-light text-[#c9b49a]">03.</span>
+              <h3 className="font-serif text-xl font-normal text-[#f5f2eb]">Dermatolojik Ürünler</h3>
+              <p className="text-xs text-[#9c978c] leading-relaxed">
+                Sentetik katkı maddesi içermeyen, uluslararası sertifikalı dermatolojik serumlar ve maskeler tercih edilir.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. HİZMETLER GRID SECTION */}
-      <section id="services" className="py-20 bg-rose-950/20 border-y border-white/5">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-rose-400 text-xs font-bold uppercase tracking-widest block mb-2">Aura Özel Bakımları</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Öne Çıkan Hizmetlerimiz</h2>
-            <p className="text-rose-200/60 text-sm">Salonda uygulanan örnek kişisel bakım ve güzellik terapileri.</p>
+      {/* 5. TREATMENT PORTFOLIO (EDITORIAL FULL-WIDTH ACCORDION LIST) */}
+      <section id="treatments" className="py-24 border-b border-[#1a1921]">
+        <div className="container mx-auto px-6 max-w-5xl">
+          
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <span className="text-[#c9b49a] text-xs font-medium tracking-widest uppercase block">Terapi Kataloğu</span>
+            <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#f5f2eb]">Öne Çıkan Bakımlarımız</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {beautyServices.map(srv => (
+          <div className="space-y-6">
+            {treatments.map(t => (
               <div 
-                key={srv.id}
-                className="p-7 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-rose-500/40 transition-all flex flex-col justify-between group relative overflow-hidden"
+                key={t.id}
+                className="p-8 border border-[#1f1e27] bg-[#0c0c10] hover:border-[#c9b49a]/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 group"
               >
-                {srv.popular && (
-                  <span className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[10px] font-bold">
-                    En Çok Tercih Edilen
-                  </span>
-                )}
-                <div>
-                  <span className="text-rose-400 text-[11px] font-semibold tracking-wider uppercase block mb-2">
-                    {srv.category}
-                  </span>
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">{srv.title}</h3>
-                  <p className="text-rose-100/60 text-xs leading-relaxed mb-6">{srv.description}</p>
+                <div className="space-y-2 max-w-2xl">
+                  <span className="text-[10px] tracking-widest uppercase text-[#c9b49a] font-semibold block">{t.category}</span>
+                  <h3 className="font-serif text-xl text-[#f5f2eb] group-hover:text-[#c9b49a] transition-colors">{t.name}</h3>
+                  <p className="text-xs text-[#9e988d] leading-relaxed">{t.description}</p>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div className="flex items-center gap-1.5 text-rose-200/50 text-xs">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{srv.duration}</span>
-                  </div>
-                  <span className="text-rose-300 font-bold text-lg">{srv.price}</span>
+                <div className="flex items-center gap-6 justify-between md:justify-end border-t md:border-t-0 pt-4 md:pt-0 border-[#1f1e27]">
+                  <span className="text-xs text-[#807b71] font-mono">{t.duration}</span>
+                  <span className="font-serif text-xl text-[#c9b49a] font-semibold">{t.price}</span>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* BEAUTY SHOWCASE GALLERY SECTION */}
-      <section className="py-20 bg-rose-950/10 border-b border-white/5">
+      {/* 6. EDITORIAL PHOTOGRAPHY SHOWCASE */}
+      <section className="py-24 bg-[#0c0b0e] border-b border-[#1a1921]">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-rose-400 text-xs font-bold uppercase tracking-widest block mb-2">Aura Salon Deneyimi</span>
-            <h2 className="text-3xl font-bold text-white mb-4">Huzurlu & Lüks Terapiler</h2>
-            <p className="text-rose-200/60 text-xs">Cildiniz ve bakımlarınız için hijyenik, dingin ve özel hazırlanmış salon alanları.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <div className="h-[460px] overflow-hidden border border-[#23212b] relative bg-[#131218]">
               <img 
-                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" 
+                src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1000&q=80" 
                 alt="Medikal Cilt Bakım Terapisi"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Medikal & Hydrafacial Bakım</span>
-                <span className="text-rose-300 text-xs">Derinlemesine temizleme ve vitamin yüklemesi</span>
+            </div>
+
+            <div className="space-y-6">
+              <span className="text-[#c9b49a] text-xs font-medium tracking-widest uppercase block">Salon Atmosferi</span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#f5f2eb] leading-tight">
+                Sakinlik ve Huzur İçinde Yenilenme Deneyimi.
+              </h2>
+              <p className="text-xs text-[#9c978c] leading-relaxed">
+                Şehrin gürültüsünden uzak, tamamen cildinize ve ruhunuza ayrılmış ferah kabinlerde uzman kadromuz eşliğinde dinlenin.
+              </p>
+              <div className="pt-2">
+                <a 
+                  href="#booking"
+                  className="px-6 py-3 border border-[#3b3846] text-[#c9b49a] text-xs uppercase tracking-widest hover:border-[#c9b49a] transition-all inline-flex items-center gap-2"
+                >
+                  Randevu Seçin <ArrowRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
 
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
-              <img 
-                src="https://images.unsplash.com/photo-1512290900673-0306e93ffdf6?auto=format&fit=crop&w=800&q=80" 
-                alt="Doğal Aromaterapi Yağları ve Masaj"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Aromaterapi Terapisi</span>
-                <span className="text-rose-300 text-xs">Bitkisel özlü doğal yağlarla rahatlatıcı bakım</span>
-              </div>
-            </div>
-
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900 sm:col-span-2 lg:col-span-1">
-              <img 
-                src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=800&q=80" 
-                alt="Steril Manikür & Tırnak Bakımı"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Medikal Manikür & Oje</span>
-                <span className="text-rose-300 text-xs">Steril ekipman ve tırnak güçlendirici terapiler</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 5. INTERAKTİF DEMO RANDEVU MODÜLÜ */}
-      <section id="appointment" className="py-20">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-rose-950/40 via-black to-[#0d070b] border border-rose-500/30 shadow-2xl relative">
-            <div className="text-center max-w-xl mx-auto mb-10">
-              <span className="text-rose-400 text-xs font-bold uppercase tracking-widest block mb-2">Demo Randevu Deneyimi</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Online Randevu Oluşturun</h2>
-              <p className="text-rose-200/60 text-xs">
-                Müşterilerinizin siteniz üzerinden saniyeler içinde randevu alabileceği örnek sistem arayüzü.
+      {/* 7. MINIMALIST APPOINTMENT SELECTOR (DEMO WIDGET) */}
+      <section id="booking" className="py-24 border-b border-[#1a1921]">
+        <div className="container mx-auto px-6 max-w-3xl">
+          <div className="p-8 sm:p-12 border border-[#282633] bg-[#0d0c12]">
+            <div className="text-center space-y-3 mb-10">
+              <span className="text-[#c9b49a] text-xs font-medium tracking-widest uppercase block">Demo Modülü</span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-light text-[#f5f2eb]">Online Randevu Talebi</h2>
+              <p className="text-xs text-[#8e887d]">
+                Müşterilerinizin web siteniz üzerinden saniyeler içinde randevu oluşturabileceği arayüz simülasyonu.
               </p>
             </div>
 
-            <form onSubmit={triggerDemoAppointment} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <form onSubmit={triggerDemoToast} className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-rose-200 mb-2">Hizmet Seçimi</label>
+                  <label className="block text-xs uppercase tracking-widest text-[#c9b49a] mb-2 font-medium">Hizmet Seçiniz</label>
                   <select 
-                    value={selectedService}
-                    onChange={(e) => setSelectedService(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-rose-500"
+                    value={activeTab}
+                    onChange={(e) => setActiveTab(e.target.value)}
+                    className="w-full px-4 py-3 bg-[#16151f] border border-[#2b2838] text-[#f5f2eb] text-xs focus:outline-none focus:border-[#c9b49a]"
                   >
-                    {beautyServices.map(s => (
-                      <option key={s.id} value={s.id} className="bg-slate-900 text-white">
-                        {s.title} — {s.price}
+                    {treatments.map(t => (
+                      <option key={t.id} value={t.id} className="bg-[#0c0b0e] text-[#f5f2eb]">
+                        {t.name} — {t.price}
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-rose-200 mb-2">Tarih & Saat</label>
-                  <select 
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs focus:outline-none focus:border-rose-500"
-                  >
-                    <option className="bg-slate-900 text-white">Bugün — 16:00</option>
-                    <option className="bg-slate-900 text-white">Yarın — 11:30</option>
-                    <option className="bg-slate-900 text-white">Yarın — 14:30</option>
-                    <option className="bg-slate-900 text-white">Cuma — 15:00</option>
+                  <label className="block text-xs uppercase tracking-widest text-[#c9b49a] mb-2 font-medium">Uygun Zaman</label>
+                  <select className="w-full px-4 py-3 bg-[#16151f] border border-[#2b2838] text-[#f5f2eb] text-xs focus:outline-none focus:border-[#c9b49a]">
+                    <option className="bg-[#0c0b0e] text-[#f5f2eb]">Yarın — 11:00</option>
+                    <option className="bg-[#0c0b0e] text-[#f5f2eb]">Yarın — 14:30</option>
+                    <option className="bg-[#0c0b0e] text-[#f5f2eb]">Cuma — 16:00</option>
                   </select>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-200 text-xs flex items-center justify-between">
-                <span className="font-medium">Seçili Bakım Süresi:</span>
-                <span className="font-bold text-rose-300">~60 Dakika</span>
-              </div>
-
               <button 
                 type="submit"
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm hover:opacity-95 transition-all shadow-xl shadow-rose-500/20 cursor-pointer"
+                className="w-full py-4 bg-[#c9b49a] text-[#08080a] font-bold text-xs tracking-widest uppercase hover:bg-[#d8c5ad] transition-all cursor-pointer"
               >
                 Demo Randevuyu Onayla
               </button>
@@ -363,32 +338,28 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 6. FAQ (SIK SORULAN SORULAR) */}
-      <section id="faq" className="py-20 bg-rose-950/20 border-t border-white/5">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <div className="text-center mb-12">
-            <span className="text-rose-400 text-xs font-bold uppercase tracking-widest block mb-2">Güzellik Salonları İçin</span>
-            <h2 className="text-3xl font-bold text-white mb-4">Sık Sorulan Sorular</h2>
-            <p className="text-rose-200/60 text-xs">Web sitesi yaptırmak isteyen salon sahiplerinin merak ettiği sorular.</p>
+      {/* 8. FAQ ACCORDION */}
+      <section id="faq" className="py-24 bg-[#0c0b0e] border-b border-[#1a1921]">
+        <div className="container mx-auto px-6 max-w-3xl space-y-12">
+          <div className="text-center space-y-3">
+            <span className="text-[#c9b49a] text-xs font-medium tracking-widest uppercase block">Bilgi Bankası</span>
+            <h2 className="font-serif text-3xl font-light text-[#f5f2eb]">Sık Sorulan Sorular</h2>
           </div>
 
           <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div 
-                key={index}
-                className="rounded-2xl bg-white/[0.02] border border-white/5 overflow-hidden transition-colors"
-              >
-                <button
+            {faqs.map((f, i) => (
+              <div key={i} className="border border-[#1f1e27] bg-[#0c0c10] overflow-hidden">
+                <button 
                   type="button"
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 font-semibold text-sm text-white hover:text-rose-300 transition-colors cursor-pointer"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full p-6 text-left flex items-center justify-between font-serif text-base text-[#f5f2eb] hover:text-[#c9b49a] transition-colors cursor-pointer"
                 >
-                  <span>{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-rose-400 shrink-0 transition-transform ${openFaq === index ? "rotate-180" : ""}`} />
+                  <span>{f.q}</span>
+                  <ChevronDown className={`w-4 h-4 text-[#c9b49a] transition-transform ${openFaq === i ? "rotate-180" : ""}`} />
                 </button>
-                {openFaq === index && (
-                  <div className="px-6 pb-6 text-xs text-rose-100/70 leading-relaxed border-t border-white/5 pt-4">
-                    {faq.a}
+                {openFaq === i && (
+                  <div className="px-6 pb-6 text-xs text-[#99948a] leading-relaxed border-t border-[#1f1e27] pt-4">
+                    {f.a}
                   </div>
                 )}
               </div>
@@ -397,39 +368,27 @@ export default function DemoBeautyClient() {
         </div>
       </section>
 
-      {/* 7. LEAD CONVERSION BANNER */}
-      <section className="py-20">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="p-10 md:p-16 rounded-3xl bg-gradient-to-r from-rose-950 via-black to-rose-950 border border-rose-500/30 text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">Güzellik Salonunuz İçin Benzer Bir Web Sitesi İster Misiniz?</h2>
-            <p className="text-rose-200/70 text-sm max-w-2xl mx-auto leading-relaxed">
-              Müşterilerinizin online randevu alabileceği, mobil uyumlu ve SEO odaklı özel tasarımlı web sitenizi 3 gün içinde yayına alalım.
-            </p>
+      {/* 9. LEAD CONVERSION BANNER & FOOTER */}
+      <footer className="py-16 bg-[#050507] text-center space-y-6">
+        <div className="container mx-auto px-6 max-w-3xl space-y-6">
+          <h2 className="font-serif text-3xl font-light text-[#f5f2eb]">
+            Güzellik Salonunuz İçin Özel Bir Web Sitesi İster Misiniz?
+          </h2>
+          <p className="text-xs text-[#8c877d] max-w-xl mx-auto leading-relaxed">
+            Bu sayfa <strong>KvK Dijital Çözümler</strong> ajansı tarafından güzellik salonu ve estetik işletmelerine özel tasarım konseptini sergilemek amacıyla hazırlanmıştır. Gerçek müşteri verisi veya tıbbi iddia içermez.
+          </p>
+          <div>
             <Link 
               href="/#contact"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm hover:opacity-95 transition-all shadow-xl shadow-rose-500/30"
+              className="px-8 py-3.5 bg-[#c9b49a] text-[#08080a] font-bold text-xs tracking-widest uppercase hover:bg-[#d8c5ad] transition-all inline-flex items-center gap-2"
             >
               KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* 8. DEMO FOOTER */}
-      <footer className="py-12 border-t border-white/10 bg-[#080407]">
-        <div className="container mx-auto px-6 text-center space-y-4">
-          <div className="flex items-center justify-center gap-2 text-rose-200/50 text-xs">
-            <span>Aura Beauty & Güzellik Merkezi</span>
-            <span>•</span>
-            <span className="text-rose-400">Konsept Demo Çalışma</span>
-          </div>
-          <p className="text-[11px] text-rose-200/40 max-w-xl mx-auto leading-relaxed">
-            Bu sayfa <strong>KvK Dijital Çözümler</strong> ajansı tarafından güzellik salonu ve estetik sektöründeki işletmelere özel web tasarım konseptini sergilemek amacıyla hazırlanmıştır. Gerçek müşteri verisi veya tıbbi teşhis içermez.
-          </p>
-          <div className="pt-4 border-t border-white/5 flex items-center justify-center gap-4 text-xs text-rose-200/60">
-            <Link href="/" className="hover:text-rose-300 transition-colors">KvK Dijital Ana Sayfa</Link>
-            <Link href="/projeler" className="hover:text-rose-300 transition-colors">Tüm Örnek Projeler</Link>
-            <Link href="/#contact" className="hover:text-rose-300 transition-colors">İletişim & Teklif</Link>
+          <div className="pt-8 border-t border-[#1a1921] flex items-center justify-center gap-6 text-xs text-[#736f66]">
+            <Link href="/" className="hover:text-[#c9b49a] transition-colors">KvK Ana Sayfa</Link>
+            <Link href="/projeler" className="hover:text-[#c9b49a] transition-colors">Tüm Örnek Projeler</Link>
+            <Link href="/#contact" className="hover:text-[#c9b49a] transition-colors">İletişim & Teklif</Link>
           </div>
         </div>
       </footer>

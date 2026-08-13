@@ -4,17 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { 
   Utensils, 
-  Coffee, 
   Clock, 
   MapPin, 
-  Phone, 
-  Sparkles, 
   ArrowRight, 
-  CheckCircle2, 
-  ExternalLink,
-  ChevronRight,
   Info,
-  Calendar
+  Calendar,
+  Sparkles
 } from "lucide-react";
 
 type MenuCategory = "all" | "kahvalti" | "burger" | "makarna" | "tatli" | "icecek";
@@ -25,85 +20,68 @@ interface MenuItem {
   category: MenuCategory;
   price: string;
   description: string;
-  badge?: string;
+  chefNote?: string;
 }
 
 const menuItems: MenuItem[] = [
   {
-    id: "1",
+    id: "m1",
     name: "Serpme Ege Kahvaltısı",
     category: "kahvalti",
     price: "450 ₺",
     description: "Ezine peyniri, Ayvalık kırma zeytin, ev yapımı reçeller, sıcak pişiler ve sınırsız çay ile.",
-    badge: "Popüler"
+    chefNote: "Şefin Seçimi"
   },
   {
-    id: "2",
+    id: "m2",
     name: "Avokado & Poşe Yumurta",
     category: "kahvalti",
     price: "240 ₺",
-    description: "Ekşi maya ekmek üzerinde taze avokado püresi, poşe yumurta ve çöreotu süslemesi.",
-    badge: "Şefin Seçimi"
+    description: "Ekşi maya ekmek üzerinde taze avokado püresi, poşe yumurta ve çöreotu süslemesi."
   },
   {
-    id: "3",
+    id: "m3",
     name: "Gurme Kasap Burger",
     category: "burger",
     price: "320 ₺",
     description: "180gr özel kıyma köfte, karamelize soğan, cheddar peynir, trüflü mayonez ve baharatlı patates.",
-    badge: "Çok Satan"
+    chefNote: "Özel Reçete"
   },
   {
-    id: "4",
+    id: "m4",
     name: "Çıtır Tavuk Sandviç",
     category: "burger",
     price: "260 ₺",
-    description: "Özel sosla marine edilmiş çıtır tavuk filfile, marul, turşu ve özel bistro sos.",
+    description: "Özel sosla marine edilmiş çıtır tavuk fileto, marul, turşu ve özel bistro sos."
   },
   {
-    id: "5",
+    id: "m5",
     name: "Kremalı Trüflü Penne",
     category: "makarna",
     price: "290 ₺",
-    description: "Taze kültür mantarı, trüf mantarı esansı, krema sosu ve parmesan rendesi.",
-    badge: "Özel Reçete"
+    description: "Taze kültür mantarı, trüf mantarı esansı, krema sosu ve parmesan rendesi."
   },
   {
-    id: "6",
+    id: "m6",
     name: "Izgara Somon & Roka",
     category: "makarna",
     price: "420 ₺",
-    description: "Taze ızgara somon fileto, kiraz domatesli roka salatası ve limonlu zeytinyağı sosu.",
+    description: "Taze ızgara somon fileto, kiraz domatesli roka salatası ve limonlu zeytinyağı sosu."
   },
   {
-    id: "7",
+    id: "m7",
     name: "San Sebastian Cheesecake",
     category: "tatli",
     price: "180 ₺",
     description: "Akışkan kıvamlı karamelize İspanyol cheesecake'i, sıcak çikolata sosu ile.",
-    badge: "Favori"
+    chefNote: "Tatlı İmza"
   },
   {
-    id: "8",
-    name: "Ev Yapımı Tiramisu",
-    category: "tatli",
-    price: "160 ₺",
-    description: "Gerçek mascarpone peyniri ve espresso ile demlenmiş İtalyan kedi dili bisküvisi.",
-  },
-  {
-    id: "9",
+    id: "m8",
     name: "Özel Blend Filtre Kahve",
     category: "icecek",
     price: "90 ₺",
-    description: "%100 Arabica Etiyopya & Kolombiya harmanı taze çekilmiş kahve.",
-  },
-  {
-    id: "10",
-    name: "Ev Yapımı Nane Limonata",
-    category: "icecek",
-    price: "95 ₺",
-    description: "Taze sıkılmış taze limon suyu ve taze nane yaprakları ile serinletici lezzet.",
-    badge: "Serinletici"
+    description: "%100 Arabica Etiyopya & Kolombiya harmanı taze çekilmiş kahve."
   }
 ];
 
@@ -116,67 +94,63 @@ export default function DemoBistroClient() {
     : menuItems.filter(item => item.category === activeCategory);
 
   const showDemoToast = () => {
-    setToastMessage("Bu bir konsept demo çalışmadır. Gerçek işletmeniz için benzer bir rezervasyon & sipariş sistemi kolayca entegre edilebilir.");
+    setToastMessage("Bu bir konsept demo çalışmadır. Gerçek işletmeniz için benzer bir online rezervasyon mekanizması entegre edilir.");
     setTimeout(() => setToastMessage(null), 5000);
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="min-h-screen bg-[#0a0b0e] text-[#e8e4df] flex flex-col font-sans selection:bg-amber-600/30 selection:text-amber-100">
       
-      {/* 1. ÜST KONSEPT DEMO BİLGİ BARI */}
-      <div className="w-full bg-gradient-to-r from-amber-500/20 via-emerald-500/20 to-amber-500/20 border-b border-amber-500/30 py-2.5 px-4 text-center text-xs sm:text-sm text-amber-200 flex flex-wrap items-center justify-center gap-2 relative z-50">
+      {/* 1. KONSEPT DEMO BARI */}
+      <div className="w-full bg-[#14161d] border-b border-amber-500/20 py-2.5 px-4 text-center text-xs text-amber-200/90 flex flex-wrap items-center justify-center gap-2 relative z-50">
         <Info className="w-4 h-4 text-amber-400 shrink-0" />
-        <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından restoran & kafeler için hazırlanmış <strong>Konsept Demo</strong> projedir.</span>
+        <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından restoran & kafeler için hazırlanmış <strong>Konsept Demo</strong> çalışmadır.</span>
         <Link 
           href="/#contact" 
-          className="ml-2 font-bold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-amber-500/30 px-2.5 py-0.5 rounded-full"
+          className="ml-2 font-semibold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-amber-500/20 px-2.5 py-0.5 rounded"
         >
           İşletmeniz İçin Teklif Alın <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
 
-      {/* 2. HEADER */}
-      <header className="sticky top-0 z-40 bg-[#07090e]/90 backdrop-blur-md border-b border-white/10">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-              <Utensils className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-white block">Pendik Sahil Bistro</span>
-              <span className="text-[10px] uppercase tracking-widest text-amber-400 font-semibold block">Kahve & Mutfak</span>
-            </div>
+      {/* 2. ASİMETRİK EDITORIAL HEADER */}
+      <header className="sticky top-0 z-40 bg-[#0a0b0e]/95 backdrop-blur-md border-b border-[#22242e]">
+        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
+          <div className="flex items-baseline gap-3">
+            <span className="font-serif text-2xl font-bold tracking-tight text-amber-100">Pendik Sahil</span>
+            <span className="text-xs uppercase tracking-widest text-amber-500/80 font-medium">Bistro & Mutfak</span>
           </div>
 
-          <nav aria-label="Demo Restoran Navigasyonu" className="hidden md:flex items-center gap-8 text-sm text-slate-300">
-            <a href="#hero" className="hover:text-amber-400 transition-colors">Ana Sayfa</a>
-            <a href="#menu" className="hover:text-amber-400 transition-colors">Menü</a>
-            <a href="#features" className="hover:text-amber-400 transition-colors">Ayrıcalıklar</a>
-            <a href="#hours" className="hover:text-amber-400 transition-colors">Saatler & Konum</a>
+          <nav aria-label="Bistro Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-wider uppercase text-[#a5a098]">
+            <a href="#story" className="hover:text-amber-200 transition-colors">Hikayemiz</a>
+            <a href="#menu" className="hover:text-amber-200 transition-colors">Gastronomi Menüsü</a>
+            <a href="#signature" className="hover:text-amber-200 transition-colors">İmza Lezzet</a>
+            <a href="#atmosphere" className="hover:text-amber-200 transition-colors">Atmosfer</a>
+            <a href="#location" className="hover:text-amber-200 transition-colors">Konum</a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <button 
               type="button"
               onClick={showDemoToast}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 text-xs font-semibold hover:bg-amber-500/20 transition-all cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded border border-amber-500/30 text-amber-200 text-xs hover:border-amber-400 transition-all cursor-pointer font-serif italic"
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Rezervasyon (Demo)</span>
+              <span>Masa Rezerve Et</span>
             </button>
             <Link 
               href="/#contact"
-              className="px-4 py-2 rounded-full bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20"
+              className="px-5 py-2.5 rounded bg-amber-600 text-slate-950 font-semibold text-xs tracking-wider uppercase hover:bg-amber-500 transition-all"
             >
-              Proje Teklifi Al
+              Teklif Al
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Toast Alert Notification */}
+      {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 rounded-2xl bg-amber-950/90 border border-amber-500/40 text-amber-200 text-xs leading-relaxed shadow-2xl backdrop-blur-xl animate-fade-in-up flex items-start gap-3">
+        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 rounded bg-[#161822] border border-amber-500/40 text-amber-200 text-xs leading-relaxed shadow-2xl backdrop-blur-xl flex items-start gap-3">
           <Info className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-amber-300 mb-1">Demo Bilgilendirmesi</p>
@@ -185,233 +159,263 @@ export default function DemoBistroClient() {
         </div>
       )}
 
-      {/* 3. HERO SECTION */}
-      <section id="hero" className="relative py-24 md:py-32 overflow-hidden flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-transparent to-[#07090e] pointer-events-none" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-6">
-              <Sparkles className="w-3.5 h-3.5" />
-              Pendik Sahil Konsept Mekan Çalışması
-            </span>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
-              Lezzetin ve Sohbetin <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">Buluştuğu Yer.</span>
-            </h1>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Deniz manzarası eşliğinde taze demlenmiş nitelikli kahveler, şeflerimizin özel reçeteli lezzetleri ve huzurlu bistro atmosferi.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <a 
-                href="#menu"
-                className="px-8 py-4 rounded-full bg-amber-500 text-slate-950 font-bold text-sm hover:bg-amber-400 transition-all flex items-center gap-2 shadow-xl shadow-amber-500/20 cursor-pointer"
-              >
-                <Utensils className="w-4 h-4" /> Menüyü İncele
-              </a>
-              <button 
-                type="button"
-                onClick={showDemoToast}
-                className="px-8 py-4 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-all cursor-pointer"
-              >
-                Masa Rezerve Et
-              </button>
+      {/* 3. ASİMETRİK SPIT HERO (EDITORIAL) */}
+      <section className="py-16 md:py-24 border-b border-[#1c1e28] relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Editorial Text Column */}
+            <div className="lg:col-span-7 space-y-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs tracking-wider uppercase font-medium">
+                <Sparkles className="w-3.5 h-3.5" />
+                Pendik Sahil Gastronomi Konsepti
+              </div>
+              
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-amber-100 leading-[1.1]">
+                Lezzetin, Deniz Manzarasıyla Buluştuğu <em className="italic text-amber-400 font-serif">Rafine Nokta.</em>
+              </h1>
+              
+              <p className="text-base sm:text-lg text-[#b0aba2] font-normal leading-relaxed max-w-2xl">
+                Pendik sahil hattında taze demlenmiş nitelikli kahveler, şeflerimizin özel imza tarifleri ve zamansız bistro atmosferi.
+              </p>
+
+              <div className="pt-4 flex flex-wrap items-center gap-6">
+                <a 
+                  href="#menu"
+                  className="px-8 py-4 rounded bg-amber-600 text-slate-950 font-bold text-xs tracking-widest uppercase hover:bg-amber-500 transition-all inline-flex items-center gap-3 shadow-lg shadow-amber-600/20"
+                >
+                  <Utensils className="w-4 h-4" /> Menüyü İncele
+                </a>
+                <div className="flex items-center gap-2 text-xs text-[#8e8980]">
+                  <Clock className="w-4 h-4 text-amber-500/80" />
+                  <span>Haftanın Her Günü: 08:30 — 00:00</span>
+                </div>
+              </div>
             </div>
+
+            {/* Right Photography Composition */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-lg overflow-hidden border border-amber-500/20 shadow-2xl bg-[#14161f] h-[480px]">
+                <img 
+                  src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80" 
+                  alt="Pendik Bistro Kahve ve Atmosfer"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 flex flex-col justify-end">
+                  <span className="font-serif italic text-amber-200 text-lg">"Taze malzemeler, samimi sohbetler."</span>
+                  <span className="text-xs text-[#a5a098] tracking-widest uppercase mt-1">Pendik Sahil Yolu</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* 4. DEMO MENÜ BÖLÜMÜ */}
-      <section id="menu" className="py-20 bg-slate-950/50 border-y border-white/5">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block mb-2">Özel Lezzetlerimiz</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Örnek Bistro Menümüz</h2>
-            <p className="text-slate-400 text-sm">Katkısız, taze ve yerel malzemelerle hazırlanan güncel menü çeşitlerimiz.</p>
+      {/* 4. THE STORY / PHILOSOPHY SECTION (EDITORIAL BLOCK) */}
+      <section id="story" className="py-24 bg-[#0d0e13] border-b border-[#1c1e28]">
+        <div className="container mx-auto px-6 max-w-4xl text-center space-y-6">
+          <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block">Felsefemiz</span>
+          <h2 className="font-serif text-3xl sm:text-5xl font-normal text-amber-100 leading-tight">
+            Her Tabakta Doğallık, Her Yudumda Nitelikli Tat.
+          </h2>
+          <div className="w-16 h-px bg-amber-500/40 mx-auto my-6" />
+          <p className="text-base text-[#b0aba2] leading-relaxed max-w-2xl mx-auto">
+            Hafta içi sabahlarında sakin bir filtre kahve molası, hafta sonlarında sevdiklerinizle uzayıp giden uzun kahvaltılar... Pendik Sahil Bistro; yerel malzemeleri modern sunumlarla buluşturan bağımsız bir gastronomi durağıdır.
+          </p>
+        </div>
+      </section>
+
+      {/* 5. GASTRONOMY MENU (CLEAN TYPOGRAPHY LIST - NO CARDS OVERDOSE) */}
+      <section id="menu" className="py-24 border-b border-[#1c1e28]">
+        <div className="container mx-auto px-6 max-w-5xl">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div>
+              <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block mb-2">Güncel Seçenekler</span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-amber-100 font-normal">Bistro Menümüz</h2>
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: "all", label: "Tüm Menü" },
+                { id: "kahvalti", label: "Kahvaltı" },
+                { id: "burger", label: "Burgerler" },
+                { id: "makarna", label: "Makarna & Ana Yemek" },
+                { id: "tatli", label: "Tatlılar" },
+                { id: "icecek", label: "Kahve & İçecek" },
+              ].map(cat => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveCategory(cat.id as MenuCategory)}
+                  className={`px-4 py-2 text-xs font-medium tracking-wider uppercase border transition-all cursor-pointer rounded ${
+                    activeCategory === cat.id
+                      ? "bg-amber-600 text-slate-950 border-amber-600 font-bold"
+                      : "bg-[#12141c] border-[#252836] text-[#b0aba2] hover:text-white"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Menü Kategori Filtre Butonları */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-12" role="group" aria-label="Menü Kategorileri">
-            {[
-              { id: "all", label: "Tümü" },
-              { id: "kahvalti", label: "Kahvaltı" },
-              { id: "burger", label: "Burger & Sandviç" },
-              { id: "makarna", label: "Ana Yemek & Makarna" },
-              { id: "tatli", label: "Tatlılar" },
-              { id: "icecek", label: "İçecekler" },
-            ].map(cat => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setActiveCategory(cat.id as MenuCategory)}
-                className={`px-5 py-2.5 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
-                  activeCategory === cat.id
-                    ? "bg-amber-500 text-slate-950 border-amber-500 font-bold shadow-lg shadow-amber-500/20"
-                    : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Menü Liste Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Typography List Composition */}
+          <div className="space-y-8">
             {filteredMenu.map(item => (
               <div 
                 key={item.id}
-                className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/30 transition-all flex flex-col justify-between group"
+                className="pb-6 border-b border-[#1e212c] flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 group"
               >
-                <div>
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-white group-hover:text-amber-300 transition-colors">{item.name}</h3>
-                      {item.badge && (
-                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold">
-                          {item.badge}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-amber-400 font-bold text-lg whitespace-nowrap">{item.price}</span>
+                <div className="space-y-1 max-w-2xl">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-serif text-xl font-medium text-amber-100 group-hover:text-amber-400 transition-colors">
+                      {item.name}
+                    </h3>
+                    {item.chefNote && (
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                        {item.chefNote}
+                      </span>
+                    )}
                   </div>
-                  <p className="text-slate-400 text-xs leading-relaxed">{item.description}</p>
+                  <p className="text-xs text-[#959087] leading-relaxed">{item.description}</p>
                 </div>
+                <span className="font-serif text-xl font-bold text-amber-400 whitespace-nowrap">{item.price}</span>
               </div>
             ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. CHEF'S SIGNATURE FEATURE (SPLIT IMAGE + TEXT) */}
+      <section id="signature" className="py-24 bg-[#0d0e13] border-b border-[#1c1e28]">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <div className="h-[400px] rounded-lg overflow-hidden border border-amber-500/20 relative bg-[#151720]">
+              <img 
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1000&q=80" 
+                alt="Özel Reçeteli Taş Fırın Lezzeti"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="space-y-6">
+              <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block">İmza Sunum</span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-amber-100 font-normal">
+                Taş Fırından Çıkan Taze Odun Ateşi Kokusu.
+              </h2>
+              <p className="text-sm text-[#b0aba2] leading-relaxed">
+                Mayalanma süresi 48 saat olan özel ekşi mayalı hamurlarımız, İtalyan domates sosu ve yerel şarküteri lezzetleri ile odun ateşinde pişirilir.
+              </p>
+              <div className="pt-2">
+                <button 
+                  type="button"
+                  onClick={showDemoToast}
+                  className="px-6 py-3 rounded border border-amber-500/30 text-amber-200 text-xs uppercase tracking-widest font-semibold hover:border-amber-400 transition-all cursor-pointer"
+                >
+                  Masa Rezerve Et (Demo)
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* PHOTO SHOWCASE GALLERY SECTION */}
-      <section className="py-20 bg-slate-950/40 border-b border-white/5">
+      {/* 7. ATMOSPHERE GALLERY (EDITORIAL COLLAGE) */}
+      <section id="atmosphere" className="py-24 border-b border-[#1c1e28]">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block mb-2">Bistro Deneyimi</span>
-            <h2 className="text-3xl font-bold text-white mb-4">Atmosfer & Sunumlarımız</h2>
-            <p className="text-slate-400 text-xs">Pendik sahilinde huzurlu anlar ve özenle hazırlanan gastronomik lezzetler.</p>
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block mb-2">Görsel Atmosfer</span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-amber-100 font-normal">Mekan & Sunumlarımız</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="h-72 rounded-lg overflow-hidden border border-[#222532] relative group">
               <img 
                 src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" 
-                alt="Bistro İç Mekan ve Kahve Sunumu"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
+                alt="Nitelikli Kahve Sunumu"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Nitelikli Kahve Deneyimi</span>
-                <span className="text-amber-300 text-xs">Taze çekilmiş %100 Arabica harmanı</span>
+                <span className="font-serif text-base text-amber-100">Nitelikli Kahve Terapisi</span>
               </div>
             </div>
 
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900">
+            <div className="h-72 rounded-lg overflow-hidden border border-[#222532] relative group">
               <img 
                 src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" 
-                alt="Bistro Restoran Masası ve Atmosfer"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
+                alt="Bistro Masa Düzeni"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Sıcak & Editorial Ortam</span>
-                <span className="text-amber-300 text-xs">Akşam yemekleri ve toplantılar için ideal</span>
+                <span className="font-serif text-base text-amber-100">Sıcak & Editorial Mekan</span>
               </div>
             </div>
 
-            <div className="group rounded-2xl overflow-hidden border border-white/10 relative h-64 bg-slate-900 sm:col-span-2 lg:col-span-1">
+            <div className="h-72 rounded-lg overflow-hidden border border-[#222532] relative group sm:col-span-2 lg:col-span-1">
               <img 
                 src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" 
-                alt="Özel Reçeteli Taş Fırın Pizzası"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="lazy"
+                alt="Gurme Lezzet Sunumu"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-                <span className="text-white font-semibold text-sm">Günlük Taze Üretim</span>
-                <span className="text-amber-300 text-xs">Doğal malzemeli özel gurme lezzetler</span>
+                <span className="font-serif text-base text-amber-100">Günlük Taze Gurme Lezzetler</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. SEKTÖREL AYRICALIKLAR */}
-      <section id="features" className="py-20">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Deniz Manzaralı Teras", desc: "Pendik sahil hattında ferah ve açık hava oturma alanı." },
-              { title: "Nitelikli Çekirdekler", desc: "Dünyanın seçkin çiftliklerinden özenle kavrulmuş taze kahveler." },
-              { title: "Taze & Günlük Üretim", desc: "Soslarımız, hamur işlerimiz ve tatlılarımız günlük hazırlanır." },
-              { title: "Sıcak & Samimi Ortam", desc: "İş toplantıları ve keyifli sohbetler için ideal konfor." },
-            ].map((f, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
-                  0{i + 1}
-                </div>
-                <h3 className="text-base font-semibold text-white">{f.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. ÇALIŞMA SAATLERİ & KONUM */}
-      <section id="hours" className="py-20 bg-slate-950/60 border-t border-white/5">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block">Ziyaret Edin</span>
-              <h2 className="text-3xl font-bold text-white">Çalışma Saatlerimiz & Konum</h2>
-              
-              <div className="space-y-4 text-sm text-slate-300">
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
-                  <Clock className="w-5 h-5 text-amber-400 shrink-0" />
-                  <div>
-                    <span className="block font-semibold text-white">Haftanın Her Günü</span>
-                    <span className="text-xs text-slate-400">08:30 — 00:00 saatleri arası açık</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
-                  <MapPin className="w-5 h-5 text-amber-400 shrink-0" />
-                  <div>
-                    <span className="block font-semibold text-white">Pendik Sahil Yolu</span>
-                    <span className="text-xs text-slate-400">Pendik Marina Yanı, İstanbul (Örnek Konum)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 text-center space-y-6">
-              <h3 className="text-2xl font-bold text-white">İşletmeniz İçin Özel Web Sitesi</h3>
-              <p className="text-slate-300 text-xs leading-relaxed">
-                Restoran veya kafeniz için dijital menülü, hızlı ve mobil uyumlu böyle bir web sitesine sahip olmak ister misiniz?
+      {/* 8. LOCATION & HOURS (MINIMALIST CLEAN BLOCK) */}
+      <section id="location" className="py-24 bg-[#0d0e13] border-b border-[#1c1e28]">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+            <div className="space-y-4">
+              <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block">Ziyaret Saatleri</span>
+              <h3 className="font-serif text-2xl text-amber-100 font-normal">Açılış & Kapanış</h3>
+              <p className="text-xs text-[#b0aba2] leading-relaxed">
+                Pazartesi — Pazar: 08:30 — 00:00 <br />
+                Mutfak Son Sipariş: 23:00
               </p>
-              <Link 
-                href="/#contact"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-all shadow-xl shadow-amber-500/20"
-              >
-                KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />
-              </Link>
+            </div>
+            <div className="space-y-4">
+              <span className="text-amber-500 text-xs font-semibold tracking-widest uppercase block">Konum & Ulaşım</span>
+              <h3 className="font-serif text-2xl text-amber-100 font-normal">Pendik Sahil Yolu</h3>
+              <p className="text-xs text-[#b0aba2] leading-relaxed">
+                Pendik Marina Yanı, Sahil Kordonu No: 42 <br />
+                Pendik / İstanbul (Konsept Örnek Adres)
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. DEMO FOOTER */}
-      <footer className="py-12 border-t border-white/10 bg-[#05060a]">
-        <div className="container mx-auto px-6 text-center space-y-4">
-          <div className="flex items-center justify-center gap-2 text-slate-400 text-xs">
-            <span>Pendik Sahil Bistro & Kafe</span>
-            <span>•</span>
-            <span className="text-amber-400">Konsept Demo Çalışma</span>
-          </div>
-          <p className="text-[11px] text-slate-500 max-w-xl mx-auto leading-relaxed">
-            Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından restoran, kafe ve gastronomi sektöründeki işletmelere özel tasarım konseptini sergilemek amacıyla hazırlanmıştır. Gerçek müşteri verisi içermez.
+      {/* 9. LEAD CONVERSION BANNER & FOOTER */}
+      <footer className="py-16 bg-[#07080a] text-center space-y-6">
+        <div className="container mx-auto px-6 max-w-3xl space-y-6">
+          <h2 className="font-serif text-3xl font-normal text-amber-100">
+            Restoran veya Kafeniz İçin Böyle Bir Web Sitesi İster Misiniz?
+          </h2>
+          <p className="text-xs text-[#9c978f] max-w-xl mx-auto leading-relaxed">
+            Bu çalışma <strong>KvK Dijital Çözümler</strong> ajansı tarafından restoran ve gastronomi işletmeleri için özel olarak tasarlanmış konsept projedir. Gerçek işletme verisi içermez.
           </p>
-          <div className="pt-4 border-t border-white/5 flex items-center justify-center gap-4 text-xs text-slate-400">
-            <Link href="/" className="hover:text-amber-400 transition-colors">KvK Dijital Ana Sayfa</Link>
-            <Link href="/projeler" className="hover:text-amber-400 transition-colors">Tüm Örnek Projeler</Link>
-            <Link href="/#contact" className="hover:text-amber-400 transition-colors">İletişim & Teklif</Link>
+          <div>
+            <Link 
+              href="/#contact"
+              className="px-8 py-3.5 rounded bg-amber-600 text-slate-950 font-bold text-xs tracking-widest uppercase hover:bg-amber-500 transition-all inline-flex items-center gap-2"
+            >
+              KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="pt-8 border-t border-[#1c1e28] flex items-center justify-center gap-6 text-xs text-[#7e7972]">
+            <Link href="/" className="hover:text-amber-200 transition-colors">KvK Ana Sayfa</Link>
+            <Link href="/projeler" className="hover:text-amber-200 transition-colors">Tüm Örnek Projeler</Link>
+            <Link href="/#contact" className="hover:text-amber-200 transition-colors">İletişim & Teklif</Link>
           </div>
         </div>
       </footer>
