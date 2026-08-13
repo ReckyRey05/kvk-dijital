@@ -101,81 +101,54 @@ export default function DemoBistroClient() {
   return (
     <div className="min-h-screen bg-[#faf8f5] text-[#1f1c19] flex flex-col font-sans selection:bg-[#b89562]/20 selection:text-[#1f1c19]">
       
-      {/* 1. KONSEPT DEMO BARI & ANA SİTEYE DÖNÜŞ */}
-      <div className="w-full bg-[#1c1815] border-b border-[#36302a] py-2.5 px-4 text-center text-xs text-[#e8ded1] flex flex-wrap items-center justify-center gap-3 relative z-50">
-        <div className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-[#c8a97e] shrink-0" />
-          <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link 
-            href="/" 
-            className="font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px]"
-          >
-            ← Ana Sayfaya Dön
-          </Link>
-          <Link 
-            href="/#iletisim" 
-            className="font-bold text-slate-950 bg-[#c8a97e] hover:bg-[#d8b98e] px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px] uppercase tracking-wider"
-          >
-            KvK'den Teklif Al <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Fixed Floating Back to Main Site Button (Sol Alt Kilitli) */}
-      <div className="fixed bottom-6 left-6 z-50 hidden sm:block">
-        <Link
-          href="/"
-          className="px-4 py-2.5 rounded-full bg-[#1c1815]/95 text-[#f4efe6] border border-[#c8a97e]/60 text-xs font-bold shadow-2xl flex items-center gap-2 hover:bg-[#2b2520] hover:scale-105 transition-all backdrop-blur-md"
-        >
-          <span className="text-[#c8a97e]">←</span> Ana KvK Sitesine Dön
+      {/* Fixed Floating Bottom Right Demo Badge */}
+      <div className="fixed bottom-6 right-6 z-50 hidden sm:flex items-center gap-3 p-3 rounded-full bg-[#1c1815]/95 border border-[#c8a97e]/60 text-white text-xs shadow-2xl backdrop-blur-md">
+        <Info className="w-4 h-4 text-[#c8a97e] shrink-0" />
+        <span className="text-[11px] text-[#e8ded1]">Konsept Demo — <strong>KvK Dijital</strong></span>
+        <Link href="/#iletisim" className="px-3 py-1 rounded bg-[#c8a97e] text-slate-950 font-bold text-[10px] uppercase tracking-wider hover:bg-[#d8b98e] transition-colors">
+          Teklif Al
         </Link>
       </div>
 
-      {/* 2. MINIMAL HOSPITALITY EDITORIAL HEADER (CENTERED BRAND + SPLIT NAV) */}
-      <header className="sticky top-0 z-40 bg-[#faf8f5]/95 backdrop-blur-md border-b border-[#e8e2d8]">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+      {/* 2. FINE-DINING TWO-STORY CENTERED HEADER (NO TOP DISCLAIMER STRIP) */}
+      <header className="sticky top-0 z-40 bg-[#faf8f5]/95 backdrop-blur-md border-b border-[#e8e2d8] py-4">
+        <div className="container mx-auto px-6 space-y-3">
           
-          {/* Left Navigation Links */}
-          <div className="flex items-center gap-6">
-            <Link href="/" className="text-xs font-semibold text-[#5a6b5c] hover:text-[#1f1c19] transition-colors inline-flex items-center gap-1">
-              ← Ana Sayfa
+          {/* Top Row: Left Return Link, Centered Brand Title, Right Reservation CTA */}
+          <div className="flex items-center justify-between">
+            <Link href="/" className="px-3 py-1.5 rounded-full border border-[#d6cbba] text-xs font-semibold text-[#1f1c19] hover:bg-[#1f1c19] hover:text-white transition-all inline-flex items-center gap-1.5">
+              ← Ana KvK Sitesine Dön
             </Link>
-            <span className="text-[#d6cbba] hidden md:inline">|</span>
-            <nav aria-label="Sol Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#635d55]">
-              <a href="#story" className="hover:text-[#1f1c19] transition-colors">Hikâyemiz</a>
-              <a href="#menu" className="hover:text-[#1f1c19] transition-colors">Menü</a>
-            </nav>
+
+            <div className="text-center">
+              <span className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1f1c19] block">Pendik Sahil</span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#5a6b5c] font-semibold block -mt-1">Bistro & Mutfak</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button 
+                type="button"
+                onClick={showDemoToast}
+                className="px-4 py-2 bg-[#1f1c19] text-[#faf8f5] text-xs uppercase tracking-widest hover:bg-[#38332d] transition-all cursor-pointer font-serif italic"
+              >
+                <Calendar className="w-3.5 h-3.5 text-[#c8a97e] inline mr-1.5" />
+                Masa Rezerve Et
+              </button>
+            </div>
           </div>
 
-          {/* Centered Editorial Brand Wordmark */}
-          <div className="text-center">
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#1f1c19] block">Pendik Sahil</span>
-            <span className="text-[9px] uppercase tracking-[0.25em] text-[#5a6b5c] font-semibold block -mt-0.5">Bistro & Mutfak</span>
-          </div>
-
-          {/* Right Navigation Links & CTA */}
-          <div className="flex items-center gap-6">
-            <nav aria-label="Sağ Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#635d55]">
-              <a href="#signature" className="hover:text-[#1f1c19] transition-colors">Lezzetler</a>
-              <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors">Atmosfer</a>
-            </nav>
-            <button 
-              type="button"
-              onClick={showDemoToast}
-              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 border border-[#d6cbba] text-[#1f1c19] text-xs hover:border-[#1f1c19] transition-all cursor-pointer font-serif italic"
-            >
-              <Calendar className="w-3.5 h-3.5 text-[#5a6b5c]" />
-              <span>Masa Rezerve Et</span>
-            </button>
-            <Link 
-              href="/#iletisim"
-              className="px-4 py-2 rounded bg-[#1f1c19] text-[#faf8f5] font-semibold text-xs tracking-widest uppercase hover:bg-[#38332d] transition-all"
-            >
-              Teklif Al
-            </Link>
-          </div>
+          {/* Bottom Row: Centered Sub-Navigation Menu Line */}
+          <nav aria-label="Bistro Menü Akışı" className="hidden lg:flex items-center justify-center gap-10 text-xs tracking-widest uppercase text-[#635d55] pt-2 border-t border-[#e8e2d8]/60">
+            <a href="#story" className="hover:text-[#1f1c19] transition-colors font-medium">Hikâyemiz</a>
+            <span className="text-[#d6cbba]">•</span>
+            <a href="#menu" className="hover:text-[#1f1c19] transition-colors font-medium">Menüyü İncele</a>
+            <span className="text-[#d6cbba]">•</span>
+            <a href="#signature" className="hover:text-[#1f1c19] transition-colors font-medium">Öne Çıkan Lezzetler</a>
+            <span className="text-[#d6cbba]">•</span>
+            <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors font-medium">Mekan Atmosferi</a>
+            <span className="text-[#d6cbba]">•</span>
+            <a href="#location" className="hover:text-[#1f1c19] transition-colors font-medium">Çalışma Saatleri</a>
+          </nav>
 
         </div>
       </header>

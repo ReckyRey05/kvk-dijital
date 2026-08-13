@@ -168,46 +168,23 @@ export default function DemoEmlakClient() {
   return (
     <div className="min-h-screen bg-[#0b1a18] text-[#f9f8f5] flex flex-col font-sans selection:bg-[#d19c53]/30 selection:text-white">
       
-      {/* 1. KONSEPT DEMO BARI & ANA SİTEYE DÖNÜŞ */}
-      <div className="w-full bg-[#061211] border-b border-[#183632] py-2.5 px-4 text-center text-xs text-[#d19c53] flex flex-wrap items-center justify-center gap-3 relative z-50">
-        <div className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-[#d19c53] shrink-0" />
-          <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link 
-            href="/" 
-            className="font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px]"
-          >
-            ← Ana Sayfaya Dön
-          </Link>
-          <Link 
-            href="/#iletisim" 
-            className="font-bold text-[#0b1a18] bg-[#d19c53] hover:bg-[#e0ad66] px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px] uppercase tracking-wider"
-          >
-            KvK'den Teklif Al <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Fixed Floating Back to Main Site Button (Sol Alt Kilitli) */}
-      <div className="fixed bottom-6 left-6 z-50 hidden sm:block">
-        <Link
-          href="/"
-          className="px-4 py-2.5 rounded-full bg-[#061211]/95 text-[#f9f8f5] border border-[#d19c53]/60 text-xs font-bold shadow-2xl flex items-center gap-2 hover:bg-[#112a27] hover:scale-105 transition-all backdrop-blur-md"
-        >
-          <span className="text-[#d19c53]">←</span> Ana KvK Sitesine Dön
+      {/* Fixed Floating Bottom Right Demo Badge */}
+      <div className="fixed bottom-6 right-6 z-50 hidden sm:flex items-center gap-3 p-3 rounded-full bg-[#061211]/95 border border-[#d19c53]/60 text-white text-xs shadow-2xl backdrop-blur-md">
+        <Info className="w-4 h-4 text-[#d19c53] shrink-0" />
+        <span className="text-[11px] text-[#8ca8a4]">Konsept Demo — <strong>KvK Dijital</strong></span>
+        <Link href="/#iletisim" className="px-3 py-1 rounded bg-[#d19c53] text-[#0b1a18] font-bold text-[10px] uppercase tracking-wider hover:bg-[#e0ad66] transition-colors">
+          Teklif Al
         </Link>
       </div>
 
-      {/* 2. PROPERTY DISCOVERY & UTILITY ACTION HEADER */}
+      {/* 2. REAL ESTATE MARKETPLACE SEARCH HEADER (INTEGRATED SEARCH BOX IN BAR) */}
       <header className="sticky top-0 z-40 bg-[#0b1a18]/95 backdrop-blur-md border-b border-[#183632]">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between gap-6">
           
-          {/* Left Property Brand & Back Link */}
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-xs font-semibold text-[#8ca8a4] hover:text-[#d19c53] transition-colors inline-flex items-center gap-1">
-              ← Ana Sayfa
+          {/* Left Brand & Return Button */}
+          <div className="flex items-center gap-4 shrink-0">
+            <Link href="/" className="px-3 py-1.5 rounded-full border border-[#1f4742] text-xs font-semibold text-[#8ca8a4] hover:text-[#d19c53] hover:border-[#d19c53] transition-all inline-flex items-center gap-1.5">
+              ← KvK Sitesine Dön
             </Link>
             <span className="text-[#183632]">|</span>
             <div className="flex items-baseline gap-2">
@@ -216,38 +193,25 @@ export default function DemoEmlakClient() {
             </div>
           </div>
 
-          {/* Center Action-Oriented Discovery Links */}
-          <nav aria-label="Emlak Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#9ebcb8]">
-            <button 
-              type="button"
-              onClick={() => { setStatusFilter("Satılık"); setTypeFilter("Tümü"); }}
-              className={`hover:text-[#d19c53] transition-colors cursor-pointer ${statusFilter === "Satılık" ? "text-[#d19c53] font-bold" : ""}`}
-            >
-              Satılık Portföy
-            </button>
-            <button 
-              type="button"
-              onClick={() => { setStatusFilter("Kiralık"); setTypeFilter("Tümü"); }}
-              className={`hover:text-[#d19c53] transition-colors cursor-pointer ${statusFilter === "Kiralık" ? "text-[#d19c53] font-bold" : ""}`}
-            >
-              Kiralık Portföy
-            </button>
-            <a href="#featured" className="hover:text-[#d19c53] transition-colors">Öne Çıkanlar</a>
-            <a href="#about" className="hover:text-[#d19c53] transition-colors">Hakkımızda</a>
-          </nav>
-
-          {/* Right Search Utility & CTA */}
-          <div className="flex items-center gap-3">
+          {/* Center Integrated Quick Property Search Bar Input */}
+          <div className="hidden lg:flex flex-grow max-w-md items-center relative">
             <a 
               href="#search"
-              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 border border-[#1f4742] text-[#d19c53] text-xs hover:border-[#d19c53] transition-all cursor-pointer font-semibold"
+              className="w-full px-4 py-2 bg-[#061211] border border-[#1f4742] rounded-full text-xs text-[#8ca8a4] flex items-center justify-between hover:border-[#d19c53] transition-all cursor-pointer"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span>İlan Ara</span>
+              <div className="flex items-center gap-2">
+                <Search className="w-3.5 h-3.5 text-[#d19c53]" />
+                <span>Pendik, Kartal, Maltepe bölgesinde mülk arayın...</span>
+              </div>
+              <span className="px-2 py-0.5 bg-[#d19c53]/20 text-[#d19c53] rounded text-[10px] font-mono">Filtrele</span>
             </a>
+          </div>
+
+          {/* Right Action Button */}
+          <div className="flex items-center gap-3 shrink-0">
             <a 
               href="#contact"
-              className="px-4 py-2 bg-[#d19c53] text-[#0b1a18] font-bold text-xs tracking-widest uppercase hover:bg-[#e0ad66] transition-all"
+              className="px-5 py-2.5 bg-[#d19c53] text-[#0b1a18] font-bold text-xs tracking-widest uppercase hover:bg-[#e0ad66] transition-all shadow-lg shadow-[#d19c53]/10"
             >
               Danışmanla Görüş
             </a>

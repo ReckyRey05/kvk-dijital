@@ -111,66 +111,45 @@ export default function DemoHukukClient() {
   return (
     <div className="min-h-screen bg-[#0a1226] text-[#f7f5f0] flex flex-col font-sans selection:bg-[#c59b63]/30 selection:text-white">
       
-      {/* 1. KONSEPT DEMO BARI & ANA SİTEYE DÖNÜŞ */}
-      <div className="w-full bg-[#060b17] border-b border-[#1c2a4a] py-2.5 px-4 text-center text-xs text-[#c59b63] flex flex-wrap items-center justify-center gap-3 relative z-50">
-        <div className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-[#c59b63] shrink-0" />
-          <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link 
-            href="/" 
-            className="font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px]"
-          >
-            ← Ana Sayfaya Dön
-          </Link>
-          <Link 
-            href="/#iletisim" 
-            className="font-bold text-[#0a1226] bg-[#c59b63] hover:bg-[#d6ac74] px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px] uppercase tracking-wider"
-          >
-            KvK'den Teklif Al <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Fixed Floating Back to Main Site Button (Sol Alt Kilitli) */}
-      <div className="fixed bottom-6 left-6 z-50 hidden sm:block">
-        <Link
-          href="/"
-          className="px-4 py-2.5 rounded-full bg-[#060b17]/95 text-[#f7f5f0] border border-[#c59b63]/60 text-xs font-bold shadow-2xl flex items-center gap-2 hover:bg-[#121c36] hover:scale-105 transition-all backdrop-blur-md"
-        >
-          <span className="text-[#c59b63]">←</span> Ana KvK Sitesine Dön
+      {/* Fixed Floating Bottom Right Demo Badge */}
+      <div className="fixed bottom-6 right-6 z-50 hidden sm:flex items-center gap-3 p-3 rounded-full bg-[#060c1c]/95 border border-[#c59b63]/60 text-white text-xs shadow-2xl backdrop-blur-md">
+        <Info className="w-4 h-4 text-[#c59b63] shrink-0" />
+        <span className="text-[11px] text-[#9eaecf]">Konsept Demo — <strong>KvK Dijital</strong></span>
+        <Link href="/#iletisim" className="px-3 py-1 rounded bg-[#c59b63] text-[#0a1226] font-bold text-[10px] uppercase tracking-wider hover:bg-[#d6ac74] transition-colors">
+          Teklif Al
         </Link>
       </div>
 
-      {/* 2. INSTITUTIONAL CORPORATE DOUBLE BAR HEADER */}
+      {/* 2. INSTITUTIONAL CORPORATE DUAL-BAND HEADER */}
       <header className="sticky top-0 z-40 bg-[#0a1226]/95 backdrop-blur-md border-b border-[#1a2745]">
         
-        {/* Top Corporate Utility Bar */}
-        <div className="hidden md:block bg-[#060c1c] border-b border-[#152342] py-1.5 px-6 text-[11px] text-[#8c9bbd]">
+        {/* Top Formal Contact & KvK Return Band */}
+        <div className="bg-[#060c1c] border-b border-[#152342] py-2 px-6 text-[11px] text-[#8c9bbd]">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <span>📍 Maslak Plaza Kat:14, Sarıyer / İstanbul</span>
-              <span>📞 0216 450 00 00</span>
-              <span>✉️ kurumsal@prestijhukuk.com</span>
+              <Link href="/" className="font-semibold text-white hover:text-[#c59b63] transition-colors inline-flex items-center gap-1">
+                ← Ana KvK Sitesine Dön
+              </Link>
+              <span className="text-[#1c2a4a] hidden md:inline">|</span>
+              <span className="hidden md:inline">📍 Maslak Plaza Kat:14, Sarıyer / İstanbul</span>
+              <span className="hidden lg:inline">📞 0216 450 00 00</span>
             </div>
-            <span className="font-mono text-[#c59b63]">Çalışma Saatleri: Pzt - Cum 09:00 - 18:00</span>
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-[#c59b63] hidden sm:inline">Pzt - Cum 09:00 - 18:00</span>
+            </div>
           </div>
         </div>
 
-        {/* Main Institutional Header Bar */}
+        {/* Main Institutional Nav Bar */}
         <div className="container mx-auto px-6 h-18 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <Link href="/" className="text-xs font-semibold text-[#8c9bbd] hover:text-[#c59b63] transition-colors inline-flex items-center gap-1">
-              ← Ana Sayfa
-            </Link>
-            <span className="text-[#1c2a4a]">|</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-serif text-lg font-bold tracking-tight text-[#f7f5f0]">PRESTİJ</span>
-              <span className="text-[10px] uppercase tracking-widest text-[#c59b63] font-semibold hidden sm:inline">Hukuk & Danışmanlık</span>
-            </div>
+          
+          {/* Formal Left Wordmark */}
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#f7f5f0]">PRESTİJ</span>
+            <span className="text-[10px] uppercase tracking-widest text-[#c59b63] font-semibold hidden sm:inline">Hukuk & Danışmanlık</span>
           </div>
 
+          {/* Center Corporate Nav Links */}
           <nav aria-label="Hukuk Navigasyon" className="hidden lg:flex items-center gap-8 text-xs tracking-widest uppercase text-[#9eaecf]">
             <a href="#philosophy" className="hover:text-[#c59b63] transition-colors">Yaklaşımımız</a>
             <a href="#practice" className="hover:text-[#c59b63] transition-colors">Çalışma Alanlarımız</a>
@@ -178,14 +157,16 @@ export default function DemoHukukClient() {
             <a href="#faq" className="hover:text-[#c59b63] transition-colors">Sık Sorulan Sorular</a>
           </nav>
 
+          {/* Right Consultation CTA */}
           <div className="flex items-center gap-3">
             <a 
               href="#contact"
-              className="px-4 py-2 bg-[#c59b63] text-[#0a1226] font-bold text-xs tracking-widest uppercase hover:bg-[#d6ac74] transition-all"
+              className="px-5 py-2.5 bg-[#c59b63] text-[#0a1226] font-bold text-xs tracking-widest uppercase hover:bg-[#d6ac74] transition-all shadow-lg shadow-[#c59b63]/10"
             >
               Danışmanlık Talebi
             </a>
           </div>
+
         </div>
       </header>
 
