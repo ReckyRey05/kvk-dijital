@@ -65,16 +65,27 @@ const treatments: TreatmentItem[] = [
 ];
 
 const availableDays = [
-  { day: 14, name: "Cuma", available: true },
-  { day: 15, name: "Cumartesi", available: true },
-  { day: 16, name: "Pazar", available: false },
-  { day: 17, name: "Pazartesi", available: true },
-  { day: 18, name: "Salı", available: true },
-  { day: 19, name: "Çarşamba", available: true },
-  { day: 20, name: "Perşembe", available: true },
+  { day: 14, name: "Cuma", short: "CUM", available: true },
+  { day: 15, name: "Cumartesi", short: "CMT", available: true },
+  { day: 16, name: "Pazar", short: "PAZ", available: false },
+  { day: 17, name: "Pazartesi", short: "PZT", available: true },
+  { day: 18, name: "Salı", short: "SAL", available: true },
+  { day: 19, name: "Çarşamba", short: "ÇAR", available: true },
+  { day: 20, name: "Perşembe", short: "PER", available: true },
+  { day: 21, name: "Cuma", short: "CUM", available: true },
+  { day: 22, name: "Cumartesi", short: "CMT", available: true },
+  { day: 23, name: "Pazar", short: "PAZ", available: false },
+  { day: 24, name: "Pazartesi", short: "PZT", available: true },
+  { day: 25, name: "Salı", short: "SAL", available: true },
+  { day: 26, name: "Çarşamba", short: "ÇAR", available: true },
+  { day: 27, name: "Perşembe", short: "PER", available: true },
+  { day: 28, name: "Cuma", short: "CUM", available: true },
+  { day: 29, name: "Cumartesi", short: "CMT", available: true },
+  { day: 30, name: "Pazar", short: "PAZ", available: false },
+  { day: 31, name: "Pazartesi", short: "PZT", available: true }
 ];
 
-const timeSlots = ["10:00", "11:30", "14:00", "15:30", "17:00", "18:30"];
+const timeSlots = ["09:30", "10:30", "11:30", "13:00", "14:00", "15:00", "16:00", "17:00", "18:30", "19:30"];
 
 const faqs = [
   {
@@ -367,23 +378,23 @@ export default function DemoBeautyClient() {
                 </select>
               </div>
 
-              {/* Interactive Calendar Selection (Ağustos 2026) */}
+              {/* Interactive Calendar Selection (Ağustos 2026 - Kaydırılabilir) */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <label className="block text-xs uppercase tracking-widest text-[#d4af37] font-semibold">
-                    2. Tarih Seçiniz (Ağustos 2026)
+                    2. Tarih Seçiniz (Ağustos 2026) <span className="text-[10px] text-[#807b71] font-normal lowercase">(sağa kaydırın →)</span>
                   </label>
                   <span className="text-[11px] text-[#807b71]">Pazar Günleri Kapalıdır</span>
                 </div>
 
-                <div className="grid grid-cols-7 gap-2">
+                <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 snap-x touch-pan-x [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:bg-[#d4af37]/50 [&::-webkit-scrollbar-track]:bg-[#181722]">
                   {availableDays.map(item => (
                     <button
                       key={item.day}
                       type="button"
                       disabled={!item.available}
                       onClick={() => setSelectedDay(item.day)}
-                      className={`p-3 border text-center transition-all flex flex-col items-center justify-center gap-1 ${
+                      className={`min-w-[72px] shrink-0 snap-start p-3 rounded-lg border text-center transition-all flex flex-col items-center justify-center gap-1 ${
                         !item.available 
                           ? "opacity-30 border-[#1f1e28] bg-[#0c0b10] cursor-not-allowed text-[#635f56]" 
                           : selectedDay === item.day
@@ -391,27 +402,29 @@ export default function DemoBeautyClient() {
                             : "bg-[#181722] border-[#2e2c3d] text-[#f5f2eb] hover:border-[#d4af37] cursor-pointer"
                       }`}
                     >
-                      <span className="text-[10px] tracking-wider uppercase opacity-80">{item.name.slice(0, 3)}</span>
+                      <span className="text-[10px] tracking-wider uppercase opacity-80">{item.short}</span>
                       <span className="font-serif text-lg">{item.day}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Interactive Time Slot Selection */}
+              {/* Interactive Time Slot Selection (Kaydırılabilir) */}
               <div>
-                <label className="block text-xs uppercase tracking-widest text-[#d4af37] mb-3 font-semibold">
-                  3. Saat Seçiniz
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-xs uppercase tracking-widest text-[#d4af37] font-semibold">
+                    3. Saat Seçiniz <span className="text-[10px] text-[#807b71] font-normal lowercase">(sağa kaydırın →)</span>
+                  </label>
+                </div>
+                <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 snap-x touch-pan-x [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:bg-[#d4af37]/50 [&::-webkit-scrollbar-track]:bg-[#181722]">
                   {timeSlots.map(time => (
                     <button
                       key={time}
                       type="button"
                       onClick={() => setSelectedTime(time)}
-                      className={`py-3 border text-xs font-mono text-center transition-all cursor-pointer ${
+                      className={`min-w-[90px] shrink-0 snap-start py-3.5 px-4 rounded-lg border text-xs font-mono text-center transition-all cursor-pointer ${
                         selectedTime === time
-                          ? "bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37] font-bold"
+                          ? "bg-[#d4af37] text-[#0a0a0d] border-[#d4af37] font-bold shadow-md shadow-[#d4af37]/20"
                           : "bg-[#181722] border-[#2e2c3d] text-[#a69f92] hover:border-[#d4af37]/50"
                       }`}
                     >
