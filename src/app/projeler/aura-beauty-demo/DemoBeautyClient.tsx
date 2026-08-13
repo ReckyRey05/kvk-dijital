@@ -112,12 +112,12 @@ export default function DemoBeautyClient() {
             <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-medium">Beauty & Spa</span>
           </div>
 
-          <nav aria-label="Aura Beauty Luxury Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#9e978c]">
-            <a href="#philosophy" className="hover:text-[#d4af37] transition-colors">Felsefe</a>
-            <a href="#treatments" className="hover:text-[#d4af37] transition-colors">Terapiler</a>
-            <a href="#showcase" className="hover:text-[#d4af37] transition-colors">Ritüeller</a>
-            <a href="#booking" className="hover:text-[#d4af37] transition-colors">Randevu</a>
-            <a href="#faq" className="hover:text-[#d4af37] transition-colors">SSS</a>
+          <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#9e978c]">
+            <a href="#philosophy" className="hover:text-[#d4af37] transition-colors">Yaklaşımımız</a>
+            <a href="#treatments" className="hover:text-[#d4af37] transition-colors">Bakım Hizmetleri</a>
+            <a href="#showcase" className="hover:text-[#d4af37] transition-colors">Salon Atmosferi</a>
+            <a href="#booking" className="hover:text-[#d4af37] transition-colors">Randevu Al</a>
+            <a href="#faq" className="hover:text-[#d4af37] transition-colors">Sık Sorulan Sorular</a>
           </nav>
 
           <div className="flex items-center gap-4">

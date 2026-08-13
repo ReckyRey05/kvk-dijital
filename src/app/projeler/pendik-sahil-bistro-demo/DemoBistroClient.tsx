@@ -121,12 +121,12 @@ export default function DemoBistroClient() {
             <span className="text-xs uppercase tracking-widest text-[#5a6b5c] font-semibold">Bistro & Mutfak</span>
           </div>
 
-          <nav aria-label="Bistro Editorial Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#635d55]">
-            <a href="#story" className="hover:text-[#1f1c19] transition-colors">Hikayemiz</a>
-            <a href="#menu" className="hover:text-[#1f1c19] transition-colors">Gastronomi Menüsü</a>
-            <a href="#signature" className="hover:text-[#1f1c19] transition-colors">İmza Lezzet</a>
-            <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors">Atmosfer</a>
-            <a href="#location" className="hover:text-[#1f1c19] transition-colors">Ziyaret & Konum</a>
+          <nav aria-label="Bistro Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#635d55]">
+            <a href="#story" className="hover:text-[#1f1c19] transition-colors">Hikâyemiz</a>
+            <a href="#menu" className="hover:text-[#1f1c19] transition-colors">Menüyü İncele</a>
+            <a href="#signature" className="hover:text-[#1f1c19] transition-colors">Öne Çıkan Lezzetler</a>
+            <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors">Mekan Atmosferi</a>
+            <a href="#location" className="hover:text-[#1f1c19] transition-colors">Çalışma Saatleri</a>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -218,7 +218,7 @@ export default function DemoBistroClient() {
       {/* 4. STORY / PHILOSOPHY SECTION */}
       <section id="story" className="py-24 border-b border-[#e8e2d8] bg-[#faf8f5]">
         <div className="container mx-auto px-6 max-w-4xl text-center space-y-6">
-          <span className="text-[#5a6b5c] text-xs font-semibold tracking-widest uppercase block">Felsefemiz</span>
+          <span className="text-[#5a6b5c] text-xs font-semibold tracking-widest uppercase block">Hikâyemiz</span>
           <h2 className="font-serif text-3xl sm:text-5xl font-normal text-[#1f1c19] leading-tight">
             Her Tabakta Doğallık, Her Yudumda Nitelikli Tat.
           </h2>
