@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
       { url: '/icon.png', sizes: '192x192', type: 'image/png' },
     ],
     shortcut: '/favicon.ico',
@@ -71,6 +71,11 @@ export default function RootLayout({
   return (
     <html lang="tr" className={`scroll-smooth ${inter.variable}`}>
       <head>
+        {/* Googlebot-Image Favicon Standards (48x48 multiple) */}
+        <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         {/* DNS prefetch for GTM tracking */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
       </head>
