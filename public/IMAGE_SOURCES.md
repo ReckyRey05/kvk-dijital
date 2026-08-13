@@ -62,5 +62,34 @@ All images are sourced under the Unsplash Free Commercial License, permitting us
 
 ---
 
+## 3. Demo #3 — Prestij Hukuk & Danışmanlık
+
+- `public/images/demos/prestij-hukuk/hero.jpg`
+  - **Source:** Unsplash (`photo-1589829545856-d10d557cf95f`)
+  - **URL:** https://images.unsplash.com/photo-1589829545856-d10d557cf95f
+  - **Alt Text:** "Prestij Hukuk kurumsal kütüphane ve resmi toplantı alanı"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/prestij-hukuk/meeting.jpg`
+  - **Source:** Unsplash (`photo-1521791136064-7986c2920216`)
+  - **URL:** https://images.unsplash.com/photo-1521791136064-7986c2920216
+  - **Alt Text:** "Kurumsal hukuk müzakeresi ve iş danışmanlığı masası"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/prestij-hukuk/architecture.jpg`
+  - **Source:** Unsplash (`photo-1486406146926-c627a92ad1ab`)
+  - **URL:** https://images.unsplash.com/photo-1486406146926-c627a92ad1ab
+  - **Alt Text:** "Modern kurumsal plaza ve hukuki danışmanlık binası mimarisi"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/prestij-hukuk/library.jpg`
+  - **Source:** Unsplash (`photo-1450133064473-71024230f91b`)
+  - **URL:** https://images.unsplash.com/photo-1450133064473-71024230f91b
+  - **Alt Text:** "Klasik hukuk kütüphanesi ve mevzuat kitaplığı"
+  - **License:** Unsplash Commercial Free License
+
+
+---
+
 ## 3. Local Asset Integrity Guarantee
 All media files listed above are physically stored in `public/images/demos/`, loaded via Next.js static asset routing, and feature explicit width/height dimensions to eliminate layout shifts (CLS).

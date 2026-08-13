@@ -37,6 +37,17 @@ const conceptDemos: ConceptCardProps[] = [
     imageSrc: "/images/demos/aura-beauty/hero.jpg",
     imageAlt: "Aura Beauty & Güzellik Merkezi medikal cilt bakımı uygulaması",
     aspectRatio: "aspect-[4/3]"
+  },
+  {
+    id: "demo-hukuk",
+    title: "Prestij Hukuk & Danışmanlık",
+    category: "Hukuk & B2B Danışmanlık",
+    description: "Hukuk büroları ve danışmanlık firmaları için İsviçre editoryal düzeninde kurumsal konsept web sitesi.",
+    features: ["İnteraktif Çalışma Alanları Kataloğu", "Kurumsal Danışmanlık Talebi Modülü", "Hukuki Rehber & Bilgi Paylaşımı"],
+    href: "/projeler/prestij-hukuk-demo",
+    imageSrc: "/images/demos/prestij-hukuk/hero.jpg",
+    imageAlt: "Prestij Hukuk & Danışmanlık kurumsal kütüphane ve resmi toplantı alanı",
+    aspectRatio: "aspect-[16/9]"
   }
 ];
 
@@ -60,7 +71,7 @@ export default function Projects({ projects }: { projects?: any[] }) {
         </div>
 
         {/* Concept Demos Showcase Grid (Strictly adhering to KvK Global Theme) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {conceptDemos.map((demo) => (
             <div 
               key={demo.id}
