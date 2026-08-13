@@ -121,27 +121,53 @@ export default function DemoBeautyClient() {
   return (
     <div className="min-h-screen bg-[#0a0a0d] text-[#f5f2eb] flex flex-col font-sans selection:bg-[#d4af37]/30 selection:text-white">
       
-      {/* 1. KONSEPT DEMO BARI */}
-      <div className="w-full bg-[#121218] border-b border-[#242330] py-2.5 px-4 text-center text-xs text-[#d4af37] flex flex-wrap items-center justify-center gap-2 relative z-50">
-        <Info className="w-4 h-4 text-[#d4af37] shrink-0" />
-        <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından güzellik & bakım salonları için hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
-        <Link 
-          href="/#iletisim" 
-          className="ml-2 font-semibold underline hover:text-white transition-colors inline-flex items-center gap-1 text-white bg-[#d4af37]/20 px-2.5 py-0.5 rounded"
+      {/* 1. KONSEPT DEMO BARI & ANA SİTEYE DÖNÜŞ */}
+      <div className="w-full bg-[#121218] border-b border-[#242330] py-2.5 px-4 text-center text-xs text-[#d4af37] flex flex-wrap items-center justify-center gap-3 relative z-50">
+        <div className="flex items-center gap-1.5">
+          <Info className="w-4 h-4 text-[#d4af37] shrink-0" />
+          <span>Bu sayfa <strong>KvK Dijital Çözümler</strong> tarafından hazırlanmış <strong>Konsept Demo Çalışma</strong>dır.</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link 
+            href="/" 
+            className="font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px]"
+          >
+            ← Ana Sayfaya Dön
+          </Link>
+          <Link 
+            href="/#iletisim" 
+            className="font-bold text-[#0a0a0d] bg-[#d4af37] hover:bg-[#e2c152] px-3 py-1 rounded transition-colors inline-flex items-center gap-1 text-[11px] uppercase tracking-wider"
+          >
+            KvK'den Teklif Al <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Fixed Floating Back to Main Site Button (Sol Alt Kilitli) */}
+      <div className="fixed bottom-6 left-6 z-50 hidden sm:block">
+        <Link
+          href="/"
+          className="px-4 py-2.5 rounded-full bg-[#121218]/95 text-[#f5f2eb] border border-[#d4af37]/60 text-xs font-bold shadow-2xl flex items-center gap-2 hover:bg-[#1a1924] hover:scale-105 transition-all backdrop-blur-md"
         >
-          Salonunuz İçin Teklif Alın <ArrowRight className="w-3 h-3" />
+          <span className="text-[#d4af37]">←</span> Ana KvK Sitesine Dön
         </Link>
       </div>
 
       {/* 2. LUXURY FASHION EDITORIAL HEADER */}
       <header className="sticky top-0 z-40 bg-[#0a0a0d]/95 backdrop-blur-md border-b border-[#1c1b26]">
         <div className="container mx-auto px-6 h-22 flex items-center justify-between">
-          <div className="flex items-baseline gap-3">
-            <span className="font-serif text-2xl font-light tracking-widest text-[#f5f2eb]">AURA</span>
-            <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-medium">Beauty & Spa</span>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="text-xs font-semibold text-[#9e978c] hover:text-[#d4af37] transition-colors inline-flex items-center gap-1">
+              ← Ana Sayfa
+            </Link>
+            <span className="text-[#2e2c3d]">|</span>
+            <div className="flex items-baseline gap-2">
+              <span className="font-serif text-xl font-light tracking-widest text-[#f5f2eb]">AURA</span>
+              <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-medium hidden sm:inline">Beauty & Spa</span>
+            </div>
           </div>
 
-          <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-10 text-xs tracking-widest uppercase text-[#9e978c]">
+          <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-8 text-xs tracking-widest uppercase text-[#9e978c]">
             <a href="#philosophy" className="hover:text-[#d4af37] transition-colors">Yaklaşımımız</a>
             <a href="#treatments" className="hover:text-[#d4af37] transition-colors">Bakım Hizmetleri</a>
             <a href="#showcase" className="hover:text-[#d4af37] transition-colors">Salon Atmosferi</a>
@@ -149,17 +175,17 @@ export default function DemoBeautyClient() {
             <a href="#faq" className="hover:text-[#d4af37] transition-colors">Sık Sorulan Sorular</a>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a 
               href="#booking"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 border border-[#3b384a] text-[#d4af37] text-xs uppercase tracking-widest hover:border-[#d4af37] transition-all cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 border border-[#3b384a] text-[#d4af37] text-xs uppercase tracking-widest hover:border-[#d4af37] transition-all cursor-pointer"
             >
               <CalendarIcon className="w-3.5 h-3.5" />
               <span>Takvim Randevu</span>
             </a>
             <Link 
               href="/#iletisim"
-              className="px-5 py-2.5 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all"
+              className="px-4 py-2 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all"
             >
               Teklif Al
             </Link>
