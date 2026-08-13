@@ -200,35 +200,59 @@ export default function DemoEmlakClient() {
         </Link>
       </div>
 
-      {/* 2. REAL ESTATE MARKETPLACE HEADER */}
+      {/* 2. PROPERTY DISCOVERY & UTILITY ACTION HEADER */}
       <header className="sticky top-0 z-40 bg-[#0b1a18]/95 backdrop-blur-md border-b border-[#183632]">
-        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          
+          {/* Left Property Brand & Back Link */}
           <div className="flex items-center gap-4">
             <Link href="/" className="text-xs font-semibold text-[#8ca8a4] hover:text-[#d19c53] transition-colors inline-flex items-center gap-1">
               ← Ana Sayfa
             </Link>
             <span className="text-[#183632]">|</span>
             <div className="flex items-baseline gap-2">
-              <span className="font-serif text-xl font-bold tracking-wider text-[#f9f8f5]">VİZYON</span>
-              <span className="text-[10px] uppercase tracking-widest text-[#d19c53] font-semibold hidden sm:inline">Gayrimenkul & Danışmanlık</span>
+              <span className="font-serif text-lg font-bold tracking-wider text-[#f9f8f5]">VİZYON</span>
+              <span className="text-[10px] uppercase tracking-widest text-[#d19c53] font-semibold hidden sm:inline">Gayrimenkul</span>
             </div>
           </div>
 
-          <nav aria-label="Emlak Navigasyon" className="hidden lg:flex items-center gap-8 text-xs tracking-widest uppercase text-[#9ebcb8]">
-            <a href="#search" className="hover:text-[#d19c53] transition-colors">İlan Ara</a>
-            <a href="#featured" className="hover:text-[#d19c53] transition-colors">Öne Çıkan Portföy</a>
+          {/* Center Action-Oriented Discovery Links */}
+          <nav aria-label="Emlak Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#9ebcb8]">
+            <button 
+              type="button"
+              onClick={() => { setStatusFilter("Satılık"); setTypeFilter("Tümü"); }}
+              className={`hover:text-[#d19c53] transition-colors cursor-pointer ${statusFilter === "Satılık" ? "text-[#d19c53] font-bold" : ""}`}
+            >
+              Satılık Portföy
+            </button>
+            <button 
+              type="button"
+              onClick={() => { setStatusFilter("Kiralık"); setTypeFilter("Tümü"); }}
+              className={`hover:text-[#d19c53] transition-colors cursor-pointer ${statusFilter === "Kiralık" ? "text-[#d19c53] font-bold" : ""}`}
+            >
+              Kiralık Portföy
+            </button>
+            <a href="#featured" className="hover:text-[#d19c53] transition-colors">Öne Çıkanlar</a>
             <a href="#about" className="hover:text-[#d19c53] transition-colors">Hakkımızda</a>
-            <a href="#contact" className="hover:text-[#d19c53] transition-colors">İletişim</a>
           </nav>
 
+          {/* Right Search Utility & CTA */}
           <div className="flex items-center gap-3">
             <a 
               href="#search"
+              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 border border-[#1f4742] text-[#d19c53] text-xs hover:border-[#d19c53] transition-all cursor-pointer font-semibold"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>İlan Ara</span>
+            </a>
+            <a 
+              href="#contact"
               className="px-4 py-2 bg-[#d19c53] text-[#0b1a18] font-bold text-xs tracking-widest uppercase hover:bg-[#e0ad66] transition-all"
             >
-              İlanları İncele
+              Danışmanla Görüş
             </a>
           </div>
+
         </div>
       </header>
 

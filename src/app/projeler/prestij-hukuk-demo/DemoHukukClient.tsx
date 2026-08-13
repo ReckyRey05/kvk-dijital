@@ -143,16 +143,30 @@ export default function DemoHukukClient() {
         </Link>
       </div>
 
-      {/* 2. CORPORATE SWISS HEADER */}
+      {/* 2. INSTITUTIONAL CORPORATE DOUBLE BAR HEADER */}
       <header className="sticky top-0 z-40 bg-[#0a1226]/95 backdrop-blur-md border-b border-[#1a2745]">
-        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        
+        {/* Top Corporate Utility Bar */}
+        <div className="hidden md:block bg-[#060c1c] border-b border-[#152342] py-1.5 px-6 text-[11px] text-[#8c9bbd]">
+          <div className="container mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <span>📍 Maslak Plaza Kat:14, Sarıyer / İstanbul</span>
+              <span>📞 0216 450 00 00</span>
+              <span>✉️ kurumsal@prestijhukuk.com</span>
+            </div>
+            <span className="font-mono text-[#c59b63]">Çalışma Saatleri: Pzt - Cum 09:00 - 18:00</span>
+          </div>
+        </div>
+
+        {/* Main Institutional Header Bar */}
+        <div className="container mx-auto px-6 h-18 flex items-center justify-between">
+          <div className="flex items-center gap-5">
             <Link href="/" className="text-xs font-semibold text-[#8c9bbd] hover:text-[#c59b63] transition-colors inline-flex items-center gap-1">
               ← Ana Sayfa
             </Link>
             <span className="text-[#1c2a4a]">|</span>
             <div className="flex items-baseline gap-2">
-              <span className="font-serif text-xl font-bold tracking-tight text-[#f7f5f0]">PRESTİJ</span>
+              <span className="font-serif text-lg font-bold tracking-tight text-[#f7f5f0]">PRESTİJ</span>
               <span className="text-[10px] uppercase tracking-widest text-[#c59b63] font-semibold hidden sm:inline">Hukuk & Danışmanlık</span>
             </div>
           </div>
@@ -162,7 +176,6 @@ export default function DemoHukukClient() {
             <a href="#practice" className="hover:text-[#c59b63] transition-colors">Çalışma Alanlarımız</a>
             <a href="#guide" className="hover:text-[#c59b63] transition-colors">Hukuki Rehber</a>
             <a href="#faq" className="hover:text-[#c59b63] transition-colors">Sık Sorulan Sorular</a>
-            <a href="#contact" className="hover:text-[#c59b63] transition-colors">İletişim</a>
           </nav>
 
           <div className="flex items-center gap-3">

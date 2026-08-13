@@ -153,43 +153,47 @@ export default function DemoBeautyClient() {
         </Link>
       </div>
 
-      {/* 2. LUXURY FASHION EDITORIAL HEADER */}
+      {/* 2. ULTRA-THIN ASYMMETRIC FASHION EDITORIAL HEADER */}
       <header className="sticky top-0 z-40 bg-[#0a0a0d]/95 backdrop-blur-md border-b border-[#1c1b26]">
-        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
+        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+          
+          {/* Left Minimalist Brand Stack */}
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-xs font-semibold text-[#9e978c] hover:text-[#d4af37] transition-colors inline-flex items-center gap-1">
+            <Link href="/" className="text-xs font-medium text-[#9e978c] hover:text-[#d4af37] transition-colors inline-flex items-center gap-1">
               ← Ana Sayfa
             </Link>
             <span className="text-[#2e2c3d]">|</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-serif text-xl font-light tracking-widest text-[#f5f2eb]">AURA</span>
-              <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-medium hidden sm:inline">Beauty & Spa</span>
+            <div className="flex items-center gap-2">
+              <span className="font-serif text-lg font-light tracking-[0.25em] text-[#f5f2eb]">A U R A</span>
+              <span className="text-[9px] uppercase tracking-[0.2em] text-[#d4af37] font-medium hidden sm:inline">• BEAUTY & SPA</span>
             </div>
           </div>
 
-          <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-8 text-xs tracking-widest uppercase text-[#9e978c]">
-            <a href="#philosophy" className="hover:text-[#d4af37] transition-colors">Yaklaşımımız</a>
-            <a href="#treatments" className="hover:text-[#d4af37] transition-colors">Bakım Hizmetleri</a>
-            <a href="#showcase" className="hover:text-[#d4af37] transition-colors">Salon Atmosferi</a>
-            <a href="#booking" className="hover:text-[#d4af37] transition-colors">Randevu Al</a>
-            <a href="#faq" className="hover:text-[#d4af37] transition-colors">Sık Sorulan Sorular</a>
-          </nav>
+          {/* Right-Aligned Asymmetric Navigation & Actions */}
+          <div className="flex items-center gap-8">
+            <nav aria-label="Aura Beauty Navigasyon" className="hidden lg:flex items-center gap-8 text-[11px] tracking-[0.15em] uppercase text-[#9e978c]">
+              <a href="#philosophy" className="hover:text-[#d4af37] transition-colors">Yaklaşımımız</a>
+              <a href="#treatments" className="hover:text-[#d4af37] transition-colors">Bakım Hizmetleri</a>
+              <a href="#showcase" className="hover:text-[#d4af37] transition-colors">Salon Atmosferi</a>
+            </nav>
 
-          <div className="flex items-center gap-3">
-            <a 
-              href="#booking"
-              className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 border border-[#3b384a] text-[#d4af37] text-xs uppercase tracking-widest hover:border-[#d4af37] transition-all cursor-pointer"
-            >
-              <CalendarIcon className="w-3.5 h-3.5" />
-              <span>Takvim Randevu</span>
-            </a>
-            <Link 
-              href="/#iletisim"
-              className="px-4 py-2 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all"
-            >
-              Teklif Al
-            </Link>
+            <div className="flex items-center gap-3">
+              <a 
+                href="#booking"
+                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 border border-[#3b384a] text-[#d4af37] text-[11px] uppercase tracking-widest hover:border-[#d4af37] transition-all cursor-pointer font-medium"
+              >
+                <CalendarIcon className="w-3 h-3" />
+                <span>Takvim Randevu</span>
+              </a>
+              <Link 
+                href="/#iletisim"
+                className="px-3.5 py-1.5 bg-[#d4af37] text-[#0a0a0d] font-bold text-[11px] tracking-widest uppercase hover:bg-[#e2c152] transition-all"
+              >
+                Teklif Al
+              </Link>
+            </div>
           </div>
+
         </div>
       </header>
 

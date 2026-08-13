@@ -133,29 +133,34 @@ export default function DemoBistroClient() {
         </Link>
       </div>
 
-      {/* 2. EDITORIAL HEADER */}
+      {/* 2. MINIMAL HOSPITALITY EDITORIAL HEADER (CENTERED BRAND + SPLIT NAV) */}
       <header className="sticky top-0 z-40 bg-[#faf8f5]/95 backdrop-blur-md border-b border-[#e8e2d8]">
-        <div className="container mx-auto px-6 h-22 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          
+          {/* Left Navigation Links */}
+          <div className="flex items-center gap-6">
             <Link href="/" className="text-xs font-semibold text-[#5a6b5c] hover:text-[#1f1c19] transition-colors inline-flex items-center gap-1">
               ← Ana Sayfa
             </Link>
-            <span className="text-[#d6cbba]">|</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-serif text-xl font-bold tracking-tight text-[#1f1c19]">Pendik Sahil</span>
-              <span className="text-[10px] uppercase tracking-widest text-[#5a6b5c] font-semibold hidden sm:inline">Bistro & Mutfak</span>
-            </div>
+            <span className="text-[#d6cbba] hidden md:inline">|</span>
+            <nav aria-label="Sol Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#635d55]">
+              <a href="#story" className="hover:text-[#1f1c19] transition-colors">Hikâyemiz</a>
+              <a href="#menu" className="hover:text-[#1f1c19] transition-colors">Menü</a>
+            </nav>
           </div>
 
-          <nav aria-label="Bistro Navigasyon" className="hidden lg:flex items-center gap-8 text-xs tracking-widest uppercase text-[#635d55]">
-            <a href="#story" className="hover:text-[#1f1c19] transition-colors">Hikâyemiz</a>
-            <a href="#menu" className="hover:text-[#1f1c19] transition-colors">Menüyü İncele</a>
-            <a href="#signature" className="hover:text-[#1f1c19] transition-colors">Öne Çıkan Lezzetler</a>
-            <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors">Mekan Atmosferi</a>
-            <a href="#location" className="hover:text-[#1f1c19] transition-colors">Çalışma Saatleri</a>
-          </nav>
+          {/* Centered Editorial Brand Wordmark */}
+          <div className="text-center">
+            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#1f1c19] block">Pendik Sahil</span>
+            <span className="text-[9px] uppercase tracking-[0.25em] text-[#5a6b5c] font-semibold block -mt-0.5">Bistro & Mutfak</span>
+          </div>
 
-          <div className="flex items-center gap-3">
+          {/* Right Navigation Links & CTA */}
+          <div className="flex items-center gap-6">
+            <nav aria-label="Sağ Navigasyon" className="hidden lg:flex items-center gap-6 text-xs tracking-widest uppercase text-[#635d55]">
+              <a href="#signature" className="hover:text-[#1f1c19] transition-colors">Lezzetler</a>
+              <a href="#atmosphere" className="hover:text-[#1f1c19] transition-colors">Atmosfer</a>
+            </nav>
             <button 
               type="button"
               onClick={showDemoToast}
@@ -171,6 +176,7 @@ export default function DemoBistroClient() {
               Teklif Al
             </Link>
           </div>
+
         </div>
       </header>
 
