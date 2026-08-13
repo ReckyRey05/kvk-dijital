@@ -24,7 +24,16 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/admin");
     } catch (err: any) {
-      setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+      console.error("Firebase Login Error:", err);
+      let msg = "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.";
+      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+        msg = "Girdiğiniz şifre veya e-posta adresi hatalı. Lütfen Firebase'de belirlediğiniz şifreyi kontrol edin.";
+      } else if (err.code === "auth/too-many-requests") {
+        msg = "Çok fazla hatalı deneme yapıldı. Lütfen 1-2 dakika bekleyip tekrar deneyin.";
+      } else if (err.message) {
+        msg = `Hata (${err.code || 'Giriş'}): ${err.message}`;
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
