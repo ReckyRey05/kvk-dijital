@@ -1,9 +1,9 @@
-# KVK Dijital Çözümler
+# KvK Dijital Çözümler
 
-> KVK Dijital Çözümler, İstanbul merkezli web tasarım, özel yazılım geliştirme ve e-ticaret çözümleri sunan profesyonel dijital ajanstır.
+> KvK Dijital Çözümler, İstanbul merkezli web tasarım, özel yazılım geliştirme ve e-ticaret çözümleri sunan profesyonel dijital ajanstır.
 
 ## Hizmetler ve Ana Sayfalar
-- [Ana Sayfa](https://kvkdijitalcozumler.com): KVK Dijital Çözümler resmi web sitesi ve ajans tanıtımı.
+- [Ana Sayfa](https://kvkdijitalcozumler.com): KvK Dijital Çözümler resmi web sitesi ve ajans tanıtımı.
 - [Web Tasarım](https://kvkdijitalcozumler.com/web-tasarim): Modern, mobil uyumlu, performanslı ve SEO odaklı profesyonel web tasarım hizmeti.
 - [İstanbul Web Tasarım](https://kvkdijitalcozumler.com/istanbul-web-tasarim): İstanbul, Kocaeli, Sakarya, Bursa ve çevresindeki işletmeler için bölgesel kurumsal web tasarım çözümleri.
 - [Kurumsal Web Tasarım](https://kvkdijitalcozumler.com/kurumsal-web-tasarim): Şirketlerin dijital prestijini artıran özel kurumsal web tasarım hizmeti.
@@ -15,8 +15,8 @@
 - [Blog](https://kvkdijitalcozumler.com/blog): Web tasarım, SEO, web performansı ve teknoloji konularında güncel yazılar.
 
 ## Marka Varlığı ve İletişim Bilgileri
-- **Resmi Marka Adı:** KVK Dijital Çözümler
-- **Kısa Ad:** KVK Dijital
+- **Resmi Marka Adı:** KvK Dijital Çözümler
+- **Kısa Ad:** KvK Dijital (Alternate: KVK Dijital)
 - **Kurucu & Web Tasarımcı:** Ali Haydar Kavak
 - **Hizmet Bölgesi:** İstanbul, Kocaeli, Sakarya, Yalova, Bursa, Tekirdağ ve Tüm Türkiye
 - **E-Posta:** iletisim@kvkdijitalcozumler.com

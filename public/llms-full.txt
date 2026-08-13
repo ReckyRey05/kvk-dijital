@@ -1,9 +1,9 @@
-# KVK Dijital Çözümler — Detaylı Marka & Hizmet Dokümantasyonu
+# KvK Dijital Çözümler — Detaylı Marka & Hizmet Dokümantasyonu
 
-> KVK Dijital Çözümler; İstanbul merkezli, modern web teknolojileri (Next.js, React, Tailwind CSS, Firebase) kullanarak yüksek performanslı, SEO ve mobil uyumlu web siteleri, e-ticaret sistemleri ve özel yazılımlar geliştiren dijital çözümler ajansıdır.
+> KvK Dijital Çözümler; İstanbul merkezli, modern web teknolojileri (Next.js, React, Tailwind CSS, Firebase) kullanarak yüksek performanslı, SEO ve mobil uyumlu web siteleri, e-ticaret sistemleri ve özel yazılımlar geliştiren dijital çözümler ajansıdır.
 
 ## Hakkımızda ve Kurucu Bilgisi
-KVK Dijital Çözümler, kurucusu Ali Haydar Kavak liderliğinde işletmelerin dijitalleşme süreçlerini uçtan uca yönetir. Tasarım estetiği, PageSpeed performansı, kullanıcı deneyimi (UX) ve arama motoru optimizasyonunu (SEO/GEO) tek bir yapıda birleştirir.
+KvK Dijital Çözümler, kurucusu Ali Haydar Kavak liderliğinde işletmelerin dijitalleşme süreçlerini uçtan uca yönetir. Tasarım estetiği, PageSpeed performansı, kullanıcı deneyimi (UX) ve arama motoru optimizasyonunu (SEO/GEO) tek bir yapıda birleştirir.
 
 ## Hizmetlerimiz ve Detaylar
 
@@ -26,6 +26,8 @@ KVK Dijital Çözümler, kurucusu Ali Haydar Kavak liderliğinde işletmelerin d
 - **URL:** https://kvkdijitalcozumler.com/ozel-yazilim
 
 ## İletişim ve Resmi Bağlantılar
+- **Resmi Marka Adı:** KvK Dijital Çözümler
+- **Kısa Ad:** KvK Dijital
 - **Web Sitesi:** https://kvkdijitalcozumler.com
 - **E-Posta:** iletisim@kvkdijitalcozumler.com
 - **Lokasyon:** İstanbul, Türkiye
