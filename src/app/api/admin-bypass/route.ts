@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
 
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
 
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

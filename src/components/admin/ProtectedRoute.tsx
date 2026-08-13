@@ -12,6 +12,12 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const pathname = usePathname();
 
   useEffect(() => {
+    const hasBypassCookie = typeof document !== "undefined" && document.cookie.includes("kvk_admin_access=true");
+    if (hasBypassCookie) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
@@ -24,6 +30,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     return () => unsubscribe();
   }, [router, pathname]);
 
+  const hasBypass = typeof document !== "undefined" && document.cookie.includes("kvk_admin_access=true");
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -32,8 +40,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
-  // If no user and trying to access protected route (will redirect via useEffect)
-  if (!user && pathname !== "/admin/login") {
+  // If no user & no bypass cookie and trying to access protected route (will redirect via useEffect)
+  if (!user && !hasBypass && pathname !== "/admin/login") {
     return null;
   }
 
