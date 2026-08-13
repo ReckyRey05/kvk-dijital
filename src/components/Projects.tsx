@@ -48,6 +48,17 @@ const conceptDemos: ConceptCardProps[] = [
     imageSrc: "/images/demos/prestij-hukuk/hero.jpg",
     imageAlt: "Prestij Hukuk & Danışmanlık kurumsal kütüphane ve resmi toplantı alanı",
     aspectRatio: "aspect-[16/9]"
+  },
+  {
+    id: "demo-emlak",
+    title: "Vizyon Gayrimenkul & Danışmanlık",
+    category: "Emlak & Gayrimenkul Marketplace",
+    description: "Emlak ofisleri ve gayrimenkul danışmanları için filtrelenebilir canlı ilan portföy modüllü web sitesi.",
+    features: ["Canlı İlan Filtreleme Motoru (Satılık/Kiralık)", "İnteraktif İlan Detay Modalı", "Mimari Mimari Editoryal Tasarım"],
+    href: "/projeler/vizyon-gayrimenkul-demo",
+    imageSrc: "/images/demos/vizyon-gayrimenkul/hero.jpg",
+    imageAlt: "Vizyon Gayrimenkul lüks deniz manzaralı residance dairesi",
+    aspectRatio: "aspect-[16/9]"
   }
 ];
 
@@ -71,7 +82,7 @@ export default function Projects({ projects }: { projects?: any[] }) {
         </div>
 
         {/* Concept Demos Showcase Grid (Strictly adhering to KvK Global Theme) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {conceptDemos.map((demo) => (
             <div 
               key={demo.id}
