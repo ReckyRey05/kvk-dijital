@@ -130,6 +130,58 @@ All images are sourced under the Unsplash Free Commercial License, permitting us
 
 ---
 
-## 5. Local Asset Integrity Guarantee
+## 5. Demo #5 — Artisanal Butik & Mağaza
+
+- `public/images/demos/artisanal-butik/hero.jpg`
+  - **Source:** Unsplash (`photo-1441986300917-64674bd600d8`)
+  - **URL:** https://images.unsplash.com/photo-1441986300917-64674bd600d8
+  - **Alt Text:** "Artisanal Butik el yapımı tasarım ürünler koleksiyonu"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/bag.jpg`
+  - **Source:** Unsplash (`photo-1590874103328-eac38a683ce7`)
+  - **URL:** https://images.unsplash.com/photo-1590874103328-eac38a683ce7
+  - **Alt Text:** "Dokuma keten omuz çantası"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/ceramic.jpg`
+  - **Source:** Unsplash (`photo-1578749556568-bc2c40e68b61`)
+  - **URL:** https://images.unsplash.com/photo-1578749556568-bc2c40e68b61
+  - **Alt Text:** "El yapımı seramik kahve fincan seti"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/necklace.jpg`
+  - **Source:** Unsplash (`photo-1535632066927-ab7c9ab60908`)
+  - **URL:** https://images.unsplash.com/photo-1535632066927-ab7c9ab60908
+  - **Alt Text:** "Doğal taş ve pirinç madalyon kolye"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/shirt.jpg`
+  - **Source:** Unsplash (`photo-1598033129183-c4f50c736f10`)
+  - **URL:** https://images.unsplash.com/photo-1598033129183-c4f50c736f10
+  - **Alt Text:** "Oversize keten yazlık gömlek"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/wallet.jpg`
+  - **Source:** Unsplash (`photo-1627123424574-724758594e93`)
+  - **URL:** https://images.unsplash.com/photo-1627123424574-724758594e93
+  - **Alt Text:** "El işçiliği hakiki deri kartlık"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/bracelet.jpg`
+  - **Source:** Unsplash (`photo-1599643478518-a784e5dc4c8f`)
+  - **URL:** https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f
+  - **Alt Text:** "Minimalist pirinç kelepçe bileklik"
+  - **License:** Unsplash Commercial Free License
+
+- `public/images/demos/artisanal-butik/tote.jpg`
+  - **Source:** Unsplash (`photo-1584917865442-de89df76afd3`)
+  - **URL:** https://images.unsplash.com/photo-1584917865442-de89df76afd3
+  - **Alt Text:** "Geniş hacimli kanvas tote bag"
+  - **License:** Unsplash Commercial Free License
+
+---
+
+## 6. Local Asset Integrity Guarantee
 All media files listed above are physically stored in `public/images/demos/`, loaded via Next.js static asset routing, and feature explicit width/height dimensions to eliminate layout shifts (CLS).
 

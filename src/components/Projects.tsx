@@ -54,10 +54,21 @@ const conceptDemos: ConceptCardProps[] = [
     title: "Vizyon Gayrimenkul & Danışmanlık",
     category: "Emlak & Gayrimenkul Marketplace",
     description: "Emlak ofisleri ve gayrimenkul danışmanları için filtrelenebilir canlı ilan portföy modüllü web sitesi.",
-    features: ["Canlı İlan Filtreleme Motoru (Satılık/Kiralık)", "İnteraktif İlan Detay Modalı", "Mimari Mimari Editoryal Tasarım"],
+    features: ["Canlı İlan Filtreleme Motoru (Satılık/Kiralık)", "İnteraktif İlan Detay Modalı", "Mimari Editoryal Portföy Tasarımı"],
     href: "/projeler/vizyon-gayrimenkul-demo",
     imageSrc: "/images/demos/vizyon-gayrimenkul/hero.jpg",
     imageAlt: "Vizyon Gayrimenkul lüks deniz manzaralı residance dairesi",
+    aspectRatio: "aspect-[16/9]"
+  },
+  {
+    id: "demo-butik",
+    title: "Artisanal Butik & Mağaza",
+    category: "Butik E-Ticaret & Retail Store",
+    description: "Butik mağazalar ve e-ticaret markaları için canlı ürün arama, filtreleme ve sepet paneli modüllü e-ticaret web sitesi.",
+    features: ["Canlı Ürün Arama & Kategori Filtreleme", "İnteraktif Sepet Paneli (Cart Drawer)", "Varyant Seçimi & Favoriler Sistemi"],
+    href: "/projeler/artisanal-butik-demo",
+    imageSrc: "/images/demos/artisanal-butik/hero.jpg",
+    imageAlt: "Artisanal Butik el yapımı tasarım ürünler koleksiyonu",
     aspectRatio: "aspect-[16/9]"
   }
 ];

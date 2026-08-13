@@ -266,6 +266,61 @@ export default async function Projeler() {
             </div>
           </div>
 
+          {/* Static Concept Demo #5 Card — Artisanal Butik & Mağaza (KvK Brand Theme) */}
+          <div className="group flex flex-col rounded-3xl overflow-hidden bg-card text-foreground border border-card-border hover:border-accent/40 transition-all duration-500 relative">
+            <div className="absolute top-4 right-4 z-10 bg-black/90 text-white border border-accent/60 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase shadow-xl backdrop-blur-md">
+              Konsept Demo
+            </div>
+            
+            <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
+              <img 
+                src="/images/demos/artisanal-butik/hero.jpg" 
+                alt="Artisanal Butik el yapımı tasarım ürünler koleksiyonu" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                loading="lazy"
+                width={800}
+                height={600}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
+                <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Butik E-Ticaret & Retail Store</span>
+                <span className="text-xl font-bold text-foreground">Artisanal Butik & Mağaza</span>
+              </div>
+            </div>
+
+            <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Butik mağazalar ve e-ticaret markaları için canlı ürün arama, filtreleme ve sepet paneli modüllü konsept e-ticaret web sitesi.
+              </p>
+
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>Canlı Ürün Arama & Kategori Filtreleme</span>
+                </li>
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>İnteraktif Sepet Paneli (Cart Drawer)</span>
+                </li>
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>Varyant Seçimi & Favoriler Sistemi</span>
+                </li>
+              </ul>
+
+              <div className="pt-6 border-t border-card-border">
+                <Link 
+                  href="/projeler/artisanal-butik-demo" 
+                  className="flex items-center justify-between w-full font-bold text-xs uppercase tracking-wider text-foreground group-hover:text-accent transition-colors mt-auto"
+                >
+                  Demoyu Detaylı İncele
+                  <div className="w-8 h-8 rounded-full border border-card-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-colors">
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+
           {/* Dynamic Customer Projects (if any exist in Firestore) */}
           {projects.map((project: any) => (
             <div
