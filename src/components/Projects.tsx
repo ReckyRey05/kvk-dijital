@@ -68,7 +68,7 @@ export default function Projects({ projects }: { projects?: any[] }) {
             >
               {/* Disclaimer Tag */}
               <div className="absolute top-4 right-4 z-10">
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-accent/20 text-accent border border-accent/40 backdrop-blur-md">
+                <span className="px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-black/90 text-white border border-accent/60 shadow-xl backdrop-blur-md">
                   Konsept Demo
                 </span>
               </div>

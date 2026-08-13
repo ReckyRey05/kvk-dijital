@@ -48,7 +48,7 @@ export default async function Projeler() {
           
           {/* Static Concept Demo #1 Card — Pendik Sahil Bistro (KvK Brand Theme) */}
           <div className="group flex flex-col rounded-3xl overflow-hidden bg-card text-foreground border border-card-border hover:border-accent/40 transition-all duration-500 relative">
-            <div className="absolute top-4 right-4 z-10 bg-accent/20 border border-accent/40 text-accent px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase backdrop-blur-md">
+            <div className="absolute top-4 right-4 z-10 bg-black/90 text-white border border-accent/60 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase shadow-xl backdrop-blur-md">
               Konsept Demo
             </div>
             
@@ -103,7 +103,7 @@ export default async function Projeler() {
 
           {/* Static Concept Demo #2 Card — Aura Beauty (KvK Brand Theme) */}
           <div className="group flex flex-col rounded-3xl overflow-hidden bg-card text-foreground border border-card-border hover:border-accent/40 transition-all duration-500 relative">
-            <div className="absolute top-4 right-4 z-10 bg-accent/20 border border-accent/40 text-accent px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase backdrop-blur-md">
+            <div className="absolute top-4 right-4 z-10 bg-black/90 text-white border border-accent/60 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase shadow-xl backdrop-blur-md">
               Konsept Demo
             </div>
             
