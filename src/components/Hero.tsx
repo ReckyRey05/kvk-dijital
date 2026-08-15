@@ -52,7 +52,7 @@ export default function Hero() {
             
             {/* Main Central Dashboard Card */}
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-background/60 backdrop-blur-md md:backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-[#0a0f0f]/95 md:bg-background/60 md:backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
             >
               {/* Fake Browser Top Bar */}
               <div className="w-full h-12 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
@@ -99,10 +99,10 @@ export default function Hero() {
             </div>
 
             {/* Floating Element 1 - Code Snippet */}
-            <div className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-md md:backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <div className="absolute -right-4 top-16 p-4 rounded-2xl bg-[#0a0a0a]/95 md:backdrop-blur-xl border border-white/10 shadow-2xl animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className="text-[10px] text-foreground/50 font-mono">React Component</span>
+                <span className="text-[10px] text-foreground/70 font-mono">React Component</span>
               </div>
               <div className="space-y-1.5 font-mono text-xs">
                 <div className="text-blue-400">export default <span className="text-purple-400">function</span> <span className="text-yellow-200">App</span>() {'{'}</div>
@@ -114,7 +114,7 @@ export default function Hero() {
             </div>
 
             {/* Floating Element 2 - SEO Score */}
-            <div className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-md md:backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+            <div className="absolute -left-6 bottom-24 p-4 rounded-2xl bg-[#0a0a0a]/95 md:backdrop-blur-xl border border-white/10 shadow-2xl flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 font-bold">
                 100
                 <svg className="absolute inset-0 w-full h-full -rotate-90" aria-hidden="true">
@@ -124,7 +124,7 @@ export default function Hero() {
               </div>
               <div>
                 <div className="text-sm font-semibold text-white">SEO & Hız</div>
-                <div className="text-[10px] text-foreground/50">Lighthouse Skoru</div>
+                <div className="text-[10px] text-foreground/70">Lighthouse Skoru</div>
               </div>
             </div>
             
