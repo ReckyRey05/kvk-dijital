@@ -202,7 +202,7 @@ export default function DemoBistroClient() {
             <div className="lg:col-span-5 relative">
               <div className="relative rounded border border-[#d6cbba] shadow-2xl bg-[#e8e2d8] h-[480px] overflow-hidden">
                 <img 
-                  src="/images/demos/pendik-bistro/hero.jpg" 
+                  src="/images/demos/pendik-bistro/hero.webp" 
                   alt="Pendik Sahil Bistro sıcak akşam atmosferi ve ahşap masa düzeni"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -305,7 +305,7 @@ export default function DemoBistroClient() {
             
             <div className="h-[400px] rounded overflow-hidden border border-[#d6cbba] relative bg-[#e8e2d8]">
               <img 
-                src="/images/demos/pendik-bistro/food-signature.jpg" 
+                src="/images/demos/pendik-bistro/food-signature.webp" 
                 alt="Odun ateşinde pişirilmiş özel reçeteli taş fırın gurme lezzeti"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -348,7 +348,7 @@ export default function DemoBistroClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group">
               <img 
-                src="/images/demos/pendik-bistro/coffee.jpg" 
+                src="/images/demos/pendik-bistro/coffee.webp" 
                 alt="Nitelikli taze demlenmiş espresso ve filtre kahve sunumu"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
@@ -362,7 +362,7 @@ export default function DemoBistroClient() {
 
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group">
               <img 
-                src="/images/demos/pendik-bistro/atmosphere.jpg" 
+                src="/images/demos/pendik-bistro/atmosphere.webp" 
                 alt="Bistro iç mekanında sıcak aydınlatma ve restoran masa düzeni"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"
@@ -376,7 +376,7 @@ export default function DemoBistroClient() {
 
             <div className="h-72 rounded overflow-hidden border border-[#d6cbba] relative group sm:col-span-2 lg:col-span-1">
               <img 
-                src="/images/demos/pendik-bistro/food-signature.jpg" 
+                src="/images/demos/pendik-bistro/food-signature.webp" 
                 alt="Taze malzemelerle hazırlanan günün lezzet tabağı"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 loading="lazy"

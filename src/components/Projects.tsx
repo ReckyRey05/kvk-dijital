@@ -23,7 +23,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Restoran ve kafeler için mobil öncelikli, dijital menülü ve hızlı konsept web tasarımı.",
     features: ["İnteraktif Dijital Menü Listesi", "Editoryal Gastronomi Düzeni", "Ziyaret Saatleri & Konum"],
     href: "/projeler/pendik-sahil-bistro-demo",
-    imageSrc: "/images/demos/pendik-bistro/hero.jpg",
+    imageSrc: "/images/demos/pendik-bistro/hero.webp",
     imageAlt: "Pendik Sahil Bistro ahşap masa ve sıcak mekan düzeni",
     aspectRatio: "aspect-[16/9]"
   },
@@ -34,7 +34,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Güzellik salonları ve bakım merkezleri için online randevu modüllü lüks konsept web tasarımı.",
     features: ["Online Randevu Modülü Simülasyonu", "Hizmet & Terapi Kataloğu", "Minimalist Moda Dergisi Düzeni"],
     href: "/projeler/aura-beauty-demo",
-    imageSrc: "/images/demos/aura-beauty/hero.jpg",
+    imageSrc: "/images/demos/aura-beauty/hero.webp",
     imageAlt: "Aura Beauty & Güzellik Merkezi medikal cilt bakımı uygulaması",
     aspectRatio: "aspect-[4/3]"
   },
@@ -45,7 +45,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Hukuk büroları ve danışmanlık firmaları için İsviçre editoryal düzeninde kurumsal konsept web sitesi.",
     features: ["İnteraktif Çalışma Alanları Kataloğu", "Kurumsal Danışmanlık Talebi Modülü", "Hukuki Rehber & Bilgi Paylaşımı"],
     href: "/projeler/prestij-hukuk-demo",
-    imageSrc: "/images/demos/prestij-hukuk/hero.jpg",
+    imageSrc: "/images/demos/prestij-hukuk/hero.webp",
     imageAlt: "Prestij Hukuk & Danışmanlık kurumsal kütüphane ve resmi toplantı alanı",
     aspectRatio: "aspect-[16/9]"
   },
@@ -56,7 +56,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Emlak ofisleri ve gayrimenkul danışmanları için filtrelenebilir canlı ilan portföy modüllü web sitesi.",
     features: ["Canlı İlan Filtreleme Motoru (Satılık/Kiralık)", "İnteraktif İlan Detay Modalı", "Mimari Editoryal Portföy Tasarımı"],
     href: "/projeler/vizyon-gayrimenkul-demo",
-    imageSrc: "/images/demos/vizyon-gayrimenkul/hero.jpg",
+    imageSrc: "/images/demos/vizyon-gayrimenkul/hero.webp",
     imageAlt: "Vizyon Gayrimenkul lüks deniz manzaralı residance dairesi",
     aspectRatio: "aspect-[16/9]"
   },
@@ -67,7 +67,7 @@ const conceptDemos: ConceptCardProps[] = [
     description: "Butik mağazalar ve e-ticaret markaları için canlı ürün arama, filtreleme ve sepet paneli modüllü e-ticaret web sitesi.",
     features: ["Canlı Ürün Arama & Kategori Filtreleme", "İnteraktif Sepet Paneli (Cart Drawer)", "Varyant Seçimi & Favoriler Sistemi"],
     href: "/projeler/artisanal-butik-demo",
-    imageSrc: "/images/demos/artisanal-butik/hero.jpg",
+    imageSrc: "/images/demos/artisanal-butik/hero.webp",
     imageAlt: "Artisanal Butik el yapımı tasarım ürünler koleksiyonu",
     aspectRatio: "aspect-[16/9]"
   }

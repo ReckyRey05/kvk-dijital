@@ -224,7 +224,7 @@ export default function DemoHukukClient() {
             <div className="lg:col-span-5 relative">
               <div className="relative border border-[#253966] shadow-2xl bg-[#121d38] h-[500px] overflow-hidden rounded-sm">
                 <img 
-                  src="/images/demos/prestij-hukuk/hero.jpg" 
+                  src="/images/demos/prestij-hukuk/hero.webp" 
                   alt="Prestij Hukuk & Danışmanlık kurumsal kütüphane ve resmi toplantı alanı"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -363,7 +363,7 @@ export default function DemoHukukClient() {
             
             <div className="h-[460px] border border-[#253966] relative bg-[#121d38] overflow-hidden">
               <img 
-                src="/images/demos/prestij-hukuk/meeting.jpg" 
+                src="/images/demos/prestij-hukuk/meeting.webp" 
                 alt="Kurumsal hukuk toplantısı ve müzakere ortamı"
                 className="w-full h-full object-cover"
                 loading="lazy"

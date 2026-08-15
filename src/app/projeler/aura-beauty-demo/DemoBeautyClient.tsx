@@ -184,7 +184,7 @@ export default function DemoBeautyClient() {
             <div className="lg:col-span-5 relative order-2 lg:order-1">
               <div className="relative border border-[#2b2a3a] shadow-2xl bg-[#14131b] h-[520px] overflow-hidden">
                 <img 
-                  src="/images/demos/aura-beauty/hero.jpg" 
+                  src="/images/demos/aura-beauty/hero.webp" 
                   alt="Ferah salonda medikal cilt bakımı ve kolajen yüz terapisi uygulaması"
                   className="w-full h-full object-cover"
                   loading="eager"
@@ -311,7 +311,7 @@ export default function DemoBeautyClient() {
             
             <div className="h-[460px] border border-[#262433] relative bg-[#14131c] overflow-hidden">
               <img 
-                src="/images/demos/aura-beauty/spa-oil.jpg" 
+                src="/images/demos/aura-beauty/spa-oil.webp" 
                 alt="Aromaterapi spa yağları ve sakinleştirici masaj ortamı"
                 className="w-full h-full object-cover"
                 loading="lazy"

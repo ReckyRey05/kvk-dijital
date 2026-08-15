@@ -45,7 +45,7 @@ const mockProducts: Product[] = [
     category: "Çanta",
     price: 850,
     oldPrice: 1100,
-    image: "/images/demos/artisanal-butik/bag.jpg",
+    image: "/images/demos/artisanal-butik/bag.webp",
     badge: "Çok Satan",
     variants: ["Doğal Bej", "Toprak Kahve", "Obsidyen Siyah"],
     description: "%100 doğal işlenmemiş keten iplikten elde dokunmuş, içi astarlı ve fermuarlı cepli dayanıklı gündelik omuz çantası."
@@ -56,7 +56,7 @@ const mockProducts: Product[] = [
     name: "El Yapımı Seramik Kahve Fincan Seti",
     category: "Ev & Yaşam",
     price: 420,
-    image: "/images/demos/artisanal-butik/ceramic.jpg",
+    image: "/images/demos/artisanal-butik/ceramic.webp",
     badge: "Yeni",
     variants: ["Kireç Beyazı", "Koyu Zeytin", "Toprak Taba"],
     description: "Tornada tek tek biçimlendirilmiş, gıda ile temasa uygun doğal sırlı ikili el yapımı seramik espresso fincan seti."
@@ -68,7 +68,7 @@ const mockProducts: Product[] = [
     category: "Takı & Aksesuar",
     price: 590,
     oldPrice: 750,
-    image: "/images/demos/artisanal-butik/necklace.jpg",
+    image: "/images/demos/artisanal-butik/necklace.webp",
     badge: "İndirim",
     variants: ["Altın Kaplama", "Gümüş Tonu"],
     description: "Aventurin ve akik doğal taşları ile pirinç madalyon detaylı, kararmaya dayanıklı el yapımı tasarım kolye."
@@ -79,7 +79,7 @@ const mockProducts: Product[] = [
     name: "Oversize Keten Yazlık Gömlek",
     category: "Giyim",
     price: 1250,
-    image: "/images/demos/artisanal-butik/shirt.jpg",
+    image: "/images/demos/artisanal-butik/shirt.webp",
     badge: "Koleksiyon",
     variants: ["S", "M", "L", "XL"],
     description: "Ferah ve nefes alan saf keten kumaştan rahat kesim, sedef düğmeli uniseks yazlık gömlek."
@@ -90,7 +90,7 @@ const mockProducts: Product[] = [
     name: "El İşçiliği Hakiki Deri Kartlık",
     category: "Takı & Aksesuar",
     price: 340,
-    image: "/images/demos/artisanal-butik/wallet.jpg",
+    image: "/images/demos/artisanal-butik/wallet.webp",
     variants: ["Taba Deri", "Füme Deri"],
     description: "Vejetal dana derisinden mumlu iplikle elde dikilmiş 6 kart kapasiteli minimalist deri cüzdan."
   },
@@ -100,7 +100,7 @@ const mockProducts: Product[] = [
     name: "Minimalist Pirinç Kelepçe Bileklik",
     category: "Takı & Aksesuar",
     price: 480,
-    image: "/images/demos/artisanal-butik/bracelet.jpg",
+    image: "/images/demos/artisanal-butik/bracelet.webp",
     variants: ["Mat Altın", "Parlak Bronz"],
     description: "Ayarlanabilir formda dövme pirinç malzeme üzerine mat cila kaplamalı zarif kelepçe bileklik."
   },
@@ -111,7 +111,7 @@ const mockProducts: Product[] = [
     category: "Çanta",
     price: 680,
     oldPrice: 850,
-    image: "/images/demos/artisanal-butik/tote.jpg",
+    image: "/images/demos/artisanal-butik/tote.webp",
     badge: "İndirim",
     variants: ["Krem Kanvas", "Haki Yeşil"],
     description: "Ağır gramajlı organik pamuk kanvas kumaştan, laptop ve günlük eşyalar için ideal tote bag."
@@ -122,7 +122,7 @@ const mockProducts: Product[] = [
     name: "Atölye Üretimi Seramik Vazo",
     category: "Ev & Yaşam",
     price: 790,
-    image: "/images/demos/artisanal-butik/hero.jpg",
+    image: "/images/demos/artisanal-butik/hero.webp",
     badge: "Özel Tasarım",
     variants: ["Mat Beyaz", "Kum Beji"],
     description: "İç mekan dekorasyonuna derinlik katan, dokulu yüzey sırlı el yapımı seramik dekoratif vazo."
@@ -381,7 +381,7 @@ export default function DemoButikClient() {
             <div className="lg:col-span-5">
               <div className="h-[320px] rounded-2xl overflow-hidden border border-[#e0d6c8] shadow-xl relative bg-[#e8dfd1]">
                 <img 
-                  src="/images/demos/artisanal-butik/hero.jpg" 
+                  src="/images/demos/artisanal-butik/hero.webp" 
                   alt="Artisanal Butik el yapımı tasarım ürünler koleksiyonu"
                   className="w-full h-full object-cover"
                   loading="eager"

@@ -50,7 +50,7 @@ const mockProperties: Property[] = [
     rooms: "3+1",
     bathrooms: 2,
     floor: "12. Kat",
-    image: "/images/demos/vizyon-gayrimenkul/hero.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/hero.webp",
     features: ["Deniz Manzarası", "Akıllı Ev Sistemi", "Kapalı Otopark", "7/24 Güvenlik"],
     description: "Pendik marina ve sahil şeridine yürüme mesafesinde, geniş cam cepheli ve yüksek tavanlı panoramik deniz manzaralı konsept residance dairesi."
   },
@@ -67,7 +67,7 @@ const mockProperties: Property[] = [
     rooms: "5+2",
     bathrooms: 4,
     floor: "Müstakil Villa",
-    image: "/images/demos/vizyon-gayrimenkul/villa.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/villa.webp",
     features: ["Özel Yüzme Havuzu", "Geniş Peyzaj Bahçe", "Müstakil Garaj", "Yerden Isıtma"],
     description: "Doğa ile iç içe, müstakil yüzme havuzu ve peyzajlı özel bahçesi bulunan modern mimarili lüks villa."
   },
@@ -84,7 +84,7 @@ const mockProperties: Property[] = [
     rooms: "2+1",
     bathrooms: 2,
     floor: "8. Kat",
-    image: "/images/demos/vizyon-gayrimenkul/apartment.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/apartment.webp",
     features: ["Geniş Balkon", "Ankastre Mutfak", "Spor Salonu", "Resepsiyon Hizmeti"],
     description: "Dragos tepesi eteklerinde, ferah yaşam alanına ve geniş balkona sahip kiralık daire."
   },
@@ -101,7 +101,7 @@ const mockProperties: Property[] = [
     rooms: "4+1 Düzen",
     bathrooms: 2,
     floor: "3. Kat",
-    image: "/images/demos/vizyon-gayrimenkul/office.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/office.webp",
     features: ["Metroya Yürüme Mesafesi", "Fiber İnternet", "VRF İklimlendirme", "Jeneratör"],
     description: "Kurumsal firmalar ve hukuk/danışmanlık ofisleri için hazır bölmeli, yüksek prestijli Caddebostan lokasyonlu ticari mülk."
   },
@@ -118,7 +118,7 @@ const mockProperties: Property[] = [
     rooms: "4+2",
     bathrooms: 3,
     floor: "Çatı Dubleks",
-    image: "/images/demos/vizyon-gayrimenkul/penthouse.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/penthouse.webp",
     features: ["100 m² Açık Teras", "Jakuzi Tesisatı", "Özel Asansör Çıkışı", "Ada Manzarası"],
     description: "Adalar manzarasına hakim 100 m² geniş açık teraslı, özel asansör erişimli çatı dubleksi residance."
   },
@@ -135,7 +135,7 @@ const mockProperties: Property[] = [
     rooms: "3+1",
     bathrooms: 2,
     floor: "Bahçe Katı",
-    image: "/images/demos/vizyon-gayrimenkul/garden-house.jpg",
+    image: "/images/demos/vizyon-gayrimenkul/garden-house.webp",
     features: ["Tahsisli Özel Bahçe", "Site İçi Çocuk Parkı", "7/24 Güvenlik", "Açık Otopark"],
     description: "Aile yaşamına uygun, site içerisinde özel bahçe kullanım alanına sahip kiralık daire."
   }
@@ -486,7 +486,7 @@ export default function DemoEmlakClient() {
             
             <div className="h-[440px] border border-[#1f4742] relative bg-[#0b1a18] overflow-hidden">
               <img 
-                src="/images/demos/vizyon-gayrimenkul/penthouse.jpg" 
+                src="/images/demos/vizyon-gayrimenkul/penthouse.webp" 
                 alt="Modern mimari penthouse ve gayrimenkul danışmanlık hizmeti"
                 className="w-full h-full object-cover"
                 loading="lazy"

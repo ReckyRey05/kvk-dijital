@@ -51,7 +51,7 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
-                src="/images/demos/pendik-bistro/hero.jpg" 
+                src="/images/demos/pendik-bistro/hero.webp" 
                 alt="Pendik Sahil Bistro & Kafe ahşap masa ve sıcak mekan düzeni" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
@@ -106,7 +106,7 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
-                src="/images/demos/aura-beauty/hero.jpg" 
+                src="/images/demos/aura-beauty/hero.webp" 
                 alt="Aura Beauty & Güzellik Merkezi medikal cilt bakımı uygulaması" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
@@ -161,7 +161,7 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
-                src="/images/demos/prestij-hukuk/hero.jpg" 
+                src="/images/demos/prestij-hukuk/hero.webp" 
                 alt="Prestij Hukuk & Danışmanlık kurumsal kütüphane ve resmi toplantı alanı" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
@@ -216,7 +216,7 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
-                src="/images/demos/vizyon-gayrimenkul/hero.jpg" 
+                src="/images/demos/vizyon-gayrimenkul/hero.webp" 
                 alt="Vizyon Gayrimenkul deniz manzaralı lüks residance dairesi" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
@@ -271,7 +271,7 @@ export default async function Projeler() {
             
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
-                src="/images/demos/artisanal-butik/hero.jpg" 
+                src="/images/demos/artisanal-butik/hero.webp" 
                 alt="Artisanal Butik el yapımı tasarım ürünler koleksiyonu" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
