@@ -85,7 +85,7 @@ function formatEditorialContent(html: string): string {
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
               <div class="flex items-center gap-3">
                 <span class="text-xs font-bold text-accent px-2.5 py-1 rounded-md bg-accent/10 border border-accent/20 font-mono">${numStr}</span>
-                <h4 class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</h4>
+                <div class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</div>
               </div>
               <div class="flex items-center gap-2 text-xs">
                 <span class="text-foreground/50 uppercase tracking-wider font-semibold">${ths[2] || "TESLİM SÜRESİ"}:</span>
@@ -111,7 +111,7 @@ function formatEditorialContent(html: string): string {
           <div class="p-6 rounded-2xl bg-[#0a0f0f]/90 border border-white/10 hover:border-accent/40 transition-all duration-300 shadow-xl group">
             <div class="flex items-center gap-3 pb-3 border-b border-white/10 mb-4">
               <span class="text-xs font-bold text-accent px-2.5 py-1 rounded-md bg-accent/10 border border-accent/20 font-mono">${numStr}</span>
-              <h4 class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</h4>
+              <div class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
@@ -206,6 +206,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         />
       )}
 
+      {/* LCP Image Preload */}
+      {post.coverImage && (
+        <link rel="preload" as="image" href={post.coverImage} />
+      )}
+
       <article className="pt-32 pb-20 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[400px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
         
@@ -249,7 +254,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           </header>
 
-          {/* Cover Image */}
+          {/* Cover Image - LCP Element */}
           {post.coverImage && (
             <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden border border-card-border mb-12 shadow-2xl bg-black/40">
               <img 
@@ -257,8 +262,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 alt={post.title}
                 className="w-full h-full object-cover"
                 loading="eager"
-                width={1200}
-                height={675}
+                width={800}
+                height={450}
               />
             </div>
           )}
