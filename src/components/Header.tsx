@@ -1,21 +1,54 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LogoHorizontal } from "./Logo";
 
 export default function Header() {
+  const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById("iletisim") || document.getElementById("contact");
+      el?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" className="relative block" aria-label="Ana Sayfa">
+        <Link href="/" onClick={handleLogoClick} className="relative block" aria-label="Ana Sayfa">
           <LogoHorizontal className="h-14" />
         </Link>
         <nav aria-label="Ana Navigasyon" className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground/70">
           <Link href="/hakkimizda" className="hover:text-accent transition-colors">Hakkımda</Link>
           <Link href="/hizmetler" className="hover:text-accent transition-colors">Hizmetler</Link>
           <Link href="/projeler" className="hover:text-accent transition-colors">Projeler</Link>
-          <Link href="/#iletisim" className="px-5 py-2.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20">
+          <Link 
+            href="/#iletisim" 
+            onClick={handleContactClick}
+            className="px-5 py-2.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20"
+          >
             İletişime Geç
           </Link>
         </nav>
+        <div className="flex md:hidden items-center gap-3">
+          <Link 
+            href="/#iletisim" 
+            onClick={handleContactClick}
+            className="px-4 py-2 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20 text-xs font-semibold"
+          >
+            İletişime Geç
+          </Link>
+        </div>
       </div>
     </header>
   );

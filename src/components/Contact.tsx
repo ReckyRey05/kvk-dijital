@@ -78,12 +78,12 @@ export default function Contact() {
   const whatsappUrl = `https://wa.me/905348914905?text=${whatsappMessage}`;
 
   return (
-    <section id="iletisim" className="w-full py-32 relative">
-      <div id="contact" className="absolute -top-32" />
+    <section id="iletisim" className="w-full pt-8 pb-20 md:pt-12 md:pb-24 scroll-mt-20 md:scroll-mt-24 relative">
+      <div id="contact" className="scroll-mt-20 md:scroll-mt-24 absolute top-0" />
       <div className="container mx-auto px-6">
 
         {/* Mini Proje Ön Değerlendirme Aracı */}
-        <div className="max-w-6xl mx-auto mb-16 glass-panel p-8 md:p-12 rounded-[2rem] border-accent/20">
+        <div className="max-w-6xl mx-auto mb-10 md:mb-12 glass-panel p-6 md:p-10 rounded-[2rem] border-accent/20">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-accent text-xs font-bold uppercase tracking-widest block mb-2">Hızlı Proje Değerlendirme</span>
             <h3 className="text-2xl md:text-3xl font-bold mb-3">Hangi Hizmete İhtiyacınız Var?</h3>

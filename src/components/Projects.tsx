@@ -75,7 +75,7 @@ const conceptDemos: ConceptCardProps[] = [
 
 export default function Projects({ projects }: { projects?: any[] }) {
   return (
-    <section id="projects" className="w-full py-24 relative overflow-hidden bg-background border-t border-card-border">
+    <section id="projects" className="w-full py-24 relative overflow-hidden bg-background border-t border-card-border scroll-mt-20 md:scroll-mt-24">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* Section Header */}

@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
 import { Metadata } from "next";
@@ -20,8 +19,6 @@ export const metadata: Metadata = {
 export default function Hakkimda() {
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32 pb-16">
-      <Header />
-      
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="mb-12">
           <Link href="/" className="inline-flex items-center gap-2 text-foreground/50 hover:text-accent transition-colors text-sm font-medium mb-8">

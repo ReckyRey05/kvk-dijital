@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
@@ -22,8 +21,6 @@ export default async function Hizmetler() {
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden pt-32 pb-16">
-      <Header />
-      
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="mb-16 text-center max-w-3xl mx-auto">
           <Link href="/" className="inline-flex items-center gap-2 text-foreground/50 hover:text-accent transition-colors text-sm font-medium mb-8">

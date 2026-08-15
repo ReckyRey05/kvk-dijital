@@ -23,7 +23,10 @@ export default function Hero() {
 
           <div className="flex flex-wrap items-center gap-4">
             <button 
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                const el = document.getElementById('iletisim') || document.getElementById('contact');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="px-6 py-3 rounded-full bg-accent text-[#050505] font-medium hover:bg-accent/90 transition-colors flex items-center gap-2 cursor-pointer"
               aria-label="Teklif Alın - İletişim bölümüne git"
             >

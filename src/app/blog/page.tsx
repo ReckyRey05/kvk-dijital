@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, Sparkles } from "lucide-react";
@@ -26,7 +25,6 @@ export default async function BlogPage() {
 
   return (
     <main className="min-h-screen bg-[#050505] text-foreground selection:bg-accent/30 selection:text-accent font-sans overflow-x-hidden">
-      <Header />
       
       <section className="pt-32 pb-20 relative border-b border-card-border">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[400px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />

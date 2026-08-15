@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowLeft, Compass } from "lucide-react";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Metadata } from "next";
 
@@ -15,8 +14,6 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main className="min-h-screen bg-[#050505] text-foreground selection:bg-accent/30 selection:text-accent font-sans flex flex-col">
-      <Header />
-      
       <div className="flex-1 flex items-center justify-center relative overflow-hidden py-32">
         {/* Background Effects */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[400px] bg-accent/10 blur-[120px] rounded-full pointer-events-none" />
