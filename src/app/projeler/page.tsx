@@ -60,7 +60,7 @@ export default async function Projeler() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Restoran & Kafe Gastronomi</span>
-                <span className="text-xl font-bold text-foreground">Pendik Sahil Bistro & Kafe</span>
+                <h2 className="text-xl font-bold text-foreground">Pendik Sahil Bistro & Kafe</h2>
               </div>
             </div>
 
@@ -115,7 +115,7 @@ export default async function Projeler() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Güzellik & Bakım Salonu</span>
-                <span className="text-xl font-bold text-foreground">Aura Beauty & Güzellik</span>
+                <h2 className="text-xl font-bold text-foreground">Aura Beauty & Güzellik</h2>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ export default async function Projeler() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Hukuk & B2B Danışmanlık</span>
-                <span className="text-xl font-bold text-foreground">Prestij Hukuk & Danışmanlık</span>
+                <h2 className="text-xl font-bold text-foreground">Prestij Hukuk & Danışmanlık</h2>
               </div>
             </div>
 
@@ -225,7 +225,7 @@ export default async function Projeler() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Emlak & Gayrimenkul Marketplace</span>
-                <span className="text-xl font-bold text-foreground">Vizyon Gayrimenkul & Danışmanlık</span>
+                <h2 className="text-xl font-bold text-foreground">Vizyon Gayrimenkul & Danışmanlık</h2>
               </div>
             </div>
 
@@ -280,7 +280,7 @@ export default async function Projeler() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent p-6 flex flex-col justify-end">
                 <span className="text-xs uppercase tracking-widest font-semibold text-accent mb-1">Butik E-Ticaret & Retail Store</span>
-                <span className="text-xl font-bold text-foreground">Artisanal Butik & Mağaza</span>
+                <h2 className="text-xl font-bold text-foreground">Artisanal Butik & Mağaza</h2>
               </div>
             </div>
 

@@ -67,7 +67,7 @@ export default function Services({ services }: { services: Service[] }) {
                  {service.icon ? <service.icon className="w-6 h-6 relative z-10" /> : null}
               </div>
               <h3 className="text-xl font-medium mb-3">{service.title}</h3>
-              <p className="text-foreground/50">{service.description}</p>
+              <p className="text-foreground/70">{service.description}</p>
             </motion.div>
           ))}
         </div>

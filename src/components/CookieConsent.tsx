@@ -57,15 +57,15 @@ export default function CookieConsent() {
                   <button 
                     onClick={declineCookies}
                     aria-label="Çerez tercihlerini kapat"
-                    className="text-gray-500 hover:text-white transition-colors cursor-pointer"
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
                 
-                <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+                <p className="text-xs text-foreground/70 mb-4 leading-relaxed">
                   Size daha iyi bir deneyim sunmak, site trafiğini analiz etmek ve içerikleri kişiselleştirmek için çerezleri (cookies) kullanıyoruz. Sitemizi kullanmaya devam ederek çerez kullanımını kabul etmiş olursunuz. Detaylı bilgi için{" "}
-                  <Link href="/cerez-politikasi" className="text-accent hover:underline">
+                  <Link href="/cerez-politikasi" className="text-accent hover:underline font-medium">
                     Çerez Politikamızı
                   </Link>{" "}
                   inceleyebilirsiniz.

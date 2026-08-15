@@ -147,11 +147,11 @@ export default function Contact() {
 
               <div className="space-y-6 text-foreground/70 border-t border-white/10 pt-8">
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">E-mail</div>
+                  <div className="text-xs uppercase tracking-wider text-foreground/60 mb-1">E-mail</div>
                   <a href="mailto:iletisim@kvkdijitalcozumler.com" className="text-lg font-medium hover:text-accent transition-colors">iletisim@kvkdijitalcozumler.com</a>
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-foreground/40 mb-1">Lokasyon</div>
+                  <div className="text-xs uppercase tracking-wider text-foreground/60 mb-1">Lokasyon</div>
                   <div className="text-lg font-medium text-foreground/90">İstanbul, Türkiye</div>
                 </div>
               </div>
@@ -238,8 +238,8 @@ export default function Contact() {
                     required
                     className="mt-0.5 w-4 h-4 rounded bg-[#050505] border-white/20 text-accent focus:ring-accent focus:ring-offset-0 shrink-0 cursor-pointer"
                   />
-                  <label htmlFor="kvkk" className="text-xs text-foreground/60 leading-relaxed cursor-pointer">
-                    <a href="/kvkk" target="_blank" className="text-accent hover:underline">KVKK Aydınlatma Metni</a>'ni ve <a href="/gizlilik-politikasi" target="_blank" className="text-accent hover:underline">Gizlilik Politikası</a>'nı okudum, kişisel verilerimin iletişim amacıyla işlenmesini onaylıyorum.
+                  <label htmlFor="kvkk" className="text-xs text-foreground/70 leading-relaxed cursor-pointer">
+                    <a href="/kvkk" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">KVKK Aydınlatma Metni</a>'ni ve <a href="/gizlilik-politikasi" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Gizlilik Politikası</a>'nı okudum, kişisel verilerimin iletişim amacıyla işlenmesini onaylıyorum.
                   </label>
                 </div>
 

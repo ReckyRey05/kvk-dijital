@@ -131,6 +131,8 @@ export default function AdminBlogPage() {
                       <Link 
                         href={`/blog/${post.slug.replace(/^\/?(blog\/)?/i, "").replace(/^\/+/, "")}`}
                         target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Yazıyı Görüntüle"
                         className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                         title="Görüntüle"
                       >
