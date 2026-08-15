@@ -168,16 +168,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* Article HTML Content */}
           <div 
-            className="prose prose-invert max-w-none text-foreground/80 leading-relaxed text-base space-y-6
-              prose-headings:text-white prose-headings:font-bold prose-headings:tracking-tight
-              prose-h2:text-2xl prose-h2:sm:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-white/10 prose-h2:text-white
-              prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-white
-              prose-p:leading-relaxed prose-p:mb-4
-              prose-a:text-accent prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-white prose-strong:font-bold
-              prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2 prose-li:text-foreground/80
-              prose-blockquote:border-l-4 prose-blockquote:border-accent prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground/90"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            className="blog-article-content prose-invert max-w-none space-y-6"
+            dangerouslySetInnerHTML={{ 
+              __html: post.content ? post.content.replace(/(<table[\s\S]*?<\/table>)/gi, '<div class="overflow-x-auto my-8 rounded-2xl border border-white/10 shadow-2xl bg-white/[0.02] p-1">$1</div>') : "" 
+            }}
           />
 
           {/* FAQ Accordion Section if present */}
