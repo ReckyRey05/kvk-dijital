@@ -71,18 +71,18 @@ export default function CookieConsent() {
                   inceleyebilirsiniz.
                 </p>
                 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col sm:flex-row items-center gap-2">
                   <button
                     onClick={acceptCookies}
-                    className="w-full bg-accent text-black text-sm font-bold py-3 px-4 rounded-xl hover:bg-accent/90 transition-colors shadow-[0_0_20px_rgba(var(--accent),0.3)]"
+                    className="w-full sm:flex-1 bg-accent text-black text-xs font-bold py-2.5 px-4 rounded-xl hover:bg-accent/90 transition-all shadow-md cursor-pointer"
                   >
-                    Tümünü Kabul Et ve Devam Et
+                    Kabul Et
                   </button>
                   <button
                     onClick={declineCookies}
-                    className="w-full text-gray-500 text-xs font-medium py-2 px-4 rounded-xl hover:text-white transition-colors"
+                    className="w-full sm:flex-1 bg-white/5 border border-white/10 text-gray-300 text-xs font-semibold py-2.5 px-4 rounded-xl hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
                   >
-                    Sadece Zorunlu Çerezler
+                    Reddet
                   </button>
                 </div>
               </div>

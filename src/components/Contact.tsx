@@ -83,13 +83,13 @@ export default function Contact() {
       <div className="container mx-auto px-6">
 
         {/* Mini Proje Ön Değerlendirme Aracı */}
-        <div className="max-w-6xl mx-auto mb-10 md:mb-12 glass-panel p-6 md:p-10 rounded-[2rem] border-accent/20">
-          <div className="text-center max-w-2xl mx-auto mb-8">
+        <div className="max-w-6xl mx-auto mb-10 md:mb-12 glass-panel p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-[2rem] border-accent/20">
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
             <span className="text-accent text-xs font-bold uppercase tracking-widest block mb-2">Hızlı Proje Değerlendirme</span>
-            <h3 className="text-2xl md:text-3xl font-bold mb-3">Hangi Hizmete İhtiyacınız Var?</h3>
-            <p className="text-foreground/70 text-sm">Aşağıdaki hizmetlerden birini seçerek mesaj alanınızı otomatik oluşturabilirsiniz.</p>
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">Hangi Hizmete İhtiyacınız Var?</h3>
+            <p className="text-foreground/70 text-xs sm:text-sm">Aşağıdaki hizmetlerden birini seçerek mesaj alanınızı otomatik oluşturabilirsiniz.</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" role="group" aria-label="Hizmet Türü Seçimi">
+          <div className="flex flex-wrap justify-center gap-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 md:gap-3" role="group" aria-label="Hizmet Türü Seçimi">
             {serviceOptions.map((opt) => (
               <button
                 key={opt}
@@ -97,14 +97,14 @@ export default function Contact() {
                 aria-pressed={formData.service === opt}
                 aria-label={`Hizmet Seçimi: ${opt}`}
                 onClick={() => handleQuickSelect(opt)}
-                className={`p-4 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center gap-2 ${
+                className={`px-3.5 py-2.5 sm:p-4 rounded-xl text-xs font-semibold border transition-all text-center flex items-center justify-center gap-2 cursor-pointer ${
                   formData.service === opt
                     ? "bg-accent/20 border-accent text-accent shadow-lg shadow-accent/10"
-                    : "bg-white/5 border-white/10 text-foreground/80 hover:bg-white/10 hover:border-white/20"
+                    : "bg-white/5 border-white/10 text-foreground/80 hover:bg-white/10 hover:border-white/20 hover:text-white"
                 }`}
               >
-                <CheckCircle2 className={`w-4 h-4 ${formData.service === opt ? "text-accent" : "text-white/30"}`} />
-                {opt}
+                <CheckCircle2 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 ${formData.service === opt ? "text-accent" : "text-white/30"}`} />
+                <span className="whitespace-nowrap sm:whitespace-normal">{opt}</span>
               </button>
             ))}
           </div>
