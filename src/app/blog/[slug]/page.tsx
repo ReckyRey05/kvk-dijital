@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { Calendar, ArrowLeft, Clock, ArrowRight, User, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/blogPosts";
+import "./blog-article.css";
 
 export const revalidate = 3600; // 1 hour ISR
 
