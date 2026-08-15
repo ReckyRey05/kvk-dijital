@@ -40,6 +40,103 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+function formatEditorialContent(html: string): string {
+  if (!html) return "";
+
+  // Transform raw HTML <table> elements into luxury Editorial Comparison Blocks
+  return html.replace(/<table[\s\S]*?<\/table>/gi, (tableHtml) => {
+    // Extract THs
+    const ths: string[] = [];
+    const thMatches = tableHtml.match(/<th[^>]*>([\s\S]*?)<\/th>/gi);
+    if (thMatches) {
+      thMatches.forEach(th => {
+        ths.push(th.replace(/<[^>]+>/g, '').trim());
+      });
+    }
+
+    // Extract TRs in tbody
+    const tbodyMatch = tableHtml.match(/<tbody[^>]*>([\s\S]*?)<\/tbody>/gi);
+    if (!tbodyMatch) {
+      return `<div class="overflow-x-auto my-8 rounded-2xl border border-white/10 shadow-2xl bg-white/[0.02] p-1">${tableHtml}</div>`;
+    }
+
+    const trMatches = tbodyMatch[0].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+    if (!trMatches || trMatches.length === 0) {
+      return `<div class="overflow-x-auto my-8 rounded-2xl border border-white/10 shadow-2xl bg-white/[0.02] p-1">${tableHtml}</div>`;
+    }
+
+    let editorialHtml = '<div class="editorial-table-block my-10 space-y-4 font-sans">';
+
+    trMatches.forEach((trHtml, idx) => {
+      const tds: string[] = [];
+      const tdMatches = trHtml.match(/<td[^>]*>([\s\S]*?)<\/td>/gi);
+      if (tdMatches) {
+        tdMatches.forEach(td => {
+          tds.push(td.replace(/<[^>]+>/g, '').trim());
+        });
+      }
+
+      const numStr = String(idx + 1).padStart(2, '0');
+
+      // Case A: 4 Columns (e.g. Proje Tipi | Teknik Kapsam | Ortalama Teslim Süresi | Hedef Kitle)
+      if (ths.length >= 4 && tds.length >= 4) {
+        editorialHtml += `
+          <div class="p-6 rounded-2xl bg-[#0a0f0f]/90 border border-white/10 hover:border-accent/40 transition-all duration-300 shadow-xl group">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-accent px-2.5 py-1 rounded-md bg-accent/10 border border-accent/20 font-mono">${numStr}</span>
+                <h4 class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</h4>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-foreground/50 uppercase tracking-wider font-semibold">${ths[2] || "TESLİM SÜRESİ"}:</span>
+                <span class="text-white font-bold px-3 py-1 rounded-full bg-white/5 border border-white/10">${tds[2]}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 text-sm">
+              <div class="space-y-1">
+                <span class="text-[11px] font-bold text-accent uppercase tracking-wider block">${ths[1] || "TEKNİK KAPSAM"}</span>
+                <p class="text-foreground/80 leading-relaxed">${tds[1]}</p>
+              </div>
+              <div class="space-y-1">
+                <span class="text-[11px] font-bold text-accent uppercase tracking-wider block">${ths[3] || "HEDEF KİTLE / KULLANIM"}</span>
+                <p class="text-foreground/80 leading-relaxed">${tds[3]}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      // Case B: 3 Columns (e.g. Kriter / Durum | WordPress Seçilmeli | Özel Yazılım Seçilmeli)
+      else if (ths.length >= 3 && tds.length >= 3) {
+        editorialHtml += `
+          <div class="p-6 rounded-2xl bg-[#0a0f0f]/90 border border-white/10 hover:border-accent/40 transition-all duration-300 shadow-xl group">
+            <div class="flex items-center gap-3 pb-3 border-b border-white/10 mb-4">
+              <span class="text-xs font-bold text-accent px-2.5 py-1 rounded-md bg-accent/10 border border-accent/20 font-mono">${numStr}</span>
+              <h4 class="text-lg font-bold text-white group-hover:text-accent transition-colors">${tds[0]}</h4>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                <span class="text-[11px] font-bold text-foreground/50 uppercase tracking-wider block">${ths[1] || "WORDPRESS"}</span>
+                <p class="text-foreground/90 font-medium leading-relaxed">${tds[1]}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-accent/5 border border-accent/20 space-y-1">
+                <span class="text-[11px] font-bold text-accent uppercase tracking-wider block">${ths[2] || "ÖZEL YAZILIM"}</span>
+                <p class="text-white font-semibold leading-relaxed">${tds[2]}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      // Fallback for any other table structure
+      else {
+        editorialHtml += `<div class="overflow-x-auto my-6 rounded-2xl border border-white/10 p-1 bg-white/[0.02]">${trHtml}</div>`;
+      }
+    });
+
+    editorialHtml += '</div>';
+    return editorialHtml;
+  });
+}
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
@@ -170,7 +267,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div 
             className="blog-article-content prose-invert max-w-none space-y-6"
             dangerouslySetInnerHTML={{ 
-              __html: post.content ? post.content.replace(/(<table[\s\S]*?<\/table>)/gi, '<div class="overflow-x-auto my-8 rounded-2xl border border-white/10 shadow-2xl bg-white/[0.02] p-1">$1</div>') : "" 
+              __html: formatEditorialContent(post.content || "") 
             }}
           />
 
