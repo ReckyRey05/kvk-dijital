@@ -35,40 +35,40 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-background/90 backdrop-blur-md">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" onClick={handleLogoClick} className="relative block" aria-label="Ana Sayfa">
-          <LogoHorizontal className="h-14" />
+        <Link href="/" onClick={handleLogoClick} className="relative inline-flex items-center min-h-[48px] min-w-[48px] py-1 px-1" aria-label="Ana Sayfa">
+          <LogoHorizontal className="h-12 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
-        <nav aria-label="Ana Navigasyon" className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground/70">
+        <nav aria-label="Ana Navigasyon" className="hidden md:flex items-center gap-6 text-sm font-medium text-foreground/70">
           <Link 
             href="/hakkimizda" 
-            className={`transition-colors hover:text-accent ${isHakkimizdaActive ? "text-accent font-semibold" : ""}`}
+            className={`py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg transition-colors hover:text-accent ${isHakkimizdaActive ? "text-accent font-semibold" : ""}`}
           >
             Hakkımda
           </Link>
           <Link 
             href="/hizmetler" 
-            className={`transition-colors hover:text-accent ${isHizmetlerActive ? "text-accent font-semibold" : ""}`}
+            className={`py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg transition-colors hover:text-accent ${isHizmetlerActive ? "text-accent font-semibold" : ""}`}
           >
             Hizmetler
           </Link>
           <Link 
             href="/projeler" 
-            className={`transition-colors hover:text-accent ${isProjelerActive ? "text-accent font-semibold" : ""}`}
+            className={`py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg transition-colors hover:text-accent ${isProjelerActive ? "text-accent font-semibold" : ""}`}
           >
             Projeler
           </Link>
           <Link 
             href="/blog" 
-            className={`transition-colors hover:text-accent ${isBlogActive ? "text-accent font-semibold" : ""}`}
+            className={`py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg transition-colors hover:text-accent ${isBlogActive ? "text-accent font-semibold" : ""}`}
           >
             Blog
           </Link>
           <Link 
             href="/#iletisim" 
             onClick={handleContactClick}
-            className="px-5 py-2.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20 font-semibold"
+            className="px-5 py-2.5 inline-flex items-center min-h-[44px] rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20 font-semibold"
           >
             İletişime Geç
           </Link>
@@ -79,14 +79,14 @@ export default function Header() {
           <Link 
             href="/#iletisim" 
             onClick={handleContactClick}
-            className="px-3.5 py-1.5 rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20 text-xs font-semibold"
+            className="px-4 py-2 inline-flex items-center min-h-[44px] rounded-full bg-accent/10 text-accent hover:bg-accent/20 transition-colors border border-accent/20 text-xs font-semibold"
           >
             İletişime Geç
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Mobil Menü Aç/Kapat"
-            className="p-2 text-foreground/80 hover:text-white transition-colors rounded-xl bg-white/5 border border-white/10"
+            className="p-2.5 min-w-[44px] min-h-[44px] inline-flex items-center justify-center text-foreground/80 hover:text-white transition-colors rounded-xl bg-white/5 border border-white/10"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

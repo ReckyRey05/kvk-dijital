@@ -9,12 +9,12 @@ export default function Footer() {
           <div className="text-sm text-foreground/50">İstanbul, Türkiye</div>
         </div>
         
-        <nav aria-label="Alt Bilgi Bağlantıları" className="flex flex-wrap justify-center gap-6 text-sm text-foreground/70">
-          <a href="https://www.instagram.com/kvkdijitalcozumler/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors cursor-pointer p-2 -m-2">Instagram</a>
-          <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">KVKK</Link>
-          <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Gizlilik Politikası</Link>
-          <Link href="/cerez-politikasi" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Çerez Politikası</Link>
-          <Link href="/kullanim-kosullari" className="hover:text-foreground transition-colors cursor-pointer p-2 -m-2">Kullanım Koşulları</Link>
+        <nav aria-label="Alt Bilgi Bağlantıları" className="flex flex-wrap justify-center gap-4 text-sm text-foreground/70">
+          <a href="https://www.instagram.com/kvkdijitalcozumler/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors cursor-pointer py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg">Instagram</a>
+          <Link href="/kvkk" className="hover:text-foreground transition-colors cursor-pointer py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg">KVKK</Link>
+          <Link href="/gizlilik-politikasi" className="hover:text-foreground transition-colors cursor-pointer py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg">Gizlilik Politikası</Link>
+          <Link href="/cerez-politikasi" className="hover:text-foreground transition-colors cursor-pointer py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg">Çerez Politikası</Link>
+          <Link href="/kullanim-kosullari" className="hover:text-foreground transition-colors cursor-pointer py-2 px-3 inline-flex items-center min-h-[44px] rounded-lg">Kullanım Koşulları</Link>
         </nav>
         
         <div className="text-xs text-foreground/50">

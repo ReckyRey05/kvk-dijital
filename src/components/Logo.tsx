@@ -8,7 +8,7 @@ export function LogoIcon({ className = "w-10 h-10" }: { className?: string }) {
       width={270}
       height={185}
       className={`object-contain ${className}`}
-      sizes="(max-width: 768px) 40px, 40px"
+      sizes="160px"
     />
   );
 }
@@ -22,9 +22,7 @@ export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
       height={190}
       priority
       fetchPriority="high"
-      // sizes: Header'da h-14 gösteriliyor (~56px yükseklik), genişlik otomatik ~190px
-      // 2x retina = ~380px, kaynak 645px yeterli
-      sizes="(max-width: 768px) 160px, 220px"
+      sizes="(max-width: 768px) 360px, 640px"
       className={`object-contain w-auto ${className}`}
     />
   );
