@@ -100,6 +100,41 @@ export default function RootLayout({
           `}
         </Script>
         
+        {/* Agentic Web / WebMCP Schema Declaration for AI Agents */}
+        <script
+          type="application/webmcp+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "webmcpVersion": "1.0",
+              "tools": [
+                {
+                  "name": "submit_contact_form",
+                  "description": "Submit a consultation request or contact message to KvK Dijital Çözümler",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string", "description": "Full name or company name" },
+                      "phone": { "type": "string", "description": "Phone number" },
+                      "email": { "type": "string", "description": "Email address" },
+                      "service": { "type": "string", "description": "Selected service category" },
+                      "message": { "type": "string", "description": "Project details or message content" }
+                    },
+                    "required": ["name", "email", "message"]
+                  }
+                },
+                {
+                  "name": "browse_services",
+                  "description": "Browse KvK Dijital Çözümler web design, e-commerce, and custom software services",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {}
+                  }
+                }
+              ]
+            })
+          }}
+        />
+        
         {/* Structured Data (JSON-LD) for SEO */}
         <script
           type="application/ld+json"

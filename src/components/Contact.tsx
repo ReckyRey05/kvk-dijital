@@ -163,12 +163,20 @@ export default function Contact() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <form onSubmit={handleSubmit} aria-label="Teklif ve İletişim Formu" className="flex flex-col gap-6">
+              <form 
+                onSubmit={handleSubmit} 
+                aria-label="Teklif ve İletişim Formu" 
+                data-webmcp-tool="submit_contact_form"
+                data-webmcp-description="Submit a consultation request or contact message to KvK Dijital Çözümler"
+                className="flex flex-col gap-6"
+              >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="name" className="text-sm font-medium text-foreground/70 px-1">İsim / Firma *</label>
                     <input 
                       id="name"
+                      name="name"
+                      data-webmcp-param="name"
                       type="text" 
                       required
                       placeholder="Adınız veya firmanız"
@@ -181,6 +189,8 @@ export default function Contact() {
                     <label htmlFor="phone" className="text-sm font-medium text-foreground/70 px-1">Telefon</label>
                     <input 
                       id="phone"
+                      name="phone"
+                      data-webmcp-param="phone"
                       type="tel" 
                       placeholder="05XX XXX XX XX"
                       value={formData.phone}
@@ -195,6 +205,8 @@ export default function Contact() {
                     <label htmlFor="email" className="text-sm font-medium text-foreground/70 px-1">E-mail *</label>
                     <input 
                       id="email"
+                      name="email"
+                      data-webmcp-param="email"
                       type="email" 
                       required
                       placeholder="ornek@firma.com"
@@ -207,6 +219,8 @@ export default function Contact() {
                     <label htmlFor="service" className="text-sm font-medium text-foreground/70 px-1">İlgilenilen Hizmet</label>
                     <select
                       id="service"
+                      name="service"
+                      data-webmcp-param="service"
                       value={formData.service}
                       onChange={(e) => setFormData({...formData, service: e.target.value})}
                       className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent transition-all text-foreground"
@@ -222,6 +236,8 @@ export default function Contact() {
                   <label htmlFor="message" className="text-sm font-medium text-foreground/70 px-1">Proje Detayları / Mesaj *</label>
                   <textarea 
                     id="message"
+                    name="message"
+                    data-webmcp-param="message"
                     rows={4}
                     required
                     placeholder="Projenizin hedefleri ve detayları hakkında kısaca bilgi verin..."
