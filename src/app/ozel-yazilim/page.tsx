@@ -4,13 +4,13 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Özel Yazılım Geliştirme & Web Uygulamaları | KVK Dijital Çözümler",
-  description: "İşletmenize özel web yazılımları, yönetim panelleri, otomasyonlar ve sistem entegrasyonları. KVK Dijital Çözümler özel yazılım hizmetleri.",
+  title: "Özel Yazılım Geliştirme & Web Uygulamaları | KvK Dijital Çözümler",
+  description: "İşletmenize özel web yazılımları, yönetim panelleri, otomasyonlar ve sistem entegrasyonları. KvK Dijital Çözümler özel yazılım hizmetleri.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/ozel-yazilim",
   },
   openGraph: {
-    title: "Özel Yazılım Geliştirme & Web Uygulamaları | KVK Dijital Çözümler",
+    title: "Özel Yazılım Geliştirme & Web Uygulamaları | KvK Dijital Çözümler",
     description: "İşletmenize özel web yazılımları, yönetim panelleri, otomasyonlar ve sistem entegrasyonları.",
     url: "https://kvkdijitalcozumler.com/ozel-yazilim",
   }
@@ -148,7 +148,7 @@ export default function OzelYazilimPage() {
             "provider": {
               "@type": "Organization",
               "@id": "https://kvkdijitalcozumler.com/#organization",
-              "name": "KVK Dijital Çözümler"
+              "name": "KvK Dijital Çözümler"
             },
             "description": "İşletmelere özel web yazılımları, yönetim panelleri, otomasyonlar ve sistem entegrasyonları."
           })

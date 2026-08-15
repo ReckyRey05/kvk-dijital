@@ -517,7 +517,7 @@ export default function DemoEmlakClient() {
         </div>
       </section>
 
-      {/* 7. CONTACT & KVK CONVERSION FOOTER */}
+      {/* 7. CONTACT & KvK CONVERSION FOOTER */}
       <footer id="contact" className="py-16 bg-[#050c0b] text-center space-y-6 text-[#f9f8f5]">
         <div className="container mx-auto px-6 max-w-3xl space-y-6">
           <h2 className="font-serif text-3xl font-light text-[#f9f8f5]">

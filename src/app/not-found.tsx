@@ -49,7 +49,7 @@ export default function NotFound() {
               
               {/* W (Left) = Logo */}
               <img 
-                src="/logos/KVK-Digital-Logo-Icon-Transparent.png" 
+                src="/logos/KvK-Digital-Logo-Icon-Transparent.png" 
                 alt="KvK Logo" 
                 className="absolute top-1/2 -left-6 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 object-contain opacity-90 drop-shadow-[0_0_15px_rgba(var(--accent),0.5)]" 
               />

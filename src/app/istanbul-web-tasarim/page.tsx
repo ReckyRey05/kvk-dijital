@@ -4,13 +4,13 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "İstanbul Web Tasarım & Dijital Ajans | KVK Dijital Çözümler",
+  title: "İstanbul Web Tasarım & Dijital Ajans | KvK Dijital Çözümler",
   description: "İstanbul merkezli web tasarım firması olarak işletmeniz için modern, kurumsal, mobil ve SEO uyumlu web sitesi yaptırma hizmeti sunuyoruz.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/istanbul-web-tasarim",
   },
   openGraph: {
-    title: "İstanbul Web Tasarım & Dijital Ajans | KVK Dijital Çözümler",
+    title: "İstanbul Web Tasarım & Dijital Ajans | KvK Dijital Çözümler",
     description: "İstanbul merkezli işletmelere özel kurumsal web tasarım, e-ticaret ve SEO çözümleri.",
     url: "https://kvkdijitalcozumler.com/istanbul-web-tasarim",
   }
@@ -28,13 +28,13 @@ export default function IstanbulWebTasarim() {
             İstanbul Web Tasarım <span className="text-accent">Firması</span>
           </h1>
           <p className="text-xl text-foreground/70 leading-relaxed mb-6">
-            KVK Dijital Çözümler olarak, <strong>İstanbul</strong> merkezli işletmelere profesyonel, mobil uyumlu ve SEO dostu web tasarım hizmetleri sunuyoruz. Anadolu Yakası ve Avrupa Yakası'ndaki markaların dijital dönüşüm süreçlerini uçtan uca yönetiyoruz.
+            KvK Dijital Çözümler olarak, <strong>İstanbul</strong> merkezli işletmelere profesyonel, mobil uyumlu ve SEO dostu web tasarım hizmetleri sunuyoruz. Anadolu Yakası ve Avrupa Yakası'ndaki markaların dijital dönüşüm süreçlerini uçtan uca yönetiyoruz.
           </p>
         </div>
 
-        {/* Neden KVK Dijital */}
+        {/* Neden KvK Dijital */}
         <div className="glass-panel p-8 md:p-10 mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Neden KVK Dijital Çözümler?</h2>
+          <h2 className="text-2xl font-semibold mb-4">Neden KvK Dijital Çözümler?</h2>
           <p className="text-foreground/70 mb-6 leading-relaxed">
             Sadece estetik bir web sitesi teslim etmekle kalmıyor, aynı zamanda hedef kitlenize ulaşmanızı sağlayacak teknik altyapıyı kuruyoruz. İstanbul başta olmak üzere Kocaeli, Sakarya, Yalova, Bursa ve Tekirdağ gibi çevre il ve sanayi merkezlerine de kurumsal web tasarım desteği veriyoruz.
           </p>
@@ -104,7 +104,7 @@ export default function IstanbulWebTasarim() {
 
         <div className="text-center p-8 bg-accent/5 rounded-2xl border border-white/5">
           <h3 className="text-2xl font-semibold mb-4">Projenize Hemen Başlayın</h3>
-          <p className="text-foreground/70 mb-6">İstanbul web tasarım ajansı KVK Dijital Çözümler ile markanızı büyütün.</p>
+          <p className="text-foreground/70 mb-6">İstanbul web tasarım ajansı KvK Dijital Çözümler ile markanızı büyütün.</p>
           <Link href="/#contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors">
             İletişime Geçin
           </Link>
@@ -124,7 +124,7 @@ export default function IstanbulWebTasarim() {
             "provider": {
               "@type": "Organization",
               "@id": "https://kvkdijitalcozumler.com/#organization",
-              "name": "KVK Dijital Çözümler"
+              "name": "KvK Dijital Çözümler"
             },
             "areaServed": ["İstanbul", "Anadolu Yakası", "Avrupa Yakası", "Kocaeli", "Sakarya", "Bursa", "Yalova", "Tekirdağ"],
             "description": "İstanbul merkezli işletmelere profesyonel web tasarım, kurumsal web sitesi ve e-ticaret çözümleri."

@@ -152,7 +152,7 @@ export default function WebTasarimPage() {
             "provider": {
               "@type": "Organization",
               "@id": "https://kvkdijitalcozumler.com/#organization",
-              "name": "KVK Dijital Çözümler"
+              "name": "KvK Dijital Çözümler"
             },
             "description": "Profesyonel, mobil uyumlu ve SEO altyapılı web tasarım ve web sitesi yaptırma hizmetleri."
           })

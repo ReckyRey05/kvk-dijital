@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Hakkımızda | KVK Dijital Çözümler",
-  description: "KVK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
+  title: "Hakkımızda | KvK Dijital Çözümler",
+  description: "KvK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/hakkimizda",
   },
   openGraph: {
-    title: "Hakkımızda | KVK Dijital Çözümler",
-    description: "KVK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
+    title: "Hakkımızda | KvK Dijital Çözümler",
+    description: "KvK Dijital Çözümler'in hikayesi, vizyonu ve kurucusu Ali Haydar Kavak hakkında bilgi edinin.",
     url: "https://kvkdijitalcozumler.com/hakkimizda",
   }
 };
@@ -79,7 +79,7 @@ export default function Hakkimda() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "AboutPage",
-            "name": "Hakkımızda - KVK Dijital Çözümler",
+            "name": "Hakkımızda - KvK Dijital Çözümler",
             "url": "https://kvkdijitalcozumler.com/hakkimizda",
             "mainEntity": {
               "@type": "Person",
@@ -89,7 +89,7 @@ export default function Hakkimda() {
               "worksFor": {
                 "@type": "Organization",
                 "@id": "https://kvkdijitalcozumler.com/#organization",
-                "name": "KVK Dijital Çözümler"
+                "name": "KvK Dijital Çözümler"
               }
             }
           })

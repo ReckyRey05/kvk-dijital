@@ -424,7 +424,7 @@ export default function DemoHukukClient() {
         </div>
       </section>
 
-      {/* 9. CONTACT FORM SIMULATION & KVK CONVERSION BANNER */}
+      {/* 9. CONTACT FORM SIMULATION & KvK CONVERSION BANNER */}
       <section id="contact" className="py-24 border-b border-[#1a2745]">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="p-8 sm:p-12 border border-[#253966] bg-[#0d162d] shadow-2xl">
@@ -490,7 +490,7 @@ export default function DemoHukukClient() {
         </div>
       </section>
 
-      {/* 10. KVK CONVERSION FOOTER */}
+      {/* 10. KvK CONVERSION FOOTER */}
       <footer className="py-16 bg-[#040812] text-center space-y-6 text-[#f7f5f0]">
         <div className="container mx-auto px-6 max-w-3xl space-y-6">
           <h2 className="font-serif text-3xl font-normal text-[#f7f5f0]">

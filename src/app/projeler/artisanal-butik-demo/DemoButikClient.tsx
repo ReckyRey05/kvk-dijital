@@ -664,7 +664,7 @@ export default function DemoButikClient() {
         </div>
       )}
 
-      {/* 8. FOOTER & KVK CONVERSION */}
+      {/* 8. FOOTER & KvK CONVERSION */}
       <footer className="py-16 bg-[#1f1c19] text-center space-y-6 text-[#faf8f5]">
         <div className="container mx-auto px-6 max-w-3xl space-y-6">
           <h2 className="font-serif text-3xl font-bold text-[#faf8f5]">

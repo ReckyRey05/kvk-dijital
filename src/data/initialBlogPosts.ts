@@ -364,4 +364,196 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       }
     ]
   }
+,
+
+  {
+    id: "post-6",
+    title: "Kurumsal Web Sitesi Nedir? İşletmeler İçin Neden Hayatidir?",
+    slug: "kurumsal-web-sitesi-nedir-isletmeler-icin-neden-hayati",
+    coverImage: "/images/blog/kurumsal-web-sitesi-nedir.jpg",
+    category: "Kurumsal Web Tasarım",
+    readTime: "8 dk okunma",
+    author: "KvK Dijital Çözümler Uzman Kadrosu",
+    isPublished: true,
+    createdAt: { toDate: () => new Date("2026-08-14T09:00:00Z") },
+    excerpt: "Kurumsal web sitesi nedir, işletmelere neler kazandırır? Dijital dünyada marka prestiji, müşteri güveni ve arama motoru görünürlüğü sağlayan kurumsal web tasarımı rehberi.",
+    content: `
+<p>Günümüz iş dünyasında bir şirketin fiziksel adresi kadar dijital adresi de hayati önem taşır. Potansiyel müşteriler, yatırımcılar ve iş ortakları bir firma hakkında ilk izlenimi edinmek için doğrudan web sitesine başvurur. Peki <strong>kurumsal web sitesi nedir</strong> ve işletmeler için neden vazgeçilmez bir yatırımdır?</p>
+
+<p>Kurumsal web sitesi, bir şirketin vizyonunu, değerlerini, ürün ve hizmetlerini, başarılarını ve iletişim kanallarını dijital ortamda resmi olarak temsil eden profesyonel web platformudur. Sıradan kişisel bloklardan veya sosyal medya hesaplarından farklı olarak kurumsal marka prestijinin teminatıdır.</p>
+
+<h2>1. 7/24 Kesintisiz Marka Prestiji ve Müşteri Güveni</h2>
+<p>Fiziksel ofisiniz mesai saatleri bittiğinde kapansa da, kurumsal web siteniz günün her saati müşterilerinize hizmet vermeye devam eder. Potansiyel bir danışan gece yarısı hizmetleriniz hakkında bilgi alabilir, referanslarınızı inceleyebilir ve teklif talebinde bulunabilir.</p>
+
+<p>Adres çubuğunda güven veren SSL sertifikası, hızlı açılan sayfalar ve profesyonel tasarım kullanıcıya <em>"Bu şirket işini ciddiye alıyor"</em> mesajını verir. Örneğin, hukuk sektöründe kurumsal kimliğin dijitaldeki duruşunu sergilemek adına hazırladığımız <a href="/projeler/prestij-hukuk-demo">Prestij Hukuk konsept demo çalışması</a>, kurumsal güvenin arayüz mimarisiyle nasıl desteklendiğinin somut bir örneğidir.</p>
+
+<h2>2. Google Arama Motorlarında Sürdürülebilir Görünürlük (SEO)</h2>
+<p>İşletmeniz ne kadar kaliteli hizmet sunarsa sunsun, arama motorlarında bulunamıyorsanız pazar payınızı rakiplerinize kaptırırsınız. Kurumsal web sitesi, <a href="/kurumsal-web-tasarim">kurumsal web tasarımı hizmetlerimiz</a> kapsamında Schema.org yapılandırılmış verileri, doğru HTML hiyerarşisi ve hız optimizasyonu ile Google'da üst sıralara tırmanmanızı sağlar.</p>
+
+<h2>3. Sosyal Medya Trafiğinin Dönüşüm Merkezidir</h2>
+<p>Instagram, LinkedIn veya Google reklamlarından gelen potansiyel müşteriler en nihayetinde karar vermek için web sitenizi ziyaret eder. Sosyal medya geçicidir; ancak web siteniz tüm dijital pazarlama faaliyetlerinizin toplandığı nihai dönüşüm merkezidir.</p>
+
+<p>Güzellik ve sağlık sektöründe faaliyet gösteren markaların müşteri randevu akışını kolaylaştırmak amacıyla tasarladığımız <a href="/projeler/aura-beauty-demo">Aura Beauty & Spa konsept demo çalışması</a>, sosyal medya trafiğinin nasıl doğrudan randevuya dönüştürülebileceğini gösterir.</p>
+
+<h2>4. Rekabette Öne Geçiren Mobil Mükemmellik</h2>
+<p>Mobil cihaz kullanımının hakim olduğu günümüzde, masaüstünde harika görünen ancak mobilde kayan bir site kurumsal kimliğinize zarar verir. Modern bir kurumsal site, %100 responsive esneklikte ve 1 saniyenin altında açılmalıdır.</p>
+
+<h2>Özet ve Sonuç</h2>
+<p>Kurumsal web sitesi bir maliyet değil, işletmenize sürekli yeni müşteriler kazandıran en yüksek dönüşümlü dijital yatırımdır. Siz de markanızı profesyonel bir altyapıyla geleceğe taşımak için <a href="/hizmetler">hizmetlerimizi inceleyebilir</a> veya <a href="/iletisim">KvK Dijital Çözümler ekibiyle iletişime geçebilirsiniz</a>.</p>
+  `,
+    faq: [
+      {
+            "question": "Kurumsal web sitesinde hangi sayfalar bulunmalıdır?",
+            "answer": "Bir kurumsal web sitesinde temel olarak Ana Sayfa, Hakkımızda, Hizmetler/Ürünler, Referanslar/Projeler, Blog ve İletişim sayfaları yer almalıdır."
+      },
+      {
+            "question": "Kurumsal web sitesi yaptırırken domain ve hosting kime ait olmalıdır?",
+            "answer": "Domain (alan adı) ve sunucu mülkiyeti tamamen sizin şirketinize ait olmalıdır. İşletmenizin dijital varlık kontrolünü bağımsız korumalısınız."
+      }
+]
+  },
+  {
+    id: "post-7",
+    title: "İstanbul'da Web Tasarım Firması Seçerken Nelere Dikkat Edilmeli?",
+    slug: "istanbulda-web-tasarim-firmasi-secerken-nelere-dikkat-edilmeli",
+    coverImage: "/images/blog/istanbul-web-tasarim-firmasi.jpg",
+    category: "Yerel SEO & Ajans Rehberi",
+    readTime: "9 dk okunma",
+    author: "KvK Dijital Çözümler Uzman Kadrosu",
+    isPublished: true,
+    createdAt: { toDate: () => new Date("2026-08-14T14:00:00Z") },
+    excerpt: "İstanbul'daki web tasarım ajansları arasından işletmeniz için en doğru ortağı seçme rehberi. Ajans kriterleri, portföy analizi, teknik yeterlilik ve maliyet şeffaflığı.",
+    content: `
+<p>Türkiye'nin ticaret ve sanayi kalbi olan <strong>İstanbul</strong>, binlerce web tasarım ajansı, yazılım firması ve freelance geliştiricinin yer aldığı devasa bir pazardır. Pendik'ten Maslak'a, Kadıköy'den İkitelli'ye kadar şirketiniz için bir web tasarım ortağı ararken karşınıza yüzlerce farklı teklif çıkar. Peki işletmeniz için en doğru web tasarım firmasını nasıl seçersiniz?</p>
+
+<p>Doğru ajans seçimi, projenizin zamanında teslim edilmesini, bütçenizin verimli kullanılmasını ve en önemlisi yatırımınızın satışa dönüşmesini belirler. İşte karar vermeden önce sormanız gereken 5 hayati soru:</p>
+
+<h2>1. Ajansın Canlı Portföyü ve Konsept Çalışmaları Gerçekçi mi?</h2>
+<p>Sadece ekran görüntüsü gösteren veya başka sitelerden kopyalanmış şablonlar sunan tekliflerden kaçının. Ajansın canlıda çalışan web sitelerini ve konsept çalışmalarını doğrudan inceleyin.</p>
+
+<p>Örneğin, restoran ve gastronomi sektöründeki dijital sunum standartlarımızı göstermek için hazırladığımız <a href="/projeler/pendik-sahil-bistro-demo">Pendik Sahil Bistro konsept demo çalışması</a>, arayüz kalitesi ve canlı hız performansını şeffafça ortaya koymaktadır. Müşterilerine somut demo sunamayan ajanslarla çalışırken dikkatli olunmalıdır.</p>
+
+<h2>2. Kodlama Teknolojisi: Hazır Yavaş Tema mı, Yoksa Modern Altyapı mı?</h2>
+<p>İstanbul'daki birçok ajans, ThemeForest üzerinden satın aldığı 50 dolarlık ağır WordPress temalarını kurup teslim eder. Bu siteler onlarca gereksiz eklenti yüzünden mobilde 5-8 saniyede açılır ve Google sıralamalarında yükselemez.</p>
+
+<p><a href="/istanbul-web-tasarim">İstanbul web tasarım çözümlerimizde</a> Next.js ve Tailwind CSS gibi sıfır gereksiz kod içeren modern altyapılar kullanarak mobil açılış hızlarını 1-2 saniyenin altında tutuyoruz.</p>
+
+<h2>3. Yerel SEO (Local SEO) ve Google Harita Uyum Yetkinliği</h2>
+<p>İşletmeniz İstanbul odaklı çalışıyorsa, ajansın yerel SEO tecrübesi şarttır. Sitenizin Schema.org LocalBusiness JSON-LD şemalarıyla desteklenmesi, ilçe bazlı aramalarda üst sıralara çıkması için hayati önem taşır.</p>
+
+<h2>4. Sözleşme Şeffaflığı ve Teslim Sonrası Desteği</h2>
+<p>Web sitesi yayınlandıktan sonra ajans ortadan kayboluyor mu? Sözleşmede teslimat süresi, ücretsiz revizyon hakkı, yedekleme garantisi ve teknik destek maddeleri net bir şekilde belirtilmelidir.</p>
+
+<h2>5. Mülkiyet Bağımsızlığı ve Türkçe Yönetim Paneli</h2>
+<p>Domain ve hosting bilgileri sizin adınıza olmalı, site teslim edildikten sonra içerikleri güncellemek için ajansa bağımlı kalınmamalıdır.</p>
+
+<h2>Sonuç</h2>
+<p>Web tasarımı firmanızın dijital yatırımıdır. <a href="/hakkimizda">KvK Dijital Çözümler ekibini inceleyebilir</a> veya İstanbul genelinde işletmenize değer katacak projeniz için <a href="/iletisim">bizimle iletişime geçebilirsiniz</a>.</p>
+  `,
+    faq: [
+      {
+            "question": "İstanbul'da bir web tasarım projesi ne kadar sürede tamamlanır?",
+            "answer": "Standart kurumsal web siteleri 1-2 hafta, kapsamlı e-ticaret ve özel yazılım projeleri ise 3-6 hafta içerisinde tüm testleri tamamlanarak canlıya alınır."
+      },
+      {
+            "question": "Web tasarımı ajansı seçerken yüz yüze görüşmek şart mıdır?",
+            "answer": "Şeffaf bir ajans ile online toplantılar ve detaylı proje sözleşmesi üzerinden tüm süreç kusursuz yürütülebilir. Dileyen müşterilerimizle İstanbul genelinde yüz yüze toplantılar da yapmaktayız."
+      }
+]
+  },
+  {
+    id: "post-8",
+    title: "İşletmeler İçin Özel Yazılım Ne Zaman Gerekli?",
+    slug: "isletmeler-icin-ozel-yazilim-ne-zaman-gerekli",
+    coverImage: "/images/blog/isletmeler-icin-ozel-yazilim.jpg",
+    category: "Özel Yazılım & Otomasyon",
+    readTime: "8 dk okunma",
+    author: "KvK Dijital Çözümler Uzman Kadrosu",
+    isPublished: true,
+    createdAt: { toDate: () => new Date("2026-08-15T10:00:00Z") },
+    excerpt: "Hazır web paketleri yetersiz kaldığında özel yazılım çözümleri işletmenize nasıl değer katar? Otomasyon, API entegrasyonu, yönetim panelleri ve ölçeklenebilirlik rehberi.",
+    content: `
+<p>Şirketler büyüdükçe, iş süreçleri karmaşıklaşır ve hazır şablon yazılımlar veya standart içerik yönetim sistemleri (CMS) işletmenin ihtiyaçlarına cevap veremez hale gelir. Peki bir şirket için <strong>özel yazılım geliştirme</strong> süreci ne zaman bir lüks olmaktan çıkıp zorunlu bir ihtiyaca dönüşür?</p>
+
+<p>Özel yazılım, hazır paketlerin sunduğu kalıplara girmek yerine; tam olarak şirketinizin operasyonel akışına, veritabanı gereksinimlerine ve güvenlik standartlarına göre terzi usulü kodlanan sistemlerdir.</p>
+
+<h2>1. Şirketinize Özel İş Süreçleri ve Otomasyon İhtiyacı</h2>
+<p>Eğer personeliniz müşteri takibi, sipariş yönetimi veya stok durumunu Excel tablolarıyla manuel yürütüyorsa, zaman ve insan hatası maliyeti artar. Özel kurgulanan bir web otomasyonu tüm bu süreçleri otomatikleştirerek yüzlerce saatlik iş gücü tasarrufu sağlar.</p>
+
+<h2>2. Farklı Sistemlerin Birbiriyle Konuşması (API Entegrasyonu)</h2>
+<p>Muhasebe programınız (Mikro, Logo, Nebim), kargo sistemleriniz, pazar yerleriniz ve CRM altyapınızın birbiriyle anlık veri alışverişi yapması gerekiyorsa özel API mimarisi şarttır.</p>
+
+<p>E-ticaret alanında özel stok ve ödeme kurgusunun önemini göstermek adına hazırladığımız <a href="/projeler/artisanal-butik-demo">Artisanal Butik konsept e-ticaret demo çalışması</a>, yüksek performanslı alışveriş altyapılarının nasıl kurgulandığına dair iyi bir örnektir.</p>
+
+<h2>3. Yüksek Veri Güvenliği ve Gizlilik Standartları</h2>
+<p>Müşteri verileri, finansal kayıtlar veya özel fikri mülkiyet tutan şirketler hazır CMS yazılımlarının bilinen güvenlik açıklarına (plugin vulnerabilities) katlanamaz. <a href="/ozel-yazilim">Özel yazılım geliştirme çözümlerimiz</a> ile dış dünyaya kapalı, şifrelenmiş veritabanı mimarisi inşa ediyoruz.</p>
+
+<h2>4. Kesintisiz Ölçeklenebilirlik ve Tam Özgürlük</h2>
+<p>Hazır paketlerde aylık veya yıllık lisans ücretleri ödersiniz, yeni bir özellik ekletmek istediğinizde sağlayıcıya bağımlı kalırsınız. Özel yazılımda ise kodun mülkiyeti tamamen sizdedir, işiniz büyüdükçe yeni modülleri özgürce eklersiniz.</p>
+
+<h2>Özet ve Sonuç</h2>
+<p>İşletmenizi standart kalıpların ötesine taşımak ve operasyonel verimliliği artırmak istiyorsanız <a href="/web-tasarim">özel yazılım ve web çözümlerimizi</a> değerlendirebilir, projeniz için <a href="/iletisim">KvK Dijital Çözümler mühendislik ekibinden teklif alabilirsiniz</a>.</p>
+  `,
+    faq: [
+      {
+            "question": "Özel yazılım projesi hazırlama süreci nasıl işler?",
+            "answer": "Süreç ilk olarak ihtiyaç analizi ve tel kafes (wireframe) kurgusu ile başlar. Ardından veritabanı mimarisi kodlanır, ön yüz tasarımı entegre edilir, güvenlik testlerinden geçirilerek teslim edilir."
+      },
+      {
+            "question": "Özel yazılım sistemlerinde sonradan değişiklik yapmak kolay mıdır?",
+            "answer": "Evet, esnek ve modüler mimaride kodlanan özel yazılımlara ilerleyen dönemde yeni modüller ve fonksiyonlar kolaylıkla eklenebilir."
+      }
+]
+  },
+  {
+    id: "post-9",
+    title: "Yerel SEO Nedir? Google Haritalarda Öne Çıkma Rehberi",
+    slug: "yerel-seo-nedir-google-haritalarda-one-cikma-rehberi",
+    coverImage: "/images/blog/yerel-seo-nedir.jpg",
+    category: "Yerel SEO & Google Haritalar",
+    readTime: "9 dk okunma",
+    author: "KvK Dijital Çözümler Uzman Kadrosu",
+    isPublished: true,
+    createdAt: { toDate: () => new Date("2026-08-16T08:00:00Z") },
+    excerpt: "Yerel müşterilere ulaşmanın en etkili yolu: Yerel SEO (Local SEO). Google Business Profile optimizasyonu, LocalBusiness JSON-LD şemaları ve bölgesel görünürlük rehberi.",
+    content: `
+<p>Bir kullanıcı telefonunu eline alıp <em>"en yakın diş kliniği"</em>, <em>"Pendik nakliyat"</em> veya <em>"Ataşehir mimarlık ofisi"</em> araması yaptığında Google ona konumuna en yakın ve en güvenilir işletmeleri listeler. İşte bu aramalarda öne çıkmanızı sağlayan stratejiye <strong>Yerel SEO (Local SEO)</strong> denir.</p>
+
+<p>Özellikle fiziksel konuma sahip veya belirli bir il/ilçede hizmet veren işletmeler için Yerel SEO, genel SEO çalışmalarından çok daha hızlı müşteri ve telefon araması getirir.</p>
+
+<h2>1. Google Business Profile (Google Benim İşletmem) Optimizasyonu</h2>
+<p>Yerel SEO'nun ilk adımı Google Haritalar profilinizi eksiksiz yapılandırmaktır:</p>
+
+<ul>
+  <li>İşletme adı, kategorisi, adresi ve telefon numarası (NAP bilgileri) %100 doğru olmalıdır.</li>
+  <li>Çalışma saatleri, hizmet listesi ve yüksek çözünürlüklü fotoğraflar düzenli eklenmelidir.</li>
+  <li>Müşterilerden gelen yorumlar yanıtlanmalı, anahtar kelime içeren müşteri değerlendirmeleri teşvik edilmelidir.</li>
+</ul>
+
+<h2>2. Web Sitesinde Schema.org LocalBusiness Şema Kodlaması</h2>
+<p>Google Botlarının sitenizi bir yerel işletme olarak tanıması için kod altyapısında JSON-LD formatında <code>LocalBusiness</code> veya <code>ProfessionalService</code> şemaları yer almalıdır. Bu şema; enlem/boylam koordinatlarınızı, açılış saatlerinizi ve hizmet verdiğiniz ilçeleri arama motoruna makine dilinde iletir.</p>
+
+<p>Emlak ve gayrimenkul sektöründe bölgesel harita görünürlüğü ve portföy sunumunu sergilemek adına hazırladığımız <a href="/projeler/vizyon-gayrimenkul-demo">Vizyon Gayrimenkul konsept demo çalışması</a>, yerel arama kurgusunun dinamik ilan yapısıyla nasıl birleştirildiğinin somut bir örneğidir.</p>
+
+<h2>3. İlçe ve Bölge Odaklı İçerik Kurgusu</h2>
+<p><a href="/istanbul-web-tasarim">İstanbul web tasarım rehberlerimizde</a> vurguladığımız gibi, bölgesel arama niyetini karşılayan özgün landing page ve blog içerikleri yerel sıralamanızı güçlendirir.</p>
+
+<h2>4. Mobil Mükemmellik ve Tek Tıkla Arama (Click to Call)</h2>
+<p>Yerel aramaların %80'den fazlası mobil cihazlardan yapıldığı için sitenizde harita yol tarifi ve doğrudan telefon arama butonları belirgin şekilde yer almalıdır.</p>
+
+<h2>Özet ve Sonuç</h2>
+<p>Yerel SEO ile bölgesel pazar payınızı artırmak ve yakınınızdaki müşterileri kazanmak için <a href="/web-tasarim">web tasarımı çözümlerimizi</a> inceleyebilir veya <a href="/iletisim">KvK Dijital Çözümler ile iletişime geçebilirsiniz</a>.</p>
+  `,
+    faq: [
+      {
+            "question": "Yerel SEO sonuçları ne kadar sürede görülmeye başlar?",
+            "answer": "Google Business Profile doğrulamasının ardından yerel harita ve bölgesel arama sonuçlarındaki ilk yükselişler 2 ila 6 hafta içerisinde gözlemlenir."
+      },
+      {
+            "question": "Fiziksel dükkanım yoksa yerel SEO yapabilir miyim?",
+            "answer": "Evet, adrese teslim hizmet veren (nakliyat, tesisat, evde bakım vb.) işletmeler hizmet bölgesi (service area) belirleyerek yerel SEO'dan yararlanabilirler."
+      }
+]
+  }
+
 ];

@@ -112,7 +112,7 @@ export default function RootLayout({
                   "@id": "https://kvkdijitalcozumler.com/#website",
                   "url": "https://kvkdijitalcozumler.com",
                   "name": "KvK Dijital Çözümler",
-                  "alternateName": ["KvK Dijital", "KVK Dijital Çözümler", "KVK Dijital"],
+                  "alternateName": ["KvK Dijital", "KvK Dijital Çözümler", "KvK Dijital"],
                   "description": "İstanbul merkezli profesyonel web tasarım, yazılım ve dijital ajans",
                   "publisher": {
                     "@id": "https://kvkdijitalcozumler.com/#organization"
@@ -122,14 +122,14 @@ export default function RootLayout({
                   "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
                   "@id": "https://kvkdijitalcozumler.com/#organization",
                   "name": "KvK Dijital Çözümler",
-                  "alternateName": ["KvK Dijital", "KVK Dijital Çözümler", "KVK Dijital"],
+                  "alternateName": ["KvK Dijital", "KvK Dijital Çözümler", "KvK Dijital"],
                   "url": "https://kvkdijitalcozumler.com",
                   "logo": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp",
                   "image": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp",
                   "telephone": "+905348914905",
                   "email": "iletisim@kvkdijitalcozumler.com",
                   "priceRange": "$$",
-                  "description": "KVK Dijital Çözümler, İstanbul merkezli kurumsal web tasarım, e-ticaret altyapısı, özel yazılım ve SEO hizmetleri sunan dijital ajanstır.",
+                  "description": "KvK Dijital Çözümler, İstanbul merkezli kurumsal web tasarım, e-ticaret altyapısı, özel yazılım ve SEO hizmetleri sunan dijital ajanstır.",
                   "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "İstanbul",
