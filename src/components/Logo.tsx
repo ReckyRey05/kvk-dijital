@@ -3,7 +3,7 @@ import Image from "next/image";
 export function LogoIcon({ className = "w-10 h-10" }: { className?: string }) {
   return (
     <Image 
-      src="/logos/kvk-digital-logo-icon-transparent.webp" 
+      src="/logos/KvK-Digital-Logo-Icon-Transparent.webp" 
       alt="KvK Dijital Çözümler" 
       width={270}
       height={185}
@@ -16,7 +16,7 @@ export function LogoIcon({ className = "w-10 h-10" }: { className?: string }) {
 export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
   return (
     <Image 
-      src="/logos/kvk-digital-logo-horizontal-transparent.webp" 
+      src="/logos/KvK-Digital-Logo-Horizontal-Transparent.webp" 
       alt="KvK Dijital Çözümler" 
       width={645}
       height={190}
@@ -31,7 +31,7 @@ export function LogoHorizontal({ className = "h-8" }: { className?: string }) {
 export function LogoPrimary({ className = "h-16" }: { className?: string }) {
   return (
     <Image 
-      src="/logos/kvk-digital-logo-primary-transparent.webp" 
+      src="/logos/KvK-Digital-Logo-Primary-Transparent.webp" 
       alt="KvK Dijital Çözümler" 
       width={810}
       height={485}
@@ -45,7 +45,7 @@ export function LogoPrimary({ className = "h-16" }: { className?: string }) {
 export function LogoCircle({ className = "w-16 h-16" }: { className?: string }) {
   return (
     <Image 
-      src="/logos/kvk-digital-logo-circle-transparent.webp" 
+      src="/logos/KvK-Digital-Logo-Circle-Transparent.webp" 
       alt="KvK Dijital Çözümler" 
       width={295}
       height={255}

@@ -167,7 +167,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       "name": "KvK Dijital Çözümler",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://kvkdijitalcozumler.com/logos/kvk-digital-logo-primary-transparent.webp"
+        "url": "https://kvkdijitalcozumler.com/logos/KvK-Digital-Logo-Primary-Transparent.webp"
       }
     },
     "mainEntityOfPage": {
