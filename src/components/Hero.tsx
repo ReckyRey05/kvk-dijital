@@ -52,7 +52,7 @@ export default function Hero() {
             
             {/* Main Central Dashboard Card */}
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-[#0a0f0f]/95 md:bg-background/60 md:backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col animate-fade-in-up"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[75%] rounded-[2rem] border border-white/10 bg-[#0a0f0f]/95 md:bg-background/60 md:backdrop-blur-3xl shadow-2xl overflow-hidden flex flex-col md:animate-fade-in-up"
             >
               {/* Fake Browser Top Bar */}
               <div className="w-full h-12 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2">
