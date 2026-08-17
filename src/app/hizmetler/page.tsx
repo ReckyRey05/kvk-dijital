@@ -143,6 +143,23 @@ export default async function Hizmetler() {
           })}
         </div>
 
+        {/* Free SEO Audit Tool Feature Banner */}
+        <div className="glass-panel p-8 sm:p-10 rounded-3xl border-accent/30 bg-accent/5 mb-16 text-center space-y-4">
+          <span className="text-accent text-xs font-bold uppercase tracking-widest block">Ücretsiz Hizmetimiz</span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Mevcut Web Sitenizin Hız ve SEO Puanını Ölçün</h2>
+          <p className="text-foreground/70 text-sm max-w-xl mx-auto leading-relaxed">
+            Sitenizin mobil açılış hızını, Google SEO kriterlerini ve teknik hatalarını 10 saniyede ücretsiz analiz edin.
+          </p>
+          <div>
+            <Link 
+              href="/ucretsiz-seo-analiz-araci"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 border border-white/15 text-white font-bold text-xs uppercase tracking-wider hover:bg-accent hover:text-slate-950 transition-colors"
+            >
+              Ücretsiz SEO Analizini Başlat <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
         {/* Conversion CTA Banner */}
         <div className="glass-panel p-8 md:p-12 text-center bg-gradient-to-br from-card via-[#0c1414] to-card border-accent/30 rounded-3xl space-y-6 relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[80px] rounded-full pointer-events-none" />
