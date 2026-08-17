@@ -150,13 +150,21 @@ export default async function Hizmetler() {
           <p className="text-foreground/70 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Hangi hizmetin işletmeniz için en uygun olduğuna karar veremediyseniz, ücretsiz dijital analiz ve danışmanlık görüşmesi gerçekleştirebiliriz.
           </p>
-          <div>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link 
               href="/iletisim" 
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-slate-950 font-bold text-sm uppercase tracking-wider hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
             >
               Teklif ve Bilgi Alın <ArrowRight className="w-4 h-4" />
             </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20hizmetleriniz%20hakk%C4%B1nda%20bilgi%20ve%20dan%C4%B1%C5%9Fmanl%C4%B1k%20almak%20istiyorum."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500/20 transition-colors text-sm"
+            >
+              WhatsApp Danışmanlık
+            </a>
           </div>
         </div>
       </div>

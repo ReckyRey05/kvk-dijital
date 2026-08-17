@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import ClientHeader from "@/components/ClientHeader";
 import CookieConsent from "@/components/CookieConsent";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export const viewport: Viewport = {
   themeColor: "#050505",
@@ -82,6 +83,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClientHeader />
         {children}
+        <WhatsAppButton />
         <CookieConsent />
         <Analytics />
         

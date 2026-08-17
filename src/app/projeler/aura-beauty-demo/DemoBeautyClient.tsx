@@ -494,13 +494,21 @@ export default function DemoBeautyClient() {
           <p className="text-xs text-[#8c877d] max-w-xl mx-auto leading-relaxed">
             Bu sayfa <strong>KvK Dijital Çözümler</strong> ajansı tarafından güzellik salonu ve estetik işletmelerine özel tasarım konseptini sergilemek amacıyla hazırlanmıştır. Gerçek müşteri verisi veya tıbbi iddia içermez.
           </p>
-          <div>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link 
               href="/#contact"
-              className="px-8 py-3.5 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all inline-flex items-center gap-2"
+              className="px-8 py-3.5 bg-[#d4af37] text-[#0a0a0d] font-bold text-xs tracking-widest uppercase hover:bg-[#e2c152] transition-all inline-flex items-center gap-2 cursor-pointer"
             >
               KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />
             </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20Aura%20Beauty%20güzellik%20merkezi%20demo%20çalışmanızı%20inceledim.%20Salnum%20için%20web%20sitesi%20teklifi%20almak%20istiyorum."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3.5 rounded border border-[#d4af37]/40 text-[#d4af37] font-semibold text-xs tracking-wider uppercase hover:bg-[#d4af37]/10 transition-colors"
+            >
+              WhatsApp'tan Yazın
+            </a>
           </div>
           <div className="pt-8 border-t border-[#1c1b26] flex items-center justify-center gap-6 text-xs text-[#736f66]">
             <Link href="/" className="hover:text-white transition-colors">KvK Ana Sayfa</Link>

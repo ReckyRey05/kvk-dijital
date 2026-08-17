@@ -61,12 +61,24 @@ export default function ETicaretWebSitesi() {
           </div>
         </div>
 
-        <div className="text-center p-8 bg-accent/5 rounded-2xl border border-white/5">
-          <h3 className="text-2xl font-semibold mb-4">Satışlara Hemen Başlayın</h3>
-          <p className="text-foreground/70 mb-6">E-Ticaret çözümlerimiz hakkında detaylı bilgi ve fiyat almak için bize ulaşın.</p>
-          <Link href="/#contact" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors">
-            Fiyat Teklifi Alın
-          </Link>
+        <div className="text-center p-8 bg-accent/5 rounded-2xl border border-accent/20">
+          <h3 className="text-2xl font-bold mb-4">E-Ticaret Mağazanızı Birlikte Açalım</h3>
+          <p className="text-foreground/70 mb-6 max-w-lg mx-auto">
+            İşletmeniz için özelleştirilmiş e-ticaret paketleri, sanal POS entegrasyonu ve fiyat detayları hakkında bilgi alın.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link href="/#contact" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors cursor-pointer text-sm">
+              Fiyat Teklifi Alın <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20E-Ticaret%20web%20sitesi%20hizmetiniz%20hakk%C4%B1nda%20bilgi%20ve%20fiyat%20almak%20istiyorum."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500/20 transition-colors text-sm"
+            >
+              WhatsApp'tan Yazın
+            </a>
+          </div>
         </div>
 
       </div>

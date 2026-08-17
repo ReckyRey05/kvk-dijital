@@ -295,22 +295,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           )}
 
-          {/* Conversion CTA Banner */}
-          <div className="mt-16 p-8 rounded-3xl bg-gradient-to-br from-card via-[#0c1414] to-card border border-accent/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
+          {/* Contextual Lead Conversion CTA Banner */}
+          <div className="mt-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-card via-[#0c1414] to-card border border-accent/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[80px] rounded-full pointer-events-none" />
             <h3 className="text-2xl sm:text-3xl font-bold text-white">
-              İşletmeniz İçin Web Projenizi Birlikte Planlayalım
+              {post.category ? `${post.category} Projenizi Birlikte Planlayalım` : "İşletmeniz İçin Web Projenizi Birlikte Planlayalım"}
             </h3>
             <p className="text-sm text-foreground/70 max-w-xl mx-auto leading-relaxed">
-              KvK Dijital Çözümler ile yüksek performanslı, SEO altyapılı ve dönüşüm odaklı web siteleri geliştirmek için ücretsiz danışmanlık alın.
+              KvK Dijital Çözümler ile yüksek performanslı, SEO altyapılı ve dönüşüm odaklı web sistemleri geliştirmek için ücretsiz danışmanlık alın.
             </p>
-            <div>
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
               <Link 
                 href="/iletisim" 
-                className="px-8 py-3.5 bg-accent text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-accent/90 transition-all inline-flex items-center gap-2 shadow-lg shadow-accent/20"
+                className="px-8 py-3.5 bg-accent text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-accent/90 transition-all inline-flex items-center gap-2 shadow-lg shadow-accent/20 cursor-pointer"
               >
                 Ücretsiz Teklif Alın <ArrowRight className="w-4 h-4" />
               </Link>
+              {post.category?.toLowerCase().includes("tasarım") || post.category?.toLowerCase().includes("tasarim") ? (
+                <Link href="/web-tasarim" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                  Web Tasarım Hizmetini İnceleyin
+                </Link>
+              ) : post.category?.toLowerCase().includes("e-ticaret") ? (
+                <Link href="/e-ticaret-web-sitesi" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                  E-Ticaret Çözümünü İnceleyin
+                </Link>
+              ) : (
+                <Link href="/hizmetler" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                  Tüm Hizmetleri İnceleyin
+                </Link>
+              )}
             </div>
           </div>
 

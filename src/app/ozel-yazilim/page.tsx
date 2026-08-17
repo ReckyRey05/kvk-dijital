@@ -127,11 +127,21 @@ export default function OzelYazilimPage() {
         <div className="text-center py-12 px-6 glass-panel border-accent/30 bg-accent/5">
           <h2 className="text-3xl font-bold mb-4">Projenizi Birlikte Planlayalım</h2>
           <p className="text-foreground/70 max-w-xl mx-auto mb-8">
-            Özel yazılım ihtiyaçlarınız ve dijital çözümler için teknik ekibimizle iletişime geçin.
+            Özel yazılım ihtiyaçlarınız ve dijital otomasyon çözümleriniz için teknik ekibimizle iletişime geçin.
           </p>
-          <Link href="/#contact" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors">
-            İletişime Geçin <ArrowRight className="w-5 h-5" />
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link href="/#contact" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-background font-bold hover:bg-accent/90 transition-colors cursor-pointer text-sm">
+              Teklif & Analiz İsteğin <ArrowRight className="w-5 h-5" />
+            </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20%C3%96zel%20Yaz%C4%B1l%C4%B1m%20ve%20otomasyon%20projemiz%20hakk%C4%B1nda%20g%C3%B6r%C3%BC%C5%9Fmek%20istiyoruz."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500/20 transition-colors text-sm"
+            >
+              WhatsApp'tan Yazın
+            </a>
+          </div>
         </div>
 
       </div>

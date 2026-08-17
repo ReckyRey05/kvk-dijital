@@ -363,17 +363,27 @@ export default async function Projeler() {
 
         </div>
 
-        <div className="glass-panel p-12 text-center border-card-border mb-24 rounded-3xl">
-          <h3 className="text-3xl font-semibold mb-6">Kendi sektörünüz için özel bir tasarım mı arıyorsunuz?</h3>
-          <p className="text-foreground/70 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-            Hangi sektörde olursanız olun, işletmenizin prestijini artıracak ve müşteri dönüştürecek özel web sitenizi tasarlayabiliriz. 
+        <div className="glass-panel p-10 md:p-12 text-center border-accent/20 mb-24 rounded-3xl bg-accent/5">
+          <h3 className="text-3xl font-bold mb-4">Kendi Sektörünüz İçin Özel Bir Web Sitesi İstiyor Musunuz?</h3>
+          <p className="text-foreground/70 text-base sm:text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+            Hangi sektörde olursanız olun, işletmenizin prestijini ve satış potansiyelini yükseltecek özel web sitenizi birlikte tasarlayalım. 
           </p>
-          <Link 
-            href="/#iletisim" 
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-black font-bold hover:bg-white/90 transition-colors shadow-lg"
-          >
-            KvK Dijital'den Teklif Alın
-          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link 
+              href="/#iletisim" 
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-slate-950 font-bold hover:bg-accent/90 transition-colors shadow-lg cursor-pointer text-sm"
+            >
+              KvK Dijital'den Teklif Alın <ArrowUpRight className="w-4 h-4" />
+            </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20konsept%20projelerinizi%20inceledim.%20Kendi%20i%C5%9Fletmem%20i%C3%A7in%20web%20sitesi%20teklifi%20almak%20istiyorum."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500/20 transition-colors text-sm"
+            >
+              WhatsApp'tan Bilgi Alın
+            </a>
+          </div>
         </div>
       </div>
 

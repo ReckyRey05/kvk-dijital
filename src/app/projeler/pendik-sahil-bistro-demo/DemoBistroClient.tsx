@@ -424,13 +424,21 @@ export default function DemoBistroClient() {
           <p className="text-xs text-[#b5a999] max-w-xl mx-auto leading-relaxed">
             Bu sayfa <strong>KvK Dijital Çözümler</strong> ajansı tarafından restoran ve gastronomi işletmeleri için özel olarak tasarlanmış konsept çalışmadır. Gerçek işletme verisi içermez.
           </p>
-          <div>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <Link 
               href="/#iletisim"
-              className="px-8 py-3.5 rounded bg-[#c8a97e] text-[#1c1815] font-bold text-xs tracking-widest uppercase hover:bg-[#d8b98e] transition-all inline-flex items-center gap-2"
+              className="px-8 py-3.5 rounded bg-[#c8a97e] text-[#1c1815] font-bold text-xs tracking-widest uppercase hover:bg-[#d8b98e] transition-all inline-flex items-center gap-2 cursor-pointer"
             >
               KvK Dijital'den Teklif Alın <ArrowRight className="w-4 h-4" />
             </Link>
+            <a 
+              href="https://wa.me/905348914905?text=Merhaba,%20Pendik%20Sahil%20Bistro%20demo%20çalışmanızı%20inceledim.%20Restoran/kafe%20işletmem%20için%20web%20sitesi%20teklifi%20almak%20istiyorum."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3.5 rounded border border-[#c8a97e]/40 text-[#c8a97e] font-semibold text-xs tracking-wider uppercase hover:bg-[#c8a97e]/10 transition-colors"
+            >
+              WhatsApp'tan Yazın
+            </a>
           </div>
           <div className="pt-8 border-t border-[#36302a] flex items-center justify-center gap-6 text-xs text-[#998d7e]">
             <Link href="/" className="hover:text-white transition-colors">KvK Ana Sayfa</Link>
