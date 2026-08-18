@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
+import { verifyAdminServerRequest } from '@/lib/auth/serverAuth';
 
 export async function POST(req: Request) {
   try {
+    const adminUser = await verifyAdminServerRequest(req);
+    if (!adminUser) {
+      return NextResponse.json(
+        { error: 'Yetkisiz işlem. Yapay zeka içerik üretimi yalnızca yetkili yöneticiler içindir.' },
+        { status: 401 }
+      );
+    }
+
     const { topic } = await req.json();
 
     if (!topic) {

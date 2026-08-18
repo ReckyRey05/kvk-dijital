@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firestore";
+import { auth } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Layout, Type, Image as ImageIcon, Sparkles } from "lucide-react";
@@ -81,9 +82,13 @@ export default function NewBlogPostPage() {
         (async () => {
           setGeneratingExcerpt(true);
           try {
+            const token = await auth.currentUser?.getIdToken();
             const response = await fetch('/api/ai/generate', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+              },
               body: JSON.stringify({ 
                 topic: `Aşağıdaki makale metninden SEO uyumlu, bilgilendirici ve dikkat çekici bir kısa özet yaz. Maksimum 155 karakter olsun. Sadece özet metnini döndür, başka bir şey yazma:\n\n${plainText.slice(0, 1500)}`
               })
@@ -120,9 +125,13 @@ export default function NewBlogPostPage() {
 
     setGeneratingAI(true);
     try {
+      const token = await auth.currentUser?.getIdToken();
       const response = await fetch('/api/ai/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ topic })
       });
 
