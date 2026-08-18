@@ -131,6 +131,32 @@ export function validateAiGenerateInput(raw: any): ValidationResult<AiGenerateIn
 }
 
 /**
+ * Ensures a URL string is safe to render in href/src attributes.
+ * Blocks dangerous schemes (javascript:, data:, vbscript:) and allows only http, https, mailto, or relative internal paths (/...).
+ */
+export function sanitizeSafeUrl(urlStr: string | null | undefined, fallbackUrl: string = "#"): string {
+  if (!urlStr || typeof urlStr !== "string") return fallbackUrl;
+  const trimmed = urlStr.trim();
+  if (!trimmed) return fallbackUrl;
+
+  // Allow relative internal routes (e.g. /projeler/demo)
+  if (trimmed.startsWith("/")) return trimmed;
+
+  // Allow mailto:
+  if (trimmed.startsWith("mailto:")) return trimmed;
+
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.toString();
+    }
+    return fallbackUrl;
+  } catch {
+    return fallbackUrl;
+  }
+}
+
+/**
  * Shared validator for media/image URLs (blog coverImage, project image, service imageUrl)
  */
 export function validateMediaUrl(urlStr: string): ValidationResult<string> {
