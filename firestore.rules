@@ -1,31 +1,44 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Blog gönderileri
-    match /blog_posts/{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
+
+    // 1. DEFAULT DENY: Block all undefined collection paths
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    // Projeler
-    match /projects/{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
+    // Verified Corporate Admin Authorization Helper Function
+    function isAdmin() {
+      return request.auth != null 
+        && request.auth.token.email_verified == true
+        && (
+          request.auth.token.email == 'alihaydarkvk@kvkdijitalcozumler.com' ||
+          request.auth.token.email == 'iletisim@kvkdijitalcozumler.com' ||
+          request.auth.token.email.matches('.*@kvkdijitalcozumler\\.com$')
+        );
     }
 
-    // Hizmetler
-    match /services/{document=**} {
+    // 2. PUBLIC READ COLLECTIONS
+    match /blog_posts/{postId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow create, update, delete: if isAdmin();
     }
 
-    // İletişim Mesajları
-    match /contactMessages/{document=**} {
-      // Herkes yeni mesaj oluşturabilir
-      allow create: if true;
-      // Sadece adminler mesajları okuyabilir, silebilir ve güncelleyebilir
-      allow read, update, delete: if request.auth != null;
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
     }
+
+    match /services/{serviceId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 3. CONTACT MESSAGES (Admin read/update/delete, Browser direct create DENY)
+    match /contactMessages/{messageId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+
   }
 }
