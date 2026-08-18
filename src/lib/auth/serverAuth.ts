@@ -19,8 +19,8 @@ export async function verifyAdminServerRequest(req: Request): Promise<DecodedIdT
     // Ensure Firebase Admin SDK is initialized before verifying token
     getAdminDb();
 
-    // Verify ID token via Firebase Admin Auth
-    const decodedToken = await getAuth().verifyIdToken(idToken);
+    // Verify ID token via Firebase Admin Auth (checkRevoked = true)
+    const decodedToken = await getAuth().verifyIdToken(idToken, true);
     
     // Validate corporate admin credentials
     const isEmailVerified = decodedToken.email_verified === true;
