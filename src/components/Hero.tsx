@@ -6,10 +6,10 @@ import { LogoIcon } from "./Logo";
 export default function Hero() {
   return (
     <section className="relative w-full min-h-screen flex items-center pt-20 pb-16">
-      {/* Background gradients - mobilde daha hafif blur GPU yükünü azaltır */}
+      {/* Background gradients - mobilde ultra-hafif CSS transform ile LCP boyama süresi düşürülmüştür */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[60px] md:blur-[120px]" />
-        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-accent/10 blur-[80px] md:blur-[150px]" />
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-accent/10 opacity-70 blur-2xl md:blur-[100px] will-change-transform" />
+        <div className="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-accent/15 opacity-60 blur-3xl md:blur-[120px] will-change-transform" />
       </div>
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">

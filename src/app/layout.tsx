@@ -72,13 +72,15 @@ export default function RootLayout({
   return (
     <html lang="tr" className={`scroll-smooth ${inter.variable}`}>
       <head>
+        {/* Preconnect for Google Fonts & GTM to speed up LCP */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         {/* Googlebot-Image Favicon Standards (48x48 multiple) */}
         <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        {/* DNS prefetch for GTM tracking */}
-        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
       </head>
       <body className={inter.className}>
         <ClientHeader />
