@@ -1,9 +1,18 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getAdminDb } from '@/lib/firebase/admin';
+import { RATE_LIMITS } from '@/config/rateLimit';
+import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 
 export async function POST(request: Request) {
   try {
+    // 1. IP-based Rate Limit Check (3 requests / 15 minutes)
+    const clientIp = getClientIp(request);
+    const ipCheck = checkRateLimit(`contact:ip:${clientIp}`, RATE_LIMITS.contact.ip);
+    if (!ipCheck.allowed) {
+      return createRateLimitResponse(ipCheck);
+    }
+
     const { name, email, phone, service, subject, message } = await request.json();
 
     if (!name || !email || !message) {
@@ -11,6 +20,13 @@ export async function POST(request: Request) {
         { error: 'İsim, e-posta ve mesaj alanları zorunludur.' },
         { status: 400 }
       );
+    }
+
+    // 2. Email-based Rate Limit Check (3 requests / 15 minutes)
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailCheck = checkRateLimit(`contact:email:${normalizedEmail}`, RATE_LIMITS.contact.email);
+    if (!emailCheck.allowed) {
+      return createRateLimitResponse(emailCheck);
     }
 
     // Save to Firestore via Firebase Admin SDK in server route

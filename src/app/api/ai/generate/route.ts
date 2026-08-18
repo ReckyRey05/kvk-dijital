@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyAdminServerRequest } from '@/lib/auth/serverAuth';
+import { RATE_LIMITS } from '@/config/rateLimit';
+import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 
 export async function POST(req: Request) {
   try {
@@ -9,6 +11,20 @@ export async function POST(req: Request) {
         { error: 'Yetkisiz işlem. Yapay zeka içerik üretimi yalnızca yetkili yöneticiler içindir.' },
         { status: 401 }
       );
+    }
+
+    // 1. IP-based Rate Limit Check (10 requests / 1 hour)
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`aiGenerate:ip:${clientIp}`, RATE_LIMITS.aiGenerate.ip);
+    if (!ipCheck.allowed) {
+      return createRateLimitResponse(ipCheck);
+    }
+
+    // 2. Admin Account-based Rate Limit Check (10 requests / 1 hour)
+    const adminEmail = (adminUser.email || adminUser.uid).toLowerCase();
+    const accountCheck = checkRateLimit(`aiGenerate:account:${adminEmail}`, RATE_LIMITS.aiGenerate.account);
+    if (!accountCheck.allowed) {
+      return createRateLimitResponse(accountCheck);
     }
 
     const { topic } = await req.json();

@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
+import { RATE_LIMITS } from '@/config/rateLimit';
+import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 
 export async function POST(request: Request) {
   try {
+    // IP-based Rate Limit Check (5 requests / 10 minutes)
+    const clientIp = getClientIp(request);
+    const ipCheck = checkRateLimit(`seoAudit:ip:${clientIp}`, RATE_LIMITS.seoAudit.ip);
+    if (!ipCheck.allowed) {
+      return createRateLimitResponse(ipCheck);
+    }
+
     const body = await request.json().catch(() => ({}));
     let { url } = body;
 
