@@ -3,6 +3,7 @@ import { verifyAdminServerRequest } from '@/lib/auth/serverAuth';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 import { validateAiGenerateInput } from '@/lib/validation/schemas';
+import { createSecureServerErrorResponse } from '@/lib/security/errorResponse';
 
 export async function POST(req: Request) {
   try {
@@ -39,10 +40,10 @@ export async function POST(req: Request) {
     }
 
     const { topic } = validation.data;
-
     const apiKey = process.env.GEMINI_API_KEY;
+
     if (!apiKey) {
-      return NextResponse.json({ error: 'API anahtarı bulunamadı.' }, { status: 500 });
+      return createSecureServerErrorResponse('AiGenerateConfig', 'GEMINI_API_KEY environment variable is missing', 'Yapay zeka servisi yapılandırma hatası.');
     }
 
     // Google Gemini API çağrısı
@@ -68,9 +69,8 @@ KURALLAR:
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Gemini API Error:', errorData);
-      return NextResponse.json({ error: `API Hatası: ${errorData?.error?.message || 'Yapay zeka yanıt veremedi.'}` }, { status: 500 });
+      const errorData = await response.json().catch(() => ({}));
+      return createSecureServerErrorResponse('GeminiApiFetch', errorData, 'Yapay zeka servisine bağlanırken bir sunucu hatası oluştu.');
     }
 
     const data = await response.json();
@@ -82,7 +82,6 @@ KURALLAR:
     return NextResponse.json({ content: cleanHtml });
 
   } catch (error) {
-    console.error('AI Generation Error:', error);
-    return NextResponse.json({ error: 'Bir hata oluştu.' }, { status: 500 });
+    return createSecureServerErrorResponse('AiGenerateHandler', error, 'Yapay zeka metni üretilirken bir sunucu hatası oluştu.');
   }
 }

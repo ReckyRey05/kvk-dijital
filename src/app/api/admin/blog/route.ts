@@ -5,6 +5,7 @@ import { validateBlogPostInput } from "@/lib/validation/schemas";
 import { FieldValue } from "firebase-admin/firestore";
 import { RATE_LIMITS } from "@/config/rateLimit";
 import { getClientIp, checkRateLimit, createRateLimitResponse, parseJsonWithByteLimit } from "@/lib/security/rateLimit";
+import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 export async function POST(req: Request) {
   try {
@@ -45,11 +46,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, id: docRef.id });
   } catch (error: any) {
-    console.error("Admin Blog Create Error:", error);
-    return NextResponse.json(
-      { error: "Blog yazısı kaydedilirken bir sunucu hatası oluştu." },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse("AdminBlogCreate", error, "Blog yazısı kaydedilirken bir sunucu hatası oluştu.");
   }
 }
 
@@ -98,11 +95,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Admin Blog Update Error:", error);
-    return NextResponse.json(
-      { error: "Blog yazısı güncellenirken bir sunucu hatası oluştu." },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse("AdminBlogUpdate", error, "Blog yazısı güncellenirken bir sunucu hatası oluştu.");
   }
 }
 
@@ -137,10 +130,6 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("Admin Blog Delete Error:", error);
-    return NextResponse.json(
-      { error: "Blog yazısı silinirken bir sunucu hatası oluştu." },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse("AdminBlogDelete", error, "Blog yazısı silinirken bir sunucu hatası oluştu.");
   }
 }

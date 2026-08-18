@@ -4,6 +4,7 @@ import { getAdminDb } from '@/lib/firebase/admin';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 import { validateContactInput } from '@/lib/validation/schemas';
+import { createSecureServerErrorResponse } from '@/lib/security/errorResponse';
 
 export async function POST(request: Request) {
   try {
@@ -101,15 +102,8 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json(
-      { error: errorObj?.message || 'Mesaj gönderilirken bir hata oluştu.' },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse('ContactSMTP', errorObj, 'Mesaj gönderilirken bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.');
   } catch (error: any) {
-    console.error('Email sending error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Mesaj gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.' },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse('ContactHandler', error, 'Mesaj gönderilirken bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.');
   }
 }
