@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
+import { validateSeoAuditInput } from '@/lib/validation/schemas';
 
 const MAX_RESPONSE_SIZE = 2 * 1024 * 1024; // 2 MB Limit
 const MAX_REDIRECTS = 2;
@@ -172,15 +173,17 @@ export async function POST(request: Request) {
       return createRateLimitResponse(ipCheck);
     }
 
-    const body = await request.json().catch(() => ({}));
-    let { url } = body;
+    const rawBody = await request.json().catch(() => ({}));
+    const validation = validateSeoAuditInput(rawBody);
 
-    if (!url || typeof url !== 'string') {
+    if (!validation.success || !validation.data) {
       return NextResponse.json(
-        { error: 'Lütfen geçerli bir web sitesi adresi girin.' },
+        { error: validation.error || 'Lütfen geçerli bir web sitesi adresi girin.' },
         { status: 400 }
       );
     }
+
+    let { url } = validation.data;
 
     url = url.trim();
     if (!url.startsWith('http://') && !url.startsWith('https://')) {

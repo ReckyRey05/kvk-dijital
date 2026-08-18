@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { getAdminDb } from '@/lib/firebase/admin';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
+import { validateContactInput } from '@/lib/validation/schemas';
 
 export async function POST(request: Request) {
   try {
@@ -13,18 +14,20 @@ export async function POST(request: Request) {
       return createRateLimitResponse(ipCheck);
     }
 
-    const { name, email, phone, service, subject, message } = await request.json();
+    const rawBody = await request.json().catch(() => ({}));
+    const validation = validateContactInput(rawBody);
 
-    if (!name || !email || !message) {
+    if (!validation.success || !validation.data) {
       return NextResponse.json(
-        { error: 'İsim, e-posta ve mesaj alanları zorunludur.' },
+        { error: validation.error || 'Gönderilen form verisi geçersiz.' },
         { status: 400 }
       );
     }
 
+    const { name, email, phone, service, subject, message } = validation.data;
+
     // 2. Email-based Rate Limit Check (3 requests / 15 minutes)
-    const normalizedEmail = email.trim().toLowerCase();
-    const emailCheck = checkRateLimit(`contact:email:${normalizedEmail}`, RATE_LIMITS.contact.email);
+    const emailCheck = checkRateLimit(`contact:email:${email}`, RATE_LIMITS.contact.email);
     if (!emailCheck.allowed) {
       return createRateLimitResponse(emailCheck);
     }

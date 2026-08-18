@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { verifyAdminServerRequest } from '@/lib/auth/serverAuth';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
+import { validateAiGenerateInput } from '@/lib/validation/schemas';
 
 export async function POST(req: Request) {
   try {
@@ -27,11 +28,17 @@ export async function POST(req: Request) {
       return createRateLimitResponse(accountCheck);
     }
 
-    const { topic } = await req.json();
+    const rawBody = await req.json().catch(() => ({}));
+    const validation = validateAiGenerateInput(rawBody);
 
-    if (!topic) {
-      return NextResponse.json({ error: 'Konu belirtilmedi.' }, { status: 400 });
+    if (!validation.success || !validation.data) {
+      return NextResponse.json(
+        { error: validation.error || 'Makale konusu 3 ile 1000 karakter arasında olmalıdır.' },
+        { status: 400 }
+      );
     }
+
+    const { topic } = validation.data;
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
