@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Mesaj başarıyla gönderildi.' });
     } catch (e: any) {
       errorObj = e;
-      console.log('zoho.com failed, trying zoho.eu...', e.message);
+      console.warn("SMTP zoho.com primary server connection failed, attempting fallback to zoho.eu");
       
       // If zoho.com fails, try zoho.eu
       try {
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, message: 'Mesaj başarıyla gönderildi.' });
       } catch (e2: any) {
         errorObj = e2;
-        console.log('zoho.eu also failed.', e2.message);
+        console.warn("SMTP zoho.eu secondary server connection also failed.");
       }
     }
 

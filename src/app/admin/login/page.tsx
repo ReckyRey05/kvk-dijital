@@ -24,7 +24,7 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/admin");
     } catch (err: any) {
-      console.error("Firebase Login Error:", err);
+      console.error("Login attempt failed.");
       let msg = "Girdiğiniz e-posta adresi veya şifre hatalı.";
       if (err.code === "auth/too-many-requests") {
         msg = "Çok fazla hatalı deneme yapıldı. Lütfen 1-2 dakika bekleyip tekrar deneyin.";
