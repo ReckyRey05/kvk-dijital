@@ -1,12 +1,40 @@
-/**
- * Pure TypeScript shared validation module for server-side API request hardening.
- * Zero external npm dependencies.
- */
+import sanitizeHtml from "sanitize-html";
 
 export interface ValidationResult<T> {
   success: boolean;
   data?: T;
   error?: string;
+}
+
+/**
+ * Sanitizes rich text HTML content for blog posts while preserving editor formatting.
+ * Strips dangerous tags (<script>, <iframe>, <object>, <embed>, <svg>), event handlers (onerror, etc.), and unsafe URL schemes (javascript:, data:).
+ */
+export function sanitizeHtmlContent(dirtyHtml: string): string {
+  if (!dirtyHtml || typeof dirtyHtml !== "string") return "";
+
+  return sanitizeHtml(dirtyHtml, {
+    allowedTags: [
+      "h1", "h2", "h3", "h4", "h5", "h6",
+      "p", "br", "span", "div",
+      "strong", "b", "em", "i", "u", "s", "strike", "code", "pre",
+      "blockquote", "ul", "ol", "li",
+      "a", "img",
+      "table", "thead", "tbody", "tfoot", "tr", "th", "td"
+    ],
+    allowedAttributes: {
+      a: ["href", "name", "target", "rel", "title"],
+      img: ["src", "alt", "title", "width", "height", "loading", "class"],
+      "*": ["class"]
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+    allowedSchemesByTag: {
+      a: ["http", "https", "mailto"],
+      img: ["http", "https"]
+    },
+    allowProtocolRelative: false,
+    disallowedTagsMode: "discard"
+  });
 }
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -172,8 +200,10 @@ export function validateBlogPostInput(raw: any): ValidationResult<BlogPostInput>
     return { success: false, error: 'Makale slug adresi 2 ile 200 karakter arasında olmalıdır.' };
   }
 
-  if (!content || content.length < 10 || content.length > 100000) {
-    return { success: false, error: 'Makale içeriği geçersiz veya çok uzun.' };
+  const sanitizedContent = sanitizeHtmlContent(content);
+
+  if (!sanitizedContent || sanitizedContent.length < 5) {
+    return { success: false, error: 'Makale içeriği geçersiz veya zararlı etiketler içeriyor.' };
   }
 
   if (coverImageRaw) {
@@ -189,7 +219,7 @@ export function validateBlogPostInput(raw: any): ValidationResult<BlogPostInput>
       title,
       slug,
       excerpt: excerpt.slice(0, 500),
-      content,
+      content: sanitizedContent,
       coverImage: coverImageRaw,
       isPublished
     }

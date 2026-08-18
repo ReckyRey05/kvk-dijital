@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import { Calendar, ArrowLeft, Clock, ArrowRight, User, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/blogPosts";
+import { sanitizeHtmlContent } from "@/lib/validation/schemas";
 import "./blog-article.css";
 
 export const revalidate = 3600; // 1 hour ISR
@@ -196,14 +197,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       {/* Article Schema */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema).replace(/</g, '\\u003c') }}
       />
       
       {/* FAQ Schema if present */}
       {faqSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, '\\u003c') }}
         />
       )}
 
@@ -273,7 +274,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div 
             className="blog-article-content prose-invert max-w-none space-y-6"
             dangerouslySetInnerHTML={{ 
-              __html: formatEditorialContent(post.content || "") 
+              __html: sanitizeHtmlContent(formatEditorialContent(post.content || "")) 
             }}
           />
 
