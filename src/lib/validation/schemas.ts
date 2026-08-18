@@ -101,3 +101,44 @@ export function validateAiGenerateInput(raw: any): ValidationResult<AiGenerateIn
     data: { topic }
   };
 }
+
+/**
+ * Shared validator for media/image URLs (blog coverImage, project image, service imageUrl)
+ */
+export function validateMediaUrl(urlStr: string): ValidationResult<string> {
+  if (!urlStr || typeof urlStr !== 'string') {
+    return { success: true, data: '' }; // Optional URL field
+  }
+
+  const trimmed = urlStr.trim();
+  if (!trimmed) {
+    return { success: true, data: '' };
+  }
+
+  if (trimmed.length > 2048) {
+    return { success: false, error: 'Görsel URL adresi 2048 karakterden uzun olamaz.' };
+  }
+
+  // Reject control characters and CRLF
+  if (/[\x00-\x1F\x7F-\x9F\r\n]/.test(trimmed)) {
+    return { success: false, error: 'Görsel URL adresi geçersiz karakterler içeriyor.' };
+  }
+
+  try {
+    const parsed = new URL(trimmed);
+
+    // Reject non-web protocols (javascript:, data:, file:, vbscript:, blob:, etc.)
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return { success: false, error: 'Görsel URL adresi yalnızca http:// veya https:// protokolünü içerebilir.' };
+    }
+
+    // Reject credentials (userinfo) in URL
+    if (parsed.username || parsed.password) {
+      return { success: false, error: 'Görsel URL adresi kullanıcı adı veya şifre içeremez.' };
+    }
+
+    return { success: true, data: parsed.toString() };
+  } catch {
+    return { success: false, error: 'Girdiğiniz görsel URL adresi biçimi geçersiz.' };
+  }
+}
