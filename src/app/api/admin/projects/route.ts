@@ -3,6 +3,8 @@ import { verifyAdminServerRequest } from "@/lib/auth/serverAuth";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { validateProjectInput } from "@/lib/validation/schemas";
 import { FieldValue } from "firebase-admin/firestore";
+import { RATE_LIMITS } from "@/config/rateLimit";
+import { getClientIp, checkRateLimit, createRateLimitResponse, parseJsonWithByteLimit } from "@/lib/security/rateLimit";
 
 export async function POST(req: Request) {
   try {
@@ -14,9 +16,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const rawBody = await req.json().catch(() => ({}));
-    const validation = validateProjectInput(rawBody);
+    // Rate Limit Checks (30 requests / 15 min)
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`adminApi:ip:${clientIp}`, RATE_LIMITS.adminApi.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
 
+    const adminEmail = (adminUser.email || adminUser.uid).toLowerCase();
+    const accountCheck = checkRateLimit(`adminApi:account:${adminEmail}`, RATE_LIMITS.adminApi.account);
+    if (!accountCheck.allowed) return createRateLimitResponse(accountCheck);
+
+    // Stream Raw JSON Body with 2 MB Byte Limit
+    const parseResult = await parseJsonWithByteLimit(req, 2 * 1024 * 1024);
+    if (!parseResult.ok) return parseResult.errorResponse;
+
+    const validation = validateProjectInput(parseResult.data);
     if (!validation.success || !validation.data) {
       return NextResponse.json(
         { error: validation.error || "Gönderilen proje verisi geçersiz." },
@@ -50,8 +63,20 @@ export async function PUT(req: Request) {
       );
     }
 
-    const rawBody = await req.json().catch(() => ({}));
-    const { id, ...projectData } = rawBody;
+    // Rate Limit Checks
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`adminApi:ip:${clientIp}`, RATE_LIMITS.adminApi.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
+
+    const adminEmail = (adminUser.email || adminUser.uid).toLowerCase();
+    const accountCheck = checkRateLimit(`adminApi:account:${adminEmail}`, RATE_LIMITS.adminApi.account);
+    if (!accountCheck.allowed) return createRateLimitResponse(accountCheck);
+
+    // Stream Raw JSON Body with 2 MB Byte Limit
+    const parseResult = await parseJsonWithByteLimit(req, 2 * 1024 * 1024);
+    if (!parseResult.ok) return parseResult.errorResponse;
+
+    const { id, ...projectData } = parseResult.data || {};
 
     if (!id || typeof id !== "string") {
       return NextResponse.json({ error: "Geçersiz doküman ID." }, { status: 400 });
@@ -90,6 +115,15 @@ export async function DELETE(req: Request) {
         { status: 401 }
       );
     }
+
+    // Rate Limit Checks
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`adminApi:ip:${clientIp}`, RATE_LIMITS.adminApi.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
+
+    const adminEmail = (adminUser.email || adminUser.uid).toLowerCase();
+    const accountCheck = checkRateLimit(`adminApi:account:${adminEmail}`, RATE_LIMITS.adminApi.account);
+    if (!accountCheck.allowed) return createRateLimitResponse(accountCheck);
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");

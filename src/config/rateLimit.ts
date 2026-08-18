@@ -30,4 +30,14 @@ export const RATE_LIMITS = {
       windowMs: 60 * 60 * 1000, // 1 Hour
     },
   },
+  adminApi: {
+    ip: {
+      max: 30,
+      windowMs: 15 * 60 * 1000, // 30 Requests / 15 Minutes
+    },
+    account: {
+      max: 30,
+      windowMs: 15 * 60 * 1000, // 30 Requests / 15 Minutes
+    },
+  },
 } as const;

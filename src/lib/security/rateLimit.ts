@@ -111,3 +111,70 @@ export function createRateLimitResponse(result: RateLimitCheckResult): NextRespo
     }
   );
 }
+
+/**
+ * Safely reads and parses request JSON body with a strict ReadableStream byte limit BEFORE full memory allocation.
+ * Returns { ok: true, data: any } or { ok: false, errorResponse: NextResponse (HTTP 413) }.
+ */
+export async function parseJsonWithByteLimit(
+  req: Request,
+  maxBytes: number = 2 * 1024 * 1024 // 2 MB Default
+): Promise<{ ok: true; data: any } | { ok: false; errorResponse: NextResponse }> {
+  try {
+    const contentLength = req.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > maxBytes) {
+      return {
+        ok: false,
+        errorResponse: NextResponse.json(
+          { error: "PAYLOAD_TOO_LARGE", message: "İstek boyutu 2MB sınırını aşıyor." },
+          { status: 413 }
+        ),
+      };
+    }
+
+    if (!req.body) {
+      return { ok: true, data: {} };
+    }
+
+    const reader = req.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let totalBytes = 0;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      if (value) {
+        totalBytes += value.length;
+        if (totalBytes > maxBytes) {
+          reader.cancel();
+          return {
+            ok: false,
+            errorResponse: NextResponse.json(
+              { error: "PAYLOAD_TOO_LARGE", message: "İstek boyutu 2MB sınırını aşıyor." },
+              { status: 413 }
+            ),
+          };
+        }
+        chunks.push(value);
+      }
+    }
+
+    const concatenated = new Uint8Array(totalBytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      concatenated.set(chunk, offset);
+      offset += chunk.length;
+    }
+
+    const text = new TextDecoder("utf-8").decode(concatenated);
+    if (!text.trim()) {
+      return { ok: true, data: {} };
+    }
+
+    const data = JSON.parse(text);
+    return { ok: true, data };
+  } catch {
+    return { ok: true, data: {} };
+  }
+}
