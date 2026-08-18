@@ -142,3 +142,169 @@ export function validateMediaUrl(urlStr: string): ValidationResult<string> {
     return { success: false, error: 'Girdiğiniz görsel URL adresi biçimi geçersiz.' };
   }
 }
+
+export interface BlogPostInput {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  isPublished: boolean;
+}
+
+export function validateBlogPostInput(raw: any): ValidationResult<BlogPostInput> {
+  if (!raw || typeof raw !== 'object') {
+    return { success: false, error: 'Gönderilen istek verisi geçersiz.' };
+  }
+
+  const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+  const slug = typeof raw.slug === 'string' ? raw.slug.trim() : '';
+  const excerpt = typeof raw.excerpt === 'string' ? raw.excerpt.trim() : '';
+  const content = typeof raw.content === 'string' ? raw.content.trim() : '';
+  const coverImageRaw = typeof raw.coverImage === 'string' ? raw.coverImage.trim() : '';
+  const isPublished = Boolean(raw.isPublished);
+
+  if (!title || title.length < 2 || title.length > 200) {
+    return { success: false, error: 'Makale başlığı 2 ile 200 karakter arasında olmalıdır.' };
+  }
+
+  if (!slug || slug.length < 2 || slug.length > 200) {
+    return { success: false, error: 'Makale slug adresi 2 ile 200 karakter arasında olmalıdır.' };
+  }
+
+  if (!content || content.length < 10 || content.length > 100000) {
+    return { success: false, error: 'Makale içeriği geçersiz veya çok uzun.' };
+  }
+
+  if (coverImageRaw) {
+    const imgValidation = validateMediaUrl(coverImageRaw);
+    if (!imgValidation.success) {
+      return { success: false, error: `Kapak Görseli: ${imgValidation.error}` };
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      title,
+      slug,
+      excerpt: excerpt.slice(0, 500),
+      content,
+      coverImage: coverImageRaw,
+      isPublished
+    }
+  };
+}
+
+export interface ProjectInput {
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  demoUrl?: string;
+  featured?: boolean;
+}
+
+export function validateProjectInput(raw: any): ValidationResult<ProjectInput> {
+  if (!raw || typeof raw !== 'object') {
+    return { success: false, error: 'Gönderilen istek verisi geçersiz.' };
+  }
+
+  const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+  const category = typeof raw.category === 'string' ? raw.category.trim() : '';
+  const description = typeof raw.description === 'string' ? raw.description.trim() : '';
+  const imageRaw = typeof raw.image === 'string' ? raw.image.trim() : '';
+  const demoUrlRaw = typeof raw.demoUrl === 'string' ? raw.demoUrl.trim() : '';
+  const featured = Boolean(raw.featured);
+  const technologies = Array.isArray(raw.technologies)
+    ? raw.technologies.filter((t: any) => typeof t === 'string').map((t: string) => t.trim().slice(0, 50)).slice(0, 20)
+    : [];
+
+  if (!title || title.length < 2 || title.length > 150) {
+    return { success: false, error: 'Proje başlığı 2 ile 150 karakter arasında olmalıdır.' };
+  }
+
+  if (!category || category.length < 2 || category.length > 100) {
+    return { success: false, error: 'Proje kategorisi geçersiz.' };
+  }
+
+  if (!description || description.length < 5 || description.length > 5000) {
+    return { success: false, error: 'Proje açıklaması 5 ile 5000 karakter arasında olmalıdır.' };
+  }
+
+  if (imageRaw) {
+    const imgValidation = validateMediaUrl(imageRaw);
+    if (!imgValidation.success) {
+      return { success: false, error: `Proje Görseli: ${imgValidation.error}` };
+    }
+  }
+
+  if (demoUrlRaw) {
+    const demoValidation = validateMediaUrl(demoUrlRaw);
+    if (!demoValidation.success) {
+      return { success: false, error: `Demo URL: ${demoValidation.error}` };
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      title,
+      category,
+      description,
+      image: imageRaw,
+      technologies,
+      demoUrl: demoUrlRaw,
+      featured
+    }
+  };
+}
+
+export interface ServiceInput {
+  title: string;
+  description: string;
+  icon: string;
+  imageUrl: string;
+  features: string[];
+}
+
+export function validateServiceInput(raw: any): ValidationResult<ServiceInput> {
+  if (!raw || typeof raw !== 'object') {
+    return { success: false, error: 'Gönderilen istek verisi geçersiz.' };
+  }
+
+  const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+  const description = typeof raw.description === 'string' ? raw.description.trim() : '';
+  const icon = typeof raw.icon === 'string' ? raw.icon.trim().slice(0, 50) : '';
+  const imageUrlRaw = typeof raw.imageUrl === 'string' ? raw.imageUrl.trim() : '';
+  const features = Array.isArray(raw.features)
+    ? raw.features.filter((f: any) => typeof f === 'string').map((f: string) => f.trim().slice(0, 200)).slice(0, 20)
+    : [];
+
+  if (!title || title.length < 2 || title.length > 150) {
+    return { success: false, error: 'Hizmet başlığı 2 ile 150 karakter arasında olmalıdır.' };
+  }
+
+  if (!description || description.length < 5 || description.length > 2000) {
+    return { success: false, error: 'Hizmet açıklaması 5 ile 2000 karakter arasında olmalıdır.' };
+  }
+
+  if (imageUrlRaw) {
+    const imgValidation = validateMediaUrl(imageUrlRaw);
+    if (!imgValidation.success) {
+      return { success: false, error: `Hizmet Görseli: ${imgValidation.error}` };
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      title,
+      description,
+      icon,
+      imageUrl: imageUrlRaw,
+      features
+    }
+  };
+}

@@ -162,15 +162,25 @@ export default function NewBlogPostPage() {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, "blog_posts"), {
-        ...formData,
-        isPublished,
-        createdAt: serverTimestamp(),
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch("/api/admin/blog", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ ...formData, isPublished })
       });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Kaydedilemedi.");
+      }
+
       router.push("/admin/blog");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding document: ", error);
-      alert("Bir hata oluştu.");
+      alert(error.message || "Bir hata oluştu.");
     } finally {
       setLoading(false);
     }

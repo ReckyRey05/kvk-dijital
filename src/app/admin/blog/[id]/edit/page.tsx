@@ -3,6 +3,7 @@
 import { useState, useEffect, use, useRef, useCallback } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firestore";
+import { auth } from "@/lib/firebase/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Layout, Type, Image as ImageIcon, Sparkles } from "lucide-react";
@@ -175,14 +176,25 @@ export default function EditBlogPostPage({ params }: { params: Promise<{ id: str
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, "blog_posts", id), {
-        ...formData,
-        isPublished,
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch("/api/admin/blog", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ id, ...formData, isPublished })
       });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Güncellenemedi.");
+      }
+
       router.push("/admin/blog");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating document: ", error);
-      alert("Bir hata oluştu.");
+      alert(error.message || "Bir hata oluştu.");
     } finally {
       setLoading(false);
     }
