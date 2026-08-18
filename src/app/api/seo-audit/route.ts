@@ -2,6 +2,167 @@ import { NextResponse } from 'next/server';
 import { RATE_LIMITS } from '@/config/rateLimit';
 import { getClientIp, checkRateLimit, createRateLimitResponse } from '@/lib/security/rateLimit';
 
+const MAX_RESPONSE_SIZE = 2 * 1024 * 1024; // 2 MB Limit
+const MAX_REDIRECTS = 2;
+
+/**
+ * Validates whether a target URL is safe for server-side fetching (Prevents SSRF)
+ */
+function isSafeUrl(targetUrlStr: string): boolean {
+  try {
+    const parsed = new URL(targetUrlStr);
+
+    // Protocol must strictly be http: or https:
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return false;
+    }
+
+    const hostname = parsed.hostname.toLowerCase();
+
+    // Check forbidden hostnames
+    if (
+      hostname === 'localhost' ||
+      hostname.endsWith('.localhost') ||
+      hostname === '127.0.0.1' ||
+      hostname === '0.0.0.0' ||
+      hostname === '::1' ||
+      hostname.endsWith('.nip.io') ||
+      hostname.endsWith('.internal') ||
+      hostname.endsWith('.local')
+    ) {
+      return false;
+    }
+
+    // Check IPv4 private & link-local ranges
+    const ipv4Match = hostname.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+    if (ipv4Match) {
+      const p1 = parseInt(ipv4Match[1], 10);
+      const p2 = parseInt(ipv4Match[2], 10);
+
+      if (
+        p1 === 127 || // Loopback
+        p1 === 10 || // Private 10.0.0.0/8
+        (p1 === 172 && p2 >= 16 && p2 <= 31) || // Private 172.16.0.0/12
+        (p1 === 192 && p2 === 168) || // Private 192.168.0.0/16
+        (p1 === 169 && p2 === 254) || // Link-local / Cloud Metadata 169.254.0.0/16
+        p1 === 0 // 0.0.0.0
+      ) {
+        return false;
+      }
+    }
+
+    // Check IPv6 private / loopback / link-local
+    if (
+      hostname.startsWith('[') ||
+      hostname.includes(':') ||
+      hostname.startsWith('fc') ||
+      hostname.startsWith('fd') ||
+      hostname.startsWith('fe80')
+    ) {
+      if (
+        hostname.includes('::1') ||
+        hostname.includes('127.0.0.1') ||
+        hostname.startsWith('fc00') ||
+        hostname.startsWith('fe80')
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Safely fetches target HTML with manual redirect validation and 2MB stream limit
+ */
+async function fetchSafeHtml(targetUrl: string, timeoutMs: number): Promise<{ html: string; finalUrl: string }> {
+  let currentUrl = targetUrl;
+  let redirectCount = 0;
+
+  while (redirectCount <= MAX_REDIRECTS) {
+    if (!isSafeUrl(currentUrl)) {
+      throw new Error('SSRF_BLOCKED');
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+      const res = await fetch(currentUrl, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Compatible; KvK-SEO-Bot/1.0; +https://kvkdijitalcozumler.com)' },
+        signal: controller.signal,
+        redirect: 'manual', // Prevent automatic unvalidated redirects
+      });
+
+      clearTimeout(timeoutId);
+
+      // Handle HTTP Redirects (301, 302, 307, 308)
+      if ([301, 302, 303, 307, 308].includes(res.status)) {
+        const location = res.headers.get('location');
+        if (!location) {
+          throw new Error('INVALID_REDIRECT');
+        }
+
+        redirectCount++;
+        if (redirectCount > MAX_REDIRECTS) {
+          throw new Error('TOO_MANY_REDIRECTS');
+        }
+
+        // Resolve relative redirect URLs against current URL
+        currentUrl = new URL(location, currentUrl).toString();
+        continue; // Re-validate new URL in next loop iteration
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP_${res.status}`);
+      }
+
+      // Stream response body to strictly enforce 2 MB limit before loading into memory
+      if (!res.body) {
+        throw new Error('NO_BODY');
+      }
+
+      const reader = res.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let totalBytes = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        if (value) {
+          totalBytes += value.length;
+          if (totalBytes > MAX_RESPONSE_SIZE) {
+            reader.cancel();
+            throw new Error('RESPONSE_TOO_LARGE');
+          }
+          chunks.push(value);
+        }
+      }
+
+      // Concatenate chunks safely into text
+      const concatenated = new Uint8Array(totalBytes);
+      let offset = 0;
+      for (const chunk of chunks) {
+        concatenated.set(chunk, offset);
+        offset += chunk.length;
+      }
+
+      const decoder = new TextDecoder('utf-8');
+      const html = decoder.decode(concatenated);
+      return { html, finalUrl: currentUrl };
+    } catch (err) {
+      clearTimeout(timeoutId);
+      throw err;
+    }
+  }
+
+  throw new Error('TOO_MANY_REDIRECTS');
+}
+
 export async function POST(request: Request) {
   try {
     // IP-based Rate Limit Check (5 requests / 10 minutes)
@@ -26,51 +187,60 @@ export async function POST(request: Request) {
       url = `https://${url}`;
     }
 
-    let parsedUrl: URL;
-    try {
-      parsedUrl = new URL(url);
-    } catch {
+    if (!isSafeUrl(url)) {
       return NextResponse.json(
-        { error: 'Girdiğiniz web adresi formatı geçersiz.' },
+        { error: 'Güvenlik nedeniyle belirtilen adres veya IP aralığı taranamaz.' },
         { status: 400 }
       );
     }
 
-    // Attempt 1: Fetch target site directly to measure real TTFB, HTTPS, SSL, and HTML Metadata
     const startTime = Date.now();
-    let siteRes: Response | null = null;
     let htmlContent = '';
-    let isHttps = parsedUrl.protocol === 'https:';
+    let isHttps = url.startsWith('https:');
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
-      siteRes = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Compatible; KvK-SEO-Bot/1.0; +https://kvkdijitalcozumler.com)' },
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      htmlContent = await siteRes.text();
-    } catch {
-      // If https fails, attempt http
+      // Attempt 1: Fetch HTTPS with 8s timeout & streaming 2MB limit
+      const result = await fetchSafeHtml(url, 8000);
+      htmlContent = result.html;
+      isHttps = result.finalUrl.startsWith('https:');
+    } catch (fetchErr: any) {
+      if (fetchErr?.message === 'SSRF_BLOCKED' || fetchErr?.message === 'TOO_MANY_REDIRECTS') {
+        return NextResponse.json(
+          { error: 'Güvenlik nedeniyle belirtilen adres veya yönlendirme hedefi taranamaz.' },
+          { status: 400 }
+        );
+      }
+      if (fetchErr?.message === 'RESPONSE_TOO_LARGE') {
+        return NextResponse.json(
+          { error: 'Hedef web sitesinin yanıt boyutu 2MB sınırını aştığı için taranamadı.' },
+          { status: 413 }
+        );
+      }
+
+      // Fallback: If HTTPS fails, attempt HTTP with 5s timeout & streaming 2MB limit
       if (isHttps) {
         try {
           const fallbackUrl = url.replace('https://', 'http://');
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-          siteRes = await fetch(fallbackUrl, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Compatible; KvK-SEO-Bot/1.0)' },
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-          htmlContent = await siteRes.text();
+          const result = await fetchSafeHtml(fallbackUrl, 5000);
+          htmlContent = result.html;
           isHttps = false;
-        } catch {
+        } catch (fallbackErr: any) {
+          if (fallbackErr?.message === 'RESPONSE_TOO_LARGE') {
+            return NextResponse.json(
+              { error: 'Hedef web sitesinin yanıt boyutu 2MB sınırını aştığı için taranamadı.' },
+              { status: 413 }
+            );
+          }
           return NextResponse.json(
             { error: 'Hedef web sitesine erişilemedi. Adresin yayında ve açık olduğunu kontrol edin.' },
             { status: 502 }
           );
         }
+      } else {
+        return NextResponse.json(
+          { error: 'Hedef web sitesine erişilemedi. Adresin yayında ve açık olduğunu kontrol edin.' },
+          { status: 502 }
+        );
       }
     }
 
