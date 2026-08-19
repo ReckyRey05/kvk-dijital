@@ -1,0 +1,160 @@
+"use client";
+
+import { Table, Order } from "@/types/restaurant";
+import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, CheckCircle2, Clock } from "lucide-react";
+import { formatEscPosReceipt } from "@/lib/restaurant/posBridge";
+import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
+
+interface BillManagerProps {
+  table: Table;
+  tableOrders: Order[];
+  onClose: () => void;
+  onCloseBill: (tableId: string) => void;
+}
+
+export default function BillManager({
+  table,
+  tableOrders,
+  onClose,
+  onCloseBill,
+}: BillManagerProps) {
+  const allItems = tableOrders.flatMap((o) => o.items);
+  const totalAmount = table.activeBillTotal;
+
+  const handlePrintReceipt = () => {
+    if (tableOrders.length === 0) return;
+    const receiptText = formatEscPosReceipt(tableOrders[0], DEMO_RESTAURANT.name);
+    // In real environment, sends to local print daemon or window.print()
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(
+        `<pre style="font-family: monospace; font-size: 14px; padding: 20px;">${receiptText.replace(/\x1B\x61\x01|\x1B\x21\x30|\x1B\x21\x00|\x1B\x61\x00|\x1B\x61\x02|\x1B\x21\x20|\x1D\x56\x41\x10/g, "")}</pre>`
+      );
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
+  const handleCompleteCheckout = (paymentMethod: "CASH" | "CARD") => {
+    onCloseBill(table.id);
+    onClose();
+  };
+
+  return (
+    <div className="w-full lg:w-96 bg-[#0a0f0f] border-l border-white/10 p-6 flex flex-col justify-between h-full">
+      {/* Header */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-extrabold text-white">{table.tableNumber}</h2>
+              {table.section && (
+                <span className="text-xs px-2 py-0.5 rounded-md bg-white/5 text-foreground/60">
+                  {table.section}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-foreground/50 mt-0.5">Masa Adisyon Yönetimi</p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Bill Items List */}
+        <div className="space-y-2 max-h-[calc(100vh-420px)] overflow-y-auto pr-1">
+          {allItems.length === 0 ? (
+            <div className="py-16 text-center text-foreground/40 space-y-2">
+              <Receipt className="w-8 h-8 mx-auto opacity-40" />
+              <p className="text-xs font-medium">Bu masada henüz aktif sipariş yok.</p>
+            </div>
+          ) : (
+            allItems.map((item, idx) => (
+              <div
+                key={`${item.id}-${idx}`}
+                className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-3 text-xs"
+              >
+                <div>
+                  <span className="font-bold text-white">
+                    {item.quantity}x {item.name}
+                  </span>
+                  {item.selectedOptions && item.selectedOptions.length > 0 && (
+                    <p className="text-[10px] text-foreground/50 mt-0.5">
+                      {item.selectedOptions
+                        .flatMap((g) => g.selectedItems.map((s) => s.name))
+                        .join(", ")}
+                    </p>
+                  )}
+                </div>
+
+                <span className="font-bold text-white shrink-0">
+                  {(item.finalPrice * item.quantity).toLocaleString("tr-TR")} TL
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Footer / Settlement Actions */}
+      <div className="space-y-4 pt-4 border-t border-white/10">
+        {/* Total & Print Row */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrintReceipt}
+              disabled={allItems.length === 0}
+              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Fiş Yazdır</span>
+            </button>
+
+            <div className="text-right">
+              <span className="text-[10px] text-foreground/50 block uppercase tracking-wider">
+                Adisyon Toplamı
+              </span>
+              <span className="text-2xl font-black text-accent">
+                {totalAmount.toLocaleString("tr-TR")}{" "}
+                <span className="text-sm text-foreground/60 font-bold">TL</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Instant Session Invalidation Warning */}
+        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 flex items-start gap-2">
+          <ShieldX className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+          <span>
+            Hesap kapatıldığında masaya ait <strong>tüm QR oturumları anında iptal edilir</strong> ve masa sıfırlanır.
+          </span>
+        </div>
+
+        {/* Settlement Payment Buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => handleCompleteCheckout("CASH")}
+            disabled={totalAmount === 0}
+            className="py-3.5 px-3 rounded-xl bg-green-500 hover:bg-green-400 text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 shadow-lg shadow-green-500/20 cursor-pointer"
+          >
+            <Banknote className="w-4 h-4" />
+            <span>Nakit Kapat</span>
+          </button>
+
+          <button
+            onClick={() => handleCompleteCheckout("CARD")}
+            disabled={totalAmount === 0}
+            className="py-3.5 px-3 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 shadow-lg shadow-accent/20 cursor-pointer"
+          >
+            <CreditCard className="w-4 h-4" />
+            <span>POS / Kart Kapat</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
