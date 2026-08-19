@@ -21,20 +21,20 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
   return (
     <div
       onClick={() => isAvailable && onSelectProduct(item)}
-      className={`group relative rounded-2xl bg-card border border-card-border p-3.5 flex gap-3.5 transition-all duration-300 ${
+      className={`group relative rounded-2xl bg-[#0c1212] border border-white/10 p-3.5 flex gap-4 transition-all duration-300 ${
         isAvailable
-          ? "hover:border-accent/40 hover:bg-white/[0.03] cursor-pointer"
-          : "opacity-60 cursor-not-allowed bg-black/40"
+          ? "hover:border-accent/50 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-accent/5 cursor-pointer"
+          : "opacity-60 cursor-not-allowed bg-black/50 border-white/5"
       }`}
     >
-      {/* Product Image & Badges */}
-      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-white/5 shrink-0">
+      {/* High Quality Food Photo */}
+      <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-white/5 shrink-0 shadow-md">
         {item.image ? (
           <img
             src={item.image}
             alt={item.name}
-            className={`w-full h-full object-cover transition-transform duration-500 ${
-              isAvailable ? "group-hover:scale-105" : "grayscale"
+            className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+              isAvailable ? "group-hover:scale-110" : "grayscale"
             }`}
             loading="lazy"
           />
@@ -44,18 +44,29 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
           </div>
         )}
 
+        {/* Soft Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
         {/* Stock Status ("Tükendi" overlay) */}
         {!isAvailable && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center text-center p-1">
-            <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider">
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-xs flex items-center justify-center text-center p-1">
+            <span className="text-[11px] font-black text-red-400 uppercase tracking-widest bg-red-950/80 px-2.5 py-1 rounded-md border border-red-500/30">
               Tükendi
             </span>
+          </div>
+        )}
+
+        {/* Prep Time Tag directly on Image */}
+        {item.preparationTimeMinutes && isAvailable && (
+          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-md text-[10px] text-white/90 font-medium flex items-center gap-1">
+            <Clock className="w-2.5 h-2.5 text-accent" />
+            <span>{item.preparationTimeMinutes} dk</span>
           </div>
         )}
       </div>
 
       {/* Product Info & Price */}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
+      <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
         <div>
           {/* Badges */}
           {item.badges && item.badges.length > 0 && isAvailable && (
@@ -66,7 +77,7 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
                 return (
                   <span
                     key={b}
-                    className={`text-[9px] font-bold px-2 py-0.5 rounded-md border ${badgeInfo.bg} ${badgeInfo.text}`}
+                    className={`text-[9px] font-extrabold px-2 py-0.5 rounded-md border ${badgeInfo.bg} ${badgeInfo.text} shadow-xs`}
                   >
                     {badgeInfo.label}
                   </span>
@@ -75,29 +86,29 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
             </div>
           )}
 
-          <h3 className="font-bold text-white text-sm leading-snug line-clamp-1 group-hover:text-accent transition-colors">
+          <h3 className="font-extrabold text-white text-sm leading-snug line-clamp-1 group-hover:text-accent transition-colors">
             {item.name}
           </h3>
 
-          <p className="text-foreground/60 text-xs line-clamp-2 mt-1 leading-relaxed">
+          <p className="text-foreground/60 text-[11px] line-clamp-2 mt-1 leading-relaxed">
             {item.description}
           </p>
+
+          {/* Calories / Allergens preview if exists */}
+          {item.calories && (
+            <span className="text-[10px] text-foreground/40 font-medium mt-1 block">
+              {item.calories} kcal
+            </span>
+          )}
         </div>
 
-        {/* Bottom Row: Price & Prep Time + Add Button */}
-        <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/5">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-extrabold text-white">
+        {/* Bottom Row: Price + Add Button */}
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+          <div className="flex items-baseline gap-1">
+            <span className="text-base font-black text-white">
               {item.price.toLocaleString("tr-TR")}
             </span>
-            <span className="text-xs text-accent font-semibold">TL</span>
-
-            {item.preparationTimeMinutes && (
-              <span className="text-[10px] text-foreground/40 flex items-center gap-1 ml-2">
-                <Clock className="w-2.5 h-2.5" />
-                {item.preparationTimeMinutes} dk
-              </span>
-            )}
+            <span className="text-xs text-accent font-bold">TL</span>
           </div>
 
           {/* Plus Add Button */}
@@ -107,10 +118,10 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
                 e.stopPropagation();
                 onSelectProduct(item);
               }}
-              className="w-8 h-8 rounded-full bg-accent/20 group-hover:bg-accent text-accent group-hover:text-black border border-accent/40 flex items-center justify-center transition-all shadow-md cursor-pointer"
+              className="w-8 h-8 rounded-xl bg-accent text-black font-extrabold flex items-center justify-center transition-all shadow-md shadow-accent/20 group-hover:scale-105 active:scale-95 cursor-pointer"
               aria-label="Sepete Ekle"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 stroke-[3]" />
             </button>
           )}
         </div>

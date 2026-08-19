@@ -1,7 +1,22 @@
 "use client";
 
 import { Category } from "@/types/restaurant";
-import { Flame, Utensils, Pizza, Beef, Soup, GlassWater, Cake, LucideIcon } from "lucide-react";
+import {
+  Flame,
+  Utensils,
+  Pizza,
+  Beef,
+  Soup,
+  GlassWater,
+  Cake,
+  Fish,
+  Coffee,
+  Salad,
+  Wine,
+  Sparkles,
+  Sandwich,
+  LucideIcon,
+} from "lucide-react";
 
 interface CategoryNavProps {
   categories: Category[];
@@ -17,6 +32,12 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Soup,
   GlassWater,
   Cake,
+  Fish,
+  Coffee,
+  Salad,
+  Wine,
+  Sparkles,
+  Sandwich,
 };
 
 export default function CategoryNav({
