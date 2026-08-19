@@ -7,6 +7,8 @@ import { useRestaurantStore } from "@/lib/restaurant/store";
 import TableGrid from "@/components/restaurant/pos/TableGrid";
 import OrderApprovalModal from "@/components/restaurant/pos/OrderApprovalModal";
 import BillManager from "@/components/restaurant/pos/BillManager";
+import ZReportModal from "@/components/restaurant/admin/ZReportModal";
+import { generateZReport } from "@/lib/restaurant/analyticsData";
 import {
   Store,
   ChefHat,
@@ -43,12 +45,15 @@ export default function KasaPosPage({ params }: KasaPageProps) {
 
   const [selectedTableId, setSelectedTableId] = useState<string | null>("m-4");
   const [activeSection, setActiveSection] = useState<string>("ALL");
+  const [isZReportOpen, setIsZReportOpen] = useState(false);
 
   // Stats calculation
   const occupiedCount = tables.filter((t) => t.status !== "EMPTY" || t.activeBillTotal > 0).length;
   const pendingOrders = orders.filter((o) => o.status === "PENDING_CONFIRMATION");
   const activeCalls = waiterCalls.filter((c) => c.status === "ACTIVE");
   const totalLiveRevenue = tables.reduce((sum, t) => sum + (t.activeBillTotal || 0), 0);
+
+  const zReportData = generateZReport(orders, tables, DEMO_RESTAURANT.name);
 
   // Sections
   const sections = ["ALL", ...Array.from(new Set(tables.map((t) => t.section).filter(Boolean)))];
@@ -83,15 +88,23 @@ export default function KasaPosPage({ params }: KasaPageProps) {
           </div>
         </div>
 
-        {/* Action Links: KDS, Yönetim, QR Test */}
+        {/* Action Links: Z-Report, KDS, Yönetim, QR Test */}
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsZReportOpen(true)}
+            className="px-3.5 py-2 rounded-xl bg-green-500/15 hover:bg-green-500/25 border border-green-500/30 text-xs font-bold text-green-300 flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <Receipt className="w-4 h-4" />
+            <span>Z-Raporu Al</span>
+          </button>
+
           <Link
             href={`/qr/${restaurantSlug}/m-4`}
             target="_blank"
             className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center gap-2 transition-colors"
           >
             <QrCode className="w-4 h-4 text-accent" />
-            <span>Masa 4 QR Menüyü Aç</span>
+            <span>Masa 4 QR</span>
           </Link>
 
           <Link
@@ -99,7 +112,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
             className="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-xs font-bold text-amber-300 flex items-center gap-2 transition-colors"
           >
             <ChefHat className="w-4 h-4" />
-            <span>Mutfak Ekranı (KDS)</span>
+            <span>Mutfak (KDS)</span>
           </Link>
 
           <Link
@@ -107,7 +120,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
             className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-foreground/70 hover:text-white flex items-center gap-2 transition-colors"
           >
             <Settings className="w-4 h-4" />
-            <span>Menü & QR Yönetimi</span>
+            <span>Yönetim</span>
           </Link>
         </div>
       </header>
@@ -212,6 +225,13 @@ export default function KasaPosPage({ params }: KasaPageProps) {
         pendingOrders={pendingOrders}
         onConfirmOrder={confirmOrder}
         onRejectOrder={(id) => updateOrderStatus(id, "CANCELLED")}
+      />
+
+      {/* Daily Z Report Modal */}
+      <ZReportModal
+        isOpen={isZReportOpen}
+        onClose={() => setIsZReportOpen(false)}
+        report={zReportData}
       />
     </div>
   );

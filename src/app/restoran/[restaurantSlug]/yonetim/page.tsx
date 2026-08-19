@@ -6,6 +6,7 @@ import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
 import MenuManager from "@/components/restaurant/admin/MenuManager";
 import QrGenerator from "@/components/restaurant/admin/QrGenerator";
+import AnalyticsDashboard from "@/components/restaurant/admin/AnalyticsDashboard";
 import {
   Store,
   ChefHat,
@@ -17,6 +18,7 @@ import {
   Zap,
   Globe,
   Save,
+  TrendingUp,
 } from "lucide-react";
 
 interface YonetimPageProps {
@@ -29,9 +31,9 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
   const resolvedParams = use(params);
   const { restaurantSlug } = resolvedParams;
 
-  const { menuItems, categories, tables, toggleItemAvailability } = useRestaurantStore();
+  const { orders, menuItems, categories, tables, toggleItemAvailability } = useRestaurantStore();
 
-  const [activeTab, setActiveTab] = useState<"MENU" | "QR" | "SETTINGS">("MENU");
+  const [activeTab, setActiveTab] = useState<"MENU" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
   // Restaurant Settings State
   const [orderMode, setOrderMode] = useState(DEMO_RESTAURANT.settings.orderMode);
@@ -110,6 +112,18 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         </button>
 
         <button
+          onClick={() => setActiveTab("ANALYTICS")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+            activeTab === "ANALYTICS"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          <span>Ciro & Z Raporu</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab("SETTINGS")}
           className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === "SETTINGS"
@@ -134,6 +148,14 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         {activeTab === "QR" && (
           <QrGenerator restaurant={DEMO_RESTAURANT} tables={tables} />
+        )}
+
+        {activeTab === "ANALYTICS" && (
+          <AnalyticsDashboard
+            orders={orders}
+            tables={tables}
+            restaurantName={DEMO_RESTAURANT.name}
+          />
         )}
 
         {activeTab === "SETTINGS" && (
