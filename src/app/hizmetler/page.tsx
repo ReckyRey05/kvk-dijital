@@ -25,7 +25,7 @@ const defaultServices = [
       "Kişi Başı Hesap Bölüştürme & Çoklu Dil (TR/EN)",
       "Gün Sonu Mali Z Raporu, Ciro Analitiği & Termal Yazıcı (ESC/POS)"
     ],
-    link: "/qr/aura-bistro/m-4",
+    link: "/blog/cep-garson-akilli-restoran-qr-menu-pos-sistemi",
     icon: UtensilsCrossed,
     isFeatured: true,
   },

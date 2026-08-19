@@ -5,6 +5,7 @@ import { Calendar, ArrowLeft, Clock, ArrowRight, User, HelpCircle } from "lucide
 import Link from "next/link";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/blogPosts";
 import { sanitizeHtmlContent } from "@/lib/validation/schemas";
+import DemoLaunchpad from "@/components/restaurant/blog/DemoLaunchpad";
 import "./blog-article.css";
 
 export const revalidate = 3600; // 1 hour ISR
@@ -258,7 +259,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* Cover Image - LCP Element */}
           {post.coverImage && (
-            <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden border border-card-border mb-12 shadow-2xl bg-black/40">
+            <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden border border-card-border mb-8 shadow-2xl bg-black/40">
               <img 
                 src={post.coverImage} 
                 alt={post.title}
@@ -268,6 +269,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 height={450}
               />
             </div>
+          )}
+
+          {/* Interactive Live Demo Launchpad for Restaurant POS Post */}
+          {(post.slug.includes("cep-garson") || post.slug.includes("qr-menu-pos")) && (
+            <DemoLaunchpad />
           )}
 
           {/* Article HTML Content */}
