@@ -265,6 +265,14 @@ export function useRestaurantStore() {
       notifyAll();
     },
 
+    updateItemPrice: (itemId: string, newPrice: number) => {
+      if (isNaN(newPrice) || newPrice < 0) return;
+      globalMenuItems = globalMenuItems.map((item) =>
+        item.id === itemId ? { ...item, price: Math.round(newPrice) } : item
+      );
+      notifyAll();
+    },
+
     transferTable: (fromTableId: string, toTableId: string) => {
       const fromTable = globalTables.find((t) => t.id === fromTableId);
       const toTable = globalTables.find((t) => t.id === toTableId);

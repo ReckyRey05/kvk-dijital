@@ -8,19 +8,39 @@ interface MenuManagerProps {
   categories: Category[];
   menuItems: MenuItem[];
   onToggleAvailability: (itemId: string) => void;
+  onUpdatePrice?: (itemId: string, newPrice: number) => void;
 }
 
 export default function MenuManager({
   categories,
   menuItems,
   onToggleAvailability,
+  onUpdatePrice,
 }: MenuManagerProps) {
   const [selectedCatId, setSelectedCatId] = useState<string>("ALL");
+  const [editingPriceItemId, setEditingPriceItemId] = useState<string | null>(null);
+  const [tempPrice, setTempPrice] = useState<string>("");
+  const [savedFeedbackId, setSavedFeedbackId] = useState<string | null>(null);
 
   const filteredItems =
     selectedCatId === "ALL"
       ? menuItems
       : menuItems.filter((i) => i.categoryId === selectedCatId);
+
+  const handleStartEditPrice = (item: MenuItem) => {
+    setEditingPriceItemId(item.id);
+    setTempPrice(item.price.toString());
+  };
+
+  const handleSavePrice = (itemId: string) => {
+    const num = parseFloat(tempPrice);
+    if (!isNaN(num) && num >= 0 && onUpdatePrice) {
+      onUpdatePrice(itemId, num);
+      setSavedFeedbackId(itemId);
+      setTimeout(() => setSavedFeedbackId(null), 1500);
+    }
+    setEditingPriceItemId(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -58,6 +78,8 @@ export default function MenuManager({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredItems.map((item) => {
           const categoryName = categories.find((c) => c.id === item.categoryId)?.name || "";
+          const isEditingPrice = editingPriceItemId === item.id;
+          const isSavedFeedback = savedFeedbackId === item.id;
 
           return (
             <div
@@ -113,16 +135,60 @@ export default function MenuManager({
                 </div>
               </div>
 
-              {/* Bottom Actions & Live Stock Toggle */}
-              <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                <div>
-                  <span className="text-sm font-black text-white">{item.price} TL</span>
-                </div>
+              {/* Bottom Actions & Live Price Editor + Live Stock Toggle */}
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-2">
+                {/* Live Editable Price */}
+                {isEditingPrice ? (
+                  <div className="flex items-center gap-1.5 bg-black/80 border border-accent rounded-xl p-1 animate-fade-in">
+                    <input
+                      type="number"
+                      value={tempPrice}
+                      onChange={(e) => setTempPrice(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSavePrice(item.id);
+                        if (e.key === "Escape") setEditingPriceItemId(null);
+                      }}
+                      className="w-16 bg-transparent text-white font-extrabold text-xs px-1.5 py-0.5 focus:outline-none"
+                      autoFocus
+                    />
+                    <span className="text-[10px] text-accent font-bold">TL</span>
+                    <button
+                      onClick={() => handleSavePrice(item.id)}
+                      className="w-6 h-6 rounded-lg bg-accent text-black flex items-center justify-center hover:bg-accent/90 cursor-pointer"
+                      title="Kaydet"
+                    >
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </button>
+                    <button
+                      onClick={() => setEditingPriceItemId(null)}
+                      className="w-6 h-6 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white/20 cursor-pointer"
+                      title="İptal"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => handleStartEditPrice(item)}
+                    className="group/price flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/[0.03] hover:bg-accent/15 border border-white/5 hover:border-accent/40 transition-all cursor-pointer"
+                    title="Fiyatı güncellemek için tıklayın"
+                  >
+                    <span className="text-sm font-black text-white group-hover/price:text-accent transition-colors">
+                      {item.price} TL
+                    </span>
+                    <Edit2 className="w-3 h-3 text-foreground/40 group-hover/price:text-accent transition-colors" />
+                    {isSavedFeedback && (
+                      <span className="text-[10px] text-green-400 font-bold ml-1 animate-fade-in">
+                        ✓ Güncellendi
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 {/* Stock Toggle Button with Dynamic Hover State */}
                 <button
                   onClick={() => onToggleAvailability(item.id)}
-                  className={`group/btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`group/btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
                     item.isAvailable
                       ? "bg-green-500/15 hover:bg-red-500/20 text-green-400 hover:text-red-300 border border-green-500/30 hover:border-red-500/40"
                       : "bg-red-500/20 hover:bg-green-500/20 text-red-300 hover:text-green-300 border border-red-500/40 hover:border-green-500/40"

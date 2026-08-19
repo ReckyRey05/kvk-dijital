@@ -31,7 +31,8 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
   const resolvedParams = use(params);
   const { restaurantSlug } = resolvedParams;
 
-  const { orders, menuItems, categories, tables, toggleItemAvailability } = useRestaurantStore();
+  const { orders, menuItems, categories, tables, toggleItemAvailability, updateItemPrice } =
+    useRestaurantStore();
 
   const [activeTab, setActiveTab] = useState<"MENU" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
@@ -143,6 +144,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
             categories={categories}
             menuItems={menuItems}
             onToggleAvailability={toggleItemAvailability}
+            onUpdatePrice={updateItemPrice}
           />
         )}
 
