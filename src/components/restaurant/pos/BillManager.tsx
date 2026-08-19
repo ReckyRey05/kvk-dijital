@@ -1,23 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import { Table, Order } from "@/types/restaurant";
-import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, CheckCircle2, Clock } from "lucide-react";
+import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, ArrowRightLeft, Check } from "lucide-react";
 import { formatEscPosReceipt } from "@/lib/restaurant/posBridge";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 
 interface BillManagerProps {
   table: Table;
   tableOrders: Order[];
+  allTables?: Table[];
   onClose: () => void;
   onCloseBill: (tableId: string) => void;
+  onTransferTable?: (fromTableId: string, toTableId: string) => void;
 }
 
 export default function BillManager({
   table,
   tableOrders,
+  allTables = [],
   onClose,
   onCloseBill,
+  onTransferTable,
 }: BillManagerProps) {
+  const [isTransferring, setIsTransferring] = useState(false);
+  const [targetTableId, setTargetTableId] = useState("");
+
   const allItems = tableOrders.flatMap((o) => o.items);
   const totalAmount = table.activeBillTotal;
 
@@ -37,6 +45,13 @@ export default function BillManager({
 
   const handleCompleteCheckout = (paymentMethod: "CASH" | "CARD") => {
     onCloseBill(table.id);
+    onClose();
+  };
+
+  const handleExecuteTransfer = () => {
+    if (!targetTableId || !onTransferTable) return;
+    onTransferTable(table.id, targetTableId);
+    setIsTransferring(false);
     onClose();
   };
 
@@ -102,17 +117,28 @@ export default function BillManager({
 
       {/* Footer / Settlement Actions */}
       <div className="space-y-4 pt-4 border-t border-white/10">
-        {/* Total & Print Row */}
+        {/* Total & Print & Transfer Row */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handlePrintReceipt}
-              disabled={allItems.length === 0}
-              className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Fiş Yazdır</span>
-            </button>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePrintReceipt}
+                disabled={allItems.length === 0}
+                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Fiş</span>
+              </button>
+
+              <button
+                onClick={() => setIsTransferring(!isTransferring)}
+                disabled={totalAmount === 0}
+                className="px-3 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
+              >
+                <ArrowRightLeft className="w-3.5 h-3.5" />
+                <span>Masa Taşı</span>
+              </button>
+            </div>
 
             <div className="text-right">
               <span className="text-[10px] text-foreground/50 block uppercase tracking-wider">
@@ -124,6 +150,45 @@ export default function BillManager({
               </span>
             </div>
           </div>
+
+          {/* Table Transfer Selector Panel */}
+          {isTransferring && (
+            <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-2.5 animate-fade-in">
+              <div className="flex items-center justify-between text-xs font-bold text-purple-200">
+                <span>Hedef Masayı Seçin</span>
+                <button
+                  onClick={() => setIsTransferring(false)}
+                  className="text-purple-400 hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <select
+                value={targetTableId}
+                onChange={(e) => setTargetTableId(e.target.value)}
+                className="w-full bg-black/60 border border-purple-500/30 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              >
+                <option value="">Hedef Masa Seçin...</option>
+                {allTables
+                  .filter((t) => t.id !== table.id)
+                  .map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.tableNumber} {t.status !== "EMPTY" ? `(Dolu - Birleştirilir: ${t.activeBillTotal} TL)` : "(Boş)"}
+                    </option>
+                  ))}
+              </select>
+
+              <button
+                onClick={handleExecuteTransfer}
+                disabled={!targetTableId}
+                className="w-full py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all disabled:opacity-40 cursor-pointer"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Adisyonu Masaya Aktar</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Instant Session Invalidation Warning */}

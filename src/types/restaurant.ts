@@ -3,6 +3,7 @@ export type PaymentMode = "CASHIER" | "ONLINE" | "HYBRID";
 export type TableStatus = "EMPTY" | "OCCUPIED" | "BILL_REQUESTED" | "WAITER_CALLED";
 export type OrderStatus = "PENDING_CONFIRMATION" | "PREPARING" | "READY" | "SERVED" | "COMPLETED" | "CANCELLED";
 export type WaiterCallType = "WAITER" | "BILL_CASH" | "BILL_CARD" | "WATER_NAPKIN";
+export type MenuLanguage = "TR" | "EN";
 
 export interface RestaurantSettings {
   orderMode: OrderMode;
@@ -13,6 +14,7 @@ export interface RestaurantSettings {
   taxRatePercent: number;
   serviceChargePercent?: number;
   allowSplitBill: boolean;
+  googleReviewUrl?: string; // Google Haritalar Puanlama URL'i
   posIntegrationType: "STANDALONE" | "CLOUD_WEBHOOK" | "LOCAL_BRIDGE";
   posWebhookUrl?: string;
   posApiKey?: string;
@@ -20,6 +22,17 @@ export interface RestaurantSettings {
   coverImage?: string;
   address?: string;
   phone?: string;
+}
+
+export interface CustomerFeedback {
+  id: string;
+  restaurantId: string;
+  tableId: string;
+  tableNumber: string;
+  rating: number; // 1-5
+  comment?: string;
+  isPublicGoogleRedirect: boolean;
+  createdAt: string;
 }
 
 export interface Restaurant {

@@ -10,6 +10,10 @@ interface MenuHeaderProps {
   onOpenWaiterCall: () => void;
   activeOrderCount: number;
   onOpenOrderTracker?: () => void;
+  lang: "TR" | "EN";
+  onToggleLang: () => void;
+  onOpenSplitBill?: () => void;
+  onOpenFeedback?: () => void;
 }
 
 export default function MenuHeader({
@@ -19,6 +23,10 @@ export default function MenuHeader({
   onOpenWaiterCall,
   activeOrderCount,
   onOpenOrderTracker,
+  lang,
+  onToggleLang,
+  onOpenSplitBill,
+  onOpenFeedback,
 }: MenuHeaderProps) {
   // Session progress calculation (15 min window)
   const percentLeft = Math.max(0, Math.min(100, (remainingMinutes / 15) * 100));
@@ -43,15 +51,24 @@ export default function MenuHeader({
           </div>
         </div>
 
-        {/* Action Buttons: Waiter Call & Active Order Tracker */}
+        {/* Action Buttons: Language Switcher, Waiter Call & Active Order Tracker */}
         <div className="flex items-center gap-2">
+          {/* TR / EN Language Switcher */}
+          <button
+            onClick={onToggleLang}
+            className="px-2.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-bold transition-colors cursor-pointer"
+            title="Dili Değiştir / Change Language"
+          >
+            {lang === "TR" ? "🇬🇧 EN" : "🇹🇷 TR"}
+          </button>
+
           {activeOrderCount > 0 && onOpenOrderTracker && (
             <button
               onClick={onOpenOrderTracker}
               className="px-2.5 py-1.5 rounded-full bg-accent/20 border border-accent/40 text-accent text-xs font-semibold flex items-center gap-1.5 animate-pulse cursor-pointer"
             >
               <ReceiptText className="w-3.5 h-3.5" />
-              <span>Siparişim ({activeOrderCount})</span>
+              <span>{lang === "TR" ? `Sipariş (${activeOrderCount})` : `Order (${activeOrderCount})`}</span>
             </button>
           )}
 
@@ -60,7 +77,7 @@ export default function MenuHeader({
             className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <Bell className="w-3.5 h-3.5 text-accent" />
-            <span>Garson</span>
+            <span>{lang === "TR" ? "Garson" : "Waiter"}</span>
           </button>
         </div>
       </div>

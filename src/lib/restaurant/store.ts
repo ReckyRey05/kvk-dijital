@@ -264,5 +264,52 @@ export function useRestaurantStore() {
       );
       notifyAll();
     },
+
+    transferTable: (fromTableId: string, toTableId: string) => {
+      const fromTable = globalTables.find((t) => t.id === fromTableId);
+      const toTable = globalTables.find((t) => t.id === toTableId);
+      if (!fromTable || !toTable) return false;
+
+      // 1. Move all active orders to toTable
+      globalOrders = globalOrders.map((ord) =>
+        ord.tableId === fromTableId && ord.status !== "COMPLETED" && ord.status !== "CANCELLED"
+          ? { ...ord, tableId: toTableId, tableNumber: toTable.tableNumber }
+          : ord
+      );
+
+      // 2. Move waiter calls
+      globalCalls = globalCalls.map((c) =>
+        c.tableId === fromTableId && c.status === "ACTIVE"
+          ? { ...c, tableId: toTableId, tableNumber: toTable.tableNumber }
+          : c
+      );
+
+      // 3. Update toTable bill & status
+      globalTables = globalTables.map((t) => {
+        if (t.id === toTableId) {
+          return {
+            ...t,
+            status: fromTable.status,
+            activeBillTotal: (t.activeBillTotal || 0) + fromTable.activeBillTotal,
+            lastOrderTime: fromTable.lastOrderTime || t.lastOrderTime,
+          };
+        }
+        if (t.id === fromTableId) {
+          return {
+            ...t,
+            status: "EMPTY",
+            activeOrderId: undefined,
+            activeBillTotal: 0,
+            lastOrderTime: undefined,
+            lastCallTime: undefined,
+            lastCallType: undefined,
+          };
+        }
+        return t;
+      });
+
+      notifyAll();
+      return true;
+    },
   };
 }

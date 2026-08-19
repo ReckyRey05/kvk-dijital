@@ -38,6 +38,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     updateOrderStatus,
     resolveWaiterCall,
     closeTableBill,
+    transferTable,
   } = useRestaurantStore();
 
   const [selectedTableId, setSelectedTableId] = useState<string | null>("m-4");
@@ -198,8 +199,10 @@ export default function KasaPosPage({ params }: KasaPageProps) {
           <BillManager
             table={selectedTable}
             tableOrders={selectedTableOrders}
+            allTables={tables}
             onClose={() => setSelectedTableId(null)}
             onCloseBill={closeTableBill}
+            onTransferTable={transferTable}
           />
         )}
       </div>

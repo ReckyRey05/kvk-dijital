@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { MenuItem, OrderItem, WaiterCallType } from "@/types/restaurant";
+import { MenuItem, OrderItem, WaiterCallType, MenuLanguage } from "@/types/restaurant";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
+import { DICTIONARY } from "@/lib/restaurant/i18n";
 import MenuHeader from "@/components/restaurant/qr/MenuHeader";
 import CategoryNav from "@/components/restaurant/qr/CategoryNav";
 import ProductCard from "@/components/restaurant/qr/ProductCard";
@@ -11,7 +12,9 @@ import ProductModal from "@/components/restaurant/qr/ProductModal";
 import CartDrawer from "@/components/restaurant/qr/CartDrawer";
 import WaiterCallModal from "@/components/restaurant/qr/WaiterCallModal";
 import OrderTracker from "@/components/restaurant/qr/OrderTracker";
-import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle } from "lucide-react";
+import SplitBillModal from "@/components/restaurant/qr/SplitBillModal";
+import FeedbackModal from "@/components/restaurant/qr/FeedbackModal";
+import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star } from "lucide-react";
 
 interface QrMenuPageProps {
   params: Promise<{
@@ -25,6 +28,10 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const { restaurantSlug, tableId } = resolvedParams;
 
   const { orders, tables, menuItems, categories, createOrder, callWaiter } = useRestaurantStore();
+
+  // Language state
+  const [lang, setLang] = useState<MenuLanguage>("TR");
+  const t = DICTIONARY[lang];
 
   // Find table or fallback
   const currentTable =
@@ -45,6 +52,8 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWaiterModalOpen, setIsWaiterModalOpen] = useState(false);
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
+  const [isSplitBillOpen, setIsSplitBillOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   // 15-Minute Dynamic Session Timer
   const [remainingSeconds, setRemainingSeconds] = useState(15 * 60); // 900s
@@ -187,15 +196,38 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenWaiterCall={() => setIsWaiterModalOpen(true)}
         activeOrderCount={activeTableOrders.length}
         onOpenOrderTracker={() => setIsTrackerOpen(true)}
+        lang={lang}
+        onToggleLang={() => setLang((l) => (l === "TR" ? "EN" : "TR"))}
+        onOpenSplitBill={() => setIsSplitBillOpen(true)}
+        onOpenFeedback={() => setIsFeedbackOpen(true)}
       />
 
+      {/* Quick Action Tools Bar (Split Bill & Feedback Booster) */}
+      <div className="max-w-md mx-auto px-4 pt-3 flex items-center justify-between gap-2">
+        <button
+          onClick={() => setIsSplitBillOpen(true)}
+          className="flex-1 py-2 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-[11px] font-semibold text-foreground/80 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+        >
+          <Calculator className="w-3.5 h-3.5 text-accent" />
+          <span>{t.splitBill}</span>
+        </button>
+
+        <button
+          onClick={() => setIsFeedbackOpen(true)}
+          className="flex-1 py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20 text-[11px] font-semibold text-amber-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+        >
+          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          <span>{lang === "TR" ? "Bizi Değerlendirin" : "Rate Us"}</span>
+        </button>
+      </div>
+
       {/* Search Bar */}
-      <div className="max-w-md mx-auto px-4 pt-3.5 pb-1">
+      <div className="max-w-md mx-auto px-4 pt-3 pb-1">
         <div className="relative">
           <Search className="w-4 h-4 text-foreground/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Menüde lezzet veya içecek arayın..."
+            placeholder={t.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder:text-foreground/40 focus:outline-none focus:border-accent/60 transition-all"
@@ -214,8 +246,8 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
       <main className="max-w-md mx-auto px-4 pt-4 space-y-3">
         {filteredItems.length === 0 ? (
           <div className="py-16 text-center text-foreground/40 space-y-2">
-            <p className="text-sm font-medium">Bu kategoride ürün bulunamadı.</p>
-            <p className="text-xs">Lütfen diğer kategorilere göz atın.</p>
+            <p className="text-sm font-medium">{lang === "TR" ? "Bu kategoride ürün bulunamadı." : "No items found in this category."}</p>
+            <p className="text-xs">{lang === "TR" ? "Lütfen diğer kategorilere göz atın." : "Please check other categories."}</p>
           </div>
         ) : (
           filteredItems.map((item) => (
@@ -240,9 +272,9 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
                 {cartTotalCount}
               </div>
               <div className="text-left">
-                <span className="text-xs block leading-tight">Sepeti Görüntüle</span>
+                <span className="text-xs block leading-tight">{t.viewCart}</span>
                 <span className="text-[10px] opacity-75 font-normal">
-                  {cartItems.length} çeşit ürün
+                  {cartItems.length} {t.itemsCount}
                 </span>
               </div>
             </div>
@@ -293,6 +325,23 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         isOpen={isTrackerOpen}
         onClose={() => setIsTrackerOpen(false)}
         tableNumber={currentTable.tableNumber}
+      />
+
+      {/* Split Bill Calculator Modal */}
+      <SplitBillModal
+        isOpen={isSplitBillOpen}
+        onClose={() => setIsSplitBillOpen(false)}
+        totalAmount={currentTable.activeBillTotal || cartTotalAmount || 500}
+        lang={lang}
+      />
+
+      {/* Customer Feedback & Google Review Booster Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+        tableNumber={currentTable.tableNumber}
+        lang={lang}
+        googleReviewUrl={DEMO_RESTAURANT.settings.googleReviewUrl}
       />
     </div>
   );
