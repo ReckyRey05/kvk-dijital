@@ -43,6 +43,80 @@ export default async function Projeler() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
           
+          {/* Featured Concept Demo #0 Card — Aura Bistro QR Menü & Canlı Restoran POS Sistemi */}
+          <div className="group flex flex-col rounded-3xl overflow-hidden bg-[#0c1212] text-foreground border-2 border-accent/40 hover:border-accent transition-all duration-500 relative shadow-2xl shadow-accent/5">
+            <div className="absolute top-4 right-4 z-10 bg-accent text-black px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider uppercase shadow-xl">
+              Canlı SaaS Demo
+            </div>
+            
+            <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
+              <img 
+                src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop&q=85" 
+                alt="Aura Bistro & Lounge modern restoran ve bar atmosferi" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+                loading="lazy"
+                width={800}
+                height={600}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-black/40 to-transparent p-6 flex flex-col justify-end">
+                <span className="text-xs uppercase tracking-widest font-extrabold text-accent mb-1">Restoran SaaS & Canlı POS</span>
+                <h2 className="text-xl font-bold text-foreground">Aura Bistro QR Menü & POS</h2>
+              </div>
+            </div>
+
+            <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Restoran ve kafeler için masadan canlı sipariş, 15dk oturum güvenliği, anlık Kasa POS, Mutfak Ekranı (KDS) ve Z-raporu analitiği.
+              </p>
+
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>15 Dk İmzalı Masa Oturumu (Sahte Sipariş Engeli)</span>
+                </li>
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>Canlı Kasa POS + Sesli Mutfak Terminali (KDS)</span>
+                </li>
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>Çoklu Dil (TR/EN) & Kişi Başı Hesap Bölüştürme</span>
+                </li>
+                <li className="flex items-center gap-2 text-xs font-medium text-foreground/80">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
+                  <span>Gün Sonu Z Raporu & Ciro Analitiği</span>
+                </li>
+              </ul>
+
+              {/* Action Buttons: 3 Interactive Portals */}
+              <div className="pt-6 border-t border-card-border space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <Link 
+                    href="/qr/aura-bistro/m-4" 
+                    className="py-2.5 px-3 rounded-xl bg-accent text-black font-extrabold text-[11px] text-center hover:bg-accent/90 transition-colors shadow-md shadow-accent/20"
+                  >
+                    Masa 4 QR Menü
+                  </Link>
+
+                  <Link 
+                    href="/restoran/aura-bistro/kasa" 
+                    className="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-[11px] text-center border border-white/10 transition-colors"
+                  >
+                    Kasa POS Paneli
+                  </Link>
+                </div>
+
+                <Link 
+                  href="/restoran/aura-bistro/mutfak" 
+                  className="w-full py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 font-bold text-[11px] text-center flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <span>Mutfak Ekranını İncele (KDS)</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
           {/* Static Concept Demo #1 Card — Pendik Sahil Bistro (KvK Brand Theme) */}
           <div className="group flex flex-col rounded-3xl overflow-hidden bg-card text-foreground border border-card-border hover:border-accent/40 transition-all duration-500 relative">
             <div className="absolute top-4 right-4 z-10 bg-black/90 text-white border border-accent/60 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase shadow-xl backdrop-blur-md">

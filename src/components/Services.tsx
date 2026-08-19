@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Laptop, Code2, Sparkles, ShoppingCart } from "lucide-react";
+import { Laptop, Code2, Sparkles, ShoppingCart, UtensilsCrossed } from "lucide-react";
 
 interface Service {
   id: string;
@@ -14,6 +14,12 @@ interface Service {
 export default function Services({ services }: { services: Service[] }) {
   const displayServices = services && services.length > 0 ? services : [
     {
+      id: "demo-pos-qr",
+      title: "Restoran QR & POS",
+      description: "15dk oturum korumalı temassız sipariş, KDS ve Z-raporu.",
+      icon: UtensilsCrossed
+    },
+    {
       id: "demo-1",
       title: "Web Tasarım",
       description: "Modern, hızlı ve mobil uyumlu web siteleri.",
@@ -22,19 +28,13 @@ export default function Services({ services }: { services: Service[] }) {
     {
       id: "demo-2",
       title: "Özel Yazılım",
-      description: "İşletmelere özel dijital sistemler.",
+      description: "İşletmelere özel dijital sistemler ve API entegrasyonları.",
       icon: Code2
-    },
-    {
-      id: "demo-3",
-      title: "AI Çözümleri",
-      description: "Yapay zeka destekli otomasyon ve araçlar.",
-      icon: Sparkles
     },
     {
       id: "demo-4",
       title: "E-Ticaret",
-      description: "Modern online satış deneyimleri.",
+      description: "Modern online satış ve sanal POS deneyimleri.",
       icon: ShoppingCart
     },
   ];

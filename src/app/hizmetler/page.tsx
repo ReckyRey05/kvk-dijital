@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import { ArrowRight, Sparkles, CheckCircle2, Laptop, Building2, ShoppingCart, Code2 } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2, Laptop, Building2, ShoppingCart, Code2, UtensilsCrossed, QrCode } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
 import { getAdminDb } from "@/lib/firebase/admin";
@@ -8,13 +8,27 @@ export const revalidate = 3600; // 1 hour ISR
 
 export const metadata: Metadata = {
   title: "Hizmetlerimiz | KvK Dijital Çözümler",
-  description: "Web Tasarımı, Kurumsal Web Sitesi, E-Ticaret Çözümleri ve Özel Yazılım Geliştirme hizmetlerimiz. 90+ mobil hızlı ve SEO altyapılı web çözümleri.",
+  description: "Web Tasarımı, Kurumsal Web Sitesi, E-Ticaret, Restoran QR Menü & POS Sistemleri ve Özel Yazılım Geliştirme hizmetlerimiz.",
   alternates: {
     canonical: "https://kvkdijitalcozumler.com/hizmetler",
   }
 };
 
 const defaultServices = [
+  {
+    id: "service-restoran-pos-qr",
+    title: "Restoran QR Menü & Akıllı POS",
+    description: "Restoran, kafe ve fast-food işletmeleri için masadan doğrudan sipariş, 15 dakikalık oturum güvenliği, canlı Kasa/Garson POS, KDS mutfak ekranı ve Z raporu analitiği.",
+    features: [
+      "15 Dakikalık Akıllı Oturum Güvenliği (Sahte Sipariş Koruması)",
+      "Canlı Kasa & Garson POS Terminali + Sesli Mutfak Ekranı (KDS)",
+      "Kişi Başı Hesap Bölüştürme & Çoklu Dil (TR/EN)",
+      "Gün Sonu Mali Z Raporu, Ciro Analitiği & Termal Yazıcı (ESC/POS)"
+    ],
+    link: "/qr/aura-bistro/m-4",
+    icon: UtensilsCrossed,
+    isFeatured: true,
+  },
   {
     id: "service-web-tasarim",
     title: "Web Tasarım",
