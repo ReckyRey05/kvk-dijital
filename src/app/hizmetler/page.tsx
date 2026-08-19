@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const defaultServices = [
   {
     id: "service-restoran-pos-qr",
-    title: "Restoran QR Menü & Akıllı POS",
+    title: "Cep Garson: Restoran QR & POS",
     description: "Restoran, kafe ve fast-food işletmeleri için masadan doğrudan sipariş, 15 dakikalık oturum güvenliği, canlı Kasa/Garson POS, KDS mutfak ekranı ve Z raporu analitiği.",
     features: [
       "15 Dakikalık Akıllı Oturum Güvenliği (Sahte Sipariş Koruması)",

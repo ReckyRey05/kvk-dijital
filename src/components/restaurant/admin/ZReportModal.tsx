@@ -110,8 +110,9 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
             </div>
           </div>
 
-          <div className="text-center pt-2 border-t border-dashed border-black/30 text-[9px] text-neutral-500">
-            *** MALİ DEĞERİ YOKTUR - GÜN SONU BİLGİLENDİRME RAPORUDUR ***
+          <div className="text-center pt-2 border-t border-dashed border-black/30 text-[9px] text-neutral-500 space-y-0.5">
+            <div>*** MALİ DEĞERİ YOKTUR - GÜN SONU BİLGİLENDİRME RAPORUDUR ***</div>
+            <div className="font-bold text-neutral-600">CEP GARSON POS SİSTEMLERİ • KVK DİJİTAL ÇÖZÜMLER</div>
           </div>
         </div>
 

@@ -15,7 +15,7 @@ export default function Services({ services }: { services: Service[] }) {
   const displayServices = services && services.length > 0 ? services : [
     {
       id: "demo-pos-qr",
-      title: "Restoran QR & POS",
+      title: "Cep Garson (QR & POS)",
       description: "15dk oturum korumalı temassız sipariş, KDS ve Z-raporu.",
       icon: UtensilsCrossed
     },

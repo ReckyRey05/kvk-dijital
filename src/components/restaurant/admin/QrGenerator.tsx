@@ -112,6 +112,9 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
             <p className="text-[11px] font-medium text-neutral-600 pt-1">
               Kameranızla okutarak menüyü inceleyebilir ve doğrudan sipariş verebilirsiniz.
             </p>
+            <div className="pt-2 text-[9px] font-bold text-neutral-400 tracking-wider uppercase border-t border-neutral-200">
+              Powered by Cep Garson | KvK Dijital Çözümler
+            </div>
           </div>
         </div>
 

@@ -258,6 +258,16 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             />
           ))
         )}
+
+        {/* Footer Branding */}
+        <footer className="pt-8 pb-24 text-center space-y-1">
+          <p className="text-[11px] font-bold text-foreground/50 tracking-wider">
+            Powered by <span className="text-accent font-extrabold">Cep Garson</span>
+          </p>
+          <p className="text-[10px] text-foreground/30 font-medium">
+            KvK Dijital Çözümler Restoran & POS Altyapısı
+          </p>
+        </footer>
       </main>
 
       {/* Floating Bottom Cart Bar */}

@@ -43,7 +43,7 @@ export default async function Projeler() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
           
-          {/* Featured Concept Demo #0 Card — Aura Bistro QR Menü & Canlı Restoran POS Sistemi */}
+          {/* Featured Concept Demo #0 Card — Cep Garson Akıllı QR Menü & Restoran POS Sistemi */}
           <div className="group flex flex-col rounded-3xl overflow-hidden bg-[#0c1212] text-foreground border-2 border-accent/40 hover:border-accent transition-all duration-500 relative shadow-2xl shadow-accent/5">
             <div className="absolute top-4 right-4 z-10 bg-accent text-black px-3.5 py-1.5 rounded-full text-xs font-black tracking-wider uppercase shadow-xl">
               Canlı SaaS Demo
@@ -52,21 +52,21 @@ export default async function Projeler() {
             <div className="w-full h-64 bg-black/40 relative overflow-hidden border-b border-card-border">
               <img 
                 src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop&q=85" 
-                alt="Aura Bistro & Lounge modern restoran ve bar atmosferi" 
+                alt="Cep Garson Akıllı Restoran ve Kafe QR Menü POS Sistemi" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 loading="lazy"
                 width={800}
                 height={600}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/95 via-black/40 to-transparent p-6 flex flex-col justify-end">
-                <span className="text-xs uppercase tracking-widest font-extrabold text-accent mb-1">Restoran SaaS & Canlı POS</span>
-                <h2 className="text-xl font-bold text-foreground">Aura Bistro QR Menü & POS</h2>
+                <span className="text-xs uppercase tracking-widest font-extrabold text-accent mb-1">Restoran SaaS & Akıllı POS</span>
+                <h2 className="text-xl font-bold text-foreground">Cep Garson (QR Menü & POS)</h2>
               </div>
             </div>
 
             <div className="p-8 flex flex-col flex-grow justify-between space-y-6">
               <p className="text-xs text-foreground/70 leading-relaxed">
-                Restoran ve kafeler için masadan canlı sipariş, 15dk oturum güvenliği, anlık Kasa POS, Mutfak Ekranı (KDS) ve Z-raporu analitiği.
+                <strong>Cep Garson:</strong> Restoran ve kafeler için masadan anlık sipariş, 15dk oturum güvenliği, canlı Kasa POS, Mutfak Ekranı (KDS) ve Z-raporu analitiği.
               </p>
 
               <ul className="space-y-2">
