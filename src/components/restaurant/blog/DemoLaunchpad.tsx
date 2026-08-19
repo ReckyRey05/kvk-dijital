@@ -25,9 +25,27 @@ export default function DemoLaunchpad() {
           Aşağıdaki 4 portala tıklayarak masadaki müşterinin, kasadaki personelin, mutfaktaki şefin ve restoran sahibinin ekranlarını gerçek zamanlı olarak anında test edebilirsiniz.
         </p>
 
-        <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-accent font-semibold flex items-center justify-center gap-2">
-          <Zap className="w-4 h-4 shrink-0" />
-          <span>İpucu: Bir sekmede <strong>Masa 4 Menüsü</strong>&apos;nü, diğer sekmede <strong>Kasa POS</strong>&apos;u açıp sipariş verin; anlık akışı görün!</span>
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-accent/15 via-emerald-500/10 to-transparent border border-accent/30 text-xs text-accent font-semibold flex flex-wrap items-center justify-center gap-2">
+          <Zap className="w-4 h-4 shrink-0 text-accent animate-pulse" />
+          <span>İpucu: Bir sekmede</span>
+          <Link
+            href="/qr/aura-bistro/m-4"
+            target="_blank"
+            className="px-2.5 py-1 rounded-lg bg-accent text-black font-extrabold text-xs hover:bg-accent/90 transition-all inline-flex items-center gap-1 shadow-md shadow-accent/20"
+          >
+            <QrCode className="w-3.5 h-3.5" />
+            <span>Masa 4 Menüsü (Aç)</span>
+          </Link>
+          <span>diğer sekmede</span>
+          <Link
+            href="/restoran/aura-bistro/kasa"
+            target="_blank"
+            className="px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-extrabold text-xs hover:bg-emerald-400 transition-all inline-flex items-center gap-1 shadow-md shadow-emerald-500/20"
+          >
+            <Store className="w-3.5 h-3.5" />
+            <span>Kasa POS (Aç)</span>
+          </Link>
+          <span>açıp sipariş verin; anlık akışı görün!</span>
         </div>
       </div>
 

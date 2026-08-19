@@ -168,11 +168,76 @@ let globalSongRequests: SongRequest[] = [
 ];
 
 const listeners = new Set<() => void>();
+let broadcastChannel: BroadcastChannel | null = null;
 
-function notifyAll() {
+if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+  try {
+    broadcastChannel = new BroadcastChannel("cep_garson_realtime_sync");
+  } catch (e) {
+    console.error("BroadcastChannel init failed", e);
+  }
+}
+
+function saveToStorage() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("cg_orders", JSON.stringify(globalOrders));
+    localStorage.setItem("cg_tables", JSON.stringify(globalTables));
+    localStorage.setItem("cg_calls", JSON.stringify(globalCalls));
+    localStorage.setItem("cg_menu", JSON.stringify(globalMenuItems));
+    localStorage.setItem("cg_alerts", JSON.stringify(globalManagerAlerts));
+    localStorage.setItem("cg_vouchers", JSON.stringify(globalVouchers));
+    localStorage.setItem("cg_songs", JSON.stringify(globalSongRequests));
+  } catch (e) {
+    console.error("Storage save error", e);
+  }
+}
+
+function loadFromStorage() {
+  if (typeof window === "undefined") return;
+  try {
+    const orders = localStorage.getItem("cg_orders");
+    if (orders) globalOrders = JSON.parse(orders);
+
+    const tables = localStorage.getItem("cg_tables");
+    if (tables) globalTables = JSON.parse(tables);
+
+    const calls = localStorage.getItem("cg_calls");
+    if (calls) globalCalls = JSON.parse(calls);
+
+    const menu = localStorage.getItem("cg_menu");
+    if (menu) globalMenuItems = JSON.parse(menu);
+
+    const alerts = localStorage.getItem("cg_alerts");
+    if (alerts) globalManagerAlerts = JSON.parse(alerts);
+
+    const vouchers = localStorage.getItem("cg_vouchers");
+    if (vouchers) globalVouchers = JSON.parse(vouchers);
+
+    const songs = localStorage.getItem("cg_songs");
+    if (songs) globalSongRequests = JSON.parse(songs);
+  } catch (e) {
+    console.error("Storage load error", e);
+  }
+}
+
+function notifyAll(broadcast = true) {
+  saveToStorage();
   listeners.forEach((listener) => listener());
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent("restaurant_state_sync"));
+    if (broadcast && broadcastChannel) {
+      broadcastChannel.postMessage({
+        type: "STATE_SYNC",
+        orders: globalOrders,
+        tables: globalTables,
+        calls: globalCalls,
+        menuItems: globalMenuItems,
+        alerts: globalManagerAlerts,
+        vouchers: globalVouchers,
+        songs: globalSongRequests,
+      });
+    }
   }
 }
 
@@ -180,9 +245,37 @@ export function useRestaurantStore() {
   const [, setTick] = useState(0);
 
   useEffect(() => {
+    loadFromStorage();
     const handler = () => setTick((t) => t + 1);
     listeners.add(handler);
     window.addEventListener("restaurant_state_sync", handler);
+
+    // Cross-tab storage listener
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith("cg_")) {
+        loadFromStorage();
+        handler();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // Cross-tab broadcast listener
+    const handleBroadcast = (event: MessageEvent) => {
+      if (event.data && event.data.type === "STATE_SYNC") {
+        if (event.data.orders) globalOrders = event.data.orders;
+        if (event.data.tables) globalTables = event.data.tables;
+        if (event.data.calls) globalCalls = event.data.calls;
+        if (event.data.menuItems) globalMenuItems = event.data.menuItems;
+        if (event.data.alerts) globalManagerAlerts = event.data.alerts;
+        if (event.data.vouchers) globalVouchers = event.data.vouchers;
+        if (event.data.songs) globalSongRequests = event.data.songs;
+        handler();
+      }
+    };
+
+    if (broadcastChannel) {
+      broadcastChannel.addEventListener("message", handleBroadcast);
+    }
 
     // Periodic check for expired discounts
     const checkExpirations = () => {
@@ -209,6 +302,10 @@ export function useRestaurantStore() {
     return () => {
       listeners.delete(handler);
       window.removeEventListener("restaurant_state_sync", handler);
+      window.removeEventListener("storage", handleStorage);
+      if (broadcastChannel) {
+        broadcastChannel.removeEventListener("message", handleBroadcast);
+      }
       clearInterval(expiryInterval);
     };
   }, []);
