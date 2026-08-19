@@ -93,6 +93,23 @@ export default function MenuManager({
                   <span className="text-[10px] text-accent font-semibold block">{categoryName}</span>
                   <h4 className="text-sm font-bold text-white leading-snug line-clamp-1">{item.name}</h4>
                   <p className="text-xs text-foreground/50 line-clamp-2 mt-0.5">{item.description}</p>
+
+                  {/* Boss / Admin Ingredients Overview */}
+                  {item.ingredients && item.ingredients.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      <span className="text-[9px] text-foreground/40 font-bold uppercase mr-1 self-center">
+                        İçerik:
+                      </span>
+                      {item.ingredients.map((ing) => (
+                        <span
+                          key={ing}
+                          className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-foreground/70"
+                        >
+                          {ing}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

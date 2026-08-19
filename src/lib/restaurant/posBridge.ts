@@ -113,6 +113,9 @@ export function formatEscPosReceipt(order: Order, restaurantName: string): strin
         }
       }
     }
+    if (item.removedIngredients && item.removedIngredients.length > 0) {
+      receipt += `   *** CIKARILANLAR: ${item.removedIngredients.join(", ")} ***\n`;
+    }
     if (item.itemNotes) {
       receipt += `   [NOT: ${item.itemNotes}]\n`;
     }

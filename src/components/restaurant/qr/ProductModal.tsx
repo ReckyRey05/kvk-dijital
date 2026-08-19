@@ -13,6 +13,13 @@ interface ProductModalProps {
 export default function ProductModal({ item, onClose, onAddToCart }: ProductModalProps) {
   const [quantity, setQuantity] = useState(1);
   const [itemNotes, setItemNotes] = useState("");
+  const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
+
+  const handleToggleIngredient = (ingredient: string) => {
+    setRemovedIngredients((prev) =>
+      prev.includes(ingredient) ? prev.filter((i) => i !== ingredient) : [...prev, ingredient]
+    );
+  };
 
   // Initialize selected options with defaults
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string[]>>(() => {
@@ -87,6 +94,7 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
       finalPrice: calculatedUnitPrice,
       quantity,
       selectedOptions: structuredSelectedOptions,
+      removedIngredients: removedIngredients.length > 0 ? removedIngredients : undefined,
       itemNotes: itemNotes.trim() || undefined,
     };
 
@@ -124,7 +132,7 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
           </div>
         </div>
 
-        {/* Scrollable Content: Description & Option Groups */}
+        {/* Scrollable Content: Description, Ingredients, & Option Groups */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
             {item.description}
@@ -135,6 +143,46 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
             <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-2.5 text-amber-300 text-xs">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>Alerjenler: {item.allergens.join(", ")}</span>
+            </div>
+          )}
+
+          {/* Interactive Ingredients & Removal Customizer */}
+          {item.ingredients && item.ingredients.length > 0 && (
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                  İçindekiler & Çıkarılacak Malzemeler
+                </h4>
+                <span className="text-[10px] text-foreground/50">
+                  İstemediğinize dokunarak çıkarın
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {item.ingredients.map((ing) => {
+                  const isRemoved = removedIngredients.includes(ing);
+                  return (
+                    <button
+                      key={ing}
+                      type="button"
+                      onClick={() => handleToggleIngredient(ing)}
+                      className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        isRemoved
+                          ? "bg-red-500/20 text-red-300 border border-red-500/40 line-through"
+                          : "bg-white/5 text-white/90 border border-white/10 hover:bg-white/10 hover:border-white/20"
+                      }`}
+                    >
+                      {isRemoved ? (
+                        <X className="w-3.5 h-3.5 text-red-400 no-underline shrink-0" />
+                      ) : (
+                        <Check className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                      )}
+                      <span>{ing}</span>
+                      {isRemoved && <span className="text-[9px] text-red-400 font-bold ml-1">(Çıkarılsın)</span>}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 

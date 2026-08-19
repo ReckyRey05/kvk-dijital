@@ -97,6 +97,14 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
                     </div>
                   )}
 
+                  {/* Removed Ingredients Alert for Cooks */}
+                  {item.removedIngredients && item.removedIngredients.length > 0 && (
+                    <div className="text-xs font-black text-red-300 bg-red-950/80 p-1.5 rounded-lg mt-1 border border-red-500/50 flex items-start gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-red-400 mt-0.5" />
+                      <span>ÇIKARILACAKLAR: {item.removedIngredients.join(", ")}</span>
+                    </div>
+                  )}
+
                   {/* Custom item note */}
                   {item.itemNotes && (
                     <p className="text-xs text-amber-300 font-bold bg-amber-500/10 p-1 rounded-md mt-1 border border-amber-500/20">

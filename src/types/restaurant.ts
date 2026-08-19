@@ -72,6 +72,7 @@ export interface MenuItem {
   price: number;
   image?: string;
   isAvailable: boolean; // Canlı Stok Açık/Kapalı ("Tükendi")
+  ingredients?: string[]; // e.g. ["Dana Köfte", "Cheddar", "Karamelize Soğan", "Turşu", "Trüf Mayonez"]
   preparationTimeMinutes?: number;
   calories?: number;
   allergens?: string[]; // e.g. ["Gluten", "Laktoz", "Fıstık"]
@@ -122,6 +123,7 @@ export interface OrderItem {
   finalPrice: number; // basePrice + options priceDelta
   quantity: number;
   selectedOptions?: SelectedOptionPayload[];
+  removedIngredients?: string[]; // e.g. ["Karamelize Soğan", "Turşu"]
   itemNotes?: string;
 }
 

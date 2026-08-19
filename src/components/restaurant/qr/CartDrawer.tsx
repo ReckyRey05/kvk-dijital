@@ -106,6 +106,18 @@ export default function CartDrawer({
                       </div>
                     )}
 
+                    {/* Removed ingredients */}
+                    {item.removedIngredients && item.removedIngredients.length > 0 && (
+                      <div className="text-[10px] text-red-400 font-semibold mt-1 flex flex-wrap gap-1">
+                        <span className="text-red-400">Çıkarılanlar:</span>
+                        {item.removedIngredients.map((ing) => (
+                          <span key={ing} className="line-through bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
+                            {ing}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     {/* Custom note */}
                     {item.itemNotes && (
                       <p className="text-[10px] text-amber-300/80 italic mt-1">
