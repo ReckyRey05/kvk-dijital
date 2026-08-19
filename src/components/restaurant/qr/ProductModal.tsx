@@ -124,8 +124,20 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
 
           <div className="absolute bottom-4 left-4 right-4">
             <h2 className="text-xl font-bold text-white leading-snug">{item.name}</h2>
-            <div className="flex items-center gap-3 text-xs text-foreground/70 mt-1">
-              <span className="font-extrabold text-accent text-base">{item.price} TL</span>
+            <div className="flex items-center gap-2 text-xs text-foreground/70 mt-1 flex-wrap">
+              {item.originalPrice && item.originalPrice > item.price && (
+                <span className="line-through text-foreground/40 font-bold text-sm">
+                  {item.originalPrice} TL
+                </span>
+              )}
+              <span className={`font-extrabold text-base ${item.originalPrice && item.originalPrice > item.price ? "text-green-400" : "text-accent"}`}>
+                {item.price} TL
+              </span>
+              {item.originalPrice && item.originalPrice > item.price && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/20 text-green-300 border border-green-500/30">
+                  %{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)} İndirim
+                </span>
+              )}
               {item.calories && <span>• {item.calories} kcal</span>}
               {item.preparationTimeMinutes && <span>• ~{item.preparationTimeMinutes} dk</span>}
             </div>

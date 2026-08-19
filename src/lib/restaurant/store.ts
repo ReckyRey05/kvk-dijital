@@ -142,9 +142,33 @@ export function useRestaurantStore() {
     const handler = () => setTick((t) => t + 1);
     listeners.add(handler);
     window.addEventListener("restaurant_state_sync", handler);
+
+    // Periodic check for expired discounts
+    const checkExpirations = () => {
+      const now = new Date();
+      let hasChanges = false;
+      globalMenuItems = globalMenuItems.map((item) => {
+        if (item.discountUntil && new Date(item.discountUntil) <= now && item.originalPrice) {
+          hasChanges = true;
+          return {
+            ...item,
+            price: item.originalPrice,
+            originalPrice: undefined,
+            discountUntil: undefined,
+          };
+        }
+        return item;
+      });
+      if (hasChanges) notifyAll();
+    };
+
+    checkExpirations();
+    const expiryInterval = setInterval(checkExpirations, 10000);
+
     return () => {
       listeners.delete(handler);
       window.removeEventListener("restaurant_state_sync", handler);
+      clearInterval(expiryInterval);
     };
   }, []);
 
@@ -268,8 +292,47 @@ export function useRestaurantStore() {
     updateItemPrice: (itemId: string, newPrice: number) => {
       if (isNaN(newPrice) || newPrice < 0) return;
       globalMenuItems = globalMenuItems.map((item) =>
-        item.id === itemId ? { ...item, price: Math.round(newPrice) } : item
+        item.id === itemId
+          ? {
+              ...item,
+              price: Math.round(newPrice),
+              originalPrice: undefined,
+              discountUntil: undefined,
+            }
+          : item
       );
+      notifyAll();
+    },
+
+    setCampaignDiscount: (itemId: string, discountedPrice: number, discountUntil: string) => {
+      if (isNaN(discountedPrice) || discountedPrice <= 0) return;
+      globalMenuItems = globalMenuItems.map((item) => {
+        if (item.id === itemId) {
+          const originalPrice = item.originalPrice || item.price;
+          return {
+            ...item,
+            price: Math.round(discountedPrice),
+            originalPrice,
+            discountUntil,
+          };
+        }
+        return item;
+      });
+      notifyAll();
+    },
+
+    cancelCampaignDiscount: (itemId: string) => {
+      globalMenuItems = globalMenuItems.map((item) => {
+        if (item.id === itemId && item.originalPrice) {
+          return {
+            ...item,
+            price: item.originalPrice,
+            originalPrice: undefined,
+            discountUntil: undefined,
+          };
+        }
+        return item;
+      });
       notifyAll();
     },
 

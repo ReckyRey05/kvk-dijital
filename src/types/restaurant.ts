@@ -70,6 +70,8 @@ export interface MenuItem {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number; // İndirim öncesi orijinal fiyat (örn: 360 TL)
+  discountUntil?: string; // İndirim bitiş tarihi (ISO string)
   image?: string;
   isAvailable: boolean; // Canlı Stok Açık/Kapalı ("Tükendi")
   ingredients?: string[]; // e.g. ["Dana Köfte", "Cheddar", "Karamelize Soğan", "Turşu", "Trüf Mayonez"]

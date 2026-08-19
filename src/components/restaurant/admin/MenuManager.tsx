@@ -1,14 +1,15 @@
-"use client";
-
 import { useState } from "react";
 import { MenuItem, Category } from "@/types/restaurant";
-import { Plus, Edit2, Check, X, AlertCircle, Sparkles, Image as ImageIcon, Flame } from "lucide-react";
+import DiscountCampaignModal from "./DiscountCampaignModal";
+import { Plus, Edit2, Check, X, AlertCircle, Sparkles, Image as ImageIcon, Flame, Tag, Clock } from "lucide-react";
 
 interface MenuManagerProps {
   categories: Category[];
   menuItems: MenuItem[];
   onToggleAvailability: (itemId: string) => void;
   onUpdatePrice?: (itemId: string, newPrice: number) => void;
+  onSetCampaignDiscount?: (itemId: string, discountedPrice: number, discountUntil: string) => void;
+  onCancelCampaignDiscount?: (itemId: string) => void;
 }
 
 export default function MenuManager({
@@ -16,11 +17,18 @@ export default function MenuManager({
   menuItems,
   onToggleAvailability,
   onUpdatePrice,
+  onSetCampaignDiscount,
+  onCancelCampaignDiscount,
 }: MenuManagerProps) {
   const [selectedCatId, setSelectedCatId] = useState<string>("ALL");
   const [editingPriceItemId, setEditingPriceItemId] = useState<string | null>(null);
   const [tempPrice, setTempPrice] = useState<string>("");
   const [savedFeedbackId, setSavedFeedbackId] = useState<string | null>(null);
+
+  // Discount campaign modal state
+  const [campaignModalItem, setCampaignModalItem] = useState<MenuItem | null>(null);
+  const [proposedPrice, setProposedPrice] = useState<number>(0);
+  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
 
   const filteredItems =
     selectedCatId === "ALL"
@@ -32,12 +40,19 @@ export default function MenuManager({
     setTempPrice(item.price.toString());
   };
 
-  const handleSavePrice = (itemId: string) => {
+  const handleSavePrice = (item: MenuItem) => {
     const num = parseFloat(tempPrice);
-    if (!isNaN(num) && num >= 0 && onUpdatePrice) {
-      onUpdatePrice(itemId, num);
-      setSavedFeedbackId(itemId);
-      setTimeout(() => setSavedFeedbackId(null), 1500);
+    if (!isNaN(num) && num >= 0) {
+      // If new price is lower than current price, ask if this is a promotional discount
+      if (num < item.price) {
+        setCampaignModalItem(item);
+        setProposedPrice(num);
+        setIsCampaignModalOpen(true);
+      } else if (onUpdatePrice) {
+        onUpdatePrice(item.id, num);
+        setSavedFeedbackId(item.id);
+        setTimeout(() => setSavedFeedbackId(null), 1500);
+      }
     }
     setEditingPriceItemId(null);
   };
@@ -145,7 +160,7 @@ export default function MenuManager({
                       value={tempPrice}
                       onChange={(e) => setTempPrice(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter") handleSavePrice(item.id);
+                        if (e.key === "Enter") handleSavePrice(item);
                         if (e.key === "Escape") setEditingPriceItemId(null);
                       }}
                       className="w-16 bg-transparent text-white font-extrabold text-xs px-1.5 py-0.5 focus:outline-none"
@@ -153,7 +168,7 @@ export default function MenuManager({
                     />
                     <span className="text-[10px] text-accent font-bold">TL</span>
                     <button
-                      onClick={() => handleSavePrice(item.id)}
+                      onClick={() => handleSavePrice(item)}
                       className="w-6 h-6 rounded-lg bg-accent text-black flex items-center justify-center hover:bg-accent/90 cursor-pointer"
                       title="Kaydet"
                     >
@@ -168,19 +183,46 @@ export default function MenuManager({
                     </button>
                   </div>
                 ) : (
-                  <div
-                    onClick={() => handleStartEditPrice(item)}
-                    className="group/price flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/[0.03] hover:bg-accent/15 border border-white/5 hover:border-accent/40 transition-all cursor-pointer"
-                    title="Fiyatı güncellemek için tıklayın"
-                  >
-                    <span className="text-sm font-black text-white group-hover/price:text-accent transition-colors">
-                      {item.price} TL
-                    </span>
-                    <Edit2 className="w-3 h-3 text-foreground/40 group-hover/price:text-accent transition-colors" />
-                    {isSavedFeedback && (
-                      <span className="text-[10px] text-green-400 font-bold ml-1 animate-fade-in">
-                        ✓ Güncellendi
-                      </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div
+                      onClick={() => handleStartEditPrice(item)}
+                      className="group/price flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/[0.03] hover:bg-accent/15 border border-white/5 hover:border-accent/40 transition-all cursor-pointer"
+                      title="Fiyatı güncellemek veya indirim yapmak için tıklayın"
+                    >
+                      {item.originalPrice && item.originalPrice > item.price ? (
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="line-through text-xs text-foreground/40 font-bold">
+                            {item.originalPrice} TL
+                          </span>
+                          <span className="text-sm font-black text-green-400">
+                            {item.price} TL
+                          </span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-300 font-bold border border-green-500/30">
+                            İndirimde
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-sm font-black text-white group-hover/price:text-accent transition-colors">
+                          {item.price} TL
+                        </span>
+                      )}
+                      <Edit2 className="w-3 h-3 text-foreground/40 group-hover/price:text-accent transition-colors" />
+                      {isSavedFeedback && (
+                        <span className="text-[10px] text-green-400 font-bold ml-1 animate-fade-in">
+                          ✓ Güncellendi
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Cancel Campaign Button if active */}
+                    {item.originalPrice && item.originalPrice > item.price && onCancelCampaignDiscount && (
+                      <button
+                        onClick={() => onCancelCampaignDiscount(item.id)}
+                        className="text-[10px] text-red-400 hover:text-red-300 underline font-semibold cursor-pointer"
+                        title="İndirimi sonlandır ve eski fiyata dön"
+                      >
+                        İndirimi Bitir
+                      </button>
                     )}
                   </div>
                 )}
@@ -216,6 +258,26 @@ export default function MenuManager({
           );
         })}
       </div>
+
+      {/* Discount Campaign Modal */}
+      <DiscountCampaignModal
+        isOpen={isCampaignModalOpen}
+        item={campaignModalItem}
+        proposedPrice={proposedPrice}
+        onClose={() => setIsCampaignModalOpen(false)}
+        onConfirmPermanentPrice={(itemId, price) => {
+          if (onUpdatePrice) onUpdatePrice(itemId, price);
+          setSavedFeedbackId(itemId);
+          setTimeout(() => setSavedFeedbackId(null), 1500);
+        }}
+        onConfirmCampaignDiscount={(itemId, discountedPrice, expiryIso) => {
+          if (onSetCampaignDiscount) {
+            onSetCampaignDiscount(itemId, discountedPrice, expiryIso);
+            setSavedFeedbackId(itemId);
+            setTimeout(() => setSavedFeedbackId(null), 1500);
+          }
+        }}
+      />
     </div>
   );
 }

@@ -68,10 +68,16 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
       {/* Product Info & Price */}
       <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
         <div>
-          {/* Badges */}
-          {item.badges && item.badges.length > 0 && isAvailable && (
-            <div className="flex flex-wrap gap-1.5 mb-1.5">
-              {item.badges.map((b) => {
+          {/* Badges (Including Discount Badge) */}
+          <div className="flex flex-wrap gap-1.5 mb-1.5">
+            {item.originalPrice && item.originalPrice > item.price && (
+              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/40 shadow-xs animate-pulse">
+                %{Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)} İndirim
+              </span>
+            )}
+
+            {item.badges && item.badges.length > 0 && isAvailable && (
+              item.badges.map((b) => {
                 const badgeInfo = BADGE_MAP[b];
                 if (!badgeInfo) return null;
                 return (
@@ -82,9 +88,9 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
                     {badgeInfo.label}
                   </span>
                 );
-              })}
-            </div>
-          )}
+              })
+            )}
+          </div>
 
           <h3 className="font-extrabold text-white text-sm leading-snug line-clamp-1 group-hover:text-accent transition-colors">
             {item.name}
@@ -104,8 +110,13 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
 
         {/* Bottom Row: Price + Add Button */}
         <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
-          <div className="flex items-baseline gap-1">
-            <span className="text-base font-black text-white">
+          <div className="flex items-baseline gap-1.5">
+            {item.originalPrice && item.originalPrice > item.price && (
+              <span className="text-xs line-through text-foreground/40 font-bold">
+                {item.originalPrice.toLocaleString("tr-TR")} TL
+              </span>
+            )}
+            <span className={`text-base font-black ${item.originalPrice && item.originalPrice > item.price ? "text-green-400" : "text-white"}`}>
               {item.price.toLocaleString("tr-TR")}
             </span>
             <span className="text-xs text-accent font-bold">TL</span>
