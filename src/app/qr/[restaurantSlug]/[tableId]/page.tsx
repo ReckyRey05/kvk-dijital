@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { MenuItem, OrderItem, WaiterCallType, MenuLanguage } from "@/types/restaurant";
+import { MenuItem, OrderItem, WaiterCallType, MenuLanguage, MenuCurrency } from "@/types/restaurant";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
 import { DICTIONARY } from "@/lib/restaurant/i18n";
+import { formatPrice } from "@/lib/restaurant/currency";
 import MenuHeader from "@/components/restaurant/qr/MenuHeader";
 import CategoryNav from "@/components/restaurant/qr/CategoryNav";
 import ProductCard from "@/components/restaurant/qr/ProductCard";
@@ -14,6 +15,9 @@ import WaiterCallModal from "@/components/restaurant/qr/WaiterCallModal";
 import OrderTracker from "@/components/restaurant/qr/OrderTracker";
 import SplitBillModal from "@/components/restaurant/qr/SplitBillModal";
 import FeedbackModal from "@/components/restaurant/qr/FeedbackModal";
+import OnlinePaymentModal from "@/components/restaurant/qr/OnlinePaymentModal";
+import SpinWheelModal from "@/components/restaurant/qr/SpinWheelModal";
+import JukeboxModal from "@/components/restaurant/qr/JukeboxModal";
 import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star } from "lucide-react";
 
 interface QrMenuPageProps {
@@ -27,10 +31,12 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const resolvedParams = use(params);
   const { restaurantSlug, tableId } = resolvedParams;
 
-  const { orders, tables, menuItems, categories, createOrder, callWaiter } = useRestaurantStore();
+  const { orders, tables, menuItems, categories, createOrder, callWaiter, payTableOnline } =
+    useRestaurantStore();
 
-  // Language state
+  // Language & Currency state
   const [lang, setLang] = useState<MenuLanguage>("TR");
+  const [currency, setCurrency] = useState<MenuCurrency>("TRY");
   const t = DICTIONARY[lang];
 
   // Find table or fallback
@@ -54,6 +60,9 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
   const [isSplitBillOpen, setIsSplitBillOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isOnlinePaymentOpen, setIsOnlinePaymentOpen] = useState(false);
+  const [isSpinWheelOpen, setIsSpinWheelOpen] = useState(false);
+  const [isJukeboxOpen, setIsJukeboxOpen] = useState(false);
 
   // 15-Minute Dynamic Session Timer
   const [remainingSeconds, setRemainingSeconds] = useState(15 * 60); // 900s
@@ -198,28 +207,13 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenOrderTracker={() => setIsTrackerOpen(true)}
         lang={lang}
         onToggleLang={() => setLang((l) => (l === "TR" ? "EN" : "TR"))}
+        currency={currency}
+        onSelectCurrency={setCurrency}
         onOpenSplitBill={() => setIsSplitBillOpen(true)}
         onOpenFeedback={() => setIsFeedbackOpen(true)}
+        onOpenSpinWheel={() => setIsSpinWheelOpen(true)}
+        onOpenJukebox={() => setIsJukeboxOpen(true)}
       />
-
-      {/* Quick Action Tools Bar (Split Bill & Feedback Booster) */}
-      <div className="max-w-md mx-auto px-4 pt-3 flex items-center justify-between gap-2">
-        <button
-          onClick={() => setIsSplitBillOpen(true)}
-          className="flex-1 py-2 px-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 text-[11px] font-semibold text-foreground/80 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-        >
-          <Calculator className="w-3.5 h-3.5 text-accent" />
-          <span>{t.splitBill}</span>
-        </button>
-
-        <button
-          onClick={() => setIsFeedbackOpen(true)}
-          className="flex-1 py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20 text-[11px] font-semibold text-amber-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-        >
-          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-          <span>{lang === "TR" ? "Bizi Değerlendirin" : "Rate Us"}</span>
-        </button>
-      </div>
 
       {/* Search Bar */}
       <div className="max-w-md mx-auto px-4 pt-3 pb-1">
@@ -254,6 +248,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             <ProductCard
               key={item.id}
               item={item}
+              currency={currency}
               onSelectProduct={(prod) => setSelectedProduct(prod)}
             />
           ))
@@ -291,7 +286,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
             <div className="flex items-center gap-2">
               <span className="text-base font-black">
-                {cartTotalAmount.toLocaleString("tr-TR")} TL
+                {formatPrice(cartTotalAmount, currency)}
               </span>
               <ArrowRight className="w-4 h-4" />
             </div>
@@ -319,6 +314,8 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onRemoveItem={handleRemoveItem}
         onSubmitOrder={handleSubmitOrder}
         remainingMinutes={remainingMinutes}
+        currency={currency}
+        onOpenOnlinePayment={() => setIsOnlinePaymentOpen(true)}
       />
 
       {/* Waiter Call Modal */}
@@ -352,6 +349,35 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         tableNumber={currentTable.tableNumber}
         lang={lang}
         googleReviewUrl={DEMO_RESTAURANT.settings.googleReviewUrl}
+      />
+
+      {/* Masada Online Ödeme (3D Secure) Modal */}
+      <OnlinePaymentModal
+        isOpen={isOnlinePaymentOpen}
+        onClose={() => setIsOnlinePaymentOpen(false)}
+        tableNumber={currentTable.tableNumber}
+        totalAmount={currentTable.activeBillTotal || cartTotalAmount || 450}
+        currency={currency}
+        onPaymentSuccess={() => {
+          payTableOnline(currentTable.id);
+          setCartItems([]);
+          setIsOnlinePaymentOpen(false);
+          setIsSpinWheelOpen(true); // Reward customer with spin wheel!
+        }}
+      />
+
+      {/* İkram Çarkıfeleği (Gamification Loyalty) Modal */}
+      <SpinWheelModal
+        isOpen={isSpinWheelOpen}
+        onClose={() => setIsSpinWheelOpen(false)}
+        tableNumber={currentTable.tableNumber}
+      />
+
+      {/* Dijital Jukebox (Müzik Kutusu) Modal */}
+      <JukeboxModal
+        isOpen={isJukeboxOpen}
+        onClose={() => setIsJukeboxOpen(false)}
+        tableNumber={currentTable.tableNumber}
       />
     </div>
   );

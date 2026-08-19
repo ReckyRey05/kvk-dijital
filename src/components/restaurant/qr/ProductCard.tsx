@@ -1,11 +1,11 @@
-"use client";
-
-import { MenuItem } from "@/types/restaurant";
+import { MenuItem, MenuCurrency } from "@/types/restaurant";
 import { Plus, Flame, Clock, Sparkles } from "lucide-react";
+import { formatPrice } from "@/lib/restaurant/currency";
 
 interface ProductCardProps {
   item: MenuItem;
   onSelectProduct: (item: MenuItem) => void;
+  currency?: MenuCurrency;
 }
 
 const BADGE_MAP: Record<string, { label: string; bg: string; text: string }> = {
@@ -15,7 +15,7 @@ const BADGE_MAP: Record<string, { label: string; bg: string; text: string }> = {
   SPICY: { label: "Acılı", bg: "bg-red-500/20 border-red-500/30", text: "text-red-300" },
 };
 
-export default function ProductCard({ item, onSelectProduct }: ProductCardProps) {
+export default function ProductCard({ item, onSelectProduct, currency = "TRY" }: ProductCardProps) {
   const isAvailable = item.isAvailable;
 
   return (
@@ -113,13 +113,12 @@ export default function ProductCard({ item, onSelectProduct }: ProductCardProps)
           <div className="flex items-baseline gap-1.5">
             {item.originalPrice && item.originalPrice > item.price && (
               <span className="text-xs line-through text-foreground/40 font-bold">
-                {item.originalPrice.toLocaleString("tr-TR")} TL
+                {formatPrice(item.originalPrice, currency)}
               </span>
             )}
             <span className={`text-base font-black ${item.originalPrice && item.originalPrice > item.price ? "text-green-400" : "text-white"}`}>
-              {item.price.toLocaleString("tr-TR")}
+              {formatPrice(item.price, currency)}
             </span>
-            <span className="text-xs text-accent font-bold">TL</span>
           </div>
 
           {/* Plus Add Button */}

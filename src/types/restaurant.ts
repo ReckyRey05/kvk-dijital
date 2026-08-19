@@ -2,8 +2,49 @@ export type OrderMode = "DIRECT_KITCHEN" | "WAITER_CONFIRMATION";
 export type PaymentMode = "CASHIER" | "ONLINE" | "HYBRID";
 export type TableStatus = "EMPTY" | "OCCUPIED" | "BILL_REQUESTED" | "WAITER_CALLED";
 export type OrderStatus = "PENDING_CONFIRMATION" | "PREPARING" | "READY" | "SERVED" | "COMPLETED" | "CANCELLED";
-export type WaiterCallType = "WAITER" | "BILL_CASH" | "BILL_CARD" | "WATER_NAPKIN";
+export type WaiterCallType =
+  | "WAITER"
+  | "BILL_CASH"
+  | "BILL_CARD"
+  | "WATER_NAPKIN"
+  | "ASHTRAY"
+  | "WIPES"
+  | "BABY_CHAIR";
 export type MenuLanguage = "TR" | "EN";
+export type MenuCurrency = "TRY" | "USD" | "EUR" | "GBP";
+
+export interface ManagerAlert {
+  id: string;
+  tableId: string;
+  tableNumber: string;
+  type: "NEGATIVE_FEEDBACK" | "URGENT_CALL" | "VIP_VISIT";
+  rating?: number;
+  message: string;
+  customerName?: string;
+  customerPhone?: string;
+  createdAt: string;
+  isResolved: boolean;
+}
+
+export interface CustomerVoucher {
+  id: string;
+  code: string;
+  title: string;
+  discountType: "PERCENT" | "ITEM" | "FIXED";
+  value: string;
+  customerName: string;
+  customerPhone: string;
+  createdAt: string;
+}
+
+export interface SongRequest {
+  id: string;
+  tableNumber: string;
+  songTitle: string;
+  artist: string;
+  votes: number;
+  createdAt: string;
+}
 
 export interface RestaurantSettings {
   orderMode: OrderMode;

@@ -36,9 +36,12 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     orders,
     tables,
     waiterCalls,
+    managerAlerts,
+    vouchers,
     confirmOrder,
     updateOrderStatus,
     resolveWaiterCall,
+    resolveManagerAlert,
     closeTableBill,
     transferTable,
   } = useRestaurantStore();
@@ -51,6 +54,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
   const occupiedCount = tables.filter((t) => t.status !== "EMPTY" || t.activeBillTotal > 0).length;
   const pendingOrders = orders.filter((o) => o.status === "PENDING_CONFIRMATION");
   const activeCalls = waiterCalls.filter((c) => c.status === "ACTIVE");
+  const unhandledAlerts = managerAlerts.filter((a) => !a.isResolved);
   const totalLiveRevenue = tables.reduce((sum, t) => sum + (t.activeBillTotal || 0), 0);
 
   const zReportData = generateZReport(orders, tables, DEMO_RESTAURANT.name);
@@ -71,6 +75,33 @@ export default function KasaPosPage({ params }: KasaPageProps) {
 
   return (
     <div className="min-h-screen bg-[#050505] text-foreground flex flex-col">
+      {/* Urgent Manager Alerts Banner (Bad Review Shield & VIP) */}
+      {unhandledAlerts.length > 0 && (
+        <div className="bg-red-950/90 border-b border-red-500/40 px-6 py-2.5 flex items-center justify-between gap-4 animate-fade-in sticky top-0 z-40">
+          <div className="flex items-center gap-3">
+            <span className="w-3 h-3 rounded-full bg-red-500 animate-ping shrink-0" />
+            <div className="text-xs">
+              <span className="font-extrabold text-red-300 mr-2">
+                ⚠️ MÜDÜR ACİL BİLDİRİMİ ({unhandledAlerts[0].tableNumber}):
+              </span>
+              <span className="text-white font-medium">{unhandledAlerts[0].message}</span>
+              {unhandledAlerts[0].rating && (
+                <span className="ml-2 px-2 py-0.5 rounded bg-red-900 text-red-200 text-[10px] font-bold">
+                  ★ {unhandledAlerts[0].rating}/5 Puan
+                </span>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={() => resolveManagerAlert(unhandledAlerts[0].id)}
+            className="px-3 py-1 rounded-xl bg-red-500 hover:bg-red-400 text-black font-extrabold text-[11px] transition-colors cursor-pointer shrink-0"
+          >
+            Müdahale Edildi / Kapat
+          </button>
+        </div>
+      )}
+
       {/* Top POS Navigation Bar */}
       <header className="sticky top-0 z-30 bg-[#080d0d] border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-4">

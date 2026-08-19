@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Order, Table, WaiterCall, MenuItem, Category } from "@/types/restaurant";
+import { Order, Table, WaiterCall, MenuItem, Category, ManagerAlert, CustomerVoucher, SongRequest } from "@/types/restaurant";
 import { DEMO_TABLES, DEMO_MENU_ITEMS, DEMO_CATEGORIES } from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 
@@ -126,6 +126,47 @@ let globalCalls = [...INITIAL_CALLS];
 let globalMenuItems = [...DEMO_MENU_ITEMS];
 let globalCategories = [...DEMO_CATEGORIES];
 
+let globalManagerAlerts: ManagerAlert[] = [
+  {
+    id: "alert_1",
+    tableId: "m-4",
+    tableNumber: "Masa 4",
+    type: "VIP_VISIT",
+    message: "VIP Düzenli Müşteri Masaya Oturdu (Ahmet Bey)",
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+    isResolved: false,
+  },
+];
+
+let globalVouchers: CustomerVoucher[] = [];
+
+let globalSongRequests: SongRequest[] = [
+  {
+    id: "song_1",
+    tableNumber: "Masa 2",
+    songTitle: "Midnight City",
+    artist: "M83",
+    votes: 6,
+    createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "song_2",
+    tableNumber: "Masa 4",
+    songTitle: "Save Your Tears",
+    artist: "The Weeknd",
+    votes: 4,
+    createdAt: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "song_3",
+    tableNumber: "Masa 6",
+    songTitle: "Get Lucky",
+    artist: "Daft Punk ft. Pharrell",
+    votes: 9,
+    createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+  },
+];
+
 const listeners = new Set<() => void>();
 
 function notifyAll() {
@@ -178,6 +219,9 @@ export function useRestaurantStore() {
     waiterCalls: globalCalls,
     menuItems: globalMenuItems,
     categories: globalCategories,
+    managerAlerts: globalManagerAlerts,
+    vouchers: globalVouchers,
+    songRequests: globalSongRequests,
 
     // Actions
     createOrder: (order: Order) => {
@@ -379,6 +423,57 @@ export function useRestaurantStore() {
         return t;
       });
 
+      notifyAll();
+      return true;
+    },
+
+    addManagerAlert: (alert: ManagerAlert) => {
+      globalManagerAlerts = [alert, ...globalManagerAlerts];
+      playWaiterCallSound();
+      notifyAll();
+    },
+
+    resolveManagerAlert: (alertId: string) => {
+      globalManagerAlerts = globalManagerAlerts.map((a) =>
+        a.id === alertId ? { ...a, isResolved: true } : a
+      );
+      notifyAll();
+    },
+
+    addVoucher: (voucher: CustomerVoucher) => {
+      globalVouchers = [voucher, ...globalVouchers];
+      notifyAll();
+    },
+
+    addSongRequest: (song: SongRequest) => {
+      globalSongRequests = [song, ...globalSongRequests];
+      notifyAll();
+    },
+
+    voteSong: (songId: string) => {
+      globalSongRequests = globalSongRequests.map((s) =>
+        s.id === songId ? { ...s, votes: s.votes + 1 } : s
+      );
+      notifyAll();
+    },
+
+    payTableOnline: (tableId: string) => {
+      globalOrders = globalOrders.map((ord) =>
+        ord.tableId === tableId && ord.status !== "CANCELLED"
+          ? { ...ord, paymentStatus: "PAID_ONLINE", paymentMethod: "ONLINE_POS", status: "COMPLETED" }
+          : ord
+      );
+      globalTables = globalTables.map((t) =>
+        t.id === tableId
+          ? {
+              ...t,
+              status: "EMPTY",
+              activeOrderId: undefined,
+              activeBillTotal: 0,
+              lastOrderTime: undefined,
+            }
+          : t
+      );
       notifyAll();
       return true;
     },

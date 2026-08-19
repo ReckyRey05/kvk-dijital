@@ -1,8 +1,7 @@
-"use client";
-
 import { useState } from "react";
-import { OrderItem, Restaurant } from "@/types/restaurant";
-import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
+import { OrderItem, Restaurant, MenuCurrency } from "@/types/restaurant";
+import { X, Trash2, Plus, Minus, ArrowRight, ShieldCheck, Clock, CheckCircle2, CreditCard } from "lucide-react";
+import { formatPrice } from "@/lib/restaurant/currency";
 
 interface CartDrawerProps {
   restaurant: Restaurant;
@@ -14,6 +13,8 @@ interface CartDrawerProps {
   onRemoveItem: (index: number) => void;
   onSubmitOrder: (notes: string) => Promise<void>;
   remainingMinutes: number;
+  currency?: MenuCurrency;
+  onOpenOnlinePayment?: () => void;
 }
 
 export default function CartDrawer({
@@ -26,6 +27,8 @@ export default function CartDrawer({
   onRemoveItem,
   onSubmitOrder,
   remainingMinutes,
+  currency = "TRY",
+  onOpenOnlinePayment,
 }: CartDrawerProps) {
   const [generalNotes, setGeneralNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -193,29 +196,45 @@ export default function CartDrawer({
             <div className="flex items-center justify-between pt-1 border-t border-white/5 px-1">
               <span className="text-xs font-medium text-foreground/70">Toplam Tutar</span>
               <span className="text-lg font-extrabold text-white">
-                {totalAmount.toLocaleString("tr-TR")} TL
+                {formatPrice(totalAmount, currency)}
               </span>
             </div>
 
-            {/* Submit Button */}
-            <button
-              onClick={handleOrderSubmit}
-              disabled={isSubmitting}
-              className="w-full py-4 rounded-xl bg-accent text-black font-extrabold text-sm flex items-center justify-center gap-2 hover:bg-accent/90 transition-all shadow-xl shadow-accent/20 disabled:opacity-50 cursor-pointer"
-            >
-              {isSubmitting ? (
-                <span>Sipariş İletiliyor...</span>
-              ) : (
-                <>
-                  <span>
-                    {restaurant.settings.orderMode === "WAITER_CONFIRMATION"
-                      ? "Siparişi Kasaya Gönder (Onaylı)"
-                      : "Siparişi Doğrudan Mutfağa Gönder"}
-                  </span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
+            {/* Action Buttons: Standard Order or Online Pay */}
+            <div className="space-y-2">
+              <button
+                onClick={handleOrderSubmit}
+                disabled={isSubmitting}
+                className="w-full py-3.5 rounded-xl bg-accent text-black font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-accent/90 transition-all shadow-xl shadow-accent/20 disabled:opacity-50 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <span>Sipariş İletiliyor...</span>
+                ) : (
+                  <>
+                    <span>
+                      {restaurant.settings.orderMode === "WAITER_CONFIRMATION"
+                        ? "Siparişi Kasaya Gönder (Onaylı)"
+                        : "Siparişi Doğrudan Mutfağa Gönder"}
+                    </span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              {onOpenOnlinePayment && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenOnlinePayment();
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  <span>Masada Kredi Kartı ile Öde (3D Secure)</span>
+                </button>
               )}
-            </button>
+            </div>
           </div>
         )}
       </div>

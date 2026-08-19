@@ -1,9 +1,8 @@
-"use client";
-
 import { useState } from "react";
-import { X, Star, ExternalLink, CheckCircle2, MessageSquare } from "lucide-react";
+import { X, Star, ExternalLink, CheckCircle2, MessageSquare, AlertTriangle } from "lucide-react";
 import { MenuLanguage } from "@/types/restaurant";
 import { DICTIONARY } from "@/lib/restaurant/i18n";
+import { useRestaurantStore } from "@/lib/restaurant/store";
 
 interface FeedbackModalProps {
   isOpen: boolean;
@@ -20,6 +19,7 @@ export default function FeedbackModal({
   googleReviewUrl = "https://maps.google.com",
   lang,
 }: FeedbackModalProps) {
+  const { addManagerAlert } = useRestaurantStore();
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -30,7 +30,20 @@ export default function FeedbackModal({
   const handleSubmit = () => {
     if (rating >= 4) {
       window.open(googleReviewUrl, "_blank");
+    } else {
+      // Dispatch urgent bad-review shield alert to cashier & manager
+      addManagerAlert({
+        id: `alert_neg_${Date.now()}`,
+        tableId: tableNumber,
+        tableNumber,
+        type: "NEGATIVE_FEEDBACK",
+        rating,
+        message: comment || "Müşteri servis veya yemekten memnun kalmadı (Düşük Puan).",
+        createdAt: new Date().toISOString(),
+        isResolved: false,
+      });
     }
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
