@@ -101,13 +101,13 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
   <li><strong>Özel Entegrasyon & Fonksiyon Geliştirme:</strong> İşletmenize özel bir sadakat kurgusu, vale takip sistemi, mevcut muhasebe/ERP yazılımı veya özel sipariş kuralı varsa, <strong>KvK Dijital Çözümler</strong> mühendislik ekibi tarafından mekanınıza özel kodlanır ve devreye alınır.</li>
 </ul>
 
-<div class="my-8 p-6 rounded-2xl bg-accent/10 border border-accent/30 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
-  <div>
-    <h4 class="text-base font-extrabold text-accent">Canlı Demoyu Hemen Kendi Ekranınızda Test Edin</h4>
-    <p class="text-xs text-foreground/70">Masa QR menüsünden sipariş verin, Kasa POS ekranında onaylayın ve Mutfak KDS akışını deneyimleyin.</p>
+<div class="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-accent/20 via-emerald-500/10 to-transparent border border-accent/40 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+  <div class="space-y-1 text-center sm:text-left">
+    <h4 class="text-lg font-black text-accent tracking-tight">Canlı Demoyu Hemen Kendi Ekranınızda Test Edin</h4>
+    <p class="text-xs sm:text-sm text-foreground/80 leading-relaxed">Masa QR menüsünden sipariş verin, Kasa POS ekranında onaylayın ve Mutfak KDS akışını anında deneyimleyin.</p>
   </div>
-  <a href="/restoran/aura-bistro/kasa" class="px-5 py-2.5 rounded-xl bg-accent text-black font-extrabold text-xs uppercase tracking-wider whitespace-nowrap hover:bg-accent/90 transition-all shadow-lg shadow-accent/20">
-    Canlı POS'u Başlat
+  <a href="/restoran/aura-bistro/kasa" class="btn-cta px-6 py-3.5 rounded-2xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs uppercase tracking-wider whitespace-nowrap transition-all shadow-xl shadow-accent/30" style="background-color: #00A6A6 !important; color: #000000 !important; text-decoration: none !important; font-weight: 900 !important;">
+    Canlı POS'u Başlat →
   </a>
 </div>
 `,

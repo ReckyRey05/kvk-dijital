@@ -39,12 +39,34 @@
   color: #00A6A6;
   font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .blog-article-content a:hover {
   text-decoration: underline;
   color: #33bbbb;
+}
+
+/* Button & CTA Link Resets inside blog content */
+.blog-article-content a.btn-cta,
+.blog-article-content a[class*="bg-accent"],
+.blog-article-content a[class*="bg-emerald"],
+.blog-article-content a[class*="bg-white"] {
+  color: #050505 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.blog-article-content a.btn-cta:hover,
+.blog-article-content a[class*="bg-accent"]:hover,
+.blog-article-content a[class*="bg-emerald"]:hover,
+.blog-article-content a[class*="bg-white"]:hover {
+  text-decoration: none !important;
+  color: #050505 !important;
+  opacity: 0.95;
 }
 
 .blog-article-content ul {
