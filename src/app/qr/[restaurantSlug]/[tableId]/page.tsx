@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
+import { useRouter } from "next/navigation";
 import { MenuItem, OrderItem, WaiterCallType, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
@@ -19,7 +20,7 @@ import OnlinePaymentModal from "@/components/restaurant/qr/OnlinePaymentModal";
 import SpinWheelModal from "@/components/restaurant/qr/SpinWheelModal";
 import JukeboxModal from "@/components/restaurant/qr/JukeboxModal";
 import ComplaintModal from "@/components/restaurant/qr/ComplaintModal";
-import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star } from "lucide-react";
+import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star, ArrowRightLeft } from "lucide-react";
 
 interface QrMenuPageProps {
   params: Promise<{
@@ -29,6 +30,7 @@ interface QrMenuPageProps {
 }
 
 export default function QrMenuPage({ params }: QrMenuPageProps) {
+  const router = useRouter();
   const resolvedParams = use(params);
   const { restaurantSlug, tableId } = resolvedParams;
 
@@ -37,6 +39,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     tables,
     menuItems,
     categories,
+    tableTransfers,
     createOrder,
     callWaiter,
     payTableOnline,
@@ -50,6 +53,32 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     transferHostRole,
     updateParticipantName,
   } = useRestaurantStore();
+
+  const [transferAlert, setTransferAlert] = useState<{ toTableNumber: string; toTableId: string } | null>(null);
+
+  // Real-time Table Transfer Auto-Redirect
+  useEffect(() => {
+    const transfer = tableTransfers[tableId];
+    if (transfer && transfer.toTableId !== tableId) {
+      setTransferAlert({
+        toTableNumber: transfer.toTableNumber,
+        toTableId: transfer.toTableId,
+      });
+
+      if (typeof window !== "undefined") {
+        const oldParticipant = localStorage.getItem(`cg_participant_${tableId}`);
+        if (oldParticipant) {
+          localStorage.setItem(`cg_participant_${transfer.toTableId}`, oldParticipant);
+        }
+      }
+
+      const timer = setTimeout(() => {
+        router.push(`/qr/${restaurantSlug}/${transfer.toTableId}`);
+      }, 2500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [tableTransfers, tableId, restaurantSlug, router]);
 
   // Language & Currency state
   const [lang, setLang] = useState<MenuLanguage>("TR");
@@ -483,6 +512,29 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         tableNumber={currentTable.tableNumber}
         tableId={currentTable.id}
       />
+
+      {/* Real-time Table Transfer Modal */}
+      {transferAlert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in text-center">
+          <div className="max-w-sm w-full bg-[#0a0f0f] border border-purple-500/50 rounded-[2rem] p-6 space-y-4 shadow-2xl animate-fade-in-up">
+            <div className="w-14 h-14 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/40 mx-auto flex items-center justify-center animate-bounce">
+              <ArrowRightLeft className="w-7 h-7" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-white">Masanız Taşındı!</h3>
+              <p className="text-xs text-purple-300 font-semibold">
+                Kasa tarafından {transferAlert.toTableNumber}&apos;ye aktarıldınız.
+              </p>
+              <p className="text-[11px] text-foreground/60 pt-1">
+                Sepetiniz, açık hesabınız ve oturumunuz otomatik olarak yeni masanıza bağlanıyor...
+              </p>
+            </div>
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-purple-500 h-full w-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

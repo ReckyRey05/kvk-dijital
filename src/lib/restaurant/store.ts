@@ -205,6 +205,7 @@ let globalHappyHourRules: HappyHourRule[] = [...DEMO_HAPPY_HOUR_RULES];
 let globalDeliveryPlatforms: DeliveryPlatformConfig[] = [...DEMO_DELIVERY_PLATFORMS];
 let globalDeliveryOrders: DeliveryOrder[] = [...DEMO_DELIVERY_ORDERS];
 let globalEFaturaRecords: EFaturaRecord[] = [...DEMO_EFATURA_RECORDS];
+let globalTableTransfers: Record<string, { toTableId: string; toTableNumber: string; timestamp: number }> = {};
 
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
@@ -235,6 +236,7 @@ function saveToStorage() {
     localStorage.setItem("cg_delivery_platforms", JSON.stringify(globalDeliveryPlatforms));
     localStorage.setItem("cg_delivery_orders", JSON.stringify(globalDeliveryOrders));
     localStorage.setItem("cg_efatura_records", JSON.stringify(globalEFaturaRecords));
+    localStorage.setItem("cg_table_transfers", JSON.stringify(globalTableTransfers));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -287,6 +289,9 @@ function loadFromStorage() {
 
     const efaturaRecords = localStorage.getItem("cg_efatura_records");
     if (efaturaRecords) globalEFaturaRecords = JSON.parse(efaturaRecords);
+
+    const tableTransfers = localStorage.getItem("cg_table_transfers");
+    if (tableTransfers) globalTableTransfers = JSON.parse(tableTransfers);
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -315,6 +320,7 @@ function notifyAll(broadcast = true) {
         deliveryPlatforms: globalDeliveryPlatforms,
         deliveryOrders: globalDeliveryOrders,
         efaturaRecords: globalEFaturaRecords,
+        tableTransfers: globalTableTransfers,
       });
     }
   }
@@ -360,6 +366,7 @@ export function useRestaurantStore() {
         if (event.data.deliveryPlatforms) globalDeliveryPlatforms = event.data.deliveryPlatforms;
         if (event.data.deliveryOrders) globalDeliveryOrders = event.data.deliveryOrders;
         if (event.data.efaturaRecords) globalEFaturaRecords = event.data.efaturaRecords;
+        if (event.data.tableTransfers) globalTableTransfers = event.data.tableTransfers;
         if (event.data.tables) globalTables = event.data.tables;
         if (event.data.calls) globalCalls = event.data.calls;
         if (event.data.menuItems) globalMenuItems = event.data.menuItems;
@@ -608,7 +615,31 @@ export function useRestaurantStore() {
           : c
       );
 
-      // 3. Update toTable bill & status
+      // 3. Move shared cart & participants seamlessly
+      if (globalSharedCarts[fromTableId]) {
+        globalSharedCarts[toTableId] = [
+          ...(globalSharedCarts[toTableId] || []),
+          ...globalSharedCarts[fromTableId],
+        ];
+        delete globalSharedCarts[fromTableId];
+      }
+
+      if (globalTableParticipants[fromTableId]) {
+        globalTableParticipants[toTableId] = [
+          ...(globalTableParticipants[toTableId] || []),
+          ...globalTableParticipants[fromTableId],
+        ];
+        delete globalTableParticipants[fromTableId];
+      }
+
+      // 4. Record transfer redirect event for customer phone real-time sync
+      globalTableTransfers[fromTableId] = {
+        toTableId,
+        toTableNumber: toTable.tableNumber,
+        timestamp: Date.now(),
+      };
+
+      // 5. Update toTable bill & status
       globalTables = globalTables.map((t) => {
         if (t.id === toTableId) {
           return {
@@ -851,6 +882,7 @@ export function useRestaurantStore() {
     deliveryPlatforms: globalDeliveryPlatforms,
     deliveryOrders: globalDeliveryOrders,
     efaturaRecords: globalEFaturaRecords,
+    tableTransfers: globalTableTransfers,
 
     toggleDeliveryPlatform: (platform: DeliveryPlatform) => {
       globalDeliveryPlatforms = globalDeliveryPlatforms.map((p) =>
