@@ -16,6 +16,10 @@ import {
   WasteLog,
   HappyHourRule,
   RecipeItem,
+  DeliveryPlatform,
+  DeliveryPlatformConfig,
+  DeliveryOrder,
+  EFaturaRecord,
 } from "@/types/restaurant";
 import {
   DEMO_TABLES,
@@ -24,6 +28,9 @@ import {
   DEMO_INGREDIENTS,
   DEMO_WASTE_LOGS,
   DEMO_HAPPY_HOUR_RULES,
+  DEMO_DELIVERY_PLATFORMS,
+  DEMO_DELIVERY_ORDERS,
+  DEMO_EFATURA_RECORDS,
 } from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 import { censorProfanity } from "./profanityFilter";
@@ -195,6 +202,9 @@ let globalTableParticipants: Record<string, TableParticipant[]> = {};
 let globalIngredients: Ingredient[] = [...DEMO_INGREDIENTS];
 let globalWasteLogs: WasteLog[] = [...DEMO_WASTE_LOGS];
 let globalHappyHourRules: HappyHourRule[] = [...DEMO_HAPPY_HOUR_RULES];
+let globalDeliveryPlatforms: DeliveryPlatformConfig[] = [...DEMO_DELIVERY_PLATFORMS];
+let globalDeliveryOrders: DeliveryOrder[] = [...DEMO_DELIVERY_ORDERS];
+let globalEFaturaRecords: EFaturaRecord[] = [...DEMO_EFATURA_RECORDS];
 
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
@@ -222,6 +232,9 @@ function saveToStorage() {
     localStorage.setItem("cg_ingredients", JSON.stringify(globalIngredients));
     localStorage.setItem("cg_waste_logs", JSON.stringify(globalWasteLogs));
     localStorage.setItem("cg_happy_hour", JSON.stringify(globalHappyHourRules));
+    localStorage.setItem("cg_delivery_platforms", JSON.stringify(globalDeliveryPlatforms));
+    localStorage.setItem("cg_delivery_orders", JSON.stringify(globalDeliveryOrders));
+    localStorage.setItem("cg_efatura_records", JSON.stringify(globalEFaturaRecords));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -265,6 +278,15 @@ function loadFromStorage() {
 
     const happyHour = localStorage.getItem("cg_happy_hour");
     if (happyHour) globalHappyHourRules = JSON.parse(happyHour);
+
+    const deliveryPlatforms = localStorage.getItem("cg_delivery_platforms");
+    if (deliveryPlatforms) globalDeliveryPlatforms = JSON.parse(deliveryPlatforms);
+
+    const deliveryOrders = localStorage.getItem("cg_delivery_orders");
+    if (deliveryOrders) globalDeliveryOrders = JSON.parse(deliveryOrders);
+
+    const efaturaRecords = localStorage.getItem("cg_efatura_records");
+    if (efaturaRecords) globalEFaturaRecords = JSON.parse(efaturaRecords);
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -290,6 +312,9 @@ function notifyAll(broadcast = true) {
         ingredients: globalIngredients,
         wasteLogs: globalWasteLogs,
         happyHourRules: globalHappyHourRules,
+        deliveryPlatforms: globalDeliveryPlatforms,
+        deliveryOrders: globalDeliveryOrders,
+        efaturaRecords: globalEFaturaRecords,
       });
     }
   }
@@ -321,6 +346,20 @@ export function useRestaurantStore() {
         const prevAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
 
         if (event.data.orders) globalOrders = event.data.orders;
+        if (event.data.tables) globalTables = event.data.tables;
+        if (event.data.calls) globalCalls = event.data.calls;
+        if (event.data.menuItems) globalMenuItems = event.data.menuItems;
+        if (event.data.alerts) globalManagerAlerts = event.data.alerts;
+        if (event.data.vouchers) globalVouchers = event.data.vouchers;
+        if (event.data.songs) globalSongRequests = event.data.songs;
+        if (event.data.sharedCarts) globalSharedCarts = event.data.sharedCarts;
+        if (event.data.participants) globalTableParticipants = event.data.participants;
+        if (event.data.ingredients) globalIngredients = event.data.ingredients;
+        if (event.data.wasteLogs) globalWasteLogs = event.data.wasteLogs;
+        if (event.data.happyHourRules) globalHappyHourRules = event.data.happyHourRules;
+        if (event.data.deliveryPlatforms) globalDeliveryPlatforms = event.data.deliveryPlatforms;
+        if (event.data.deliveryOrders) globalDeliveryOrders = event.data.deliveryOrders;
+        if (event.data.efaturaRecords) globalEFaturaRecords = event.data.efaturaRecords;
         if (event.data.tables) globalTables = event.data.tables;
         if (event.data.calls) globalCalls = event.data.calls;
         if (event.data.menuItems) globalMenuItems = event.data.menuItems;
@@ -791,7 +830,6 @@ export function useRestaurantStore() {
       notifyAll();
     },
 
-    // Happy Hour & Campaign Engine
     toggleHappyHourRule: (ruleId: string) => {
       globalHappyHourRules = globalHappyHourRules.map((r) =>
         r.id === ruleId ? { ...r, isActive: !r.isActive } : r
@@ -806,6 +844,30 @@ export function useRestaurantStore() {
       } else {
         globalHappyHourRules = [rule, ...globalHappyHourRules];
       }
+      notifyAll();
+    },
+
+    // Delivery Aggregator Platform Actions (Getir, Yemeksepeti, Trendyol, Migros)
+    deliveryPlatforms: globalDeliveryPlatforms,
+    deliveryOrders: globalDeliveryOrders,
+    efaturaRecords: globalEFaturaRecords,
+
+    toggleDeliveryPlatform: (platform: DeliveryPlatform) => {
+      globalDeliveryPlatforms = globalDeliveryPlatforms.map((p) =>
+        p.platform === platform ? { ...p, isOpen: !p.isOpen } : p
+      );
+      notifyAll();
+    },
+
+    updateDeliveryOrderStatus: (orderId: string, status: DeliveryOrder["status"]) => {
+      globalDeliveryOrders = globalDeliveryOrders.map((ord) =>
+        ord.id === orderId ? { ...ord, status } : ord
+      );
+      notifyAll();
+    },
+
+    issueEFatura: (record: EFaturaRecord) => {
+      globalEFaturaRecords = [record, ...globalEFaturaRecords];
       notifyAll();
     },
   };

@@ -8,6 +8,8 @@ import TableGrid from "@/components/restaurant/pos/TableGrid";
 import OrderApprovalModal from "@/components/restaurant/pos/OrderApprovalModal";
 import BillManager from "@/components/restaurant/pos/BillManager";
 import ZReportModal from "@/components/restaurant/admin/ZReportModal";
+import DeliveryHub from "@/components/restaurant/pos/DeliveryHub";
+import EFaturaModal from "@/components/restaurant/pos/EFaturaModal";
 import { generateZReport } from "@/lib/restaurant/analyticsData";
 import {
   Store,
@@ -20,6 +22,9 @@ import {
   Sparkles,
   RefreshCw,
   QrCode,
+  Bike,
+  FileCheck2,
+  LayoutGrid,
 } from "lucide-react";
 
 import { censorProfanity } from "@/lib/restaurant/profanityFilter";
@@ -40,6 +45,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     waiterCalls,
     managerAlerts,
     vouchers,
+    deliveryOrders,
     confirmOrder,
     updateOrderStatus,
     resolveWaiterCall,
@@ -48,15 +54,18 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     transferTable,
   } = useRestaurantStore();
 
+  const [kasaTab, setKasaTab] = useState<"TABLES" | "DELIVERY">("TABLES");
   const [selectedTableId, setSelectedTableId] = useState<string | null>("m-4");
   const [activeSection, setActiveSection] = useState<string>("ALL");
   const [isZReportOpen, setIsZReportOpen] = useState(false);
+  const [isEFaturaOpen, setIsEFaturaOpen] = useState(false);
 
   // Stats calculation
   const occupiedCount = tables.filter((t) => t.status !== "EMPTY" || t.activeBillTotal > 0).length;
   const pendingOrders = orders.filter((o) => o.status === "PENDING_CONFIRMATION");
   const activeCalls = waiterCalls.filter((c) => c.status === "ACTIVE");
   const unhandledAlerts = managerAlerts.filter((a) => !a.isResolved);
+  const activeDeliveryCount = deliveryOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length;
   const totalLiveRevenue = tables.reduce((sum, t) => sum + (t.activeBillTotal || 0), 0);
 
   const zReportData = generateZReport(orders, tables, DEMO_RESTAURANT.name);
@@ -210,49 +219,98 @@ export default function KasaPosPage({ params }: KasaPageProps) {
         </div>
       </div>
 
-      {/* Main Workspace Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Left Side: Table Grid & Section Filters */}
-        <div className="flex-1 p-6 overflow-y-auto space-y-4">
-          {/* Section Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto sleek-scrollbar pb-1">
-            {sections.map((sec) => (
-              <button
-                key={sec}
-                onClick={() => setActiveSection(sec || "ALL")}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                  activeSection === sec
-                    ? "bg-accent text-black shadow-lg shadow-accent/20"
-                    : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {sec === "ALL" ? "Tüm Masalar" : sec}
-              </button>
-            ))}
-          </div>
+      {/* POS Sub-Navigation Mode Switcher */}
+      <div className="px-6 py-2.5 bg-black/40 border-b border-white/5 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setKasaTab("TABLES")}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+              kasaTab === "TABLES"
+                ? "bg-accent text-black shadow-md shadow-accent/20"
+                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            <span>Masa Salonu Planı ({tables.length} Masa)</span>
+          </button>
 
-          {/* Table Grid */}
-          <TableGrid
-            tables={filteredTables}
-            waiterCalls={waiterCalls}
-            selectedTableId={selectedTableId}
-            onSelectTable={(id) => setSelectedTableId(id)}
-            onResolveCall={resolveWaiterCall}
-          />
+          <button
+            onClick={() => setKasaTab("DELIVERY")}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+              kasaTab === "DELIVERY"
+                ? "bg-accent text-black shadow-md shadow-accent/20"
+                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <Bike className="w-4 h-4" />
+            <span>Paket Servis & Platform Hub (Getir, Yemeksepeti, Trendyol)</span>
+            {activeDeliveryCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-amber-500 text-black text-[10px] font-black animate-pulse">
+                {activeDeliveryCount} Yeni
+              </span>
+            )}
+          </button>
         </div>
 
-        {/* Right Side: Selected Table Bill Manager */}
-        {selectedTable && (
-          <BillManager
-            table={selectedTable}
-            tableOrders={selectedTableOrders}
-            allTables={tables}
-            onClose={() => setSelectedTableId(null)}
-            onCloseBill={closeTableBill}
-            onTransferTable={transferTable}
-          />
-        )}
+        <button
+          onClick={() => setIsEFaturaOpen(true)}
+          className="px-3.5 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
+        >
+          <FileCheck2 className="w-4 h-4 text-emerald-400" />
+          <span>Hızlı E-Fatura / E-Adisyon</span>
+        </button>
       </div>
+
+      {/* Main Workspace Layout */}
+      {kasaTab === "DELIVERY" ? (
+        <div className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+          <DeliveryHub orders={deliveryOrders} />
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          {/* Left Side: Table Grid & Section Filters */}
+          <div className="flex-1 p-6 overflow-y-auto space-y-4">
+            {/* Section Filter Pills */}
+            <div className="flex items-center gap-2 overflow-x-auto sleek-scrollbar pb-1">
+              {sections.map((sec) => (
+                <button
+                  key={sec}
+                  onClick={() => setActiveSection(sec || "ALL")}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    activeSection === sec
+                      ? "bg-accent text-black shadow-lg shadow-accent/20"
+                      : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {sec === "ALL" ? "Tüm Masalar" : sec}
+                </button>
+              ))}
+            </div>
+
+            {/* Table Grid */}
+            <TableGrid
+              tables={filteredTables}
+              waiterCalls={waiterCalls}
+              selectedTableId={selectedTableId}
+              onSelectTable={(id) => setSelectedTableId(id)}
+              onResolveCall={resolveWaiterCall}
+            />
+          </div>
+
+          {/* Right Side: Selected Table Bill Manager */}
+          {selectedTable && (
+            <BillManager
+              table={selectedTable}
+              tableOrders={selectedTableOrders}
+              allTables={tables}
+              onClose={() => setSelectedTableId(null)}
+              onCloseBill={closeTableBill}
+              onTransferTable={transferTable}
+              onOpenEFatura={() => setIsEFaturaOpen(true)}
+            />
+          )}
+        </div>
+      )}
 
       {/* Order Approval Modal for Incoming QR Orders */}
       <OrderApprovalModal
@@ -266,6 +324,14 @@ export default function KasaPosPage({ params }: KasaPageProps) {
         isOpen={isZReportOpen}
         onClose={() => setIsZReportOpen(false)}
         report={zReportData}
+      />
+
+      {/* E-Fatura & E-Adisyon Modal */}
+      <EFaturaModal
+        isOpen={isEFaturaOpen}
+        onClose={() => setIsEFaturaOpen(false)}
+        tableNumber={selectedTable ? selectedTable.tableNumber : "Hızlı Fatura"}
+        totalAmount={selectedTable && selectedTable.activeBillTotal > 0 ? selectedTable.activeBillTotal : 1540}
       />
     </div>
   );

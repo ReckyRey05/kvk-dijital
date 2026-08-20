@@ -1,4 +1,16 @@
-import { Restaurant, Category, MenuItem, Table, Ingredient, WasteLog, HappyHourRule } from "@/types/restaurant";
+import {
+  Restaurant,
+  Category,
+  MenuItem,
+  Table,
+  Ingredient,
+  WasteLog,
+  HappyHourRule,
+  DeliveryPlatformConfig,
+  DeliveryOrder,
+  EFaturaRecord,
+  SaaSPackageInfo,
+} from "@/types/restaurant";
 
 export const DEMO_INGREDIENTS: Ingredient[] = [
   { id: "ing_beef_burger", name: "Kuru Dinlendirilmiş Dana Kıyma", unit: "kg", unitCost: 480, currentStock: 24.5, criticalStock: 5.0, category: "ET", lastRestockedAt: "2026-08-19" },
@@ -574,4 +586,157 @@ export const DEMO_TABLES: Table[] = [
   { id: "m-6", restaurantId: "rest_aura_bistro", tableNumber: "Masa 6", section: "Bahçe", capacity: 4, status: "EMPTY", activeBillTotal: 0 },
   { id: "m-7", restaurantId: "rest_aura_bistro", tableNumber: "Masa 7", section: "Bahçe", capacity: 8, status: "OCCUPIED", activeBillTotal: 2480, lastOrderTime: "25 dk önce" },
   { id: "m-8", restaurantId: "rest_aura_bistro", tableNumber: "Masa 8", section: "VIP Lounge", capacity: 10, status: "EMPTY", activeBillTotal: 0 },
+];
+
+export const DEMO_DELIVERY_PLATFORMS: DeliveryPlatformConfig[] = [
+  { platform: "GETIR", name: "Getir Yemek", isOpen: true, autoAccept: false, extraPrepTimeMinutes: 5, apiKey: "gy_live_sec_849201" },
+  { platform: "YEMEKSEPETI", name: "Yemeksepeti", isOpen: true, autoAccept: true, extraPrepTimeMinutes: 0, apiKey: "ys_live_sec_102933" },
+  { platform: "TRENDYOL", name: "Trendyol Yemek", isOpen: true, autoAccept: false, extraPrepTimeMinutes: 10, apiKey: "ty_live_sec_559401" },
+  { platform: "MIGROS", name: "Migros Yemek", isOpen: false, autoAccept: false, extraPrepTimeMinutes: 0, apiKey: "mg_live_sec_991823" },
+];
+
+export const DEMO_DELIVERY_ORDERS: DeliveryOrder[] = [
+  {
+    id: "deliv_1",
+    platform: "GETIR",
+    platformOrderId: "GY-84920",
+    customerName: "Caner Yılmaz",
+    customerPhone: "+90 532 111 22 33",
+    deliveryAddress: "Caferağa Mah. Moda Cad. No: 42 D: 5, Kadıköy / İstanbul",
+    courierNotes: "Lütfen zile basmayın, kapıya bırakıp arayın.",
+    status: "PREPARING",
+    items: [
+      {
+        id: "item_del_1",
+        menuItemId: "item_truffle_burger",
+        name: "Trüflü Gurme Dana Burger (180g)",
+        basePrice: 360,
+        finalPrice: 360,
+        quantity: 2,
+      },
+      {
+        id: "item_del_2",
+        menuItemId: "item_san_sebastian",
+        name: "Belçika Çikolatalı San Sebastian Cheesecake",
+        basePrice: 240,
+        finalPrice: 240,
+        quantity: 1,
+      },
+    ],
+    subtotal: 960,
+    deliveryFee: 0,
+    totalAmount: 960,
+    paymentType: "ONLINE_PAID",
+    courierName: "Getir Kurye (Ahmet B.)",
+    courierPhone: "+90 555 987 65 43",
+    createdAt: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
+  },
+  {
+    id: "deliv_2",
+    platform: "TRENDYOL",
+    platformOrderId: "TY-39104",
+    customerName: "Selin Demir",
+    customerPhone: "+90 533 444 55 66",
+    deliveryAddress: "Fenerbahçe Mah. Lale Sok. No: 18 D: 3, Kadıköy",
+    courierNotes: "Soslar ve peçete bol konulsun.",
+    status: "PENDING",
+    items: [
+      {
+        id: "item_del_3",
+        menuItemId: "item_burrata_pizza",
+        name: "Taze Burrata & Fesleğenli Napoliten Pizza",
+        basePrice: 420,
+        finalPrice: 420,
+        quantity: 1,
+      },
+      {
+        id: "item_del_4",
+        menuItemId: "item_passion_mocktail",
+        name: "Passion Fruit & Taze Nane İtalyan Mocktail",
+        basePrice: 160,
+        finalPrice: 160,
+        quantity: 2,
+      },
+    ],
+    subtotal: 740,
+    deliveryFee: 0,
+    totalAmount: 740,
+    paymentType: "ONLINE_PAID",
+    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+  },
+];
+
+export const DEMO_EFATURA_RECORDS: EFaturaRecord[] = [
+  {
+    id: "efat_1",
+    ettnNo: "c8f3b210-449e-4e6a-b280-99e847192a01",
+    faturaNo: "AUR202600000140",
+    tableNumber: "Masa 7",
+    vknTckn: "3892019482",
+    recipientTitle: "KVKK TEKNOLOJİ YAZILIM A.Ş.",
+    taxOffice: "Kadıköy V.D.",
+    recipientEmail: "muhasebe@kvkteknoloji.com",
+    grossTotal: 2480,
+    kdvTotal: 248,
+    netTotal: 2232,
+    status: "SENT_TO_GIB",
+    issuedAt: "2026-08-19T23:15:00.000Z",
+  },
+];
+
+export const SAAS_PACKAGES: SaaSPackageInfo[] = [
+  {
+    tier: "STARTER",
+    name: "Starter (Tek Şube)",
+    monthlyPrice: 599,
+    annualPrice: 5990,
+    description: "Tek lokasyonlu restoran, kafe ve bistrolar için sıfır donanım maliyetli akıllı başlangıç paketi.",
+    features: [
+      "1 Şube (Tek Lokasyon)",
+      "Sınırsız Masa & Sınırsız Sipariş",
+      "Çoklu Dil (TR/EN) & Çoklu Para Birimi (TRY/USD/EUR/GBP)",
+      "Masa Reisi (Host) & Ortak Masa Sepeti (Group Dining)",
+      "Masada Online Ödeme (3D Secure)",
+      "Google 5 Yıldız Akıllı İtibar Kalkanı",
+      "İkram Çarkıfeleği & Dijital Jukebox",
+      "Korumalı Patron Şikayet Günlüğü & Küfür Filtresi",
+      "Canlı Kasa POS & Termal Z-Raporu Çıktısı",
+      "7/24 Teknik Destek",
+    ],
+  },
+  {
+    tier: "PRO",
+    name: "Pro (Reçete & Mutfak)",
+    monthlyPrice: 899,
+    annualPrice: 8990,
+    isPopular: true,
+    description: "Reçete maliyeti, gıda fire kontrolü ve mutfak KDS analitiği ile kârlılığını maksimize etmek isteyen işletmeler için.",
+    features: [
+      "Starter Paketindeki TÜM Özellikler",
+      "Reçete & Porsiyon Başı Gerçek Maliyet Motoru (BOM)",
+      "Gram / ML / Adet Bazlı Hammadde Depo Takibi",
+      "Brüt Kâr (TL) & Kâr Marjı (%) Matrisi",
+      "Mutfak Fire & Zayi (Waste Tracking) Takibi",
+      "KDS Mutfak Ekranı & Hazırlanma Süresi Analitiği",
+      "Mutfak Darboğaz & Gecikme Alarmları",
+      "Happy Hour & Kural Tabanlı Otomatik Kampanya Motoru",
+      "Öncelikli Telefon & WhatsApp Desteği",
+    ],
+  },
+  {
+    tier: "ENTERPRISE",
+    name: "Enterprise (Platformlar & Çok Şube)",
+    monthlyPrice: 1299,
+    annualPrice: 12990,
+    description: "Getir, Yemeksepeti, Trendyol, Migros entegrasyonu ve resmi E-Fatura / E-Adisyon gereksinimi olan zincirler için.",
+    features: [
+      "Pro Paketindeki TÜM Özellikler",
+      "Yemek Platformları Hub'ı (Getir, Yemeksepeti, Trendyol, Migros)",
+      "Tek Ekranda Paket Servis Kabul & Kurye Fişi Yazdırma",
+      "E-Fatura & E-Adisyon Entegrasyonu (Paraşüt, BizimHesap, QNB, GİB)",
+      "Çoklu Şube & Konsolide Ciro/Stok Yönetimi",
+      "ÖKC & Akıllı POS Entegrasyon Köprüsü",
+      "Özel Müşteri Temsilcisi & %99.9 Uptime SLA",
+    ],
+  },
 ];

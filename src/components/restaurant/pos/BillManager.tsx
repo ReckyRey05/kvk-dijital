@@ -13,6 +13,7 @@ interface BillManagerProps {
   onClose: () => void;
   onCloseBill: (tableId: string) => void;
   onTransferTable?: (fromTableId: string, toTableId: string) => void;
+  onOpenEFatura?: () => void;
 }
 
 export default function BillManager({
@@ -22,6 +23,7 @@ export default function BillManager({
   onClose,
   onCloseBill,
   onTransferTable,
+  onOpenEFatura,
 }: BillManagerProps) {
   const [isTransferring, setIsTransferring] = useState(false);
   const [targetTableId, setTargetTableId] = useState("");
@@ -219,6 +221,18 @@ export default function BillManager({
             <span>POS / Kart Kapat</span>
           </button>
         </div>
+
+        {/* E-Fatura & E-Adisyon Action */}
+        {onOpenEFatura && (
+          <button
+            onClick={onOpenEFatura}
+            disabled={totalAmount === 0}
+            className="w-full py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 cursor-pointer"
+          >
+            <Receipt className="w-4 h-4 text-emerald-400" />
+            <span>GİB Resmi E-Fatura & E-Adisyon Kes</span>
+          </button>
+        )}
       </div>
     </div>
   );

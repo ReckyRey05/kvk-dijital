@@ -270,3 +270,67 @@ export interface TableSession {
   isActive: boolean;
   token: string;
 }
+
+// 1. Delivery Aggregator Platform Hub (Getir, Yemeksepeti, Trendyol, Migros)
+export type DeliveryPlatform = "GETIR" | "YEMEKSEPETI" | "TRENDYOL" | "MIGROS";
+
+export interface DeliveryPlatformConfig {
+  platform: DeliveryPlatform;
+  name: string;
+  isOpen: boolean;
+  autoAccept: boolean;
+  extraPrepTimeMinutes: number;
+  apiKey?: string;
+}
+
+export interface DeliveryOrder {
+  id: string;
+  platform: DeliveryPlatform;
+  platformOrderId: string; // e.g. "GY-8492" or "YS-10293"
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  courierNotes?: string;
+  status: "PENDING" | "PREPARING" | "COURIER_ASSIGNED" | "DELIVERED" | "CANCELLED";
+  items: OrderItem[];
+  subtotal: number;
+  deliveryFee: number;
+  totalAmount: number;
+  paymentType: "ONLINE_PAID" | "CASH_ON_DELIVERY" | "CARD_ON_DELIVERY";
+  courierName?: string;
+  courierPhone?: string;
+  createdAt: string;
+}
+
+// 2. E-Fatura & E-Adisyon Integration
+export type EFaturaProvider = "PARASUT" | "BIZIMHESAP" | "QNB_EFINANS" | "GIB_PORTAL";
+
+export interface EFaturaRecord {
+  id: string;
+  ettnNo: string; // UUID e.g. "550e8400-e29b-41d4-a716-446655440000"
+  faturaNo: string; // e.g. "AUR202600000142"
+  orderId?: string;
+  tableNumber?: string;
+  vknTckn: string;
+  recipientTitle: string;
+  taxOffice?: string;
+  recipientEmail?: string;
+  grossTotal: number;
+  kdvTotal: number;
+  netTotal: number;
+  status: "SENT_TO_GIB" | "QUEUED" | "FAILED";
+  issuedAt: string;
+}
+
+// 3. SaaS Packaging & Feature Entitlement
+export type SaaSPackageTier = "STARTER" | "PRO" | "ENTERPRISE";
+
+export interface SaaSPackageInfo {
+  tier: SaaSPackageTier;
+  name: string;
+  monthlyPrice: number;
+  annualPrice: number;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+}

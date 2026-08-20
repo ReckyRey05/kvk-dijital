@@ -10,6 +10,7 @@ import About from "@/components/About";
 // Heavy below-the-fold components remain dynamic
 const Services = nextDynamic(() => import("@/components/Services"), { ssr: true });
 const Projects = nextDynamic(() => import("@/components/Projects"), { ssr: true });
+const PosComparison = nextDynamic(() => import("@/components/home/PosComparison"), { ssr: true });
 const Process = nextDynamic(() => import("@/components/Process"), { ssr: true });
 const FAQ = nextDynamic(() => import("@/components/FAQ"), { ssr: true });
 const Contact = nextDynamic(() => import("@/components/Contact"), { ssr: true });
@@ -55,6 +56,11 @@ export default async function Home() {
       <div className="w-full cv-auto">
         <Suspense fallback={null}>
           <Projects projects={projects} />
+        </Suspense>
+      </div>
+      <div className="w-full cv-auto">
+        <Suspense fallback={null}>
+          <PosComparison />
         </Suspense>
       </div>
       <div className="w-full cv-auto">
