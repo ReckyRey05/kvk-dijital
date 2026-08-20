@@ -93,6 +93,14 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 <h2>9. Gün Sonu Canlı Mali Z Raporu & Termal Yazdırma</h2>
 <p>Kasa kapatılırken tek tıkla Kredi Kartı, Nakit ve Masada 3D Secure Online ödemeleri ayrıştıran, KDV (%10) dökümünü hesaplayan canlı mali Z-Raporu 80mm rulo kağıda basılır.</p>
 
+<h2>10. %100 İşletmenize Özel Kişiselleştirilebilir (Custom-Tailored & White-Label)</h2>
+<p>Her restoranın mutfak akışı, masa düzeni ve müşteri profili farklıdır. Cep Garson kalıplaşmış, değiştirilemez bir yazılım değildir; <strong>işletmenize birebir uyarlanır:</strong></p>
+<ul>
+  <li><strong>Markanıza Özel Tasarım (White-Label):</strong> Restoranınızın logosu, kurumsal renkleri, tipografisi ve atmosferi QR menüye ve ekranlara birebir giydirilir. Müşteri yalnızca sizin markanızı görür.</li>
+  <li><strong>Kendi Alan Adınız (Domain):</strong> Sistem dilerseniz <code>menu.restoraniniz.com</code> gibi kendi resmi web sitenizin altında çalışır.</li>
+  <li><strong>Özel Entegrasyon & Fonksiyon Geliştirme:</strong> İşletmenize özel bir sadakat kurgusu, vale takip sistemi, mevcut muhasebe/ERP yazılımı veya özel sipariş kuralı varsa, <strong>KvK Dijital Çözümler</strong> mühendislik ekibi tarafından mekanınıza özel kodlanır ve devreye alınır.</li>
+</ul>
+
 <div class="my-8 p-6 rounded-2xl bg-accent/10 border border-accent/30 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
   <div>
     <h4 class="text-base font-extrabold text-accent">Canlı Demoyu Hemen Kendi Ekranınızda Test Edin</h4>
@@ -107,6 +115,10 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       {
         question: "Cep Garson'u kullanmak için özel ve pahalı donanımlar almam gerekir mi?",
         answer: "Hayır. Cep Garson sıfır donanım maliyetlidir. Kasada herhangi bir tablet veya bilgisayar, mutfakta bir ekran ve masalarda müşterilerin kendi telefonları yeterlidir."
+      },
+      {
+        question: "Sistemi kendi restoranımızın kurumsal kimliğine ve özel isteklerimize göre özelleştirebilir miyiz?",
+        answer: "Kesinlikle evet. Logonuz, kurumsal renkleriniz, masa yerleşiminiz ve menü yapınız mekanınıza özel giydirilir. Ayrıca mekanınıza özel ek fonksiyonlar (özel kampanya kuralları, muhasebe bağlantısı vb.) KvK Dijital Çözümler ekibimizce özel olarak geliştirilebilir."
       },
       {
         question: "Masa Reisi sistemi nasıl çalışır?",
