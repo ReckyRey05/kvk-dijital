@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table, Restaurant } from "@/types/restaurant";
-import { Printer, Download, QrCode, ExternalLink, Sparkles } from "lucide-react";
+import { Printer, Download, QrCode, ExternalLink, Sparkles, CheckCircle2 } from "lucide-react";
+import QRCode from "qrcode";
 
 interface QrGeneratorProps {
   restaurant: Restaurant;
@@ -11,19 +12,51 @@ interface QrGeneratorProps {
 
 export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
   const [selectedTable, setSelectedTable] = useState<Table>(tables[0]);
+  const [qrDataUrl, setQrDataUrl] = useState<string>("/restaurant/qr-demo.png");
+  const [isCopied, setIsCopied] = useState(false);
 
   // Construct target QR destination URL
   const qrTargetUrl = typeof window !== "undefined"
     ? `${window.location.origin}/qr/${restaurant.slug}/${selectedTable.id}`
     : `https://kvkdijitalcozumler.com/qr/${restaurant.slug}/${selectedTable.id}`;
 
-  // Public High-Resolution QR Generator API URL
-  const qrImageApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-    qrTargetUrl
-  )}&bgcolor=FFFFFF&color=050505&margin=10`;
+  useEffect(() => {
+    let isMounted = true;
+    if (typeof window !== "undefined") {
+      const target = `${window.location.origin}/qr/${restaurant.slug}/${selectedTable.id}`;
+      QRCode.toDataURL(target, {
+        width: 400,
+        margin: 2,
+        color: {
+          dark: "#000000",
+          light: "#FFFFFF",
+        },
+        errorCorrectionLevel: "H",
+      })
+        .then((url) => {
+          if (isMounted) setQrDataUrl(url);
+        })
+        .catch((err) => {
+          console.error("Local QR Code Generation error:", err);
+          if (isMounted) setQrDataUrl("/restaurant/qr-demo.png");
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedTable.id, restaurant.slug]);
 
   const handlePrintCard = () => {
     window.print();
+  };
+
+  const handleDownloadQr = () => {
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = `QR_${restaurant.slug}_${selectedTable.tableNumber.replace(/\s+/g, "_")}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -37,7 +70,7 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           QR kodunu basmak veya indirmek istediğiniz masayı seçin.
         </p>
 
-        <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+        <div className="space-y-2 max-h-96 overflow-y-auto pr-1 sleek-scrollbar">
           {tables.map((t) => (
             <div
               key={t.id}
@@ -70,13 +103,24 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           <span className="text-xs font-bold uppercase tracking-wider text-foreground/60">
             Masa Kartı Önizlemesi
           </span>
-          <button
-            onClick={handlePrintCard}
-            className="px-3.5 py-1.5 rounded-xl bg-accent text-black font-bold text-xs flex items-center gap-1.5 shadow-md shadow-accent/20 hover:bg-accent/90 transition-colors cursor-pointer"
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span>Kartı Yazdır</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownloadQr}
+              className="px-3 py-1.5 rounded-xl bg-white/10 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-white/20 transition-colors cursor-pointer"
+              title="QR Kod Görselini İndir"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>İndir</span>
+            </button>
+
+            <button
+              onClick={handlePrintCard}
+              className="px-3.5 py-1.5 rounded-xl bg-accent text-black font-bold text-xs flex items-center gap-1.5 shadow-md shadow-accent/20 hover:bg-accent/90 transition-colors cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Kartı Yazdır</span>
+            </button>
+          </div>
         </div>
 
         {/* Printable Physical Table Stand Design Card */}
@@ -96,11 +140,14 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           </div>
 
           {/* QR Code Frame */}
-          <div className="p-3 bg-neutral-50 rounded-2xl border-2 border-neutral-200 shadow-inner">
+          <div className="p-3 bg-neutral-50 rounded-2xl border-2 border-neutral-200 shadow-inner flex items-center justify-center">
             <img
-              src={qrImageApiUrl}
+              src={qrDataUrl}
               alt={`QR Code ${selectedTable.tableNumber}`}
-              className="w-48 h-48 object-contain"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = "/restaurant/qr-demo.png";
+              }}
+              className="w-48 h-48 object-contain rounded-lg"
             />
           </div>
 
