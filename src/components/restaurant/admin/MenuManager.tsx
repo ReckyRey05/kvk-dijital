@@ -60,11 +60,11 @@ export default function MenuManager({
   return (
     <div className="space-y-6">
       {/* Category Filter Tabs */}
-      <div className="flex items-center justify-between gap-4 flex-wrap pb-2 border-b border-white/5">
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+      <div className="pb-2 border-b border-white/5">
+        <div className="flex items-center gap-2 overflow-x-auto sleek-scrollbar pb-2.5 max-w-full">
           <button
             onClick={() => setSelectedCatId("ALL")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
               selectedCatId === "ALL"
                 ? "bg-accent text-black shadow-md shadow-accent/20"
                 : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"

@@ -212,7 +212,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
         {/* Left Side: Table Grid & Section Filters */}
         <div className="flex-1 p-6 overflow-y-auto space-y-4">
           {/* Section Filter Pills */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto sleek-scrollbar pb-1">
             {sections.map((sec) => (
               <button
                 key={sec}

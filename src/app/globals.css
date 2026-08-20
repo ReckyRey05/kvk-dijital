@@ -37,3 +37,45 @@
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
+/* Global sleek/naive luxury dark scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 166, 166, 0.5);
+}
+
+/* Hidden scrollbar with smooth scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Sleek ultra-thin naif scrollbar */
+.sleek-scrollbar::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+.sleek-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+}
+.sleek-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 166, 166, 0.4);
+  border-radius: 9999px;
+}
+.sleek-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 166, 166, 0.8);
+}
+
