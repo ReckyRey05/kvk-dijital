@@ -10,6 +10,10 @@ import {
   DeliveryOrder,
   EFaturaRecord,
   SaaSPackageInfo,
+  StaffRole,
+  StaffPermissions,
+  StaffMember,
+  BossSecuritySettings,
 } from "@/types/restaurant";
 
 export const DEMO_INGREDIENTS: Ingredient[] = [
@@ -740,3 +744,119 @@ export const SAAS_PACKAGES: SaaSPackageInfo[] = [
     ],
   },
 ];
+
+// 4. Staff Role Default Permission Matrix
+export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, StaffPermissions> = {
+  OWNER: {
+    canConfirmOrders: true,
+    canGiveDiscount: true,
+    maxDiscountPercent: 100,
+    canTransferTables: true,
+    canCancelBill: true,
+    canViewReportsAndZ: true,
+    canEditMenuAndPrices: true,
+    canViewComplaints: true,
+    canViewRecipesAndCosts: true,
+    canManagePlatformOrders: true,
+  },
+  MANAGER: {
+    canConfirmOrders: true,
+    canGiveDiscount: true,
+    maxDiscountPercent: 25,
+    canTransferTables: true,
+    canCancelBill: true,
+    canViewReportsAndZ: true,
+    canEditMenuAndPrices: false,
+    canViewComplaints: true,
+    canViewRecipesAndCosts: true,
+    canManagePlatformOrders: true,
+  },
+  CASHIER: {
+    canConfirmOrders: true,
+    canGiveDiscount: true,
+    maxDiscountPercent: 10,
+    canTransferTables: true,
+    canCancelBill: false, // Needs manager or boss PIN
+    canViewReportsAndZ: true,
+    canEditMenuAndPrices: false,
+    canViewComplaints: false,
+    canViewRecipesAndCosts: false,
+    canManagePlatformOrders: true,
+  },
+  WAITER: {
+    canConfirmOrders: true,
+    canGiveDiscount: false,
+    maxDiscountPercent: 0,
+    canTransferTables: true,
+    canCancelBill: false,
+    canViewReportsAndZ: false,
+    canEditMenuAndPrices: false,
+    canViewComplaints: false,
+    canViewRecipesAndCosts: false,
+    canManagePlatformOrders: false,
+  },
+  KITCHEN: {
+    canConfirmOrders: false,
+    canGiveDiscount: false,
+    maxDiscountPercent: 0,
+    canTransferTables: false,
+    canCancelBill: false,
+    canViewReportsAndZ: false,
+    canEditMenuAndPrices: false,
+    canViewComplaints: false,
+    canViewRecipesAndCosts: false,
+    canManagePlatformOrders: false,
+  },
+};
+
+export const DEMO_STAFF_MEMBERS: StaffMember[] = [
+  {
+    id: "staff_1",
+    restaurantId: "rest_aura_bistro",
+    name: "Ali Garson",
+    role: "WAITER",
+    pinCode: "1111",
+    phone: "+90 534 111 22 33",
+    isActive: true,
+    lastActiveAt: "2026-08-20T03:30:00Z",
+  },
+  {
+    id: "staff_2",
+    restaurantId: "rest_aura_bistro",
+    name: "Murat Kasiyer",
+    role: "CASHIER",
+    pinCode: "2222",
+    phone: "+90 534 222 33 44",
+    isActive: true,
+    lastActiveAt: "2026-08-20T03:45:00Z",
+  },
+  {
+    id: "staff_3",
+    restaurantId: "rest_aura_bistro",
+    name: "Mehmet Şef (Mutfak)",
+    role: "KITCHEN",
+    pinCode: "3333",
+    phone: "+90 534 333 44 55",
+    isActive: true,
+    lastActiveAt: "2026-08-20T03:50:00Z",
+  },
+  {
+    id: "staff_4",
+    restaurantId: "rest_aura_bistro",
+    name: "Serkan Salon Müdürü",
+    role: "MANAGER",
+    pinCode: "4444",
+    phone: "+90 534 444 55 66",
+    isActive: true,
+    lastActiveAt: "2026-08-20T03:55:00Z",
+  },
+];
+
+export const DEMO_BOSS_SECURITY: BossSecuritySettings = {
+  masterPin: "1923",
+  is2FAEnabled: false,
+  twoFactorMethod: "APP",
+  twoFactorPhone: "+90 534 891 49 05",
+  twoFactorEmail: "patron@aurabistro.com",
+  autoLockMinutes: 15,
+};

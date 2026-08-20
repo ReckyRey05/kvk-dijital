@@ -20,6 +20,10 @@ import {
   DeliveryPlatformConfig,
   DeliveryOrder,
   EFaturaRecord,
+  StaffRole,
+  StaffPermissions,
+  StaffMember,
+  BossSecuritySettings,
 } from "@/types/restaurant";
 import {
   DEMO_TABLES,
@@ -31,6 +35,9 @@ import {
   DEMO_DELIVERY_PLATFORMS,
   DEMO_DELIVERY_ORDERS,
   DEMO_EFATURA_RECORDS,
+  DEFAULT_ROLE_PERMISSIONS,
+  DEMO_STAFF_MEMBERS,
+  DEMO_BOSS_SECURITY,
 } from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 import { censorProfanity } from "./profanityFilter";
@@ -206,6 +213,9 @@ let globalDeliveryPlatforms: DeliveryPlatformConfig[] = [...DEMO_DELIVERY_PLATFO
 let globalDeliveryOrders: DeliveryOrder[] = [...DEMO_DELIVERY_ORDERS];
 let globalEFaturaRecords: EFaturaRecord[] = [...DEMO_EFATURA_RECORDS];
 let globalTableTransfers: Record<string, { toTableId: string; toTableNumber: string; timestamp: number }> = {};
+let globalStaffMembers: StaffMember[] = [...DEMO_STAFF_MEMBERS];
+let globalRolePermissions: Record<StaffRole, StaffPermissions> = { ...DEFAULT_ROLE_PERMISSIONS };
+let globalBossSecurity: BossSecuritySettings = { ...DEMO_BOSS_SECURITY };
 
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
@@ -237,6 +247,9 @@ function saveToStorage() {
     localStorage.setItem("cg_delivery_orders", JSON.stringify(globalDeliveryOrders));
     localStorage.setItem("cg_efatura_records", JSON.stringify(globalEFaturaRecords));
     localStorage.setItem("cg_table_transfers", JSON.stringify(globalTableTransfers));
+    localStorage.setItem("cg_staff_members", JSON.stringify(globalStaffMembers));
+    localStorage.setItem("cg_role_permissions", JSON.stringify(globalRolePermissions));
+    localStorage.setItem("cg_boss_security", JSON.stringify(globalBossSecurity));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -292,6 +305,15 @@ function loadFromStorage() {
 
     const tableTransfers = localStorage.getItem("cg_table_transfers");
     if (tableTransfers) globalTableTransfers = JSON.parse(tableTransfers);
+
+    const staffMembers = localStorage.getItem("cg_staff_members");
+    if (staffMembers) globalStaffMembers = JSON.parse(staffMembers);
+
+    const rolePermissions = localStorage.getItem("cg_role_permissions");
+    if (rolePermissions) globalRolePermissions = JSON.parse(rolePermissions);
+
+    const bossSecurity = localStorage.getItem("cg_boss_security");
+    if (bossSecurity) globalBossSecurity = JSON.parse(bossSecurity);
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -321,6 +343,9 @@ function notifyAll(broadcast = true) {
         deliveryOrders: globalDeliveryOrders,
         efaturaRecords: globalEFaturaRecords,
         tableTransfers: globalTableTransfers,
+        staffMembers: globalStaffMembers,
+        rolePermissions: globalRolePermissions,
+        bossSecurity: globalBossSecurity,
       });
     }
   }
@@ -367,6 +392,9 @@ export function useRestaurantStore() {
         if (event.data.deliveryOrders) globalDeliveryOrders = event.data.deliveryOrders;
         if (event.data.efaturaRecords) globalEFaturaRecords = event.data.efaturaRecords;
         if (event.data.tableTransfers) globalTableTransfers = event.data.tableTransfers;
+        if (event.data.staffMembers) globalStaffMembers = event.data.staffMembers;
+        if (event.data.rolePermissions) globalRolePermissions = event.data.rolePermissions;
+        if (event.data.bossSecurity) globalBossSecurity = event.data.bossSecurity;
         if (event.data.tables) globalTables = event.data.tables;
         if (event.data.calls) globalCalls = event.data.calls;
         if (event.data.menuItems) globalMenuItems = event.data.menuItems;
@@ -900,6 +928,41 @@ export function useRestaurantStore() {
 
     issueEFatura: (record: EFaturaRecord) => {
       globalEFaturaRecords = [record, ...globalEFaturaRecords];
+      notifyAll();
+    },
+
+    // Staff & Permission Management Actions (RBAC)
+    staffMembers: globalStaffMembers,
+    rolePermissions: globalRolePermissions,
+    bossSecurity: globalBossSecurity,
+
+    updateBossSecurity: (settings: Partial<BossSecuritySettings>) => {
+      globalBossSecurity = { ...globalBossSecurity, ...settings };
+      notifyAll();
+    },
+
+    updateRolePermissions: (role: StaffRole, permissions: Partial<StaffPermissions>) => {
+      globalRolePermissions = {
+        ...globalRolePermissions,
+        [role]: { ...globalRolePermissions[role], ...permissions },
+      };
+      notifyAll();
+    },
+
+    addStaffMember: (staff: StaffMember) => {
+      globalStaffMembers = [...globalStaffMembers, staff];
+      notifyAll();
+    },
+
+    updateStaffMember: (staffId: string, updates: Partial<StaffMember>) => {
+      globalStaffMembers = globalStaffMembers.map((s) =>
+        s.id === staffId ? { ...s, ...updates } : s
+      );
+      notifyAll();
+    },
+
+    deleteStaffMember: (staffId: string) => {
+      globalStaffMembers = globalStaffMembers.filter((s) => s.id !== staffId);
       notifyAll();
     },
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
@@ -10,6 +10,8 @@ import AnalyticsDashboard from "@/components/restaurant/admin/AnalyticsDashboard
 import RecipeManager from "@/components/restaurant/admin/RecipeManager";
 import ComplaintsLog from "@/components/restaurant/admin/ComplaintsLog";
 import PlatformManager from "@/components/restaurant/admin/PlatformManager";
+import StaffManager from "@/components/restaurant/admin/StaffManager";
+import BossAuthModal from "@/components/restaurant/admin/BossAuthModal";
 import {
   Store,
   ChefHat,
@@ -25,6 +27,9 @@ import {
   Scale,
   MessageSquareWarning,
   Layers,
+  Users,
+  Lock,
+  LogOut,
 } from "lucide-react";
 
 interface YonetimPageProps {
@@ -43,13 +48,33 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
     categories,
     tables,
     managerAlerts,
+    bossSecurity,
     toggleItemAvailability,
     updateItemPrice,
     setCampaignDiscount,
     cancelCampaignDiscount,
   } = useRestaurantStore();
 
-  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "COMPLAINTS" | "PLATFORMS" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
+  // Boss Authentication State
+  const [isBossAuthenticated, setIsBossAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("cg_boss_auth");
+      if (stored === "true") {
+        setIsBossAuthenticated(true);
+      }
+    }
+  }, []);
+
+  const handleLockScreen = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("cg_boss_auth");
+    }
+    setIsBossAuthenticated(false);
+  };
+
+  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "STAFF" | "COMPLAINTS" | "PLATFORMS" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
   // Restaurant Settings State
   const [orderMode, setOrderMode] = useState(DEMO_RESTAURANT.settings.orderMode);
@@ -83,6 +108,15 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleLockScreen}
+            className="px-3.5 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs font-bold text-purple-300 flex items-center gap-2 transition-colors cursor-pointer"
+            title="Boss Panelini Kilitle"
+          >
+            <Lock className="w-4 h-4" />
+            <span>Ekranı Kilitle</span>
+          </button>
+
           <Link
             href={`/restoran/${restaurantSlug}/kasa`}
             className="px-3.5 py-2 rounded-xl bg-accent/15 hover:bg-accent/25 border border-accent/30 text-xs font-bold text-accent flex items-center gap-2 transition-colors"
@@ -125,6 +159,18 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         >
           <Scale className="w-4 h-4" />
           <span>Reçete, Maliyet & Kâr Analizi</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("STAFF")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === "STAFF"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          <span>Personel & Rol Yetkileri</span>
         </button>
 
         <button
@@ -208,6 +254,10 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         {activeTab === "RECIPES" && (
           <RecipeManager menuItems={menuItems} categories={categories} />
+        )}
+
+        {activeTab === "STAFF" && (
+          <StaffManager />
         )}
 
         {activeTab === "COMPLAINTS" && (
@@ -360,6 +410,13 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
           </div>
         )}
       </main>
+
+      {/* Boss PIN & 2FA Gate Modal */}
+      <BossAuthModal
+        isOpen={!isBossAuthenticated}
+        bossSecurity={bossSecurity}
+        onAuthenticated={() => setIsBossAuthenticated(true)}
+      />
     </div>
   );
 }

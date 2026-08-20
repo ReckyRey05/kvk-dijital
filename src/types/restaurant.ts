@@ -334,3 +334,42 @@ export interface SaaSPackageInfo {
   features: string[];
   isPopular?: boolean;
 }
+
+// 4. Staff Roles & Permission Management (RBAC)
+export type StaffRole = "WAITER" | "CASHIER" | "KITCHEN" | "MANAGER" | "OWNER";
+
+export interface StaffPermissions {
+  canConfirmOrders: boolean;
+  canGiveDiscount: boolean;
+  maxDiscountPercent: number; // e.g. 10 or 25
+  canTransferTables: boolean;
+  canCancelBill: boolean; // False = Requires Boss Override
+  canViewReportsAndZ: boolean;
+  canEditMenuAndPrices: boolean;
+  canViewComplaints: boolean;
+  canViewRecipesAndCosts: boolean;
+  canManagePlatformOrders: boolean;
+}
+
+export interface StaffMember {
+  id: string;
+  restaurantId: string;
+  name: string;
+  role: StaffRole;
+  pinCode: string; // 4-digit PIN e.g. "1234"
+  phone?: string;
+  email?: string;
+  isActive: boolean;
+  customPermissions?: Partial<StaffPermissions>;
+  lastActiveAt?: string;
+}
+
+// 5. Boss Security & 2FA Configuration
+export interface BossSecuritySettings {
+  masterPin: string; // e.g. "1923"
+  is2FAEnabled: boolean;
+  twoFactorMethod: "APP" | "SMS" | "EMAIL";
+  twoFactorPhone?: string;
+  twoFactorEmail?: string;
+  autoLockMinutes: number; // e.g. 15, 30, 60 or 0
+}
