@@ -12,8 +12,19 @@ import {
   SongRequest,
   OrderItem,
   TableParticipant,
+  Ingredient,
+  WasteLog,
+  HappyHourRule,
+  RecipeItem,
 } from "@/types/restaurant";
-import { DEMO_TABLES, DEMO_MENU_ITEMS, DEMO_CATEGORIES } from "./mockData";
+import {
+  DEMO_TABLES,
+  DEMO_MENU_ITEMS,
+  DEMO_CATEGORIES,
+  DEMO_INGREDIENTS,
+  DEMO_WASTE_LOGS,
+  DEMO_HAPPY_HOUR_RULES,
+} from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 
 // Initial Demo Active Orders
@@ -180,6 +191,9 @@ let globalSongRequests: SongRequest[] = [
 
 let globalSharedCarts: Record<string, OrderItem[]> = {};
 let globalTableParticipants: Record<string, TableParticipant[]> = {};
+let globalIngredients: Ingredient[] = [...DEMO_INGREDIENTS];
+let globalWasteLogs: WasteLog[] = [...DEMO_WASTE_LOGS];
+let globalHappyHourRules: HappyHourRule[] = [...DEMO_HAPPY_HOUR_RULES];
 
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
@@ -204,6 +218,9 @@ function saveToStorage() {
     localStorage.setItem("cg_songs", JSON.stringify(globalSongRequests));
     localStorage.setItem("cg_shared_carts", JSON.stringify(globalSharedCarts));
     localStorage.setItem("cg_table_participants", JSON.stringify(globalTableParticipants));
+    localStorage.setItem("cg_ingredients", JSON.stringify(globalIngredients));
+    localStorage.setItem("cg_waste_logs", JSON.stringify(globalWasteLogs));
+    localStorage.setItem("cg_happy_hour", JSON.stringify(globalHappyHourRules));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -238,6 +255,15 @@ function loadFromStorage() {
 
     const participants = localStorage.getItem("cg_table_participants");
     if (participants) globalTableParticipants = JSON.parse(participants);
+
+    const ingredients = localStorage.getItem("cg_ingredients");
+    if (ingredients) globalIngredients = JSON.parse(ingredients);
+
+    const wasteLogs = localStorage.getItem("cg_waste_logs");
+    if (wasteLogs) globalWasteLogs = JSON.parse(wasteLogs);
+
+    const happyHour = localStorage.getItem("cg_happy_hour");
+    if (happyHour) globalHappyHourRules = JSON.parse(happyHour);
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -260,6 +286,9 @@ function notifyAll(broadcast = true) {
         songs: globalSongRequests,
         sharedCarts: globalSharedCarts,
         participants: globalTableParticipants,
+        ingredients: globalIngredients,
+        wasteLogs: globalWasteLogs,
+        happyHourRules: globalHappyHourRules,
       });
     }
   }
@@ -299,6 +328,9 @@ export function useRestaurantStore() {
         if (event.data.songs) globalSongRequests = event.data.songs;
         if (event.data.sharedCarts) globalSharedCarts = event.data.sharedCarts;
         if (event.data.participants) globalTableParticipants = event.data.participants;
+        if (event.data.ingredients) globalIngredients = event.data.ingredients;
+        if (event.data.wasteLogs) globalWasteLogs = event.data.wasteLogs;
+        if (event.data.happyHourRules) globalHappyHourRules = event.data.happyHourRules;
 
         const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
         const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -694,6 +726,76 @@ export function useRestaurantStore() {
           p.id === participantId ? { ...p, name: newName.trim() || p.name } : p
         ),
       };
+      notifyAll();
+    },
+
+    // Priority 0: Recipe & Raw Ingredient Stock Management
+    ingredients: globalIngredients,
+    wasteLogs: globalWasteLogs,
+    happyHourRules: globalHappyHourRules,
+
+    addIngredient: (ingredient: Ingredient) => {
+      globalIngredients = [ingredient, ...globalIngredients];
+      notifyAll();
+    },
+
+    updateIngredientStock: (ingredientId: string, newStock: number) => {
+      globalIngredients = globalIngredients.map((ing) =>
+        ing.id === ingredientId
+          ? {
+              ...ing,
+              currentStock: Math.max(0, newStock),
+              lastRestockedAt: new Date().toISOString().split("T")[0],
+            }
+          : ing
+      );
+      notifyAll();
+    },
+
+    saveRecipe: (itemId: string, recipe: RecipeItem[]) => {
+      const totalCost = recipe.reduce((sum, r) => {
+        const ing = globalIngredients.find((i) => i.id === r.ingredientId);
+        return sum + (ing ? ing.unitCost * r.quantity : 0);
+      }, 0);
+
+      globalMenuItems = globalMenuItems.map((m) =>
+        m.id === itemId
+          ? {
+              ...m,
+              recipe,
+              costPrice: Math.round(totalCost * 100) / 100,
+            }
+          : m
+      );
+      notifyAll();
+    },
+
+    logWaste: (waste: WasteLog) => {
+      globalWasteLogs = [waste, ...globalWasteLogs];
+      // Automatically deduct from raw ingredient stock
+      globalIngredients = globalIngredients.map((ing) =>
+        ing.id === waste.ingredientId
+          ? { ...ing, currentStock: Math.max(0, ing.currentStock - waste.quantity) }
+          : ing
+      );
+      notifyAll();
+    },
+
+    // Happy Hour & Campaign Engine
+    toggleHappyHourRule: (ruleId: string) => {
+      globalHappyHourRules = globalHappyHourRules.map((r) =>
+        r.id === ruleId ? { ...r, isActive: !r.isActive } : r
+      );
+      notifyAll();
+    },
+
+    saveHappyHourRule: (rule: HappyHourRule) => {
+      const exists = globalHappyHourRules.find((r) => r.id === rule.id);
+      if (exists) {
+        globalHappyHourRules = globalHappyHourRules.map((r) => (r.id === rule.id ? rule : r));
+      } else {
+        globalHappyHourRules = [rule, ...globalHappyHourRules];
+      }
       notifyAll();
     },
   };

@@ -1,4 +1,64 @@
-import { Restaurant, Category, MenuItem, Table } from "@/types/restaurant";
+import { Restaurant, Category, MenuItem, Table, Ingredient, WasteLog, HappyHourRule } from "@/types/restaurant";
+
+export const DEMO_INGREDIENTS: Ingredient[] = [
+  { id: "ing_beef_burger", name: "Kuru Dinlendirilmiş Dana Kıyma", unit: "kg", unitCost: 480, currentStock: 24.5, criticalStock: 5.0, category: "ET", lastRestockedAt: "2026-08-19" },
+  { id: "ing_brioche_bun", name: "Tereyağlı Brioche Burger Ekmeği", unit: "adet", unitCost: 8.5, currentStock: 140, criticalStock: 30, category: "UNLU_MAMUL", lastRestockedAt: "2026-08-19" },
+  { id: "ing_cheddar", name: "12 Aylık Olgunlaştırılmış Cheddar", unit: "kg", unitCost: 340, currentStock: 12.0, criticalStock: 3.0, category: "SUT_URUNU", lastRestockedAt: "2026-08-18" },
+  { id: "ing_truffle_mayo", name: "Taze Trüf & Aioli Mayonezi", unit: "kg", unitCost: 290, currentStock: 8.5, criticalStock: 2.0, category: "SOS", lastRestockedAt: "2026-08-19" },
+  { id: "ing_dry_aged_beef", name: "28 Gün Dry-Aged Dana Antrikot", unit: "kg", unitCost: 850, currentStock: 18.0, criticalStock: 4.0, category: "ET", lastRestockedAt: "2026-08-17" },
+  { id: "ing_lamb_chops", name: "Taze Süt Kuzu Pirzola", unit: "kg", unitCost: 720, currentStock: 15.0, criticalStock: 3.0, category: "ET", lastRestockedAt: "2026-08-18" },
+  { id: "ing_burrata", name: "Taze Puglia Manda Burrata (125g)", unit: "adet", unitCost: 65, currentStock: 35, criticalStock: 8, category: "SUT_URUNU", lastRestockedAt: "2026-08-19" },
+  { id: "ing_pizza_dough", name: "48 Saat Mayalanmış Napoliten Hamur", unit: "adet", unitCost: 12, currentStock: 80, criticalStock: 20, category: "UNLU_MAMUL", lastRestockedAt: "2026-08-19" },
+  { id: "ing_san_marzano", name: "DOP San Marzano Domates Sosu", unit: "l", unitCost: 95, currentStock: 25, criticalStock: 5, category: "SOS", lastRestockedAt: "2026-08-16" },
+  { id: "ing_callebaut", name: "Callebaut %70 Belçika Çikolatası", unit: "kg", unitCost: 420, currentStock: 10, criticalStock: 2.5, category: "DIGER", lastRestockedAt: "2026-08-15" },
+  { id: "ing_coffee_beans", name: "%100 Arabica Ethiopia Yirgacheffe", unit: "kg", unitCost: 480, currentStock: 14, criticalStock: 3.0, category: "ICECEK", lastRestockedAt: "2026-08-18" },
+];
+
+export const DEMO_WASTE_LOGS: WasteLog[] = [
+  {
+    id: "waste_1",
+    ingredientId: "ing_brioche_bun",
+    ingredientName: "Tereyağlı Brioche Burger Ekmeği",
+    quantity: 6,
+    unit: "adet",
+    cost: 51,
+    reason: "DAMAGED",
+    loggedAt: "2026-08-19T22:30:00.000Z",
+    loggedBy: "Şef Mehmet",
+  },
+  {
+    id: "waste_2",
+    ingredientId: "ing_burrata",
+    ingredientName: "Taze Puglia Manda Burrata (125g)",
+    quantity: 1,
+    unit: "adet",
+    cost: 65,
+    reason: "PREPARATION_ERROR",
+    loggedAt: "2026-08-19T20:15:00.000Z",
+    loggedBy: "Mutfak Ekibi",
+  },
+];
+
+export const DEMO_HAPPY_HOUR_RULES: HappyHourRule[] = [
+  {
+    id: "hh_1",
+    title: "Öğleden Sonra Kahve Molası",
+    discountPercent: 15,
+    startHour: 14,
+    endHour: 17,
+    targetCategoryId: "cat_coffee",
+    isActive: true,
+  },
+  {
+    id: "hh_2",
+    title: "Akşamüstü Burger Keyfi",
+    discountPercent: 10,
+    startHour: 16,
+    endHour: 18,
+    targetCategoryId: "cat_burgers",
+    isActive: false,
+  },
+];
 
 export const DEMO_RESTAURANT: Restaurant = {
   id: "rest_aura_bistro",
@@ -47,6 +107,13 @@ export const DEMO_MENU_ITEMS: MenuItem[] = [
     name: "Trüflü Gurme Dana Burger (180g)",
     description: "Kuru dinlendirilmiş dana antrikot köftesi, taze trüf mayonezi, karamelize arpacık soğan, 12 aylık eritilmiş cheddar, tereyağlı brioche ekmeği ve trüflü patates cipsi ile.",
     price: 360,
+    costPrice: 114.5,
+    recipe: [
+      { ingredientId: "ing_beef_burger", quantity: 0.18 }, // 180g (86.4 TL)
+      { ingredientId: "ing_brioche_bun", quantity: 1 }, // 1 adet (8.5 TL)
+      { ingredientId: "ing_cheddar", quantity: 0.025 }, // 25g (8.5 TL)
+      { ingredientId: "ing_truffle_mayo", quantity: 0.025 }, // 25g (7.25 TL)
+    ],
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop&q=85",
     isAvailable: true,
     ingredients: [

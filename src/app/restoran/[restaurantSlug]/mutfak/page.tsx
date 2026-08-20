@@ -73,18 +73,24 @@ export default function MutfakKdsPage({ params }: MutfakPageProps) {
       </header>
 
       {/* Summary KPI Bar */}
-      <div className="px-6 py-3 bg-white/[0.01] border-b border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-xs">
+      <div className="px-6 py-3 bg-white/[0.01] border-b border-white/5 flex items-center justify-between overflow-x-auto sleek-scrollbar">
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 text-xs whitespace-nowrap">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-foreground/70">Hazırlanan:</span>
             <span className="font-extrabold text-white text-sm">{preparingCount} Sipariş</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-xs whitespace-nowrap">
             <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
             <span className="text-foreground/70">Servis Bekleyen:</span>
             <span className="font-extrabold text-green-400 text-sm">{readyCount} Sipariş</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs whitespace-nowrap pl-3 border-l border-white/10">
+            <Clock className="w-3.5 h-3.5 text-accent" />
+            <span className="text-foreground/70">Ort. Çıkış Süresi:</span>
+            <span className="font-extrabold text-accent text-sm">~9.2 Dk</span>
           </div>
         </div>
 

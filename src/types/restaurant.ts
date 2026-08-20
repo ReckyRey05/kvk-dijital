@@ -106,6 +106,46 @@ export interface ProductOptionGroup {
   options: ProductOptionItem[];
 }
 
+export type IngredientUnit = "kg" | "g" | "l" | "ml" | "adet";
+
+export interface Ingredient {
+  id: string;
+  name: string;
+  unit: IngredientUnit;
+  unitCost: number; // TL cinsinden birim maliyet (örn: 1 kg dana kıyma = 480 TL)
+  currentStock: number; // Mevcut stok miktarı
+  criticalStock: number; // Kritik uyarı seviyesi
+  category: "ET" | "SEBZE" | "SOS" | "UNLU_MAMUL" | "SUT_URUNU" | "ICECEK" | "BAHARAT" | "DIGER";
+  lastRestockedAt?: string;
+}
+
+export interface RecipeItem {
+  ingredientId: string;
+  quantity: number; // Reçetedeki miktar (örn: 0.18 kg veya 1 adet)
+}
+
+export interface WasteLog {
+  id: string;
+  ingredientId: string;
+  ingredientName: string;
+  quantity: number;
+  unit: IngredientUnit;
+  cost: number;
+  reason: "EXPIRED" | "DAMAGED" | "PREPARATION_ERROR" | "STAFF_MEAL";
+  loggedAt: string;
+  loggedBy: string;
+}
+
+export interface HappyHourRule {
+  id: string;
+  title: string;
+  discountPercent: number;
+  startHour: number; // örn: 14 (14:00)
+  endHour: number; // örn: 18 (18:00)
+  targetCategoryId?: string; // "cat_burgers" veya "ALL"
+  isActive: boolean;
+}
+
 export interface MenuItem {
   id: string;
   restaurantId: string;
@@ -118,6 +158,8 @@ export interface MenuItem {
   image?: string;
   isAvailable: boolean; // Canlı Stok Açık/Kapalı ("Tükendi")
   ingredients?: string[]; // e.g. ["Dana Köfte", "Cheddar", "Karamelize Soğan", "Turşu", "Trüf Mayonez"]
+  recipe?: RecipeItem[]; // Reçete kalemleri
+  costPrice?: number; // Otomatik hesaplanan porsiyon maliyeti (TL)
   preparationTimeMinutes?: number;
   calories?: number;
   allergens?: string[]; // e.g. ["Gluten", "Laktoz", "Fıstık"]

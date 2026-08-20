@@ -7,6 +7,7 @@ import { useRestaurantStore } from "@/lib/restaurant/store";
 import MenuManager from "@/components/restaurant/admin/MenuManager";
 import QrGenerator from "@/components/restaurant/admin/QrGenerator";
 import AnalyticsDashboard from "@/components/restaurant/admin/AnalyticsDashboard";
+import RecipeManager from "@/components/restaurant/admin/RecipeManager";
 import {
   Store,
   ChefHat,
@@ -19,6 +20,7 @@ import {
   Globe,
   Save,
   TrendingUp,
+  Scale,
 } from "lucide-react";
 
 interface YonetimPageProps {
@@ -42,7 +44,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
     cancelCampaignDiscount,
   } = useRestaurantStore();
 
-  const [activeTab, setActiveTab] = useState<"MENU" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
+  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
   // Restaurant Settings State
   const [orderMode, setOrderMode] = useState(DEMO_RESTAURANT.settings.orderMode);
@@ -71,7 +73,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
                 Yönetim & Yapılandırma
               </span>
             </div>
-            <p className="text-xs text-foreground/50">Menü, Masa QR ve Entegrasyon Paneli</p>
+            <p className="text-xs text-foreground/50">Menü, Reçete Maliyeti, Masa QR ve Entegrasyon Paneli</p>
           </div>
         </div>
 
@@ -95,10 +97,10 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
       </header>
 
       {/* Tabs Navigation */}
-      <div className="px-6 py-3 bg-white/[0.01] border-b border-white/5 flex items-center gap-2">
+      <div className="px-6 py-3 bg-white/[0.01] border-b border-white/5 flex items-center gap-2 overflow-x-auto sleek-scrollbar">
         <button
           onClick={() => setActiveTab("MENU")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "MENU"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
@@ -109,8 +111,20 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         </button>
 
         <button
+          onClick={() => setActiveTab("RECIPES")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === "RECIPES"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <Scale className="w-4 h-4" />
+          <span>Reçete, Maliyet & Kâr Analizi</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab("QR")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "QR"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
@@ -122,7 +136,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         <button
           onClick={() => setActiveTab("ANALYTICS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "ANALYTICS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
@@ -134,7 +148,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         <button
           onClick={() => setActiveTab("SETTINGS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "SETTINGS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
@@ -156,6 +170,10 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
             onSetCampaignDiscount={setCampaignDiscount}
             onCancelCampaignDiscount={cancelCampaignDiscount}
           />
+        )}
+
+        {activeTab === "RECIPES" && (
+          <RecipeManager menuItems={menuItems} categories={categories} />
         )}
 
         {activeTab === "QR" && (
