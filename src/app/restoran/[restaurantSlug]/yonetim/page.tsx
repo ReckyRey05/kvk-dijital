@@ -8,6 +8,7 @@ import MenuManager from "@/components/restaurant/admin/MenuManager";
 import QrGenerator from "@/components/restaurant/admin/QrGenerator";
 import AnalyticsDashboard from "@/components/restaurant/admin/AnalyticsDashboard";
 import RecipeManager from "@/components/restaurant/admin/RecipeManager";
+import ComplaintsLog from "@/components/restaurant/admin/ComplaintsLog";
 import {
   Store,
   ChefHat,
@@ -21,6 +22,7 @@ import {
   Save,
   TrendingUp,
   Scale,
+  MessageSquareWarning,
 } from "lucide-react";
 
 interface YonetimPageProps {
@@ -38,13 +40,14 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
     menuItems,
     categories,
     tables,
+    managerAlerts,
     toggleItemAvailability,
     updateItemPrice,
     setCampaignDiscount,
     cancelCampaignDiscount,
   } = useRestaurantStore();
 
-  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
+  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "COMPLAINTS" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
   // Restaurant Settings State
   const [orderMode, setOrderMode] = useState(DEMO_RESTAURANT.settings.orderMode);
@@ -123,6 +126,23 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         </button>
 
         <button
+          onClick={() => setActiveTab("COMPLAINTS")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === "COMPLAINTS"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <MessageSquareWarning className="w-4 h-4" />
+          <span>Şikayet & Denetim Günlüğü</span>
+          {managerAlerts.filter((a) => !a.isResolved).length > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full bg-red-500 text-white text-[9px] font-black animate-pulse">
+              {managerAlerts.filter((a) => !a.isResolved).length}
+            </span>
+          )}
+        </button>
+
+        <button
           onClick={() => setActiveTab("QR")}
           className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "QR"
@@ -174,6 +194,10 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         {activeTab === "RECIPES" && (
           <RecipeManager menuItems={menuItems} categories={categories} />
+        )}
+
+        {activeTab === "COMPLAINTS" && (
+          <ComplaintsLog alerts={managerAlerts} />
         )}
 
         {activeTab === "QR" && (

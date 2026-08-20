@@ -26,6 +26,7 @@ import {
   DEMO_HAPPY_HOUR_RULES,
 } from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
+import { censorProfanity } from "./profanityFilter";
 
 // Initial Demo Active Orders
 const INITIAL_ORDERS: Order[] = [
@@ -597,7 +598,11 @@ export function useRestaurantStore() {
     },
 
     addManagerAlert: (alert: ManagerAlert) => {
-      globalManagerAlerts = [alert, ...globalManagerAlerts];
+      const censoredAlert: ManagerAlert = {
+        ...alert,
+        message: censorProfanity(alert.message),
+      };
+      globalManagerAlerts = [censoredAlert, ...globalManagerAlerts];
       playWaiterCallSound();
       notifyAll();
     },
@@ -606,6 +611,11 @@ export function useRestaurantStore() {
       globalManagerAlerts = globalManagerAlerts.map((a) =>
         a.id === alertId ? { ...a, isResolved: true } : a
       );
+      notifyAll();
+    },
+
+    deleteManagerAlert: (alertId: string) => {
+      globalManagerAlerts = globalManagerAlerts.filter((a) => a.id !== alertId);
       notifyAll();
     },
 

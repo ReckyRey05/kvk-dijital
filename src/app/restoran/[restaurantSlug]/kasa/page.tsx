@@ -22,6 +22,8 @@ import {
   QrCode,
 } from "lucide-react";
 
+import { censorProfanity } from "@/lib/restaurant/profanityFilter";
+
 interface KasaPageProps {
   params: Promise<{
     restaurantSlug: string;
@@ -84,7 +86,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
               <span className="font-extrabold text-red-300 mr-2">
                 ⚠️ MÜDÜR ACİL BİLDİRİMİ ({unhandledAlerts[0].tableNumber}):
               </span>
-              <span className="text-white font-medium">{unhandledAlerts[0].message}</span>
+              <span className="text-white font-medium">{censorProfanity(unhandledAlerts[0].message)}</span>
               {unhandledAlerts[0].rating && (
                 <span className="ml-2 px-2 py-0.5 rounded bg-red-900 text-red-200 text-[10px] font-bold">
                   ★ {unhandledAlerts[0].rating}/5 Puan
@@ -96,8 +98,9 @@ export default function KasaPosPage({ params }: KasaPageProps) {
           <button
             onClick={() => resolveManagerAlert(unhandledAlerts[0].id)}
             className="px-3 py-1 rounded-xl bg-red-500 hover:bg-red-400 text-black font-extrabold text-[11px] transition-colors cursor-pointer shrink-0"
+            title="Alarmı Kapat (Kayıt Patron Paneline İletilir)"
           >
-            Müdahale Edildi / Kapat
+            Müdahale Edildi / Alarmı Kapat
           </button>
         </div>
       )}
