@@ -262,6 +262,10 @@ export function useRestaurantStore() {
     // Cross-tab broadcast listener
     const handleBroadcast = (event: MessageEvent) => {
       if (event.data && event.data.type === "STATE_SYNC") {
+        const prevOrderCount = globalOrders.length;
+        const prevCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
+        const prevAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
+
         if (event.data.orders) globalOrders = event.data.orders;
         if (event.data.tables) globalTables = event.data.tables;
         if (event.data.calls) globalCalls = event.data.calls;
@@ -269,6 +273,16 @@ export function useRestaurantStore() {
         if (event.data.alerts) globalManagerAlerts = event.data.alerts;
         if (event.data.vouchers) globalVouchers = event.data.vouchers;
         if (event.data.songs) globalSongRequests = event.data.songs;
+
+        const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
+        const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
+
+        if (event.data.orders && event.data.orders.length > prevOrderCount) {
+          playOrderAlertSound();
+        } else if (newCallCount > prevCallCount || newAlertCount > prevAlertCount) {
+          playWaiterCallSound();
+        }
+
         handler();
       }
     };
