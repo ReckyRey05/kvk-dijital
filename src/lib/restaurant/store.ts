@@ -1,7 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Order, Table, WaiterCall, MenuItem, Category, ManagerAlert, CustomerVoucher, SongRequest } from "@/types/restaurant";
+import {
+  Order,
+  Table,
+  WaiterCall,
+  MenuItem,
+  Category,
+  ManagerAlert,
+  CustomerVoucher,
+  SongRequest,
+  OrderItem,
+  TableParticipant,
+} from "@/types/restaurant";
 import { DEMO_TABLES, DEMO_MENU_ITEMS, DEMO_CATEGORIES } from "./mockData";
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 
@@ -167,6 +178,9 @@ let globalSongRequests: SongRequest[] = [
   },
 ];
 
+let globalSharedCarts: Record<string, OrderItem[]> = {};
+let globalTableParticipants: Record<string, TableParticipant[]> = {};
+
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
 
@@ -188,6 +202,8 @@ function saveToStorage() {
     localStorage.setItem("cg_alerts", JSON.stringify(globalManagerAlerts));
     localStorage.setItem("cg_vouchers", JSON.stringify(globalVouchers));
     localStorage.setItem("cg_songs", JSON.stringify(globalSongRequests));
+    localStorage.setItem("cg_shared_carts", JSON.stringify(globalSharedCarts));
+    localStorage.setItem("cg_table_participants", JSON.stringify(globalTableParticipants));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -216,6 +232,12 @@ function loadFromStorage() {
 
     const songs = localStorage.getItem("cg_songs");
     if (songs) globalSongRequests = JSON.parse(songs);
+
+    const sharedCarts = localStorage.getItem("cg_shared_carts");
+    if (sharedCarts) globalSharedCarts = JSON.parse(sharedCarts);
+
+    const participants = localStorage.getItem("cg_table_participants");
+    if (participants) globalTableParticipants = JSON.parse(participants);
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -236,6 +258,8 @@ function notifyAll(broadcast = true) {
         alerts: globalManagerAlerts,
         vouchers: globalVouchers,
         songs: globalSongRequests,
+        sharedCarts: globalSharedCarts,
+        participants: globalTableParticipants,
       });
     }
   }
@@ -273,6 +297,8 @@ export function useRestaurantStore() {
         if (event.data.alerts) globalManagerAlerts = event.data.alerts;
         if (event.data.vouchers) globalVouchers = event.data.vouchers;
         if (event.data.songs) globalSongRequests = event.data.songs;
+        if (event.data.sharedCarts) globalSharedCarts = event.data.sharedCarts;
+        if (event.data.participants) globalTableParticipants = event.data.participants;
 
         const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
         const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -585,8 +611,90 @@ export function useRestaurantStore() {
             }
           : t
       );
+      // Clear shared cart on checkout
+      if (globalSharedCarts[tableId]) {
+        globalSharedCarts = { ...globalSharedCarts, [tableId]: [] };
+      }
       notifyAll();
       return true;
+    },
+
+    // Shared Group Table Cart & Host System
+    sharedCarts: globalSharedCarts,
+    tableParticipants: globalTableParticipants,
+
+    addToSharedCart: (tableId: string, item: OrderItem) => {
+      const current = globalSharedCarts[tableId] || [];
+      globalSharedCarts = {
+        ...globalSharedCarts,
+        [tableId]: [...current, item],
+      };
+      notifyAll();
+    },
+
+    updateSharedCartQuantity: (tableId: string, index: number, newQty: number) => {
+      const current = globalSharedCarts[tableId] || [];
+      globalSharedCarts = {
+        ...globalSharedCarts,
+        [tableId]: current.map((it, idx) => (idx === index ? { ...it, quantity: newQty } : it)),
+      };
+      notifyAll();
+    },
+
+    removeFromSharedCart: (tableId: string, index: number) => {
+      const current = globalSharedCarts[tableId] || [];
+      globalSharedCarts = {
+        ...globalSharedCarts,
+        [tableId]: current.filter((_, idx) => idx !== index),
+      };
+      notifyAll();
+    },
+
+    clearSharedCart: (tableId: string) => {
+      globalSharedCarts = {
+        ...globalSharedCarts,
+        [tableId]: [],
+      };
+      notifyAll();
+    },
+
+    registerParticipant: (tableId: string, participant: TableParticipant) => {
+      const current = globalTableParticipants[tableId] || [];
+      const exists = current.find((p) => p.id === participant.id);
+      if (!exists) {
+        const isFirst = current.length === 0;
+        const newPart = { ...participant, isHost: isFirst || participant.isHost };
+        globalTableParticipants = {
+          ...globalTableParticipants,
+          [tableId]: [...current, newPart],
+        };
+        notifyAll();
+        return newPart;
+      }
+      return exists;
+    },
+
+    transferHostRole: (tableId: string, targetParticipantId: string) => {
+      const current = globalTableParticipants[tableId] || [];
+      globalTableParticipants = {
+        ...globalTableParticipants,
+        [tableId]: current.map((p) => ({
+          ...p,
+          isHost: p.id === targetParticipantId,
+        })),
+      };
+      notifyAll();
+    },
+
+    updateParticipantName: (tableId: string, participantId: string, newName: string) => {
+      const current = globalTableParticipants[tableId] || [];
+      globalTableParticipants = {
+        ...globalTableParticipants,
+        [tableId]: current.map((p) =>
+          p.id === participantId ? { ...p, name: newName.trim() || p.name } : p
+        ),
+      };
+      notifyAll();
     },
   };
 }

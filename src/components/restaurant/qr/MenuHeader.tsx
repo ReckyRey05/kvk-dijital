@@ -1,5 +1,9 @@
-import { Restaurant, Table, MenuLanguage, MenuCurrency } from "@/types/restaurant";
-import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Restaurant, Table, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
+import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check } from "lucide-react";
+import { formatPrice } from "@/lib/restaurant/currency";
 
 interface MenuHeaderProps {
   restaurant: Restaurant;
@@ -16,6 +20,11 @@ interface MenuHeaderProps {
   onOpenFeedback?: () => void;
   onOpenSpinWheel?: () => void;
   onOpenJukebox?: () => void;
+  // Multi-User Group & Table Balance
+  tableBillTotal?: number;
+  currentParticipant?: TableParticipant | null;
+  participantCount?: number;
+  onUpdateName?: (newName: string) => void;
 }
 
 export default function MenuHeader({
@@ -33,10 +42,23 @@ export default function MenuHeader({
   onOpenFeedback,
   onOpenSpinWheel,
   onOpenJukebox,
+  tableBillTotal = 0,
+  currentParticipant,
+  participantCount = 1,
+  onUpdateName,
 }: MenuHeaderProps) {
-  const percentLeft = Math.max(0, Math.min(100, (remainingMinutes / 15) * 100));
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState(currentParticipant?.name || "");
 
+  const percentLeft = Math.max(0, Math.min(100, (remainingMinutes / 15) * 100));
   const currencies: MenuCurrency[] = ["TRY", "USD", "EUR", "GBP"];
+
+  const handleSaveName = () => {
+    if (tempName.trim() && onUpdateName) {
+      onUpdateName(tempName.trim());
+    }
+    setIsEditingName(false);
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-[#050505]/95 backdrop-blur-xl border-b border-white/10 transition-all">
@@ -89,9 +111,76 @@ export default function MenuHeader({
         </div>
       </div>
 
+      {/* Live Table Open Bill Total & Multi-User Group Bar */}
+      <div className="bg-gradient-to-r from-accent/15 via-emerald-500/10 to-transparent border-t border-white/5 px-4 py-2">
+        <div className="max-w-md mx-auto flex items-center justify-between gap-2">
+          {/* Table Bill Total */}
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-xs">
+              ₺
+            </div>
+            <div>
+              <span className="text-[10px] text-foreground/50 block leading-tight font-medium">Masa Açık Tutarı</span>
+              <span className="text-xs font-black text-emerald-400">
+                {formatPrice(tableBillTotal || table.activeBillTotal || 0, currency)}
+              </span>
+            </div>
+          </div>
+
+          {/* Group Dining & Participant Badge */}
+          <div className="flex items-center gap-1.5 bg-black/50 px-2.5 py-1 rounded-xl border border-white/10 text-[10px]">
+            {isEditingName ? (
+              <div className="flex items-center gap-1">
+                <input
+                  type="text"
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
+                  placeholder="Adınız"
+                  className="w-20 bg-white/10 px-1.5 py-0.5 rounded text-white text-[10px] outline-none border border-accent/40"
+                  autoFocus
+                />
+                <button
+                  onClick={handleSaveName}
+                  className="p-1 rounded bg-accent text-black font-bold hover:bg-accent/90"
+                >
+                  <Check className="w-2.5 h-2.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsEditingName(true)}
+                className="flex items-center gap-1 text-[10px] transition-colors hover:text-accent cursor-pointer group"
+                title="İsminizi değiştirmek için tıklayın"
+              >
+                {currentParticipant?.isHost ? (
+                  <div className="flex items-center gap-1 text-amber-300 font-extrabold">
+                    <Crown className="w-3 h-3 text-amber-400" />
+                    <span>Masa Reisi ({currentParticipant.name})</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1 text-foreground/80 font-bold">
+                    <User className="w-3 h-3 text-accent" />
+                    <span>{currentParticipant?.name || "Misafir"}</span>
+                  </div>
+                )}
+                <Edit3 className="w-2.5 h-2.5 text-foreground/40 group-hover:text-accent ml-0.5" />
+              </button>
+            )}
+
+            <div className="h-3 w-px bg-white/10" />
+
+            <div className="flex items-center gap-1 text-foreground/60 font-medium" title="Masadaki Aktif Kişi Sayısı">
+              <Users className="w-3 h-3 text-accent" />
+              <span>{participantCount} Kişi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Quick Interactive Features Strip: Currency, SpinWheel, Jukebox, SplitBill */}
       <div className="bg-white/[0.02] border-t border-white/5 px-4 py-2">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+        <div className="max-w-md mx-auto flex items-center justify-between gap-1 overflow-x-auto sleek-scrollbar pb-0.5">
           {/* Currency Switcher */}
           <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-xl border border-white/10 shrink-0">
             {currencies.map((c) => (

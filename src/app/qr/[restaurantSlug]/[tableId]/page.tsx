@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { MenuItem, OrderItem, WaiterCallType, MenuLanguage, MenuCurrency } from "@/types/restaurant";
+import { MenuItem, OrderItem, WaiterCallType, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { useRestaurantStore } from "@/lib/restaurant/store";
 import { DICTIONARY } from "@/lib/restaurant/i18n";
@@ -31,15 +31,31 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const resolvedParams = use(params);
   const { restaurantSlug, tableId } = resolvedParams;
 
-  const { orders, tables, menuItems, categories, createOrder, callWaiter, payTableOnline } =
-    useRestaurantStore();
+  const {
+    orders,
+    tables,
+    menuItems,
+    categories,
+    createOrder,
+    callWaiter,
+    payTableOnline,
+    sharedCarts,
+    tableParticipants,
+    addToSharedCart,
+    updateSharedCartQuantity,
+    removeFromSharedCart,
+    clearSharedCart,
+    registerParticipant,
+    transferHostRole,
+    updateParticipantName,
+  } = useRestaurantStore();
 
   // Language & Currency state
   const [lang, setLang] = useState<MenuLanguage>("TR");
   const [currency, setCurrency] = useState<MenuCurrency>("TRY");
   const t = DICTIONARY[lang];
 
-  // Find table or fallback
+  // Current table
   const currentTable =
     tables.find((t) => t.id === tableId || t.tableNumber.toLowerCase() === tableId.toLowerCase()) || {
       id: tableId,
@@ -50,11 +66,59 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
       activeBillTotal: 0,
     };
 
+  // Multi-user & Table Participant Setup
+  const [currentParticipant, setCurrentParticipant] = useState<TableParticipant | null>(null);
+  const participants = tableParticipants[tableId] || [];
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const storageKey = `cg_participant_${tableId}`;
+    const stored = localStorage.getItem(storageKey);
+    let participant: TableParticipant;
+
+    const existingList = tableParticipants[tableId] || [];
+
+    if (stored) {
+      participant = JSON.parse(stored);
+      // Sync host state with store if changed
+      const liveP = existingList.find((p) => p.id === participant.id);
+      if (liveP) {
+        participant = liveP;
+      }
+    } else {
+      const isFirst = existingList.length === 0;
+      const guestNum = existingList.length + 1;
+      participant = {
+        id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        name: isFirst ? "Masa Reisi" : `Misafir ${guestNum}`,
+        isHost: isFirst,
+        joinedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(storageKey, JSON.stringify(participant));
+    }
+
+    const registered = registerParticipant(tableId, participant);
+    setCurrentParticipant(registered);
+  }, [tableId]);
+
+  // Keep local participant in sync when host role transfers
+  useEffect(() => {
+    if (currentParticipant) {
+      const live = participants.find((p) => p.id === currentParticipant.id);
+      if (live && (live.isHost !== currentParticipant.isHost || live.name !== currentParticipant.name)) {
+        setCurrentParticipant(live);
+        localStorage.setItem(`cg_participant_${tableId}`, JSON.stringify(live));
+      }
+    }
+  }, [participants, currentParticipant, tableId]);
+
+  // Shared Cart Items
+  const cartItems = sharedCarts[tableId] || [];
+
   // State
   const [activeCategoryId, setActiveCategoryId] = useState<string>(categories[0]?.id || "");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
-  const [cartItems, setCartItems] = useState<OrderItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWaiterModalOpen, setIsWaiterModalOpen] = useState(false);
   const [isTrackerOpen, setIsTrackerOpen] = useState(false);
@@ -100,22 +164,25 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     return matchesSearch && matchesCategory;
   });
 
-  // Cart actions
+  // Cart actions (Shared Table Cart)
   const handleAddToCart = (item: OrderItem) => {
-    setCartItems((prev) => [...prev, item]);
+    const itemWithUser: OrderItem = {
+      ...item,
+      addedBy: currentParticipant?.name || "Misafir",
+      addedById: currentParticipant?.id,
+    };
+    addToSharedCart(tableId, itemWithUser);
   };
 
   const handleUpdateQuantity = (index: number, newQty: number) => {
-    setCartItems((prev) =>
-      prev.map((it, idx) => (idx === index ? { ...it, quantity: newQty } : it))
-    );
+    updateSharedCartQuantity(tableId, index, newQty);
   };
 
   const handleRemoveItem = (index: number) => {
-    setCartItems((prev) => prev.filter((_, idx) => idx !== index));
+    removeFromSharedCart(tableId, index);
   };
 
-  // Order submission
+  // Order submission by Host
   const handleSubmitOrder = async (notes: string) => {
     const totalAmount = cartItems.reduce((sum, it) => sum + it.finalPrice * it.quantity, 0);
 
@@ -141,7 +208,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     };
 
     createOrder(newOrder);
-    setCartItems([]);
+    clearSharedCart(tableId);
     setIsCartOpen(false);
     setIsTrackerOpen(true);
   };
@@ -158,6 +225,21 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
       status: "ACTIVE",
       createdAt: new Date().toISOString(),
     });
+  };
+
+  // Update Participant Name
+  const handleUpdateName = (newName: string) => {
+    if (currentParticipant) {
+      updateParticipantName(tableId, currentParticipant.id, newName);
+      const updated = { ...currentParticipant, name: newName };
+      setCurrentParticipant(updated);
+      localStorage.setItem(`cg_participant_${tableId}`, JSON.stringify(updated));
+    }
+  };
+
+  // Transfer Host Role
+  const handleTransferHost = (targetId: string) => {
+    transferHostRole(tableId, targetId);
   };
 
   // Active table orders
@@ -213,6 +295,10 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenFeedback={() => setIsFeedbackOpen(true)}
         onOpenSpinWheel={() => setIsSpinWheelOpen(true)}
         onOpenJukebox={() => setIsJukeboxOpen(true)}
+        tableBillTotal={currentTable.activeBillTotal}
+        currentParticipant={currentParticipant}
+        participantCount={participants.length || 1}
+        onUpdateName={handleUpdateName}
       />
 
       {/* Search Bar */}
@@ -316,6 +402,13 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         remainingMinutes={remainingMinutes}
         currency={currency}
         onOpenOnlinePayment={() => setIsOnlinePaymentOpen(true)}
+        currentParticipant={currentParticipant}
+        participants={participants}
+        onTransferHost={handleTransferHost}
+        onPayMyShare={(myItems, myTotal) => {
+          setIsCartOpen(false);
+          setIsOnlinePaymentOpen(true);
+        }}
       />
 
       {/* Waiter Call Modal */}
@@ -360,7 +453,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         currency={currency}
         onPaymentSuccess={() => {
           payTableOnline(currentTable.id);
-          setCartItems([]);
+          clearSharedCart(currentTable.id);
           setIsOnlinePaymentOpen(false);
           setIsSpinWheelOpen(true); // Reward customer with spin wheel!
         }}

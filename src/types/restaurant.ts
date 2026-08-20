@@ -158,6 +158,13 @@ export interface SelectedOptionPayload {
   }[];
 }
 
+export interface TableParticipant {
+  id: string;
+  name: string;
+  isHost: boolean;
+  joinedAt: string;
+}
+
 export interface OrderItem {
   id: string;
   menuItemId: string;
@@ -168,6 +175,8 @@ export interface OrderItem {
   selectedOptions?: SelectedOptionPayload[];
   removedIngredients?: string[]; // e.g. ["Karamelize Soğan", "Turşu"]
   itemNotes?: string;
+  addedBy?: string; // e.g. "Masa Reisi", "Misafir 2", "Ali"
+  addedById?: string;
 }
 
 export interface Order {
