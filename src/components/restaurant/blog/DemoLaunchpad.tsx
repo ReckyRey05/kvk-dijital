@@ -159,10 +159,10 @@ export default function DemoLaunchpad() {
 
           <div className="space-y-1">
             <h4 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
-              4. Reçete, Kâr & Patron Paneli <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-purple-300" />
+              4. Reçete, Personel & Patron Paneli <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-purple-300" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              Gramaj bazlı reçete maliyeti, mutfak fire (zayi) takibi, korumalı şikayet günlüğü ve küfür filtresi.
+              Gramaj bazlı reçete maliyeti, mutfak fire takibi, 2FA güvenliği ve personel rol yetki matrisi.
             </p>
           </div>
 
@@ -173,21 +173,31 @@ export default function DemoLaunchpad() {
         </Link>
       </div>
 
-      {/* Direct Contact CTA */}
+      {/* Dual CTA Section */}
       <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 text-xs text-foreground/70">
           <ShieldCheck className="w-4 h-4 text-accent" />
-          <span>Restoranınız için anahtar teslim kurulum ve 7/24 teknik destek</span>
+          <span>Restoranınız için anahtar teslim kurulum, özel alan adı ve teknik destek</span>
         </div>
 
-        <Link
-          href="https://wa.me/905348914905?text=Merhaba,%20Cep%20Garson%20Restoran%20QR%20ve%20POS%20sistemi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
-          target="_blank"
-          className="px-6 py-2.5 rounded-full bg-accent text-black font-extrabold text-xs flex items-center gap-2 hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
-        >
-          <span>İşletmeniz İçin Teklif Alın</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/restoran/aura-bistro/kasa"
+            className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
+          >
+            <span>Canlı Demoyu Dene</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+
+          <Link
+            href="https://wa.me/905348914905?text=Merhaba,%20Cep%20Garson%20Restoran%20QR%20ve%20POS%20sistemi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
+            target="_blank"
+            className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-accent/20 cursor-pointer"
+          >
+            <span>Restoranınız İçin Teklif Alın</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
     </section>
   );

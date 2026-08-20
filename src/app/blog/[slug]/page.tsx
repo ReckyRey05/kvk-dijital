@@ -303,36 +303,82 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           )}
 
           {/* Contextual Lead Conversion CTA Banner */}
-          <div className="mt-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-card via-[#0c1414] to-card border border-accent/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[80px] rounded-full pointer-events-none" />
-            <h3 className="text-2xl sm:text-3xl font-bold text-white">
-              {post.category ? `${post.category} Projenizi Birlikte Planlayalım` : "İşletmeniz İçin Web Projenizi Birlikte Planlayalım"}
-            </h3>
-            <p className="text-sm text-foreground/70 max-w-xl mx-auto leading-relaxed">
-              KvK Dijital Çözümler ile yüksek performanslı, SEO altyapılı ve dönüşüm odaklı web sistemleri geliştirmek için ücretsiz danışmanlık alın.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link 
-                href="/iletisim" 
-                className="px-8 py-3.5 bg-accent text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-accent/90 transition-all inline-flex items-center gap-2 shadow-lg shadow-accent/20 cursor-pointer"
-              >
-                Ücretsiz Teklif Alın <ArrowRight className="w-4 h-4" />
-              </Link>
-              {post.category?.toLowerCase().includes("tasarım") || post.category?.toLowerCase().includes("tasarim") ? (
-                <Link href="/web-tasarim" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
-                  Web Tasarım Hizmetini İnceleyin
+          {(post.slug.includes("cep-garson") || post.slug.includes("qr-menu-pos")) ? (
+            <div className="mt-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-card via-[#0c1414] to-card border border-accent/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[80px] rounded-full pointer-events-none" />
+              <div className="space-y-2">
+                <span className="text-[11px] font-black uppercase tracking-wider text-accent">Bütünleşik Restoran İşletim Sistemi</span>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+                  Restoranınızın Tüm Operasyonunu Tek Platformda Yönetin
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto text-[11px] font-bold text-foreground/80">
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">QR Menü</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Mobil Sipariş</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Kasa POS</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Mutfak KDS</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Stok & Reçete</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Personel Yönetimi</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Paket Servis Hub</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">İşletme Analitiği</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Masada 3D Ödeme</span>
+                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">Çoklu Şube</span>
+              </div>
+
+              <p className="text-sm text-foreground/70 max-w-xl mx-auto leading-relaxed">
+                İşletmenizin kurumsal kimliğine ve menü yapısına özel anahtar teslim kurulum, sıfır donanım kilidi ve 7/24 teknik destek.
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+                <Link 
+                  href="/restoran/aura-bistro/kasa" 
+                  className="px-8 py-3.5 bg-accent text-slate-950 font-black text-xs uppercase tracking-wider rounded-full hover:bg-accent/90 transition-all inline-flex items-center gap-2 shadow-lg shadow-accent/20 cursor-pointer"
+                >
+                  Canlı Demoyu Deneyin <ArrowRight className="w-4 h-4" />
                 </Link>
-              ) : post.category?.toLowerCase().includes("e-ticaret") ? (
-                <Link href="/e-ticaret-web-sitesi" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
-                  E-Ticaret Çözümünü İnceleyin
+
+                <Link 
+                  href="https://wa.me/905348914905?text=Merhaba,%20Cep%20Garson%20Restoran%20sistemi%20i%C3%A7in%20teklif%20almak%20istiyorum."
+                  target="_blank"
+                  className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-bold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors inline-flex items-center gap-2"
+                >
+                  Restoranınız İçin Teklif Alın
                 </Link>
-              ) : (
-                <Link href="/hizmetler" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
-                  Tüm Hizmetleri İnceleyin
-                </Link>
-              )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="mt-16 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-card via-[#0c1414] to-card border border-accent/30 text-center space-y-6 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[80px] rounded-full pointer-events-none" />
+              <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                {post.category ? `${post.category} Projenizi Birlikte Planlayalım` : "İşletmeniz İçin Web Projenizi Birlikte Planlayalım"}
+              </h3>
+              <p className="text-sm text-foreground/70 max-w-xl mx-auto leading-relaxed">
+                KvK Dijital Çözümler ile yüksek performanslı, SEO altyapılı ve dönüşüm odaklı web sistemleri geliştirmek için ücretsiz danışmanlık alın.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+                <Link 
+                  href="/iletisim" 
+                  className="px-8 py-3.5 bg-accent text-slate-950 font-bold text-xs uppercase tracking-wider rounded-full hover:bg-accent/90 transition-all inline-flex items-center gap-2 shadow-lg shadow-accent/20 cursor-pointer"
+                >
+                  Ücretsiz Teklif Alın <ArrowRight className="w-4 h-4" />
+                </Link>
+                {post.category?.toLowerCase().includes("tasarım") || post.category?.toLowerCase().includes("tasarim") ? (
+                  <Link href="/web-tasarim" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    Web Tasarım Hizmetini İnceleyin
+                  </Link>
+                ) : post.category?.toLowerCase().includes("e-ticaret") ? (
+                  <Link href="/e-ticaret-web-sitesi" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    E-Ticaret Çözümünü İnceleyin
+                  </Link>
+                ) : (
+                  <Link href="/hizmetler" className="px-6 py-3.5 rounded-full bg-white/5 border border-white/10 text-white font-semibold text-xs uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    Tüm Hizmetleri İnceleyin
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Other Articles Recommendation Grid */}
           {otherPosts.length > 0 && (

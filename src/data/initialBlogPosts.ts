@@ -15,169 +15,315 @@ export interface ExtendedBlogPost extends BlogPost {
 export const initialBlogPosts: ExtendedBlogPost[] = [
   {
     id: "post-cep-garson-qr-menu-pos",
-    title: "Restoranınızı Dijital Bir Satış Makinesine Dönüştürün: Cep Garson Restoran İşletim Sistemi (OS) Rehberi",
+    title: "Restoranınızın Dijital İşletim Sistemi: Cep Garson QR Menü, POS, KDS ve Restoran Yönetim Rehberi",
     slug: "cep-garson-akilli-restoran-qr-menu-pos-sistemi",
     coverImage: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&auto=format&fit=crop&q=85",
     category: "Restoran Yazılımları & POS",
-    readTime: "6 dk okunma",
+    readTime: "7 dk okunma",
     author: "KvK Dijital Çözümler Uzman Kadrosu",
     isPublished: true,
     createdAt: { toDate: () => new Date("2026-08-20T00:00:00Z") },
-    excerpt: "Masa Reisi ortak sepeti, masada 3D Secure ile kendi payını ödeme, gramaj bazlı reçete kâr motoru, Google 5 yıldız kalkanı, küfür filtreli patron günlüğü, paket servis hub'ı ve GİB E-Fatura ile restoranınızı geleceğe taşıyın.",
+    excerpt: "QR Menü, mobil sipariş, POS, mutfak ekranı (KDS), reçete maliyeti, stok, personel yetkilendirme, paket servis hub'ı ve işletme analitiğini tek çatı altında birleştiren yeni nesil restoran işletim sistemi.",
     content: `
-<p class="lead">Restoran ve kafe işletmeciliğinde kârı eriten temel problemler bellidir: <strong>Masa başında dakikalarca garson bekleyen müşteriler, hesap öderken çıkan karmaşa, reçetesiz pişen yemeklerdeki hammadde kaçakları, ayrı ayrı öten paket servis tabletleri ve Google'a düşen haksız 1 yıldızlı yorumlar.</strong></p>
+<p class="lead">Günümüz gastronomi ve yeme-içme sektöründe başarı; yalnızca lezzetli tabaklar sunmaktan değil, <strong>sipariş hızını, mutfak koordinasyonunu, hammadde maliyetlerini ve müşteri deneyimini tek bir merkezden kusursuz yönetebilmekten</strong> geçer.</p>
 
-<p>Piyasadaki klasik QR menüler müşteriye yalnızca statik bir PDF veya ürün listesi gösterirken, geleneksel hantal POS yazılımları ise dükkanınıza pahalı lisans ve donanım kilitleri dayatır. <strong>KvK Dijital Çözümler</strong> tarafından geliştirilen <strong>Cep Garson Restoran İşletim Sistemi (OS)</strong> ise masadaki misafirden mutfaktaki şefe, depodaki gramajdan kasadaki Z-raporuna kadar tüm dükkanı birbirine bağlayan %100 bulut ve tarayıcı tabanlı eksiksiz bir yönetim ekosistemidir.</p>
+<p>Geleneksel restoran yönetiminde kağıt menüler yıpranır ve fiyat değişimlerinde baskı maliyeti yaratır; hantal masaüstü POS cihazları masadaki misafirle mutfak arasındaki bağı koparır; ayrı ayrı öten paket servis tabletleri personeli yorar; reçetesiz pişen tabaklar ise gıda maliyetlerini (food cost) belirsizleştirir. <strong>KvK Dijital Çözümler</strong> tarafından geliştirilen <strong>Cep Garson</strong>, basit bir QR menü değil; restoranınızın tüm operasyonunu uçtan uca birbirine bağlayan <strong>kapsamlı bir Restoran Dijital İşletim Sistemidir (Restaurant OS)</strong>.</p>
 
-<div class="my-8 p-6 rounded-2xl bg-white/[0.03] border border-accent/30 text-white">
-  <h3 class="text-lg font-bold text-accent mb-2">Neden Sıfır Donanım Kilidi ve %100 Tarayıcı Tabanlı Mimari?</h3>
-  <p class="text-xs text-foreground/80 leading-relaxed">Özel el terminali veya pahalı POS cihazı almanıza gerek yoktur. Windows kurulumu veya güncelleme derdi yoktur. Kasada ve mutfakta dilediğiniz herhangi bir iPad, Android tablet, dokunmatik ekran veya bilgisayardan anında çalışır. Müşterileriniz ise hiçbir uygulama indirmeden kendi telefonlarından 1 saniyenin altında sisteme dahil olur.</p>
+<div class="my-8 p-6 rounded-3xl bg-white/[0.03] border border-accent/30 text-white">
+  <div class="text-xs font-black uppercase tracking-wider text-accent mb-2">Bütünleşik Ekosistem Mimarisi</div>
+  <h3 class="text-lg font-bold text-white mb-2">Restoranınızın Tüm Operasyonu Tek Platformda</h3>
+  <p class="text-xs text-foreground/80 leading-relaxed mb-4">Cep Garson, bağımsız çalışan tekil programlar yerine dükkanınızın her noktasını tek akışta senkronize eder:</p>
+  <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono font-bold text-foreground/90">
+    <span class="px-2.5 py-1 rounded-lg bg-accent/20 text-accent border border-accent/30">QR Menü</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Mobil Sipariş</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Kasa POS</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">Mutfak KDS</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Stok & Reçete (BOM)</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/30">Personel & Rol Yetki</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Paket Servis Hub</span>
+    <span class="text-foreground/40">→</span>
+    <span class="px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/30">İşletme Analitiği</span>
+  </div>
 </div>
 
-<h2>1. Masa Reisi & Canlı Ortak Masa Sepeti (Group Dining)</h2>
-<p>Kalabalık masalarda herkesin ayrı ayrı garson çağırması, siparişlerin birbirine karışması ve adisyon karmaşası tamamen son bulur:</p>
+<h2>Cep Garson İşletmenize Ne Kazandırır?</h2>
+<p>Cep Garson, restoranınızın günlük işleyişinde verimliliği ve denetimi artırmak için tasarlanmış 6 temel kazanım sunar:</p>
+
 <ul>
-  <li><strong>Masa Reisi Yetkisi:</strong> QR kodu ilk okutan misafir otomatik olarak masa başkanı (Host) seçilir.</li>
-  <li><strong>Ortak Canlı Sepet:</strong> Masadaki tüm misafirler kendi telefonlarından diledikleri ürünleri sepete ekler; sepette her ürünün üzerinde kimin eklediği renkli rozetle gösterilir.</li>
-  <li><strong>Reis Onayıyla Güvenli Gönderim:</strong> Siparişi kontrol edip tek dokunuşla mutfağa ve kasaya gönderme yetkisi Masa Reisindedir. Sahte veya mükerrer siparişler sıfırlanır.</li>
+  <li><strong>Daha Hızlı Sipariş Akışı:</strong> Müşteriler garson beklemeden kendi telefonlarından menüyü inceleyip siparişlerini doğrudan iletebilir.</li>
+  <li><strong>Daha Az Operasyonel Hata:</strong> Masadan verilen siparişler ve malzeme çıkarma tercihleri doğrudan kasa ve mutfak ekranlarına dijital olarak aktarılır; el yazısı veya sözlü aktarım hataları minimize edilir.</li>
+  <li><strong>Daha Yüksek Sepet Potansiyeli (Akıllı Ek Satış):</strong> Ürün seçimi esnasında ekstra sos, içecek, patates, porsiyon yükseltme ve tatlı seçenekleri sunularak doğal ek satış fırsatları oluşturulur.</li>
+  <li><strong>Daha Kontrollü Maliyet:</strong> Gramaj bazlı reçete, hammadde depo takibi ve mutfak fire kayıtları sayesinde tabak başı maliyetler ve kârlılık şeffaf şekilde izlenir.</li>
+  <li><strong>Gerçek Zamanlı İşletme Görünürlüğü:</strong> Günlük ciro, masa doluluk oranları, açık adisyonlar, en çok satan ürünler ve personel hareketleri tek bir yönetim panelinde toplanır.</li>
+  <li><strong>Personelin Zamanını Verimli Kullanma:</strong> Garsonların sipariş notu almak veya menü taşımak yerine misafirlere kaliteli servis ve sıcak karşılama sunmasına imkan tanır.</li>
+</ul>
+
+<h2>Geleneksel Restoran Sistemleri vs Cep Garson</h2>
+<p>İşletmenizin mevcut operasyonu ile yeni nesil bulut işletim sistemi arasındaki temel farklar:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Özellik / Modül</th>
+      <th>Geleneksel Restoran Sistemleri</th>
+      <th>Cep Garson Dijital İşletim Sistemi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Menü Sunumu</strong></td>
+      <td>Yıpranan kağıt menü veya statik PDF</td>
+      <td>Dinamik, çok dilli, 4K görsel ve içerik destekli QR menü</td>
+    </tr>
+    <tr>
+      <td><strong>Sipariş Alma</strong></td>
+      <td>Garsonun masaya gelip not alması</td>
+      <td>Masadan çok kullanıcılı ortak sepetle doğrudan iletim</td>
+    </tr>
+    <tr>
+      <td><strong>Mutfak İletişimi</strong></td>
+      <td>Kaybolabilen kağıt fişler ve sözlü aktarım</td>
+      <td>Sesli uyarı ve süre sayaçlı dijital Mutfak Ekranı (KDS)</td>
+    </tr>
+    <tr>
+      <td><strong>Maliyet & Reçete</strong></td>
+      <td>Manuel Excel tabloları veya tahmini hesap</td>
+      <td>Gramaj bazlı reçete (BOM), fire kaydı ve anlık kâr marjı</td>
+    </tr>
+    <tr>
+      <td><strong>Paket Servis Yönetimi</strong></td>
+      <td>4 ayrı tabletin aynı anda ötmesi ve karmaşa</td>
+      <td>Getir, Yemeksepeti, Trendyol, Migros tek Kasa Hub ekranında</td>
+    </tr>
+    <tr>
+      <td><strong>Hesap Ödeme</strong></td>
+      <td>Masa başında pos sırası ve bölüşme karmaşası</td>
+      <td>Masada 3D Secure ile kendi payını ödeme & Kasa tahsilatı</td>
+    </tr>
+    <tr>
+      <td><strong>Raporlama</strong></td>
+      <td>Yalnızca gün sonu sınırlı kasa çıktısı</td>
+      <td>Gerçek zamanlı ciro, ürün performansı ve operasyon analitiği</td>
+    </tr>
+    <tr>
+      <td><strong>Donanım Bağımlılığı</strong></td>
+      <td>Pahalı özel POS cihazları ve Windows kurulumu</td>
+      <td>Sıfır donanım masrafı; iPad, Android, tablet veya web tarayıcı</td>
+    </tr>
+    <tr>
+      <td><strong>Yetkilendirme & Güvenlik</strong></td>
+      <td>Herkesin tek ekrana erişebildiği zayıf yapı</td>
+      <td>Garson PIN, Mutfak KDS ve 2FA korumalı Patron paneli izolasyonu</td>
+    </tr>
+    <tr>
+      <td><strong>Özelleştirilebilirlik</strong></td>
+      <td>Kalıplaşmış, değiştirilemez paketler</td>
+      <td>Logonuza, renklerinize ve kendi alan adınıza %100 uyarlama</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>1. Masa Reisi & Canlı Ortak Masa Sepeti (Group Dining)</h2>
+<p>Kalabalık arkadaş gruplarında herkesin ayrı ayrı garson araması ve siparişlerin karışması engellenir:</p>
+<ul>
+  <li><strong>Masa Reisi Yetkisi:</strong> Masadaki QR kodu ilk okutan misafir otomatik olarak masa oturumunun yöneticisi (Host) olur.</li>
+  <li><strong>Ortak Canlı Sepet:</strong> Masadaki tüm misafirler kendi telefonlarından sepeti görüntüleyebilir ve ürün ekleyebilir; her ürünün üzerinde kimin eklediği rozetle belirtilir.</li>
+  <li><strong>Kontrollü İletim:</strong> Sepeti onaylayıp mutfağa ve kasaya gönderme yetkisi Masa Reisindedir; bu sayede mükerrer ve sahte sipariş riski önemli ölçüde azaltılır.</li>
 </ul>
 
 <h2>2. Masada Kendi Payını Ödeme (Pay My Share & 3D Secure)</h2>
-<p>Grup yemeklerinde en büyük müşteri eziyeti olan hesap bölüştürme derdine son teknoloji çözüm:</p>
+<p>Grup yemeklerinde hesabı bölüştürmek için personelin masaya birden fazla kez POS cihazı taşımasına gerek kalmaz:</p>
 <ul>
-  <li>Erken kalkmak isteyen misafir telefonundan <strong>"Benim Payım"</strong> sekmesine geçer.</li>
-  <li>Yalnızca kendi yediği yemeği ve içeceği işaretler; garson beklemeden 3D Secure kredi kartı ile telefonundan anında öder.</li>
-  <li>Kasa ekranında o misafirin payı anında düşer; masanın kalan hesap bakiyesi saniyesinde canlı güncellenir.</li>
+  <li>Erken ayrılmak isteyen misafir <strong>"Benim Payım"</strong> bölümünden yalnızca kendi tükettiği ürünleri seçer.</li>
+  <li>Telefonundan güvenli 3D Secure altyapısıyla ödemesini tamamlar.</li>
+  <li>Kasa POS ekranında o misafirin payı anında düşer; masanın kalan hesap bakiyesi gerçek zamanlı olarak güncellenir.</li>
 </ul>
 
-<h2>3. Malzeme Çıkarma, Alerjen Filtresi ve Özel İstekler</h2>
-<p>Müşteriler sevmedikleri veya alerjileri olan malzemeleri (Örn: Soğan, Domates, Turşu, Gluten) menüden tek dokunuşla çıkarabilir. Bu bilgi mutfak KDS ekranına kırmızı kalın uyarı olarak yansır; yanlış tabak çıkması engellenir.</p>
+<h2>3. Akıllı Ek Satış (Upsell) & Malzeme Kişiselleştirme</h2>
+<p>Müşteri sipariş verirken sepet değerini ve müşteri memnuniyetini artıran akıllı opsiyonlar devreye girer:</p>
+<ul>
+  <li><strong>Tamamlayıcı Ürün Önerileri:</strong> Örneğin hamburger seçildiğinde patates, özel soslar, soğuk içecekler, porsiyon büyütme veya tatlı önerileri sunulur.</li>
+  <li><strong>Malzeme & Alerjen Çıkarma:</strong> Misafirler sevmedikleri veya alerjisi oldukları bileşenleri (Örn: Soğan, Domates, Turşu, Gluten) tek dokunuşla menüden çıkarabilir; bu bilgi mutfak KDS ekranına kalın renkli uyarı olarak iletilir.</li>
+</ul>
 
 <h2>4. Reçete, Gramaj & Gerçek Kâr Marjı Motoru (BOM & Food Cost)</h2>
-<p>Rakiplerin yalnızca en yüksek kurumsal paketlerde sunduğu <em>Reçete & Gıda Maliyeti Motoru</em> Cep Garson'da standart olarak gelir:</p>
+<p>Restoranın kârlılığını sürdürebilmesi için reçete ve hammadde kontrolü esastır:</p>
 <ul>
-  <li>Menüdeki her yemeğe gram/ml/adet bazında reçete tanımlayın <em>(Örn: 180g Kıyma + 1 Ekmek + 25g Cheddar = 114,50 TL Maliyet)</em>.</li>
-  <li>Porsiyon başı net maliyetinizi, brüt kârınızı (TL) ve kâr marjınızı (%) saniyesinde takip edin.</li>
-  <li>Sipariş tamamlandıkça depodaki hammadde stoğu gramajına kadar otomatik düşer.</li>
-  <li><strong>Fire (Zayi) Takibi:</strong> Mutfakta yanan, dökülen veya bozulan ürünleri tek tıkla fire olarak kaydedin; mutfak kaçaklarını kuruşu kuruşuna kontrol altına alın.</li>
+  <li>Menüdeki her tabağa gram, mililitre veya adet bazında malzeme reçetesi tanımlanır <em>(Örn: 180g Dana Kıyma + 1 Brioche Ekmek + 25g Cheddar = Net Maliyet)</em>.</li>
+  <li>Porsiyon başı gerçek maliyet, brüt kâr (TL) ve kâr marjı (%) anlık olarak izlenir.</li>
+  <li>Sipariş tamamlandıkça depodaki hammadde stoğu otomatik düşer.</li>
+  <li><strong>Mutfak Fire & Zayi Takibi:</strong> Mutfakta yanan, dökülen veya bozulan ürünler tek tıkla fire olarak sisteme girilerek hammadde kaçakları kontrol altına alınır.</li>
 </ul>
 
-<h2>5. Mutfak Ekranı (KDS) & Hazırlık Süre Analitiği</h2>
-<p>Geleneksel kağıt fişlerin kaybolduğu veya ıslandığı mutfak karmaşasına dijital son:</p>
+<h2>5. Mutfak Ekranı (KDS) & Hazırlık Süresi Analitiği</h2>
+<p>Mutfak ile servis arasındaki iletişimi dijitalleştiren Şef Ekranı (Kitchen Display System):</p>
 <ul>
-  <li><strong>Sesli Çan Bildirimi:</strong> Yeni sipariş geldiğinde şef ekranında anında sesli zil çalar.</li>
-  <li><strong>Süre Sayaçları ve Darboğaz Alarmları:</strong> Her siparişin hazırlandığı süre renk kodlarıyla ilerler (Yeşil -> Sarı -> Kırmızı). Belirlenen hedef süreyi (Örn: 10 dk) aşan tabaklarda ekran kırmızı renkte uyarır.</li>
-  <li><strong>İstasyon Yönetimi:</strong> Aşçı hazırladığı ürünün üstüne dokunarak tabağı "Hazır" durumuna getirir; garsonun telefonuna servis bildirimi düşer.</li>
+  <li><strong>Sesli Bildirim:</strong> Yeni sipariş onaylandığında mutfakta sesli uyarı çalar.</li>
+  <li><strong>Süre Sayaçları ve Gecikme Uyarıları:</strong> Hazırlık süresi yeşil, sarı ve kırmızı renk kodlarıyla takip edilir; belirlenen hedef hazırlık süresini aşan tabaklarda görsel uyarı verilir.</li>
+  <li><strong>İstasyon Bazlı Çıkış:</strong> Aşçı hazırladığı tabağın üzerine dokunarak "Hazır" durumuna getirdiğinde servis personeline bildirim gider.</li>
 </ul>
 
-<h2>6. Akıllı İtibar Kalkanı (Google 5 Yıldız Booster)</h2>
-<p>Restoranınızın itibarını personelin insafına veya şans faktörüne bırakmayın:</p>
+<h2>6. Müşteri Geri Bildirim & Google Yorum Sistemi</h2>
+<p>Müşteri memnuniyetini proaktif şekilde yöneten iki yönlü geri bildirim döngüsü:</p>
 <ul>
-  <li><strong>5 Yıldızlı Yorumlar:</strong> Hizmetten memnun kalan müşteriler tek tuşla doğrudan işletmenizin Google Haritalar profiline yönlendirilir ve 5 yıldızlı yorum bırakmaya teşvik edilir.</li>
-  <li><strong>1-3 Yıldızlı Şikayetler:</strong> Servis veya yemekten memnun kalmayan müşterinin bildirimi Google'a düşmeden önce anında Kasa POS ekranına <strong>Kırmızı Sesli Acil Alarm</strong> olarak düşer; müdür masaya anında ikramla müdahale ederek krizi memnuniyete çevirir.</li>
+  <li><strong>Memnun Misafirler:</strong> Masadaki servis ve yemek deneyiminden memnun kalan müşteriler, dilerlerse tek dokunuşla işletmenizin Google Haritalar profiline yönlendirilerek deneyimlerini paylaşmaya davet edilir.</li>
+  <li><strong>İşletme İçi Acil Bildirim:</strong> Yemekten veya servisten memnun kalmayan misafirlerin şikayetleri doğrudan Kasa POS ekranına sesli ve görsel acil uyarı olarak düşer; salon müdürü masaya anında müdahale ederek müşteri memnuniyetsizliğini işletme içinde çözer.</li>
 </ul>
 
-<h2>7. Korumalı Patron Şikayet Günlüğü & Otomatik Küfür Filtresi (Boss Audit Log)</h2>
-<p>Personelin müşteri şikayetlerini ekrandan silip patronun gözünden gizlemesini önleyen güvenlik mekanizması:</p>
+<h2>7. Korumalı Patron Şikayet Günlüğü & Küfür Filtresi (Boss Audit Log)</h2>
+<p>Müşteri şikayetlerinin personel tarafından gizlenmesini veya silinmesini önleyen güvenlik katmanı:</p>
 <ul>
-  <li>Gelen tüm müşteri şikayetleri akıllı küfür filtresinden geçer (argo sözcükler <code>***</code> olarak maskelenir).</li>
-  <li>Garsonlar veya kasiyerler alarmı susturabilir; ancak şikayet kaydını <strong>ASLA silemez</strong>.</li>
-  <li>Tüm şikayetler patron yönetim panelinde kalıcı olarak saklanır; silme ve denetim yetkisi yalnızca restoran sahibindedir.</li>
+  <li>Gelen tüm müşteri geri bildirimleri küfür filtreleme mekanizmasından geçer (argo kelimeler <code>***</code> olarak maskelenir).</li>
+  <li>Garsonlar veya kasiyerler alarmı susturabilir; ancak şikayet kaydını <strong>kesinlikle silemez</strong>.</li>
+  <li>Tüm geri bildirimler patron yönetim panelinde kalıcı olarak saklanır; silme ve arşivleme yetkisi yalnızca restoran sahibindedir.</li>
 </ul>
 
 <h2>8. Paket Servis Hub (Getir, Yemeksepeti, Trendyol, Migros)</h2>
-<p>Kasada 4 farklı tabletin aynı anda ötüp personeli bunaltmasına son verin:</p>
+<p>Kasada birden fazla tabletin yarattığı karmaşayı tek ekranda toplayan merkezi paket servis terminali:</p>
 <ul>
-  <li>Tüm platformlardan gelen paket siparişler tek bir Kasa POS ekranında birleşir.</li>
-  <li>Tek tıkla sipariş onaylanır, mutfak KDS ekranına düşer ve kurye adres fişi termal yazıcıdan çıkar.</li>
-  <li>Yoğunluk anında tek butonla platformların sipariş alımı durdurulabilir.</li>
+  <li>Tüm yemek platformlarından gelen siparişler Kasa POS arayüzünde tek listede birleşir.</li>
+  <li>Tek dokunuşla sipariş kabul edilir, mutfak KDS ekranına iletilir ve kurye adres fişi termal yazıcıdan çıkar.</li>
+  <li>Yoğunluk anında tek butonla platformların sipariş alımı geçici olarak durdurulabilir.</li>
 </ul>
 
-<h2>9. Resmi GİB E-Fatura & E-Adisyon Entegrasyonu</h2>
-<p>Masa hesabı kapatılırken tek tuşla <strong>Paraşüt, BizimHesap, QNB e-Finans veya GİB E-Arşiv Portalı</strong> üzerinden resmi UUID ETTN kodlu e-fatura üretilir ve müşterinin e-postasına saniyeler içinde iletilir.</p>
+<h2>9. Resmi E-Fatura & E-Adisyon Entegrasyon Desteği</h2>
+<p>Paraşüt, BizimHesap, QNB e-Finans ve GİB E-Arşiv Portalı ile uyumlu altyapı sayesinde hesap kapatılırken UUID ETTN kodlu elektronik fatura oluşturulabilir ve müşterinin e-posta adresine iletilebilir.</p>
 
-<h2>10. İkram Çarkıfeleği & Dijital Jukebox (Müşteri Sadakati & CRM)</h2>
+<h2>10. İkram Çarkıfeleği & Dijital Jukebox (Müşteri Etkileşimi)</h2>
 <ul>
-  <li><strong>İkram Çarkıfeleği:</strong> Müşterilere indirim ve tatlı kuponu kazandıran gamification çarkı sayesinde KVKK uyumlu müşteri telefon havuzu ve CRM datası toplanır.</li>
-  <li><strong>Dijital Jukebox:</strong> Masadaki misafirler mekanda çalmasını istedikleri şarkıyı telefonlarından oylar; mekanın atmosferi ve enerjisi yükselir.</li>
+  <li><strong>İkram Çarkıfeleği:</strong> Misafirlere ikram veya indirim kuponu kazandıran etkileşimli çark sayesinde KVKK uyumlu müşteri veri tabanı oluşturulur.</li>
+  <li><strong>Dijital Jukebox:</strong> Masadaki misafirler mekanda çalmasını istedikleri şarkıları oylayarak restoranın müzik atmosferine doğrudan katılabilir.</li>
 </ul>
 
-<h2>11. Canlı Masa Transferi & Otomatik Telefon Senkronizasyonu</h2>
-<p>Kasa görevlisi Masa 4'ü Masa 7'ye taşıdığı anda müşterinin telefonunda otomatik olarak <em>"Masanız Kasa Tarafından Masa 7'ye Taşındı"</em> bildirimi belirir. 2 saniye içinde müşterinin tarayıcısı yeni masaya yönlendirilir; sepeti, açık hesabı ve oturumu hiçbir veri kaybı olmadan korunur.</p>
+<h2>11. Canlı Masa Transferi & Otomatik Oturum Senkronizasyonu</h2>
+<p>Kasa görevlisi bir masayı başka bir masaya taşıdığında (Örn: Masa 4 -> Masa 7), müşterinin telefon ekranında bilgilendirme mesajı görüntülenir ve tarayıcı otomatik olarak yeni masaya yönlendirilir; açık sepet ve hesap bilgileri eksiksiz korunur.</p>
 
-<h2>12. Gün Sonu Canlı Mali Z Raporu & 80mm Termal Çıktı</h2>
-<p>Kasa kapatılırken tek tuşla Kredi Kartı, Nakit ve Masada 3D Secure Online ödemeleri ayrıştıran, KDV (%10) hasılat dökümünü hesaplayan ve en çok satan ürünleri listeleyen canlı mali Z-Raporu 80mm rulo fiş yazıcıdan basılır.</p>
+<h2>12. Elektronik Gün Sonu Raporlaması & Yapılandırılabilir KDV</h2>
+<p>Günün sonunda kasa kapatılırken Nakit, POS Kredi Kartı ve Masada Online ödeme dağılımını gösteren, <strong>yapılandırılabilir ürün bazlı KDV ve vergi hesaplama desteğine</strong> sahip ESC/POS uyumlu Gün Sonu Raporu 80mm termal yazıcıdan çıktı alınabilir.</p>
 
-<h2>13. %100 İşletmenize Özel Kişiselleştirilebilir (Custom-Tailored & White-Label)</h2>
-<p>Her restoranın kimliği ve işleyişi farklıdır. Cep Garson kalıplaşmış paketler yerine tamamen işletmenize uyarlanır:</p>
+<h2>13. Rol Tabanlı Yetkilendirme & Hızlı PIN Girişi (Garson, Mutfak ve Boss İzolasyonu)</h2>
+<p>Farklı personel gruplarının yetki sınırları güvenlik amacıyla kesin olarak ayrılmıştır:</p>
 <ul>
-  <li><strong>Markanıza Özel Tasarım (White-Label):</strong> Restoranınızın logosu, kurumsal renkleri ve tipografisi QR menüye ve ekranlara birebir giydirilir.</li>
-  <li><strong>Kendi Alan Adınız (Domain):</strong> Sistem dilerseniz <code>menu.restoraniniz.com</code> gibi kendi resmi web adresiniz altında çalışır.</li>
-  <li><strong>Özel Entegrasyon & Geliştirme:</strong> İşletmenize özel bir vale takip sistemi, mevcut muhasebe/ERP yazılımı veya özel sadakat kurgusu varsa <strong>KvK Dijital Çözümler</strong> mühendislik kadrosu tarafından dükkanınıza özel kodlanır.</li>
+  <li><strong>Patron (Super Admin):</strong> Ciro dökümleri, hammadde maliyetleri, personel izinleri, fiyat yönetimi, Z raporları ve şikayet günlüğüne tam erişim. 2FA (İki Aşamalı Doğrulama) desteği.</li>
+  <li><strong>Salon Müdürü:</strong> Kasa işlemleri, masa transferleri, indirim onayları ve operasyonel raporlar.</li>
+  <li><strong>Kasa Görevlisi:</strong> Tahsilat, adisyon kapatma ve paket servis sipariş kabulü.</li>
+  <li><strong>Garson (4 Haneli Hızlı PIN):</strong> Masadan sipariş alma, servis onaylama ve masa taşıma. Ciro ve maliyet verilerine erişemez.</li>
+  <li><strong>Mutfak (KDS):</strong> Yalnızca hazırlık sırası, süre sayaçları ve mutfak fire (zayi) kaydı.</li>
 </ul>
 
-<h2>14. Rol Tabanlı Yetkilendirme & Hızlı PIN Girişi (Garson, Mutfak ve Boss İzolasyonu)</h2>
-<p>Kendi web siteniz altında (Örn: <code>restoraniniz.com/kasa</code> veya <code>pos.restoraniniz.com</code>) çalışan sistemde personel yetkileri kesin çizgilerle birbirinden ayrılmıştır:</p>
-<ul>
-  <li><strong>Garson & Kasiyer Girişi (4 Haneli Hızlı PIN):</strong> Garsonlar serviste vakit kaybetmemek için kendilerine özel 4 haneli PIN kodlarıyla saniyede oturum açar. Yalnızca sipariş alma, masa taşıma ve hesap kapatma yetkileri bulunur. Fiyat değiştiremez, reçete maliyetlerini ve toplam ciroyu göremez, müşteri şikayetlerini <strong>kesinlikle silemezler</strong>.</li>
-  <li><strong>Mutfak (KDS) Girişi:</strong> Aşçılar ve baristalar yalnızca kendi istasyonlarına düşen siparişleri, süre sayaçlarını ve fire giriş ekranını görür; kasa işlemlerine erişemez.</li>
-  <li><strong>Patron / Müdür Paneli (Full Super Admin):**</strong> İşletme sahibi şifreli ana yönetici hesabıyla dilediği yerden (cep telefonu dahil) anlık ciroyu, Z-raporlarını, personel performans dökümlerini, hammadde maliyetlerini ve silinemeyen patron şikayet günlüğünü tam yetkiyle yönetir.</li>
-</ul>
+<h2>14. Örnek Patron Dashboard & Canlı Operasyon Görünümü</h2>
+<p>Restoran sahibinin dükkanındaki tüm akışı anlık takip edebildiği örnek yönetim paneli yapısı:</p>
 
-<div class="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-accent/20 via-emerald-500/10 to-transparent border border-accent/40 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
-  <div class="space-y-1 text-center sm:text-left">
-    <h4 class="text-lg font-black text-accent tracking-tight">Canlı Demoyu Hemen Kendi Ekranınızda Test Edin</h4>
-    <p class="text-xs sm:text-sm text-foreground/80 leading-relaxed">Masa QR menüsünden sipariş verin, Kasa POS ekranında onaylayın ve Mutfak KDS akışını anında deneyimleyin.</p>
+<div class="my-6 p-6 rounded-3xl bg-[#0a0f0f] border border-white/10 space-y-4 font-sans text-xs">
+  <div class="text-[11px] font-bold text-accent uppercase tracking-wider">Örnek Yönetim Paneli Göstergeleri</div>
+  
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+      <span class="text-foreground/50 text-[10px] uppercase font-semibold">Günlük Ciro</span>
+      <div class="text-base font-extrabold text-white">48.650 TL</div>
+      <span class="text-[10px] text-emerald-400 font-bold">+18% geçen haftaya göre</span>
+    </div>
+    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+      <span class="text-foreground/50 text-[10px] uppercase font-semibold">Toplam Sipariş</span>
+      <div class="text-base font-extrabold text-white">142 Adet</div>
+      <span class="text-[10px] text-accent font-bold">%68 QR Masadan</span>
+    </div>
+    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+      <span class="text-foreground/50 text-[10px] uppercase font-semibold">Ortalama Sepet</span>
+      <div class="text-base font-extrabold text-white">342,60 TL</div>
+      <span class="text-[10px] text-emerald-400 font-bold">+45 TL Upsell Etkisi</span>
+    </div>
+    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
+      <span class="text-foreground/50 text-[10px] uppercase font-semibold">Masa Doluluk</span>
+      <div class="text-base font-extrabold text-white">14 / 18 Masa</div>
+      <span class="text-[10px] text-amber-300 font-bold">%78 Doluluk Oranı</span>
+    </div>
   </div>
-  <a href="/restoran/aura-bistro/kasa" class="btn-cta px-6 py-3.5 rounded-2xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs uppercase tracking-wider whitespace-nowrap transition-all shadow-xl shadow-accent/30" style="background-color: #00A6A6 !important; color: #000000 !important; text-decoration: none !important; font-weight: 900 !important;">
-    Canlı POS'u Başlat →
-  </a>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+    <div class="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+      <span class="text-[11px] font-bold text-white block">Canlı Mutfak Durumu</span>
+      <div class="flex items-center justify-between text-[11px] text-foreground/70">
+        <span>Hazırlanan Tabaklar:</span>
+        <span class="font-bold text-white">8 Adet</span>
+      </div>
+      <div class="flex items-center justify-between text-[11px] text-foreground/70">
+        <span>Ortalama Servis Çıkış Süresi:</span>
+        <span class="font-bold text-emerald-400">11.4 Dakika</span>
+      </div>
+    </div>
+
+    <div class="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+      <span class="text-[11px] font-bold text-white block">Günün En Çok Satanları</span>
+      <div class="flex items-center justify-between text-[11px] text-foreground/70">
+        <span>1. Trüf & Aioli Burger (42 Adet)</span>
+        <span class="font-bold text-accent">%64 Kâr Marjı</span>
+      </div>
+      <div class="flex items-center justify-between text-[11px] text-foreground/70">
+        <span>2. Burrata & Pesto Pizza (28 Adet)</span>
+        <span class="font-bold text-accent">%71 Kâr Marjı</span>
+      </div>
+    </div>
+  </div>
 </div>
+
+<h2>15. İşletmenize Özel Yazılım & Markalama Uyarlaması (White-Label)</h2>
+<p>Her restoranın servis akışı ve kurumsal kimliği farklıdır. Cep Garson, kalıplaşmış paketler yerine dükkanınıza özel olarak uyarlanır:</p>
+<ul>
+  <li><strong>Markanıza Özel Arayüz:</strong> Logonuz, kurumsal renk paletiniz ve tipografiniz tüm menü ve panellere birebir giydirilir.</li>
+  <li><strong>Kendi Alan Adınız (Domain):</strong> Sistem <code>menu.restoraniniz.com</code> gibi kendi web siteniz altında yayına alınabilir.</li>
+  <li><strong>Özel Entegrasyon Geliştirme:</strong> İşletmenizin mevcut muhasebe altyapısı, ERP yazılımı, sadakat sistemi veya vale takip kurgusu varsa <a href="/ozel-yazilim">özel yazılım geliştirme ekibimiz</a> tarafından mekanınıza entegre edilir. Ayrıca işletmenizin kurumsal web sitesi ihtiyacı için <a href="/web-tasarim">profesyonel web tasarım</a> ve <a href="/istanbul-web-tasarim">İstanbul web tasarım çözümlerimiz</a> ile tam uyumlu çalışır.</li>
+</ul>
+
+<h2>Restoran Yazılımı ve POS Sistemi Hakkında Sıkça Sorulan Sorular</h2>
+<p>Restoran ve kafe işletmecilerinin dijital sipariş ve POS sistemleri hakkında en çok merak ettiği sorular:</p>
 `,
     faq: [
       {
-        question: "Cep Garson'u kullanmak için özel ve pahalı donanımlar almam gerekir mi?",
-        answer: "Hayır. Cep Garson sıfır donanım masrafı ile çalışır. Kasada mevcut bilgisayarınız veya tabletiniz, mutfakta herhangi bir ekran ve masalarda müşterilerin kendi akıllı telefonları yeterlidir."
+        question: "Cep Garson bir QR Menü mü, yoksa tam bir POS sistemi midir?",
+        answer: "Cep Garson, her ikisini de kapsayan uçtan uca bir Restoran Dijital İşletim Sistemidir (Restaurant OS). QR menü, mobil sipariş, Kasa POS, Mutfak KDS ekranı, reçete maliyeti, stok takibi, paket servis hub'ı ve işletme analitiğini tek merkezden yönetir."
       },
       {
-        question: "Müşterilerin cep telefonuna herhangi bir uygulama indirmesi gerekir mi?",
-        answer: "Kesinlikle hayır. Müşteriler masadaki akrilik QR kodu telefonlarının standart kamera uygulamasıyla okuttuğunda menü 1 saniyenin altında doğrudan Safari veya Chrome tarayıcısında açılır."
+        question: "Sistemi kullanmak için özel ve pahalı donanımlar satın almam gerekir mi?",
+        answer: "Hayır. Cep Garson sıfır donanım masrafı ile çalışır. Kasada mevcut herhangi bir tablet veya bilgisayar, mutfakta bir ekran ve masalarda müşterilerin kendi akıllı telefonları yeterlidir."
       },
       {
-        question: "Sisteme nasıl giriş yapılır? Garsonların ve patronun yetkileri ayrı mıdır?",
-        answer: "Evet. Sisteme kendi web siteniz altından güvenli linkle girilir. Garsonlar 4 haneli hızlı PIN koduyla giriş yaparak sadece sipariş ve tahsilat ekranını görür; ciro, maliyet ve şikayetleri göremez veya silemez. Restoran sahibi (Boss) ise şifreli ana panelle fiyat, ciro, Z-raporu, reçete ve silinemeyen şikayet günlüğüne tam yetkilidir."
+        question: "Müşterilerin cep telefonlarına herhangi bir uygulama indirmesi gerekir mi?",
+        answer: "Kesinlikle hayır. Müşteriler masadaki akrilik QR kodu telefonlarının standart kamera uygulamasıyla okuttuğunda menü doğrudan Safari veya Chrome tarayıcısında anında açılır."
       },
       {
-        question: "Sistemi kendi restoranımızın kurumsal kimliğine ve özel isteklerimize göre özelleştirebilir miyiz?",
-        answer: "Kesinlikle evet. Logonuz, kurumsal renkleriniz, masa yerleşiminiz ve menü yapınız mekanınıza özel giydirilir. Ayrıca işletmenize özel ek fonksiyonlar (özel kampanya kuralları, muhasebe bağlantısı vb.) KvK Dijital Çözümler ekibimizce özel olarak geliştirilebilir."
+        question: "Garsonlar, mutfak ve patron için ayrı giriş ve yetkilendirme sistemi nasıl çalışır?",
+        answer: "Her personel grubunun yetkisi ayrıdır. Garsonlar 4 haneli hızlı PIN koduyla yalnızca sipariş ve masa ekranına erişirken, mutfak yalnızca KDS hazırlık sırasını görür. Patron ise şifreli ve 2FA korumalı panelle ciro, maliyet ve şikayet günlüğüne tam yetkilidir."
       },
       {
-        question: "Masa Reisi ve çok kullanıcılı ortak sepet sistemi nasıl çalışır?",
-        answer: "Masadaki QR kodu ilk okutan kişi 'Masa Reisi' atanır. Diğer misafirler ekledikçe ürünler ortak sepette rozetleriyle görünür. Siparişi mutfağa ve kasaya gönderme yetkisi ise yalnızca Masa Reisindedir."
+        question: "Masa Reisi ve çok kullanıcılı ortak sepet sistemi nasıl işler?",
+        answer: "QR kodu ilk okutan kişi 'Masa Reisi' atanır. Masadaki diğer misafirler sepete ürün ekleyebilir; ancak siparişi mutfağa ve kasaya gönderme yetkisi Masa Reisindedir. Bu sayede sahte ve mükerrer sipariş riski azaltılır."
       },
       {
-        question: "Masada kendi payını 3D Secure ile ödeme süreci nasıl işler?",
-        answer: "Masadan erken kalkmak isteyen misafir menüden 'Benim Payım' sekmesine geçip yalnızca kendi yediklerini seçer ve 3D Secure ile öder. Kasa ekranında o kişinin payı anında düşer, masanın kalan borcu canlı güncellenir."
-      },
-      {
-        question: "Kasa masayı başka masaya taşıdığında müşterinin telefonunda ne olur?",
-        answer: "Kasa Masa 4'ü Masa 7'ye taşıdığı an, müşterinin telefon ekranında 'Masanız Taşındı' uyarısı belirir ve sayfa otomatik olarak Masa 7'ye yönlendirilir; açık sepeti ve hesabı eksiksiz korunur."
+        question: "Masada kendi payını ödeme süreci nasıl çalışır?",
+        answer: "Masadan erken ayrılmak isteyen misafir 'Benim Payım' sekmesinden yalnızca kendi tükettiklerini seçer ve 3D Secure kredi kartı ile telefonundan öder. Kasa ekranında o kişinin payı anında düşer, masanın kalan bakiyesi güncellenir."
       },
       {
         question: "Reçete (BOM), gramaj ve mutfak fire (zayi) takibi nasıl çalışır?",
-        answer: "Yemeklerinize gramaj bazında malzeme reçetesi tanımlarsınız. Satış yapıldıkça depodaki hammadde gram gram otomatik düşer; aşçılar yanan veya dökülen fireleri tek tıkla sisteme işler."
+        answer: "Menüdeki her tabağa gramaj bazlı malzeme reçetesi tanımlanır. Satış yapıldıkça depodaki hammadde otomatik düşer; aşçılar yanan veya dökülen fireleri tek tıkla sisteme işleyerek maliyet kaçaklarını önler."
       },
       {
         question: "Getir, Yemeksepeti, Trendyol ve Migros siparişleri tek ekranda toplanabilir mi?",
-        answer: "Evet. Tüm yemek platformları tek bir Kasa POS ekranına bağlanır. Dört ayrı tablet karmaşası olmadan tek ekrandan onaylanıp mutfağa iletilir ve kurye adres fişi basılır."
+        answer: "Evet. Tüm yemek platformları tek bir Kasa POS ekranına bağlanır. Dört ayrı tablet karmaşası olmadan tek ekrandan siparişler kabul edilip mutfağa iletilir ve kurye adres fişi basılır."
       },
       {
-        question: "Resmi GİB E-Fatura ve E-Adisyon süreçleri nasıl işler?",
-        answer: "Paraşüt, BizimHesap, QNB ve GİB E-Arşiv Portalı entegrasyonuyla kasadan tek tuşla resmi UUID ETTN kodlu E-Fatura üretilip müşterinin e-posta adresine otomatik gönderilir."
+        question: "İnternet bağlantısında dalgalanma olduğunda veri kaybı yaşanır mı?",
+        answer: "Sistem tarayıcı yerel veri saklama (localStorage) altyapısına sahiptir. Kısa süreli bağlantı dalgalanmalarında açık adisyon ve sepet verileri korunur; bağlantı sağlandığında canlı senkronizasyon devam eder."
       },
       {
-        question: "İnternet dalgalanmasında veya yoğun günlerde sistem yavaşlar mı?",
-        answer: "Hayır. Sistem Next.js 16.3 Turbopack altyapısında ve her işletmenin kendi izole alanında çalıştığı için başka restoranların yoğunluğu sizi etkilemez. Tarayıcı içi BroadcastChannel mimarisiyle işlemler 0.005 saniye (5ms) rekor hızda gerçekleşir."
+        question: "Sistemi kendi restoranımızın kurumsal kimliğine ve özel isteklerimize göre özelleştirebilir miyiz?",
+        answer: "Evet. Logonuz, kurumsal renkleriniz, masa yerleşiminiz ve menü yapınız mekanınıza özel giydirilir. Ayrıca mevcut muhasebe veya ERP programınıza özel entegrasyonlar KvK Dijital Çözümler mühendislik ekibimizce özel olarak geliştirilebilir."
       }
     ]
   },
