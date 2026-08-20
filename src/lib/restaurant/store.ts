@@ -847,6 +847,53 @@ export function useRestaurantStore() {
       notifyAll();
     },
 
+    updateIngredientCost: (ingredientId: string, newUnitCost: number) => {
+      const validCost = Math.max(0, newUnitCost);
+      globalIngredients = globalIngredients.map((ing) =>
+        ing.id === ingredientId ? { ...ing, unitCost: validCost } : ing
+      );
+
+      // Auto-recalculate costPrice and margin for all recipes using this ingredient
+      globalMenuItems = globalMenuItems.map((item) => {
+        if (!item.recipe || item.recipe.length === 0) return item;
+        const totalCost = item.recipe.reduce((sum, r) => {
+          const ing = globalIngredients.find((i) => i.id === r.ingredientId);
+          return sum + (ing ? ing.unitCost * r.quantity : 0);
+        }, 0);
+        return {
+          ...item,
+          costPrice: Math.round(totalCost * 100) / 100,
+        };
+      });
+      notifyAll();
+    },
+
+    updateIngredient: (ingredientId: string, updates: Partial<Ingredient>) => {
+      globalIngredients = globalIngredients.map((ing) =>
+        ing.id === ingredientId ? { ...ing, ...updates } : ing
+      );
+
+      if (updates.unitCost !== undefined) {
+        globalMenuItems = globalMenuItems.map((item) => {
+          if (!item.recipe || item.recipe.length === 0) return item;
+          const totalCost = item.recipe.reduce((sum, r) => {
+            const ing = globalIngredients.find((i) => i.id === r.ingredientId);
+            return sum + (ing ? ing.unitCost * r.quantity : 0);
+          }, 0);
+          return {
+            ...item,
+            costPrice: Math.round(totalCost * 100) / 100,
+          };
+        });
+      }
+      notifyAll();
+    },
+
+    deleteIngredient: (ingredientId: string) => {
+      globalIngredients = globalIngredients.filter((ing) => ing.id !== ingredientId);
+      notifyAll();
+    },
+
     updateIngredientStock: (ingredientId: string, newStock: number) => {
       globalIngredients = globalIngredients.map((ing) =>
         ing.id === ingredientId

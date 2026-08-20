@@ -42,6 +42,9 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
     happyHourRules,
     saveRecipe,
     updateIngredientStock,
+    updateIngredientCost,
+    updateIngredient,
+    deleteIngredient,
     addIngredient,
     logWaste,
     toggleHappyHourRule,
@@ -56,6 +59,17 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
   const [tempRecipe, setTempRecipe] = useState<RecipeItem[]>([]);
   const [selectedIngredientId, setSelectedIngredientId] = useState<string>("");
   const [selectedQuantity, setSelectedQuantity] = useState<string>("");
+  const [quickCostInput, setQuickCostInput] = useState<string>("");
+  const [costUpdatedMsg, setCostUpdatedMsg] = useState<string | null>(null);
+
+  // Edit ingredient modal
+  const [editingIngredient, setEditingIngredient] = useState<Ingredient | null>(null);
+  const [editIngName, setEditIngName] = useState("");
+  const [editIngCost, setEditIngCost] = useState("");
+  const [editIngStock, setEditIngStock] = useState("");
+  const [editIngCritical, setEditIngCritical] = useState("");
+  const [editIngUnit, setEditIngUnit] = useState<IngredientUnit>("kg");
+  const [editIngCategory, setEditIngCategory] = useState<Ingredient["category"]>("ET");
 
   // Add ingredient modal
   const [isAddIngredientOpen, setIsAddIngredientOpen] = useState(false);
@@ -80,12 +94,67 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
   const criticalCount = ingredients.filter((ing) => ing.currentStock <= ing.criticalStock).length;
   const totalWasteToday = wasteLogs.reduce((sum, w) => sum + w.cost, 0);
 
-  // Recipe modal open
+  // Selected ingredient object for recipe modal
+  const selectedIng = ingredients.find((i) => i.id === selectedIngredientId) || ingredients[0];
+
   const handleOpenRecipeModal = (item: MenuItem) => {
     setEditingRecipeItem(item);
     setTempRecipe(item.recipe ? [...item.recipe] : []);
-    setSelectedIngredientId(ingredients[0]?.id || "");
+    const initialIng = ingredients[0];
+    setSelectedIngredientId(initialIng?.id || "");
+    setQuickCostInput(initialIng ? String(initialIng.unitCost) : "");
     setSelectedQuantity("");
+    setCostUpdatedMsg(null);
+  };
+
+  const handleSelectIngredientChange = (ingId: string) => {
+    setSelectedIngredientId(ingId);
+    const ing = ingredients.find((i) => i.id === ingId);
+    if (ing) {
+      setQuickCostInput(String(ing.unitCost));
+    }
+  };
+
+  const handleQuickUpdateCost = () => {
+    if (!selectedIng) return;
+    const cost = parseFloat(quickCostInput);
+    if (isNaN(cost) || cost < 0) return;
+
+    updateIngredientCost(selectedIng.id, cost);
+    setCostUpdatedMsg(`${selectedIng.name} alış fiyatı ${cost} TL/${selectedIng.unit} olarak güncellendi!`);
+    setTimeout(() => setCostUpdatedMsg(null), 2500);
+  };
+
+  const handleOpenEditIngredient = (ing: Ingredient) => {
+    setEditingIngredient(ing);
+    setEditIngName(ing.name);
+    setEditIngCost(String(ing.unitCost));
+    setEditIngStock(String(ing.currentStock));
+    setEditIngCritical(String(ing.criticalStock));
+    setEditIngUnit(ing.unit);
+    setEditIngCategory(ing.category);
+  };
+
+  const handleSaveEditIngredient = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingIngredient) return;
+
+    const cost = parseFloat(editIngCost);
+    const stock = parseFloat(editIngStock);
+    const crit = parseFloat(editIngCritical);
+
+    if (isNaN(cost) || isNaN(stock)) return;
+
+    updateIngredient(editingIngredient.id, {
+      name: editIngName.trim(),
+      unitCost: Math.max(0, cost),
+      currentStock: Math.max(0, stock),
+      criticalStock: isNaN(crit) ? 5 : crit,
+      unit: editIngUnit,
+      category: editIngCategory,
+    });
+
+    setEditingIngredient(null);
   };
 
   const handleAddRecipeIngredient = () => {
@@ -382,32 +451,70 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
                       </span>
                       <h4 className="font-bold text-white text-sm mt-1">{ing.name}</h4>
                     </div>
-                    {isCritical && (
-                      <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold flex items-center gap-1">
-                        <AlertTriangle className="w-3 h-3" />
-                        <span>Kritik</span>
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {isCritical && (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          <span>Kritik</span>
+                        </span>
+                      )}
+                      <button
+                        onClick={() => handleOpenEditIngredient(ing)}
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-foreground/60 hover:text-white transition-colors cursor-pointer"
+                        title="Hammaddeyi ve Fiyatı Düzenle"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm(`${ing.name} hammaddesini silmek istediğinize emin misiniz?`)) {
+                            deleteIngredient(ing.id);
+                          }
+                        }}
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-foreground/40 hover:text-rose-300 transition-colors cursor-pointer"
+                        title="Hammaddeyi Sil"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-white/5 grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-[10px] text-foreground/50 block">Birim Maliyet</span>
-                      <span className="font-extrabold text-white">
-                        {ing.unitCost.toLocaleString("tr-TR")} TL / {ing.unit}
-                      </span>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-foreground/50 block">Birim Alış Fiyatı</span>
+                      <div className="flex items-center gap-1">
+                        <span className="font-extrabold text-accent text-sm">
+                          {ing.unitCost.toLocaleString("tr-TR")} TL
+                        </span>
+                        <span className="text-[10px] text-foreground/40">/{ing.unit}</span>
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newCost = prompt(`${ing.name} yeni birim alış fiyatı (TL/${ing.unit}):`, String(ing.unitCost));
+                          if (newCost !== null) {
+                            const val = parseFloat(newCost);
+                            if (!isNaN(val) && val >= 0) updateIngredientCost(ing.id, val);
+                          }
+                        }}
+                        className="text-[10px] text-purple-400 hover:text-purple-300 font-bold block hover:underline"
+                      >
+                        Fiyatı Değiştir
+                      </button>
                     </div>
 
-                    <div>
+                    <div className="space-y-1">
                       <span className="text-[10px] text-foreground/50 block">Mevcut Stok</span>
-                      <span className={`font-black text-sm ${isCritical ? "text-amber-400" : "text-emerald-400"}`}>
+                      <span className={`font-black text-sm block ${isCritical ? "text-amber-400" : "text-emerald-400"}`}>
                         {ing.currentStock} {ing.unit}
                       </span>
+                      <span className="text-[10px] text-foreground/40 block">Kritik: {ing.criticalStock} {ing.unit}</span>
                     </div>
                   </div>
 
-                  <div className="mt-3 pt-2 flex items-center justify-between text-[10px] text-foreground/40">
-                    <span>Kritik Limit: {ing.criticalStock} {ing.unit}</span>
+                  <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px]">
+                    <span className="text-foreground/40">
+                      Son Güncelleme: {ing.lastRestockedAt || "Bugün"}
+                    </span>
                     <button
                       onClick={() => {
                         const add = prompt(`${ing.name} için eklenecek stok miktarı (${ing.unit}):`, "5");
@@ -609,15 +716,21 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
             </div>
 
             {/* Add Ingredient into Recipe Form */}
-            <div className="pt-2 border-t border-white/5 space-y-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/70 block">
-                + Malzeme Ekle
-              </span>
+            <div className="pt-2 border-t border-white/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/70">
+                  + Malzeme & Porsiyon Ekle
+                </span>
+                <span className="text-[10px] text-accent font-semibold">
+                  Alış maliyeti doğrudan güncellenebilir
+                </span>
+              </div>
+
               <div className="grid grid-cols-12 gap-2">
                 <div className="col-span-7">
                   <select
                     value={selectedIngredientId}
-                    onChange={(e) => setSelectedIngredientId(e.target.value)}
+                    onChange={(e) => handleSelectIngredientChange(e.target.value)}
                     className="w-full bg-[#121818] border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white outline-none focus:border-accent"
                   >
                     {ingredients.map((ing) => (
@@ -647,6 +760,42 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
                   </button>
                 </div>
               </div>
+
+              {/* Quick Unit Cost Modifier for Selected Ingredient */}
+              {selectedIng && (
+                <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div>
+                    <span className="text-purple-300 font-bold block">{selectedIng.name} Alış Fiyatı</span>
+                    <span className="text-[10px] text-foreground/50">Dükkanınız bu hammaddeyi kaça alıyor? (Birim maliyet)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={quickCostInput}
+                        onChange={(e) => setQuickCostInput(e.target.value)}
+                        className="w-20 h-8 bg-black/70 border border-purple-500/40 focus:border-accent rounded-lg px-2 text-right font-mono font-bold text-xs text-white outline-none"
+                      />
+                      <span className="text-[10px] text-foreground/50 font-semibold">TL/{selectedIng.unit}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleQuickUpdateCost}
+                      className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-[10px] uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-purple-600/20"
+                    >
+                      Fiyatı Güncelle
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {costUpdatedMsg && (
+                <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2 animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{costUpdatedMsg}</span>
+                </div>
+              )}
             </div>
 
             {/* Save Recipe */}
@@ -879,6 +1028,134 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
                 className="py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs"
               >
                 Vazgeç
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* EDIT INGREDIENT MODAL */}
+      {editingIngredient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <form
+            onSubmit={handleSaveEditIngredient}
+            className="w-full max-w-md bg-[#0a0f0f] border border-accent/40 rounded-[2rem] p-6 space-y-4 shadow-2xl animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <div>
+                <h3 className="text-base font-bold text-white">Hammadde & Alış Fiyatını Güncelle</h3>
+                <p className="text-xs text-accent font-semibold">{editingIngredient.name}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingIngredient(null)}
+                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] text-foreground/60 font-bold block mb-1">Hammadde Adı</label>
+                <input
+                  type="text"
+                  required
+                  value={editIngName}
+                  onChange={(e) => setEditIngName(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-accent"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] text-foreground/60 font-bold block mb-1">Birim Alış Fiyatı (TL) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    value={editIngCost}
+                    onChange={(e) => setEditIngCost(e.target.value)}
+                    className="w-full bg-white/5 border border-accent/40 rounded-xl px-3 py-2 text-xs font-mono font-bold text-accent outline-none focus:border-accent"
+                  />
+                  <span className="text-[9px] text-foreground/40 mt-0.5 block">Tedarik maliyetiniz</span>
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-foreground/60 font-bold block mb-1">Ölçü Birimi</label>
+                  <select
+                    value={editIngUnit}
+                    onChange={(e) => setEditIngUnit(e.target.value as IngredientUnit)}
+                    className="w-full bg-[#121818] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                  >
+                    <option value="kg">Kilogram (kg)</option>
+                    <option value="g">Gram (g)</option>
+                    <option value="l">Litre (l)</option>
+                    <option value="ml">Mililitre (ml)</option>
+                    <option value="adet">Adet</option>
+                    <option value="porsiyon">Porsiyon</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] text-foreground/60 font-bold block mb-1">Mevcut Depo Stoğu</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    value={editIngStock}
+                    onChange={(e) => setEditIngStock(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-accent"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-foreground/60 font-bold block mb-1">Kritik Stok Uyarısı</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={editIngCritical}
+                    onChange={(e) => setEditIngCritical(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-accent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-foreground/60 font-bold block mb-1">Kategori</label>
+                <select
+                  value={editIngCategory}
+                  onChange={(e) => setEditIngCategory(e.target.value as Ingredient["category"])}
+                  className="w-full bg-[#121818] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none"
+                >
+                  <option value="ET">Et & Şarküteri</option>
+                  <option value="SUT_URUNU">Süt & Peynir</option>
+                  <option value="UNLU_MAMUL">Unlu Mamul & Ekmek</option>
+                  <option value="SEBZE">Sebze & Meyve</option>
+                  <option value="SOS">Sos & Yağ</option>
+                  <option value="ICECEK">İçecek & Kahve</option>
+                  <option value="BAHARAT">Baharat & Kuru Gıda</option>
+                  <option value="DIGER">Diğer</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-3">
+              <button
+                type="submit"
+                className="py-3 rounded-xl bg-accent text-black font-extrabold text-xs uppercase tracking-wider hover:bg-accent/90 transition-all cursor-pointer shadow-lg shadow-accent/20"
+              >
+                Fiyatı & Bilgileri Kaydet
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditingIngredient(null)}
+                className="py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs"
+              >
+                İptal
               </button>
             </div>
           </form>
