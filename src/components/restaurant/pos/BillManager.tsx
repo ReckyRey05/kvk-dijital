@@ -58,49 +58,50 @@ export default function BillManager({
   };
 
   return (
-    <div className="w-full lg:w-96 bg-[#0a0f0f] border-l border-white/10 p-6 flex flex-col justify-between h-full">
+    <div className="w-full lg:w-96 bg-[#0a0f0f] border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-6 flex flex-col justify-between h-auto lg:h-full shrink-0 shadow-2xl">
       {/* Header */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-extrabold text-white">{table.tableNumber}</h2>
+              <h2 className="text-lg sm:text-xl font-extrabold text-white">{table.tableNumber}</h2>
               {table.section && (
-                <span className="text-xs px-2 py-0.5 rounded-md bg-white/5 text-foreground/60">
+                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-md bg-white/5 text-foreground/60">
                   {table.section}
                 </span>
               )}
             </div>
-            <p className="text-xs text-foreground/50 mt-0.5">Masa Adisyon Yönetimi</p>
+            <p className="text-[11px] sm:text-xs text-foreground/50 mt-0.5">Masa Adisyon Yönetimi</p>
           </div>
 
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors cursor-pointer"
+            title="Paneli Kapat"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Bill Items List */}
-        <div className="space-y-2 max-h-[calc(100vh-420px)] overflow-y-auto pr-1">
+        <div className="space-y-2 max-h-52 sm:max-h-72 lg:max-h-[calc(100vh-420px)] overflow-y-auto pr-1 sleek-scrollbar">
           {allItems.length === 0 ? (
-            <div className="py-16 text-center text-foreground/40 space-y-2">
-              <Receipt className="w-8 h-8 mx-auto opacity-40" />
+            <div className="py-10 sm:py-16 text-center text-foreground/40 space-y-2">
+              <Receipt className="w-7 h-7 sm:w-8 sm:h-8 mx-auto opacity-40" />
               <p className="text-xs font-medium">Bu masada henüz aktif sipariş yok.</p>
             </div>
           ) : (
             allItems.map((item, idx) => (
               <div
                 key={`${item.id}-${idx}`}
-                className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-3 text-xs"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-2 text-xs"
               >
-                <div>
-                  <span className="font-bold text-white">
+                <div className="min-w-0">
+                  <span className="font-bold text-white break-words">
                     {item.quantity}x {item.name}
                   </span>
                   {item.selectedOptions && item.selectedOptions.length > 0 && (
-                    <p className="text-[10px] text-foreground/50 mt-0.5">
+                    <p className="text-[10px] text-foreground/50 mt-0.5 break-words">
                       {item.selectedOptions
                         .flatMap((g) => g.selectedItems.map((s) => s.name))
                         .join(", ")}
@@ -108,7 +109,7 @@ export default function BillManager({
                   )}
                 </div>
 
-                <span className="font-bold text-white shrink-0">
+                <span className="font-bold text-white shrink-0 ml-2">
                   {(item.finalPrice * item.quantity).toLocaleString("tr-TR")} TL
                 </span>
               </div>
@@ -118,15 +119,15 @@ export default function BillManager({
       </div>
 
       {/* Footer / Settlement Actions */}
-      <div className="space-y-4 pt-4 border-t border-white/10">
+      <div className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-white/10 mt-4 lg:mt-0">
         {/* Total & Print & Transfer Row */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap xs:flex-nowrap items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={handlePrintReceipt}
                 disabled={allItems.length === 0}
-                className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
+                className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground text-xs font-semibold flex items-center gap-1 transition-colors disabled:opacity-30 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5" />
                 <span>Fiş</span>
@@ -135,27 +136,27 @@ export default function BillManager({
               <button
                 onClick={() => setIsTransferring(!isTransferring)}
                 disabled={totalAmount === 0}
-                className="px-3 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-30 cursor-pointer"
+                className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-semibold flex items-center gap-1 transition-colors disabled:opacity-30 cursor-pointer"
               >
                 <ArrowRightLeft className="w-3.5 h-3.5" />
                 <span>Masa Taşı</span>
               </button>
             </div>
 
-            <div className="text-right">
-              <span className="text-[10px] text-foreground/50 block uppercase tracking-wider">
+            <div className="text-right ml-auto">
+              <span className="text-[9px] sm:text-[10px] text-foreground/50 block uppercase tracking-wider">
                 Adisyon Toplamı
               </span>
-              <span className="text-2xl font-black text-accent">
+              <span className="text-xl sm:text-2xl font-black text-accent">
                 {totalAmount.toLocaleString("tr-TR")}{" "}
-                <span className="text-sm text-foreground/60 font-bold">TL</span>
+                <span className="text-xs sm:text-sm text-foreground/60 font-bold">TL</span>
               </span>
             </div>
           </div>
 
           {/* Table Transfer Selector Panel */}
           {isTransferring && (
-            <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-2.5 animate-fade-in">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-2.5 animate-fade-in">
               <div className="flex items-center justify-between text-xs font-bold text-purple-200">
                 <span>Hedef Masayı Seçin</span>
                 <button
@@ -194,7 +195,7 @@ export default function BillManager({
         </div>
 
         {/* Instant Session Invalidation Warning */}
-        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300 flex items-start gap-2">
+        <div className="p-2.5 sm:p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[10px] sm:text-[11px] text-amber-300 flex items-start gap-2">
           <ShieldX className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
           <span>
             Hesap kapatıldığında masaya ait <strong>tüm QR oturumları anında iptal edilir</strong> ve masa sıfırlanır.
@@ -202,23 +203,23 @@ export default function BillManager({
         </div>
 
         {/* Settlement Payment Buttons */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <button
             onClick={() => handleCompleteCheckout("CASH")}
             disabled={totalAmount === 0}
-            className="py-3.5 px-3 rounded-xl bg-green-500 hover:bg-green-400 text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 shadow-lg shadow-green-500/20 cursor-pointer"
+            className="py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl bg-green-500 hover:bg-green-400 text-black font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 shadow-lg shadow-green-500/20 cursor-pointer"
           >
-            <Banknote className="w-4 h-4" />
+            <Banknote className="w-4 h-4 shrink-0" />
             <span>Nakit Kapat</span>
           </button>
 
           <button
             onClick={() => handleCompleteCheckout("CARD")}
             disabled={totalAmount === 0}
-            className="py-3.5 px-3 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 shadow-lg shadow-accent/20 cursor-pointer"
+            className="py-3 sm:py-3.5 px-2 sm:px-3 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all disabled:opacity-30 shadow-lg shadow-accent/20 cursor-pointer"
           >
-            <CreditCard className="w-4 h-4" />
-            <span>POS / Kart Kapat</span>
+            <CreditCard className="w-4 h-4 shrink-0" />
+            <span>POS / Kart</span>
           </button>
         </div>
 
@@ -227,10 +228,10 @@ export default function BillManager({
           <button
             onClick={onOpenEFatura}
             disabled={totalAmount === 0}
-            className="w-full py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 cursor-pointer"
+            className="w-full py-2.5 sm:py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-extrabold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-30 cursor-pointer"
           >
-            <Receipt className="w-4 h-4 text-emerald-400" />
-            <span>GİB Resmi E-Fatura & E-Adisyon Kes</span>
+            <Receipt className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>E-Fatura & E-Adisyon Kes</span>
           </button>
         )}
       </div>

@@ -19,7 +19,7 @@ export default function TableGrid({
   onResolveCall,
 }: TableGridProps) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4">
       {tables.map((table) => {
         const isSelected = selectedTableId === table.id;
         const activeCall = waiterCalls.find(
@@ -53,30 +53,30 @@ export default function TableGrid({
           <div
             key={table.id}
             onClick={() => onSelectTable(table.id)}
-            className={`relative p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-44 ${statusBorder} ${statusBg} ${
-              isSelected ? "ring-2 ring-white scale-[1.02] shadow-2xl" : ""
+            className={`relative p-3 sm:p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between min-h-[140px] sm:h-44 ${statusBorder} ${statusBg} ${
+              isSelected ? "ring-2 ring-white scale-[1.01] shadow-2xl" : ""
             }`}
           >
             {/* Top Bar: Table Number & Status Badge */}
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-white text-base tracking-tight">
+            <div className="flex items-start justify-between gap-1.5">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-extrabold text-white text-sm sm:text-base tracking-tight truncate">
                     {table.tableNumber}
                   </h3>
                   {table.section && (
-                    <span className="text-[10px] text-foreground/50 font-medium">
+                    <span className="text-[9px] sm:text-[10px] text-foreground/50 font-medium truncate">
                       ({table.section})
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-1 text-[11px] text-foreground/50 mt-0.5">
-                  <Users className="w-3 h-3" />
+                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-foreground/50 mt-0.5">
+                  <Users className="w-3 h-3 shrink-0" />
                   <span>{table.capacity} Kişilik</span>
                 </div>
               </div>
 
-              <span className={`text-[10px] px-2.5 py-0.5 rounded-full ${statusBadge.color}`}>
+              <span className={`text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 rounded-full shrink-0 font-bold ${statusBadge.color}`}>
                 {statusBadge.label}
               </span>
             </div>
@@ -88,29 +88,29 @@ export default function TableGrid({
                   e.stopPropagation();
                   onResolveCall(activeCall.id);
                 }}
-                className="p-2 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-between text-purple-200 text-xs hover:bg-purple-500/30 transition-colors"
+                className="p-1.5 sm:p-2 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-between text-purple-200 text-[10px] sm:text-xs hover:bg-purple-500/30 transition-colors my-1"
                 title="Talebi Tamamla"
               >
                 <div className="flex items-center gap-1.5 truncate">
-                  <Bell className="w-3.5 h-3.5 text-purple-400 shrink-0 animate-bounce" />
-                  <span className="truncate text-[11px] font-semibold">{activeCall.message}</span>
+                  <Bell className="w-3 h-3 text-purple-400 shrink-0 animate-bounce" />
+                  <span className="truncate text-[10px] sm:text-[11px] font-semibold">{activeCall.message}</span>
                 </div>
-                <CheckCircle className="w-3.5 h-3.5 text-green-400 shrink-0 ml-1" />
+                <CheckCircle className="w-3 h-3 text-green-400 shrink-0 ml-1" />
               </div>
             )}
 
             {/* Bottom Row: Bill Total & Last Activity */}
-            <div className="pt-2 border-t border-white/5 flex items-end justify-between">
+            <div className="pt-2 border-t border-white/5 flex items-end justify-between gap-1">
               <div>
-                <span className="text-[10px] text-foreground/50 block">Masa Adisyonu</span>
-                <span className="text-base font-black text-white">
+                <span className="text-[9px] sm:text-[10px] text-foreground/50 block">Masa Adisyonu</span>
+                <span className="text-sm sm:text-base font-black text-white">
                   {table.activeBillTotal.toLocaleString("tr-TR")}{" "}
                   <span className="text-xs text-accent font-semibold">TL</span>
                 </span>
               </div>
 
               {table.lastOrderTime && (
-                <div className="text-[10px] text-foreground/50 flex items-center gap-1">
+                <div className="text-[9px] sm:text-[10px] text-foreground/50 flex items-center gap-1 shrink-0">
                   <Clock className="w-2.5 h-2.5 text-accent" />
                   <span>{table.lastOrderTime}</span>
                 </div>

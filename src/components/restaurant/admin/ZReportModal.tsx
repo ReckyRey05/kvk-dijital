@@ -17,19 +17,19 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in print:bg-transparent print:p-0 print:backdrop-blur-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in print:bg-transparent print:p-0 print:backdrop-blur-none">
       <div
-        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-[2rem] p-6 space-y-6 shadow-2xl animate-fade-in-up print:border-none print:shadow-none print:p-0 print:bg-transparent"
+        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-2xl animate-fade-in-up max-h-[90vh] overflow-y-auto sleek-scrollbar print:border-none print:shadow-none print:p-0 print:bg-transparent"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-white/10 print:hidden">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent text-black flex items-center justify-center font-extrabold">
+            <div className="w-10 h-10 rounded-xl bg-accent text-black flex items-center justify-center font-extrabold shrink-0">
               <Receipt className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Gün Sonu Z Raporu</h3>
+              <h3 className="text-sm sm:text-base font-bold text-white">Gün Sonu Z Raporu</h3>
               <p className="text-xs font-mono text-foreground/50">{report.reportNumber}</p>
             </div>
           </div>
@@ -45,12 +45,12 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
         {/* Printable Thermal Receipt Container */}
         <div
           id="printable-z-report"
-          className="bg-white text-black p-6 rounded-2xl font-mono text-xs space-y-4 shadow-inner border border-neutral-300 select-text"
+          className="bg-white text-black p-4 sm:p-6 rounded-2xl font-mono text-xs space-y-4 shadow-inner border border-neutral-300 select-text"
         >
           {/* Header */}
           <div className="text-center border-b border-dashed border-black/30 pb-3 space-y-1">
             <h4 className="font-extrabold text-sm uppercase tracking-wider">{report.restaurantName}</h4>
-            <p className="text-[10px] text-neutral-600">GÜN SONU MALİ Z RAPORU</p>
+            <p className="text-[10px] text-neutral-600 font-bold">GÜN SONU ELEKTRONİK Z RAPORU</p>
             <p className="text-[10px] text-neutral-500">{report.date}</p>
             <p className="text-[10px] font-bold">Rapor No: {report.reportNumber}</p>
           </div>
@@ -117,16 +117,16 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
           </div>
 
           <div className="text-center pt-2 border-t border-dashed border-black/30 text-[9px] text-neutral-500 space-y-0.5">
-            <div>*** MALİ DEĞERİ YOKTUR - GÜN SONU BİLGİLENDİRME RAPORUDUR ***</div>
+            <div>*** GÜN SONU BİLGİLENDİRME RAPORUDUR ***</div>
             <div className="font-bold text-neutral-600">CEP GARSON POS SİSTEMLERİ • KVK DİJİTAL ÇÖZÜMLER</div>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="grid grid-cols-2 gap-3 pt-1 print:hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 pt-1 print:hidden">
           <button
             onClick={handlePrint}
-            className="py-3.5 rounded-xl bg-accent text-black font-extrabold text-xs flex items-center justify-center gap-2 hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
+            className="py-3 sm:py-3.5 rounded-xl bg-accent text-black font-extrabold text-xs flex items-center justify-center gap-2 hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
           >
             <Printer className="w-4 h-4" />
             <span>Z Raporunu Yazdır</span>
@@ -134,7 +134,7 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
 
           <button
             onClick={onClose}
-            className="py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors cursor-pointer"
+            className="py-3 sm:py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors cursor-pointer"
           >
             Kapat
           </button>
