@@ -11,6 +11,7 @@ export interface ZReportData {
   netSales: number;
   cashTotal: number;
   cardTotal: number;
+  onlineTotal: number;
   cancelledTotal: number;
   averageTicketSize: number;
   averageTableDurationMinutes: number;
@@ -45,15 +46,37 @@ export function generateZReport(
   // Include base sample historical revenue for rich demo analytics
   const sampleBaseGross = 18450;
   const sampleBaseCash = 5200;
-  const sampleBaseCard = 13250;
+  const sampleBaseCard = 10450;
+  const sampleBaseOnline = 2800;
 
-  const liveOrdersTotal = orders.reduce((sum, o) => (o.status !== "CANCELLED" ? sum + o.totalAmount : sum), 0);
-  const liveCash = orders.reduce((sum, o) => (o.paymentMethod === "CASH" ? sum + o.totalAmount : sum), 0);
-  const liveCard = orders.reduce((sum, o) => (o.paymentMethod !== "CASH" ? sum + o.totalAmount : sum), 0);
+  // Live order calculations
+  const liveCash = orders.reduce(
+    (sum, o) => (o.status !== "CANCELLED" && o.paymentMethod === "CASH" ? sum + o.totalAmount : sum),
+    0
+  );
+  const liveOnline = orders.reduce(
+    (sum, o) =>
+      o.status !== "CANCELLED" && (o.paymentMethod === "ONLINE_POS" || o.paymentStatus === "PAID_ONLINE")
+        ? sum + o.totalAmount
+        : sum,
+    0
+  );
+  const liveCard = orders.reduce(
+    (sum, o) =>
+      o.status !== "CANCELLED" &&
+      o.paymentMethod !== "CASH" &&
+      o.paymentMethod !== "ONLINE_POS" &&
+      o.paymentStatus !== "PAID_ONLINE"
+        ? sum + o.totalAmount
+        : sum,
+    0
+  );
 
+  const liveOrdersTotal = liveCash + liveCard + liveOnline;
   const grossSales = sampleBaseGross + liveOrdersTotal;
   const cashTotal = sampleBaseCash + liveCash;
   const cardTotal = sampleBaseCard + liveCard;
+  const onlineTotal = sampleBaseOnline + liveOnline;
   const taxAmount = Math.round(grossSales * 0.1);
   const netSales = grossSales - taxAmount;
   const cancelledTotal = cancelledOrders.reduce((sum, o) => sum + o.totalAmount, 0);
@@ -62,14 +85,19 @@ export function generateZReport(
   const totalTablesServed = 36 + tables.filter((t) => t.status !== "EMPTY").length;
   const averageTicketSize = Math.round(grossSales / totalOrdersCount);
 
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  const reportNumber = `Z-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+
   return {
-    reportNumber: `Z-${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, "0")}-0142`,
-    date: new Date().toLocaleDateString("tr-TR", {
+    reportNumber,
+    date: now.toLocaleDateString("tr-TR", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
     }),
     restaurantName,
     totalOrdersCount,
@@ -79,6 +107,7 @@ export function generateZReport(
     netSales,
     cashTotal,
     cardTotal,
+    onlineTotal,
     cancelledTotal,
     averageTicketSize,
     averageTableDurationMinutes: 42,

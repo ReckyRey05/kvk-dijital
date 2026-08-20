@@ -82,6 +82,12 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
               <span>2. NAKİT KASA:</span>
               <span className="font-bold">{report.cashTotal.toLocaleString("tr-TR")} TL</span>
             </div>
+            {report.onlineTotal > 0 && (
+              <div className="flex justify-between text-emerald-800">
+                <span>3. MASADA ONLİNE (3D SECURE):</span>
+                <span className="font-bold">+{report.onlineTotal.toLocaleString("tr-TR")} TL</span>
+              </div>
+            )}
             {report.cancelledTotal > 0 && (
               <div className="flex justify-between text-red-600">
                 <span>İPTAL / İADE TOPLAMI:</span>
