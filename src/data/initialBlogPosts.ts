@@ -25,14 +25,14 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
     createdAt: { toDate: () => new Date("2026-08-20T00:00:00Z") },
     excerpt: "QR Menü, mobil sipariş, POS, mutfak ekranı (KDS), reçete maliyeti, stok, personel yetkilendirme, paket servis hub'ı ve işletme analitiğini tek çatı altında birleştiren yeni nesil restoran işletim sistemi.",
     content: `
-<p class="lead">Günümüz gastronomi ve yeme-içme sektöründe başarı; yalnızca lezzetli tabaklar sunmaktan değil, <strong>sipariş hızını, mutfak koordinasyonunu, hammadde maliyetlerini ve müşteri deneyimini tek bir merkezden kusursuz yönetebilmekten</strong> geçer.</p>
+<p class="lead">Günümüz gastronomi ve yeme-içme sektöründe başarı; yalnızca lezzetli tabaklar sunmaktan değil, <strong>sipariş hızını, mutfak koordinasyonunu, hammadde maliyetlerini ve müşteri deneyimini tek bir merkezden düzenli yönetebilmekten</strong> geçer.</p>
 
-<p>Geleneksel restoran yönetiminde kağıt menüler yıpranır ve fiyat değişimlerinde baskı maliyeti yaratır; hantal masaüstü POS cihazları masadaki misafirle mutfak arasındaki bağı koparır; ayrı ayrı öten paket servis tabletleri personeli yorar; reçetesiz pişen tabaklar ise gıda maliyetlerini (food cost) belirsizleştirir. <strong>KvK Dijital Çözümler</strong> tarafından geliştirilen <strong>Cep Garson</strong>, basit bir QR menü değil; restoranınızın tüm operasyonunu uçtan uca birbirine bağlayan <strong>kapsamlı bir Restoran Dijital İşletim Sistemidir (Restaurant OS)</strong>.</p>
+<p>Geleneksel restoran yönetiminde kağıt menüler yıpranır ve fiyat değişimlerinde baskı maliyeti yaratır; hantal masaüstü POS cihazları masadaki misafirle mutfak arasındaki iletişimi yavaşlatır; ayrı ayrı çalışan paket servis tabletleri personeli yorar; reçetesiz pişen tabaklar ise gıda maliyetlerini (food cost) belirsizleştirir. <strong>KvK Dijital Çözümler</strong> tarafından geliştirilen <strong>Cep Garson</strong>, basit bir QR menü aracı değil; restoranınızın tüm operasyonunu uçtan uca birbirine bağlayan <strong>kapsamlı bir Restoran Dijital İşletim Sistemidir (Restaurant OS)</strong>.</p>
 
 <div class="my-8 p-6 rounded-3xl bg-white/[0.03] border border-accent/30 text-white">
-  <div class="text-xs font-black uppercase tracking-wider text-accent mb-2">Bütünleşik Ekosistem Mimarisi</div>
-  <h3 class="text-lg font-bold text-white mb-2">Restoranınızın Tüm Operasyonu Tek Platformda</h3>
-  <p class="text-xs text-foreground/80 leading-relaxed mb-4">Cep Garson, bağımsız çalışan tekil programlar yerine dükkanınızın her noktasını tek akışta senkronize eder:</p>
+  <div class="text-xs font-black uppercase tracking-wider text-accent mb-1">Cep Garson</div>
+  <h3 class="text-xl font-black text-white mb-2">Restoranınızın Dijital İşletim Sistemi</h3>
+  <p class="text-xs text-foreground/80 leading-relaxed mb-4">QR Menü, mobil sipariş, POS, KDS, stok, kampanya, ödeme ve işletme analitiğini tek platformda birleştirin:</p>
   <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono font-bold text-foreground/90">
     <span class="px-2.5 py-1 rounded-lg bg-accent/20 text-accent border border-accent/30">QR Menü</span>
     <span class="text-foreground/40">→</span>
@@ -53,15 +53,15 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 </div>
 
 <h2>Cep Garson İşletmenize Ne Kazandırır?</h2>
-<p>Cep Garson, restoranınızın günlük işleyişinde verimliliği ve denetimi artırmak için tasarlanmış 6 temel kazanım sunar:</p>
+<p>Cep Garson, restoran ve kafelerin günlük operasyonunda verimliliği ve denetimi artırmak için tasarlanmış 6 temel ticari değer sunar:</p>
 
 <ul>
-  <li><strong>Daha Hızlı Sipariş Akışı:</strong> Müşteriler garson beklemeden kendi telefonlarından menüyü inceleyip siparişlerini doğrudan iletebilir.</li>
-  <li><strong>Daha Az Operasyonel Hata:</strong> Masadan verilen siparişler ve malzeme çıkarma tercihleri doğrudan kasa ve mutfak ekranlarına dijital olarak aktarılır; el yazısı veya sözlü aktarım hataları minimize edilir.</li>
-  <li><strong>Daha Yüksek Sepet Potansiyeli (Akıllı Ek Satış):</strong> Ürün seçimi esnasında ekstra sos, içecek, patates, porsiyon yükseltme ve tatlı seçenekleri sunularak doğal ek satış fırsatları oluşturulur.</li>
-  <li><strong>Daha Kontrollü Maliyet:</strong> Gramaj bazlı reçete, hammadde depo takibi ve mutfak fire kayıtları sayesinde tabak başı maliyetler ve kârlılık şeffaf şekilde izlenir.</li>
-  <li><strong>Gerçek Zamanlı İşletme Görünürlüğü:</strong> Günlük ciro, masa doluluk oranları, açık adisyonlar, en çok satan ürünler ve personel hareketleri tek bir yönetim panelinde toplanır.</li>
-  <li><strong>Personelin Zamanını Verimli Kullanma:</strong> Garsonların sipariş notu almak veya menü taşımak yerine misafirlere kaliteli servis ve sıcak karşılama sunmasına imkan tanır.</li>
+  <li><strong>Daha Hızlı Sipariş:</strong> Müşterinin sipariş sürecini hızlandırmaya yardımcı olur; misafirler garson beklemeden menüyü inceleyip siparişini doğrudan iletebilir.</li>
+  <li><strong>Daha Az Operasyonel Hata:</strong> Siparişlerin dijital olarak doğrudan kasa ve mutfak ekranlarına aktarılmasını sağlar; el yazısı veya sözlü aktarım hatalarını engellemeye yardımcı olur.</li>
+  <li><strong>Daha Yüksek Sepet Potansiyeli:</strong> Ekstra ürün, içecek, sos, tatlı ve porsiyon yükseltme gibi tamamlayıcı ürün önerileriyle ek satış (upsell) fırsatları oluşturur.</li>
+  <li><strong>Daha Kontrollü Maliyet:</strong> Stok, reçete, gramaj ve porsiyon maliyeti (food cost) verilerinin anlık olarak takip edilmesini sağlar.</li>
+  <li><strong>Daha Güçlü Operasyon:</strong> KDS (Mutfak Ekranı) ve gerçek zamanlı sipariş akışı sayesinde mutfak operasyonunun daha düzenli yönetilmesine yardımcı olur.</li>
+  <li><strong>Tek Merkezden Yönetim:</strong> Kasa, sipariş, stok, personel, kampanya ve raporların tek platformda yönetilmesini sağlar; personelin zamanını sipariş almak yerine müşteriye kaliteli hizmet vermeye ayırmasına yardımcı olur.</li>
 </ul>
 
 <h2>Geleneksel Restoran Sistemleri vs Cep Garson</h2>
@@ -134,7 +134,7 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 <ul>
   <li><strong>Masa Reisi Yetkisi:</strong> Masadaki QR kodu ilk okutan misafir otomatik olarak masa oturumunun yöneticisi (Host) olur.</li>
   <li><strong>Ortak Canlı Sepet:</strong> Masadaki tüm misafirler kendi telefonlarından sepeti görüntüleyebilir ve ürün ekleyebilir; her ürünün üzerinde kimin eklediği rozetle belirtilir.</li>
-  <li><strong>Kontrollü İletim:</strong> Sepeti onaylayıp mutfağa ve kasaya gönderme yetkisi Masa Reisindedir; bu sayede mükerrer ve sahte sipariş riski önemli ölçüde azaltılır.</li>
+  <li><strong>Kontrollü İletim:</strong> Sepeti onaylayıp mutfağa ve kasaya gönderme yetkisi Masa Reisindedir; bu sayede sahte veya mükerrer sipariş riski önemli ölçüde azaltılır.</li>
 </ul>
 
 <h2>2. Masada Kendi Payını Ödeme (Pay My Share & 3D Secure)</h2>
@@ -146,17 +146,17 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 </ul>
 
 <h2>3. Akıllı Ek Satış (Upsell) & Malzeme Kişiselleştirme</h2>
-<p>Müşteri sipariş verirken sepet değerini ve müşteri memnuniyetini artıran akıllı opsiyonlar devreye girer:</p>
+<p>Müşteri sipariş verirken sepet değerini ve müşteri memnuniyetini artıran tamamlayıcı opsiyonlar devreye girer:</p>
 <ul>
   <li><strong>Tamamlayıcı Ürün Önerileri:</strong> Örneğin hamburger seçildiğinde patates, özel soslar, soğuk içecekler, porsiyon büyütme veya tatlı önerileri sunulur.</li>
-  <li><strong>Malzeme & Alerjen Çıkarma:</strong> Misafirler sevmedikleri veya alerjisi oldukları bileşenleri (Örn: Soğan, Domates, Turşu, Gluten) tek dokunuşla menüden çıkarabilir; bu bilgi mutfak KDS ekranına kalın renkli uyarı olarak iletilir.</li>
+  <li><strong>Malzeme & Alerjen Çıkarma:</strong> Misafirler sevmedikleri veya alerjisi oldukları bileşenleri (Örn: Soğan, Domates, Turşu, Gluten) menüden çıkarabilir; bu bilgi mutfak KDS ekranına kalın renkli uyarı olarak iletilir.</li>
 </ul>
 
 <h2>4. Reçete, Gramaj & Gerçek Kâr Marjı Motoru (BOM & Food Cost)</h2>
 <p>Restoranın kârlılığını sürdürebilmesi için reçete ve hammadde kontrolü esastır:</p>
 <ul>
   <li>Menüdeki her tabağa gram, mililitre veya adet bazında malzeme reçetesi tanımlanır <em>(Örn: 180g Dana Kıyma + 1 Brioche Ekmek + 25g Cheddar = Net Maliyet)</em>.</li>
-  <li>Porsiyon başı gerçek maliyet, brüt kâr (TL) ve kâr marjı (%) anlık olarak izlenir.</li>
+  <li>Porsiyon başı maliyet, brüt kâr (TL) ve kâr marjı (%) anlık olarak izlenir.</li>
   <li>Sipariş tamamlandıkça depodaki hammadde stoğu otomatik düşer.</li>
   <li><strong>Mutfak Fire & Zayi Takibi:</strong> Mutfakta yanan, dökülen veya bozulan ürünler tek tıkla fire olarak sisteme girilerek hammadde kaçakları kontrol altına alınır.</li>
 </ul>
@@ -169,15 +169,15 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
   <li><strong>İstasyon Bazlı Çıkış:</strong> Aşçı hazırladığı tabağın üzerine dokunarak "Hazır" durumuna getirdiğinde servis personeline bildirim gider.</li>
 </ul>
 
-<h2>6. Müşteri Geri Bildirim & Google Yorum Sistemi</h2>
+<h2>6. Müşteri Geri Bildirim & İtibar Yönetimi</h2>
 <p>Müşteri memnuniyetini proaktif şekilde yöneten iki yönlü geri bildirim döngüsü:</p>
 <ul>
-  <li><strong>Memnun Misafirler:</strong> Masadaki servis ve yemek deneyiminden memnun kalan müşteriler, dilerlerse tek dokunuşla işletmenizin Google Haritalar profiline yönlendirilerek deneyimlerini paylaşmaya davet edilir.</li>
-  <li><strong>İşletme İçi Acil Bildirim:</strong> Yemekten veya servisten memnun kalmayan misafirlerin şikayetleri doğrudan Kasa POS ekranına sesli ve görsel acil uyarı olarak düşer; salon müdürü masaya anında müdahale ederek müşteri memnuniyetsizliğini işletme içinde çözer.</li>
+  <li><strong>Müşteri Deneyimi Ölçümü:</strong> Misafirlerin servis ve yemek deneyimi masada doğrudan ölçülür; deneyiminden memnun kalan misafirler dilerlerse tek dokunuşla işletmenizin Google Haritalar profiline yönlendirilerek geri bildirim bırakmaya davet edilir.</li>
+  <li><strong>İşletme İçi Acil Bildirim:</strong> Yemekten veya servisten memnun kalmayan misafirlerin geri bildirimleri doğrudan Kasa POS ekranına sesli ve görsel acil uyarı olarak iletilir; salon müdürü masaya anında müdahale ederek müşteri memnuniyetsizliğini işletme içinde çözüme kavuşturur.</li>
 </ul>
 
 <h2>7. Korumalı Patron Şikayet Günlüğü & Küfür Filtresi (Boss Audit Log)</h2>
-<p>Müşteri şikayetlerinin personel tarafından gizlenmesini veya silinmesini önleyen güvenlik katmanı:</p>
+<p>Müşteri geri bildirimlerinin personel tarafından gizlenmesini veya silinmesini önleyen güvenlik katmanı:</p>
 <ul>
   <li>Gelen tüm müşteri geri bildirimleri küfür filtreleme mekanizmasından geçer (argo kelimeler <code>***</code> olarak maskelenir).</li>
   <li>Garsonlar veya kasiyerler alarmı susturabilir; ancak şikayet kaydını <strong>kesinlikle silemez</strong>.</li>
@@ -192,8 +192,8 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
   <li>Yoğunluk anında tek butonla platformların sipariş alımı geçici olarak durdurulabilir.</li>
 </ul>
 
-<h2>9. Resmi E-Fatura & E-Adisyon Entegrasyon Desteği</h2>
-<p>Paraşüt, BizimHesap, QNB e-Finans ve GİB E-Arşiv Portalı ile uyumlu altyapı sayesinde hesap kapatılırken UUID ETTN kodlu elektronik fatura oluşturulabilir ve müşterinin e-posta adresine iletilebilir.</p>
+<h2>9. E-Fatura & E-Adisyon Entegrasyon Desteği</h2>
+<p>Paraşüt, BizimHesap, QNB e-Finans ve GİB E-Arşiv Portalı ile uyumlu altyapı desteği sayesinde hesap kapatılırken UUID ETTN kodlu elektronik fatura üretilebilir ve müşterinin e-posta adresine iletilebilir.</p>
 
 <h2>10. İkram Çarkıfeleği & Dijital Jukebox (Müşteri Etkileşimi)</h2>
 <ul>
@@ -205,12 +205,12 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 <p>Kasa görevlisi bir masayı başka bir masaya taşıdığında (Örn: Masa 4 -> Masa 7), müşterinin telefon ekranında bilgilendirme mesajı görüntülenir ve tarayıcı otomatik olarak yeni masaya yönlendirilir; açık sepet ve hesap bilgileri eksiksiz korunur.</p>
 
 <h2>12. Elektronik Gün Sonu Raporlaması & Yapılandırılabilir KDV</h2>
-<p>Günün sonunda kasa kapatılırken Nakit, POS Kredi Kartı ve Masada Online ödeme dağılımını gösteren, <strong>yapılandırılabilir ürün bazlı KDV ve vergi hesaplama desteğine</strong> sahip ESC/POS uyumlu Gün Sonu Raporu 80mm termal yazıcıdan çıktı alınabilir.</p>
+<p>Günün sonunda kasa kapatılırken Nakit, POS Kredi Kartı ve Masada Online ödeme dağılımını gösteren, <strong>ürün bazlı yapılandırılabilir KDV ve vergi hesaplama desteğine</strong> sahip ESC/POS uyumlu Gün Sonu Raporu 80mm termal yazıcıdan çıktı alınabilir.</p>
 
 <h2>13. Rol Tabanlı Yetkilendirme & Hızlı PIN Girişi (Garson, Mutfak ve Boss İzolasyonu)</h2>
 <p>Farklı personel gruplarının yetki sınırları güvenlik amacıyla kesin olarak ayrılmıştır:</p>
 <ul>
-  <li><strong>Patron (Super Admin):</strong> Ciro dökümleri, hammadde maliyetleri, personel izinleri, fiyat yönetimi, Z raporları ve şikayet günlüğüne tam erişim. 2FA (İki Aşamalı Doğrulama) desteği.</li>
+  <li><strong>Patron (Super Admin):</strong> Ciro dökümleri, hammadde maliyetleri, personel izinleri, fiyat yönetimi, gün sonu raporları ve şikayet günlüğüne tam erişim. 2FA (İki Aşamalı Doğrulama) desteği.</li>
   <li><strong>Salon Müdürü:</strong> Kasa işlemleri, masa transferleri, indirim onayları ve operasyonel raporlar.</li>
   <li><strong>Kasa Görevlisi:</strong> Tahsilat, adisyon kapatma ve paket servis sipariş kabulü.</li>
   <li><strong>Garson (4 Haneli Hızlı PIN):</strong> Masadan sipariş alma, servis onaylama ve masa taşıma. Ciro ve maliyet verilerine erişemez.</li>
@@ -218,7 +218,7 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
 </ul>
 
 <h2>14. Örnek Patron Dashboard & Canlı Operasyon Görünümü</h2>
-<p>Restoran sahibinin dükkanındaki tüm akışı anlık takip edebildiği örnek yönetim paneli yapısı:</p>
+<p>Restoran sahibinin dükkanındaki tüm akışı takip edebildiği örnek yönetim paneli yapısı:</p>
 
 <div class="my-6 p-6 rounded-3xl bg-[#0a0f0f] border border-white/10 space-y-4 font-sans text-xs">
   <div class="text-[11px] font-bold text-accent uppercase tracking-wider">Örnek Yönetim Paneli Göstergeleri</div>
@@ -227,22 +227,22 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
     <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
       <span class="text-foreground/50 text-[10px] uppercase font-semibold">Günlük Ciro</span>
       <div class="text-base font-extrabold text-white">48.650 TL</div>
-      <span class="text-[10px] text-emerald-400 font-bold">+18% geçen haftaya göre</span>
+      <span class="text-[10px] text-emerald-400 font-bold">Örnek Canlı Veri</span>
     </div>
     <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
       <span class="text-foreground/50 text-[10px] uppercase font-semibold">Toplam Sipariş</span>
       <div class="text-base font-extrabold text-white">142 Adet</div>
-      <span class="text-[10px] text-accent font-bold">%68 QR Masadan</span>
+      <span class="text-[10px] text-accent font-bold">Masadan Sipariş</span>
     </div>
     <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
       <span class="text-foreground/50 text-[10px] uppercase font-semibold">Ortalama Sepet</span>
       <div class="text-base font-extrabold text-white">342,60 TL</div>
-      <span class="text-[10px] text-emerald-400 font-bold">+45 TL Upsell Etkisi</span>
+      <span class="text-[10px] text-emerald-400 font-bold">Ek Satış Dahil</span>
     </div>
     <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-1">
       <span class="text-foreground/50 text-[10px] uppercase font-semibold">Masa Doluluk</span>
       <div class="text-base font-extrabold text-white">14 / 18 Masa</div>
-      <span class="text-[10px] text-amber-300 font-bold">%78 Doluluk Oranı</span>
+      <span class="text-[10px] text-amber-300 font-bold">Canlı Doluluk</span>
     </div>
   </div>
 
@@ -263,11 +263,11 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       <span class="text-[11px] font-bold text-white block">Günün En Çok Satanları</span>
       <div class="flex items-center justify-between text-[11px] text-foreground/70">
         <span>1. Trüf & Aioli Burger (42 Adet)</span>
-        <span class="font-bold text-accent">%64 Kâr Marjı</span>
+        <span class="font-bold text-accent">Kâr Marjı Analizi</span>
       </div>
       <div class="flex items-center justify-between text-[11px] text-foreground/70">
         <span>2. Burrata & Pesto Pizza (28 Adet)</span>
-        <span class="font-bold text-accent">%71 Kâr Marjı</span>
+        <span class="font-bold text-accent">Kâr Marjı Analizi</span>
       </div>
     </div>
   </div>
@@ -295,7 +295,7 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       },
       {
         question: "Müşterilerin cep telefonlarına herhangi bir uygulama indirmesi gerekir mi?",
-        answer: "Kesinlikle hayır. Müşteriler masadaki akrilik QR kodu telefonlarının standart kamera uygulamasıyla okuttuğunda menü doğrudan Safari veya Chrome tarayıcısında anında açılır."
+        answer: "Kesinlikle hayır. Müşteriler masadaki akrilik QR kodu telefonlarının standart kamera uygulamasıyla okuttuğunda menü doğrudan mobil tarayıcıda açılır."
       },
       {
         question: "Garsonlar, mutfak ve patron için ayrı giriş ve yetkilendirme sistemi nasıl çalışır?",
@@ -303,7 +303,7 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       },
       {
         question: "Masa Reisi ve çok kullanıcılı ortak sepet sistemi nasıl işler?",
-        answer: "QR kodu ilk okutan kişi 'Masa Reisi' atanır. Masadaki diğer misafirler sepete ürün ekleyebilir; ancak siparişi mutfağa ve kasaya gönderme yetkisi Masa Reisindedir. Bu sayede sahte ve mükerrer sipariş riski azaltılır."
+        answer: "QR kodu ilk okutan kişi 'Masa Reisi' atanır. Masadaki diğer misafirler sepete ürün ekleyebilir; ancak siparişi mutfağa ve kasaya gönderme yetkisi Masa Reisindedir. Bu sayede sahte veya mükerrer sipariş riski önemli ölçüde azaltılır."
       },
       {
         question: "Masada kendi payını ödeme süreci nasıl çalışır?",

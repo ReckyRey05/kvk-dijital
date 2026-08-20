@@ -102,7 +102,7 @@ export default function DemoLaunchpad() {
               2. Kasa POS & Paket Servis Hub <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-emerald-300" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              Getir/Trendyol paket siparişleri, tek tıkla resmi GİB E-Fatura kesme ve anlık termal Z-Raporu.
+              Getir/Trendyol paket siparişleri, e-fatura entegrasyon desteği ve ESC/POS uyumlu gün sonu raporlama.
             </p>
           </div>
 
