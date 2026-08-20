@@ -72,7 +72,7 @@ export default function DemoLaunchpad() {
               1. Masa 4 QR Menü <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-accent" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              15dk oturum korumalı 4K menü, malzeme çıkarma, TR/EN dil seçeneği ve sepetten canlı sipariş verme.
+              Masa Reisi ortak sepeti, masada 3D Secure ile kendi payını ödeme, İkram Çarkıfeleği ve Dijital Jukebox.
             </p>
           </div>
 
@@ -99,10 +99,10 @@ export default function DemoLaunchpad() {
 
           <div className="space-y-1">
             <h4 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors flex items-center gap-1.5">
-              2. Kasa & Garson POS Terminali <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-emerald-300" />
+              2. Kasa POS & Paket Servis Hub <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-emerald-300" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              Masa doluluk haritası, sipariş onaylama, masa transferi, parçalı tahsilat ve anlık Z raporu.
+              Getir/Trendyol paket siparişleri, tek tıkla resmi GİB E-Fatura kesme ve anlık termal Z-Raporu.
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export default function DemoLaunchpad() {
               3. Mutfak Ekranı (KDS) <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-amber-300" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              Sesli çan bildirimleri, geçen süre sayaçları, malzeme çıkarma uyarıları ve hazırlık adımları.
+              Sesli çan bildirimleri, hazırlık süre sayaçları, mutfak darboğaz alarmları ve ortalama servis analitiği.
             </p>
           </div>
 
@@ -159,10 +159,10 @@ export default function DemoLaunchpad() {
 
           <div className="space-y-1">
             <h4 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
-              4. Boss Yönetim & Menü / Ciro Paneli <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-purple-300" />
+              4. Reçete, Kâr & Patron Paneli <ExternalLink className="w-3.5 h-3.5 text-foreground/40 group-hover:text-purple-300" />
             </h4>
             <p className="text-xs text-foreground/60 leading-relaxed">
-              Tek tıkla fiyat değiştirme, süreli indirim kampanyası başlatma, masa QR çıktıları ve Z raporu.
+              Gramaj bazlı reçete maliyeti, mutfak fire (zayi) takibi, korumalı şikayet günlüğü ve küfür filtresi.
             </p>
           </div>
 
