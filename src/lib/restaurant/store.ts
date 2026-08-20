@@ -1012,5 +1012,10 @@ export function useRestaurantStore() {
       globalStaffMembers = globalStaffMembers.filter((s) => s.id !== staffId);
       notifyAll();
     },
+
+    restoreDemoStaff: () => {
+      globalStaffMembers = [...DEMO_STAFF_MEMBERS];
+      notifyAll();
+    },
   };
 }
