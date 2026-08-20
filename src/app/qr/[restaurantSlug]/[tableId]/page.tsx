@@ -18,6 +18,7 @@ import FeedbackModal from "@/components/restaurant/qr/FeedbackModal";
 import OnlinePaymentModal from "@/components/restaurant/qr/OnlinePaymentModal";
 import SpinWheelModal from "@/components/restaurant/qr/SpinWheelModal";
 import JukeboxModal from "@/components/restaurant/qr/JukeboxModal";
+import ComplaintModal from "@/components/restaurant/qr/ComplaintModal";
 import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star } from "lucide-react";
 
 interface QrMenuPageProps {
@@ -127,6 +128,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const [isOnlinePaymentOpen, setIsOnlinePaymentOpen] = useState(false);
   const [isSpinWheelOpen, setIsSpinWheelOpen] = useState(false);
   const [isJukeboxOpen, setIsJukeboxOpen] = useState(false);
+  const [isComplaintOpen, setIsComplaintOpen] = useState(false);
 
   // 15-Minute Dynamic Session Timer
   const [remainingSeconds, setRemainingSeconds] = useState(15 * 60); // 900s
@@ -295,6 +297,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenFeedback={() => setIsFeedbackOpen(true)}
         onOpenSpinWheel={() => setIsSpinWheelOpen(true)}
         onOpenJukebox={() => setIsJukeboxOpen(true)}
+        onOpenComplaint={() => setIsComplaintOpen(true)}
         tableBillTotal={currentTable.activeBillTotal}
         currentParticipant={currentParticipant}
         participantCount={participants.length || 1}
@@ -471,6 +474,14 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         isOpen={isJukeboxOpen}
         onClose={() => setIsJukeboxOpen(false)}
         tableNumber={currentTable.tableNumber}
+      />
+
+      {/* Müdüre Şikayet & Acil Talep İletme Modal */}
+      <ComplaintModal
+        isOpen={isComplaintOpen}
+        onClose={() => setIsComplaintOpen(false)}
+        tableNumber={currentTable.tableNumber}
+        tableId={currentTable.id}
       />
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { WaiterCallType } from "@/types/restaurant";
 import { X, Bell, CreditCard, Banknote, Droplets, CheckCircle2, Flame, Baby, Sparkles } from "lucide-react";

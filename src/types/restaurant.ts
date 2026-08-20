@@ -9,7 +9,8 @@ export type WaiterCallType =
   | "WATER_NAPKIN"
   | "ASHTRAY"
   | "WIPES"
-  | "BABY_CHAIR";
+  | "BABY_CHAIR"
+  | "COMPLAINT";
 export type MenuLanguage = "TR" | "EN";
 export type MenuCurrency = "TRY" | "USD" | "EUR" | "GBP";
 
@@ -17,7 +18,8 @@ export interface ManagerAlert {
   id: string;
   tableId: string;
   tableNumber: string;
-  type: "NEGATIVE_FEEDBACK" | "URGENT_CALL" | "VIP_VISIT";
+  type: "NEGATIVE_FEEDBACK" | "URGENT_CALL" | "VIP_VISIT" | "COMPLAINT";
+  category?: string; // e.g. "Yemek Kalitesi", "Gecikme", "Personel", "Hesap"
   rating?: number;
   message: string;
   customerName?: string;

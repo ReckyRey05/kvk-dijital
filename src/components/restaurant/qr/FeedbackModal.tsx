@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { X, Star, ExternalLink, CheckCircle2, MessageSquare, AlertTriangle } from "lucide-react";
 import { MenuLanguage } from "@/types/restaurant";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Restaurant, Table, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
-import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check } from "lucide-react";
+import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check, AlertTriangle } from "lucide-react";
 import { formatPrice } from "@/lib/restaurant/currency";
 
 interface MenuHeaderProps {
@@ -20,6 +20,7 @@ interface MenuHeaderProps {
   onOpenFeedback?: () => void;
   onOpenSpinWheel?: () => void;
   onOpenJukebox?: () => void;
+  onOpenComplaint?: () => void;
   // Multi-User Group & Table Balance
   tableBillTotal?: number;
   currentParticipant?: TableParticipant | null;
@@ -42,6 +43,7 @@ export default function MenuHeader({
   onOpenFeedback,
   onOpenSpinWheel,
   onOpenJukebox,
+  onOpenComplaint,
   tableBillTotal = 0,
   currentParticipant,
   participantCount = 1,
@@ -244,6 +246,18 @@ export default function MenuHeader({
               >
                 <Star className="w-3 h-3" />
                 <span>Puan Ver</span>
+              </button>
+            )}
+
+            {/* Direct Manager Complaint */}
+            {onOpenComplaint && (
+              <button
+                onClick={onOpenComplaint}
+                className="px-2 py-1 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 hover:text-red-200 text-[10px] font-extrabold flex items-center gap-1 transition-colors cursor-pointer"
+                title="Müdüre Şikayet / Görüş İlet"
+              >
+                <AlertTriangle className="w-3 h-3 text-red-400" />
+                <span>Şikayet İlet</span>
               </button>
             )}
           </div>
