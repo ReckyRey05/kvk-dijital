@@ -239,48 +239,48 @@ export default function RecipeManager({ menuItems, categories }: RecipeManagerPr
   }, 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Top High-Value Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Ortalama Kâr Marjı</span>
-            <span className="text-xl font-black text-emerald-400">%{avgMargin}</span>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Ortalama Kâr</span>
+            <span className="text-base sm:text-xl font-black text-emerald-400">%{avgMargin}</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
-            <Percent className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Hammadde Deposu</span>
-            <span className="text-xl font-black text-white">{ingredients.length} Kalem</span>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center">
-            <Boxes className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+            <Percent className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Kritik Stok Uyarısı</span>
-            <span className={`text-xl font-black ${criticalCount > 0 ? "text-amber-400 animate-pulse" : "text-white"}`}>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Hammadde Deposu</span>
+            <span className="text-base sm:text-xl font-black text-white">{ingredients.length} Kalem</span>
+          </div>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center shrink-0">
+            <Boxes className="w-4 h-4 sm:w-5 sm:h-5" />
+          </div>
+        </div>
+
+        <div className="p-3 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Kritik Stok</span>
+            <span className={`text-base sm:text-xl font-black truncate ${criticalCount > 0 ? "text-amber-400 animate-pulse" : "text-white"}`}>
               {criticalCount} Kalem
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
-            <AlertTriangle className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Fire & Zayi Maliyeti</span>
-            <span className="text-xl font-black text-red-400">{totalWasteToday.toLocaleString("tr-TR")} TL</span>
+        <div className="p-3 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Fire & Zayi</span>
+            <span className="text-base sm:text-xl font-black text-red-400 truncate">{totalWasteToday.toLocaleString("tr-TR")} TL</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0">
+            <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
       </div>

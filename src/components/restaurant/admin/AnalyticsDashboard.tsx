@@ -69,71 +69,71 @@ export default function AnalyticsDashboard({
       </div>
 
       {/* 4 Main Financial KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Gross Revenue */}
-        <div className="p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-2 sm:space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground/60">Günlük Brüt Ciro</span>
-            <div className="w-8 h-8 rounded-xl bg-green-500/15 text-green-400 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold text-foreground/60 truncate">Günlük Ciro</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-green-500/15 text-green-400 flex items-center justify-center shrink-0">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl font-black text-white">
+            <div className="text-lg sm:text-2xl font-black text-white truncate">
               {zReport.grossSales.toLocaleString("tr-TR")}{" "}
-              <span className="text-xs text-accent font-bold">TL</span>
+              <span className="text-[10px] sm:text-xs text-accent font-bold">TL</span>
             </div>
-            <span className="text-[11px] text-green-400 font-semibold flex items-center gap-1 mt-1">
-              <ArrowUpRight className="w-3 h-3" />
-              <span>Düne göre +%18 artışta</span>
+            <span className="text-[10px] sm:text-[11px] text-green-400 font-semibold flex items-center gap-1 mt-0.5 truncate">
+              <ArrowUpRight className="w-3 h-3 shrink-0" />
+              <span>Düne göre +%18</span>
             </span>
           </div>
         </div>
 
         {/* Total Orders */}
-        <div className="p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-2 sm:space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground/60">Toplam Sipariş / Fiş</span>
-            <div className="w-8 h-8 rounded-xl bg-accent/15 text-accent flex items-center justify-center">
-              <Receipt className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold text-foreground/60 truncate">Toplam Sipariş</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-accent/15 text-accent flex items-center justify-center shrink-0">
+              <Receipt className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl font-black text-white">{zReport.totalOrdersCount} Fiş</div>
-            <span className="text-[11px] text-foreground/50 mt-1 block">
-              {zReport.totalTablesServed} farklı masaya servis
+            <div className="text-lg sm:text-2xl font-black text-white truncate">{zReport.totalOrdersCount} Fiş</div>
+            <span className="text-[10px] sm:text-[11px] text-foreground/50 mt-0.5 block truncate">
+              {zReport.totalTablesServed} masa servisi
             </span>
           </div>
         </div>
 
         {/* Average Ticket Size */}
-        <div className="p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-2 sm:space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground/60">Ortalama Adisyon (Ticket)</span>
-            <div className="w-8 h-8 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold text-foreground/60 truncate">Ort. Adisyon</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0">
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl font-black text-white">
+            <div className="text-lg sm:text-2xl font-black text-white truncate">
               {zReport.averageTicketSize.toLocaleString("tr-TR")}{" "}
-              <span className="text-xs text-blue-400 font-bold">TL</span>
+              <span className="text-[10px] sm:text-xs text-blue-400 font-bold">TL</span>
             </div>
-            <span className="text-[11px] text-foreground/50 mt-1 block">Masa başına ortalama harcama</span>
+            <span className="text-[10px] sm:text-[11px] text-foreground/50 mt-0.5 block truncate">Masa başına harcama</span>
           </div>
         </div>
 
         {/* Average Table Duration */}
-        <div className="p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-[#0c1212] border border-white/10 flex flex-col justify-between space-y-2 sm:space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground/60">Ort. Masa Oturum Süresi</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center">
-              <Clock className="w-4 h-4" />
+            <span className="text-[10px] sm:text-xs font-semibold text-foreground/60 truncate">Ort. Oturum</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-2xl font-black text-white">{zReport.averageTableDurationMinutes} Dk</div>
-            <span className="text-[11px] text-foreground/50 mt-1 block">Masa devir hızı: ~1.4 saat</span>
+            <div className="text-lg sm:text-2xl font-black text-white truncate">{zReport.averageTableDurationMinutes} Dk</div>
+            <span className="text-[10px] sm:text-[11px] text-foreground/50 mt-0.5 block truncate">Devir: ~1.4 saat</span>
           </div>
         </div>
       </div>

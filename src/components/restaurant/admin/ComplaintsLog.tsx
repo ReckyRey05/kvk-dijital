@@ -76,66 +76,66 @@ export default function ComplaintsLog({ alerts }: ComplaintsLogProps) {
       </div>
 
       {/* Summary KPI Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Toplam Şikayet / Bildirim</span>
-            <span className="text-xl font-black text-white">{alerts.length} Kayıt</span>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Toplam Şikayet</span>
+            <span className="text-lg sm:text-xl font-black text-white">{alerts.length} Kayıt</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-white/5 text-white flex items-center justify-center">
-            <MessageSquareWarning className="w-5 h-5 text-accent" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/5 text-white flex items-center justify-center shrink-0">
+            <MessageSquareWarning className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Açık / İnceleme Bekleyen</span>
-            <span className={`text-xl font-black ${pendingCount > 0 ? "text-red-400 animate-pulse" : "text-white"}`}>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Açık / Bekleyen</span>
+            <span className={`text-lg sm:text-xl font-black truncate ${pendingCount > 0 ? "text-red-400 animate-pulse" : "text-white"}`}>
               {pendingCount} Adet
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center">
-            <AlertTriangle className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-foreground/50 block font-medium">Müdahale Edilen / Çözülen</span>
-            <span className="text-xl font-black text-emerald-400">{resolvedCount} Adet</span>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#0a0f0f] border border-white/10 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <span className="text-[10px] sm:text-xs text-foreground/50 block font-medium truncate">Müdahale Edilen</span>
+            <span className="text-lg sm:text-xl font-black text-emerald-400 truncate">{resolvedCount} Adet</span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-xl border border-white/10 w-full sm:w-auto">
+        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/10 w-full sm:w-auto overflow-x-auto sleek-scrollbar">
           <button
             onClick={() => setFilter("ALL")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filter === "ALL" ? "bg-accent text-black shadow-md" : "text-foreground/70 hover:text-white"
             }`}
           >
-            Tüm Kayıtlar ({alerts.length})
+            Tümü ({alerts.length})
           </button>
           <button
             onClick={() => setFilter("PENDING")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filter === "PENDING" ? "bg-red-500 text-white shadow-md" : "text-foreground/70 hover:text-white"
             }`}
           >
-            Açık Olanlar ({pendingCount})
+            Açık ({pendingCount})
           </button>
           <button
             onClick={() => setFilter("RESOLVED")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               filter === "RESOLVED" ? "bg-emerald-500 text-black shadow-md" : "text-foreground/70 hover:text-white"
             }`}
           >
-            Çözülenler ({resolvedCount})
+            Çözülen ({resolvedCount})
           </button>
         </div>
 

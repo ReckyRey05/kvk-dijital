@@ -10,6 +10,7 @@ export type WaiterCallType =
   | "ASHTRAY"
   | "WIPES"
   | "BABY_CHAIR"
+  | "CUSTOM"
   | "COMPLAINT";
 export type MenuLanguage = "TR" | "EN";
 export type MenuCurrency = "TRY" | "USD" | "EUR" | "GBP";

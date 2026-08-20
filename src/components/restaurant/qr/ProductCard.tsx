@@ -21,14 +21,14 @@ export default function ProductCard({ item, onSelectProduct, currency = "TRY" }:
   return (
     <div
       onClick={() => isAvailable && onSelectProduct(item)}
-      className={`group relative rounded-2xl bg-[#0c1212] border border-white/10 p-3.5 flex gap-4 transition-all duration-300 ${
+      className={`group relative rounded-2xl bg-[#0c1212] border border-white/10 p-3 sm:p-3.5 flex gap-3 sm:gap-4 transition-all duration-300 ${
         isAvailable
           ? "hover:border-accent/50 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-accent/5 cursor-pointer"
           : "opacity-60 cursor-not-allowed bg-black/50 border-white/5"
       }`}
     >
       {/* High Quality Food Photo */}
-      <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-white/5 shrink-0 shadow-md">
+      <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-white/5 shrink-0 shadow-md">
         {item.image ? (
           <img
             src={item.image}

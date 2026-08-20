@@ -23,33 +23,33 @@ export default function OrderTracker({ orders, isOpen, onClose, tableNumber }: O
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-t-[2rem] sm:rounded-[2rem] max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in-up"
+        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-t-[1.5rem] sm:rounded-[2rem] max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-white/10 flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+        <div className="p-3.5 sm:p-4 border-b border-white/10 flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-1.5 truncate">
               <span>Canlı Sipariş Takibi</span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-accent/20 text-accent font-semibold">
+              <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-accent/20 text-accent font-semibold shrink-0">
                 {tableNumber}
               </span>
             </h3>
-            <p className="text-[11px] text-foreground/60">
+            <p className="text-[10px] sm:text-[11px] text-foreground/60 truncate">
               {orders.length} adet aktif siparişiniz bulunuyor
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Orders List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3 sm:space-y-4 sleek-scrollbar">
           {orders.length === 0 ? (
             <div className="py-12 text-center text-foreground/50 space-y-2">
               <p className="text-sm font-medium">Aktif siparişiniz bulunmuyor.</p>

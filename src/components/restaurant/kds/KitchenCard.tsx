@@ -42,7 +42,7 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
 
   return (
     <div
-      className={`rounded-2xl bg-[#0c1212] border ${cardBorder} p-4 flex flex-col justify-between shadow-2xl transition-all h-[360px]`}
+      className={`rounded-2xl bg-[#0c1212] border ${cardBorder} p-3.5 sm:p-4 flex flex-col justify-between shadow-2xl transition-all min-h-[340px] sm:min-h-[360px] h-auto`}
     >
       {/* Header: Table & Elapsed Timer */}
       <div className="space-y-3">

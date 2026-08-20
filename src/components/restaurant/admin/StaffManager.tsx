@@ -109,62 +109,62 @@ export default function StaffManager() {
 
   return (
     <div className="space-y-6">
-      {/* Sub Tab Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-card border border-card-border">
-        <div className="flex items-center gap-2">
+      {/* Sub-Tabs Nav */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto sleek-scrollbar pb-1 sm:pb-0">
           <button
             onClick={() => setSubTab("STAFF_LIST")}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               subTab === "STAFF_LIST"
                 ? "bg-accent text-black shadow-lg shadow-accent/20"
                 : "bg-white/5 text-foreground/70 hover:bg-white/10"
             }`}
           >
-            <Users className="w-4 h-4" />
-            <span>Personel & PIN Listesi ({staffMembers.length})</span>
+            <Users className="w-3.5 h-3.5" />
+            <span>Personel Listesi ({staffMembers.length})</span>
           </button>
 
           <button
             onClick={() => setSubTab("PERMISSIONS_MATRIX")}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               subTab === "PERMISSIONS_MATRIX"
                 ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
                 : "bg-white/5 text-foreground/70 hover:bg-white/10"
             }`}
           >
-            <Sliders className="w-4 h-4" />
-            <span>Rol İzin Matrisi (Yetkilendirme)</span>
+            <Sliders className="w-3.5 h-3.5" />
+            <span>Rol İzin Matrisi</span>
           </button>
 
           <button
             onClick={() => setSubTab("BOSS_SECURITY")}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               subTab === "BOSS_SECURITY"
                 ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20"
                 : "bg-white/5 text-foreground/70 hover:bg-white/10"
             }`}
           >
-            <Lock className="w-4 h-4" />
-            <span>Patron Giriş & 2FA Ayarları</span>
+            <Lock className="w-3.5 h-3.5" />
+            <span>Patron Giriş & 2FA</span>
           </button>
         </div>
 
         {subTab === "STAFF_LIST" && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto sleek-scrollbar pb-1 sm:pb-0">
             {staffMembers.length < 4 && (
               <button
                 onClick={restoreDemoStaff}
-                className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground/70 hover:text-white font-bold text-xs transition-all cursor-pointer"
+                className="px-3 py-1.5 sm:py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-foreground/70 hover:text-white font-bold text-xs transition-all cursor-pointer whitespace-nowrap shrink-0"
               >
                 Demo Personelleri Yükle
               </button>
             )}
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-accent text-black font-extrabold text-xs flex items-center gap-1.5 hover:bg-accent/90 transition-all shadow-md shadow-accent/20 cursor-pointer"
+              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-accent text-black font-extrabold text-xs flex items-center gap-1.5 hover:bg-accent/90 transition-all shadow-md shadow-accent/20 cursor-pointer whitespace-nowrap shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>Yeni Personel Ekle</span>
+              <Plus className="w-3.5 h-3.5" />
+              <span>Yeni Personel</span>
             </button>
           </div>
         )}

@@ -28,7 +28,7 @@ export default function SplitBillModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-t-[2rem] sm:rounded-[2rem] p-6 space-y-6 shadow-2xl animate-fade-in-up"
+        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-t-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-2xl animate-fade-in-up max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

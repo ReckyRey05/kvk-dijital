@@ -94,7 +94,7 @@ export default function ComplaintModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-md bg-[#0a0f0f] border border-red-500/30 rounded-t-[2rem] sm:rounded-[2rem] p-6 space-y-5 shadow-2xl shadow-red-950/40 animate-fade-in-up"
+        className="w-full max-w-md bg-[#0a0f0f] border border-red-500/30 rounded-t-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl shadow-red-950/40 animate-fade-in-up max-h-[92vh] overflow-y-auto sleek-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

@@ -42,41 +42,41 @@ export default function PlatformManager() {
           </p>
         </div>
 
-        {/* Sub-Tabs Navigation */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveSubTab("PLATFORMS")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeSubTab === "PLATFORMS"
-                ? "bg-accent text-black shadow-md shadow-accent/20"
-                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            Yemek Platformları ({deliveryPlatforms.length})
-          </button>
+      {/* Sub-Tabs Navigation */}
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto sleek-scrollbar pb-1 sm:pb-0">
+        <button
+          onClick={() => setActiveSubTab("PLATFORMS")}
+          className={`px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+            activeSubTab === "PLATFORMS"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          Yemek Platformları ({deliveryPlatforms.length})
+        </button>
 
-          <button
-            onClick={() => setActiveSubTab("EFATURA")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeSubTab === "EFATURA"
-                ? "bg-accent text-black shadow-md shadow-accent/20"
-                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            E-Fatura & GİB ({efaturaRecords.length})
-          </button>
+        <button
+          onClick={() => setActiveSubTab("EFATURA")}
+          className={`px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+            activeSubTab === "EFATURA"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          E-Fatura & GİB ({efaturaRecords.length})
+        </button>
 
-          <button
-            onClick={() => setActiveSubTab("PACKAGES")}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeSubTab === "PACKAGES"
-                ? "bg-accent text-black shadow-md shadow-accent/20"
-                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            SaaS Paket & Lisanslar
-          </button>
-        </div>
+        <button
+          onClick={() => setActiveSubTab("PACKAGES")}
+          className={`px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+            activeSubTab === "PACKAGES"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          SaaS Paket & Lisanslar
+        </button>
+      </div>
       </div>
 
       {/* 1. YEMEK PLATFORMLARI TAB */}

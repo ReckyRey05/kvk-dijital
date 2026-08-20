@@ -105,11 +105,11 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div
-        className="w-full max-w-md bg-[#0c1212] border border-white/10 rounded-t-[2rem] sm:rounded-[2rem] max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in-up"
+        className="w-full max-w-md bg-[#0c1212] border border-white/10 rounded-t-[1.5rem] sm:rounded-[2rem] max-h-[92vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with Image / Close button */}
-        <div className="relative h-48 sm:h-52 w-full bg-white/5 shrink-0 overflow-hidden">
+        <div className="relative h-44 sm:h-52 w-full bg-white/5 shrink-0 overflow-hidden">
           {item.image && (
             <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
           )}
@@ -117,13 +117,13 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
 
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center hover:bg-black/80 transition-colors cursor-pointer"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center hover:bg-black/80 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
-          <div className="absolute bottom-4 left-4 right-4">
-            <h2 className="text-xl font-bold text-white leading-snug">{item.name}</h2>
+          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+            <h2 className="text-lg sm:text-xl font-bold text-white leading-snug">{item.name}</h2>
             <div className="flex items-center gap-2 text-xs text-foreground/70 mt-1 flex-wrap">
               {item.originalPrice && item.originalPrice > item.price && (
                 <span className="line-through text-foreground/40 font-bold text-sm">

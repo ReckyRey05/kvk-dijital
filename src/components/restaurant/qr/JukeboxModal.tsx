@@ -50,9 +50,9 @@ export default function JukeboxModal({
   const sortedSongs = [...songRequests].sort((a, b) => b.votes - a.votes);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-fade-in">
       <div
-        className="w-full max-w-md bg-[#0c1212] border border-purple-500/40 rounded-[2rem] p-6 space-y-6 shadow-2xl animate-fade-in-up"
+        className="w-full max-w-md bg-[#0c1212] border border-purple-500/40 rounded-t-[1.5rem] sm:rounded-[2rem] p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-2xl animate-fade-in-up max-h-[92vh] overflow-y-auto sleek-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

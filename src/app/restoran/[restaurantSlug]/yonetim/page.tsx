@@ -91,98 +91,98 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
   return (
     <div className="min-h-screen bg-[#050505] text-foreground flex flex-col">
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-[#080d0d] border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center font-extrabold border border-white/10">
-            <Settings className="w-5 h-5 text-accent" />
+      <header className="sticky top-0 z-30 bg-[#080d0d] border-b border-white/10 px-3 sm:px-6 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 text-white flex items-center justify-center font-extrabold border border-white/10 shrink-0">
+            <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-extrabold text-white">{DEMO_RESTAURANT.name}</h1>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-foreground/70 font-semibold">
-                Yönetim & Yapılandırma
+              <h1 className="text-sm sm:text-base font-extrabold text-white">{DEMO_RESTAURANT.name}</h1>
+              <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-foreground/70 font-semibold shrink-0">
+                Yönetim
               </span>
             </div>
-            <p className="text-xs text-foreground/50">Menü, Reçete Maliyeti, Masa QR ve Entegrasyon Paneli</p>
+            <p className="text-[11px] sm:text-xs text-foreground/50 hidden xs:block">Menü, Reçete Maliyeti, Masa QR ve Entegrasyon Paneli</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto sleek-scrollbar pb-1 sm:pb-0">
           <button
             onClick={handleLockScreen}
-            className="px-3.5 py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs font-bold text-purple-300 flex items-center gap-2 transition-colors cursor-pointer"
+            className="px-3 py-1.5 sm:py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-xs font-bold text-purple-300 flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
             title="Boss Panelini Kilitle"
           >
-            <Lock className="w-4 h-4" />
-            <span>Ekranı Kilitle</span>
+            <Lock className="w-3.5 h-3.5" />
+            <span>Kilitle</span>
           </button>
 
           <Link
             href={`/restoran/${restaurantSlug}/kasa`}
-            className="px-3.5 py-2 rounded-xl bg-accent/15 hover:bg-accent/25 border border-accent/30 text-xs font-bold text-accent flex items-center gap-2 transition-colors"
+            className="px-3 py-1.5 sm:py-2 rounded-xl bg-accent/15 hover:bg-accent/25 border border-accent/30 text-xs font-bold text-accent flex items-center gap-1.5 transition-colors shrink-0"
           >
-            <Store className="w-4 h-4" />
-            <span>Kasa Paneline Dön</span>
+            <Store className="w-3.5 h-3.5" />
+            <span>Kasa Paneli</span>
           </Link>
 
           <Link
             href={`/restoran/${restaurantSlug}/mutfak`}
-            className="px-3.5 py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-xs font-bold text-amber-300 flex items-center gap-2 transition-colors"
+            className="px-3 py-1.5 sm:py-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-xs font-bold text-amber-300 flex items-center gap-1.5 transition-colors shrink-0"
           >
-            <ChefHat className="w-4 h-4" />
-            <span>Mutfak Ekranı</span>
+            <ChefHat className="w-3.5 h-3.5" />
+            <span>Mutfak</span>
           </Link>
         </div>
       </header>
 
       {/* Tabs Navigation */}
-      <div className="px-6 py-3 bg-white/[0.01] border-b border-white/5 flex items-center gap-2 overflow-x-auto sleek-scrollbar">
+      <div className="px-3 sm:px-6 py-2.5 bg-white/[0.01] border-b border-white/5 flex items-center gap-2 overflow-x-auto sleek-scrollbar">
         <button
           onClick={() => setActiveTab("MENU")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "MENU"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <UtensilsCrossed className="w-4 h-4" />
-          <span>Menü & Canlı Stok</span>
+          <UtensilsCrossed className="w-3.5 h-3.5" />
+          <span>Menü & Stok</span>
         </button>
 
         <button
           onClick={() => setActiveTab("RECIPES")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "RECIPES"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <Scale className="w-4 h-4" />
-          <span>Reçete, Maliyet & Kâr Analizi</span>
+          <Scale className="w-3.5 h-3.5" />
+          <span>Reçete & Maliyet</span>
         </button>
 
         <button
           onClick={() => setActiveTab("STAFF")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "STAFF"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <Users className="w-4 h-4" />
-          <span>Personel & Rol Yetkileri</span>
+          <Users className="w-3.5 h-3.5" />
+          <span>Personel & Yetki</span>
         </button>
 
         <button
           onClick={() => setActiveTab("COMPLAINTS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "COMPLAINTS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <MessageSquareWarning className="w-4 h-4" />
-          <span>Şikayet & Denetim Günlüğü</span>
+          <MessageSquareWarning className="w-3.5 h-3.5" />
+          <span>Şikayet Günlüğü</span>
           {managerAlerts.filter((a) => !a.isResolved).length > 0 && (
             <span className="px-1.5 py-0.2 rounded-full bg-red-500 text-white text-[9px] font-black animate-pulse">
               {managerAlerts.filter((a) => !a.isResolved).length}
@@ -192,55 +192,55 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
         <button
           onClick={() => setActiveTab("PLATFORMS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "PLATFORMS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <Layers className="w-4 h-4" />
-          <span>Yemek Platformları & E-Fatura Hub</span>
+          <Layers className="w-3.5 h-3.5" />
+          <span>Platform & E-Fatura</span>
         </button>
 
         <button
           onClick={() => setActiveTab("QR")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "QR"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <QrCode className="w-4 h-4" />
-          <span>Masa QR Kodları ({tables.length})</span>
+          <QrCode className="w-3.5 h-3.5" />
+          <span>Masa QR ({tables.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab("ANALYTICS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "ANALYTICS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <TrendingUp className="w-4 h-4" />
+          <TrendingUp className="w-3.5 h-3.5" />
           <span>Ciro & Z Raporu</span>
         </button>
 
         <button
           onClick={() => setActiveTab("SETTINGS")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             activeTab === "SETTINGS"
               ? "bg-accent text-black shadow-md shadow-accent/20"
               : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
           }`}
         >
-          <Sliders className="w-4 h-4" />
-          <span>Restoran & POS Ayarları</span>
+          <Sliders className="w-3.5 h-3.5" />
+          <span>Ayarlar</span>
         </button>
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+      <main className="flex-1 p-3 sm:p-6 overflow-y-auto max-w-7xl mx-auto w-full">
         {activeTab === "MENU" && (
           <MenuManager
             categories={categories}
@@ -281,9 +281,9 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         )}
 
         {activeTab === "SETTINGS" && (
-          <div className="max-w-2xl mx-auto space-y-6 bg-[#0c1212] border border-white/10 p-6 sm:p-8 rounded-3xl shadow-2xl">
+          <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6 bg-[#0c1212] border border-white/10 p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-2xl">
             <div>
-              <h3 className="text-lg font-extrabold text-white">Restoran Çalışma Modları & Güvenlik</h3>
+              <h3 className="text-base sm:text-lg font-extrabold text-white">Restoran Çalışma Modları & Güvenlik</h3>
               <p className="text-xs text-foreground/60 mt-1">
                 İşletme türünüze göre sipariş, ödeme ve güvenlik kurallarını özelleştirin.
               </p>
@@ -294,10 +294,10 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
               <label className="text-xs font-bold uppercase tracking-wider text-white block">
                 Sipariş İletim Modu
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div
                   onClick={() => setOrderMode("WAITER_CONFIRMATION")}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                  className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
                     orderMode === "WAITER_CONFIRMATION"
                       ? "bg-accent/15 border-accent text-white"
                       : "bg-white/[0.02] border-white/10 text-foreground/60"
@@ -311,7 +311,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
 
                 <div
                   onClick={() => setOrderMode("DIRECT_KITCHEN")}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                  className={`p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
                     orderMode === "DIRECT_KITCHEN"
                       ? "bg-accent/15 border-accent text-white"
                       : "bg-white/[0.02] border-white/10 text-foreground/60"
@@ -330,16 +330,16 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
               <label className="text-xs font-bold uppercase tracking-wider text-white block">
                 QR Oturum Zaman Aşımı (Güvenlik Koruması)
               </label>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3">
                 <input
                   type="number"
                   value={sessionTimeout}
                   onChange={(e) => setSessionTimeout(Number(e.target.value))}
                   min={5}
                   max={60}
-                  className="w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-accent"
+                  className="w-20 sm:w-24 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-accent"
                 />
-                <span className="text-xs text-foreground/60 font-medium">
+                <span className="text-[11px] sm:text-xs text-foreground/60 font-medium">
                   dakika sonra işlem yapılmazsa masadaki oturum düşer (Varsayılan: 15 Dk)
                 </span>
               </div>
