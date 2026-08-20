@@ -79,3 +79,68 @@
   background: rgba(0, 166, 166, 0.8);
 }
 
+/* Print optimization for thermal receipts and QR stands */
+@media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+  
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* Hide everything on the page by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Make ONLY the printable receipt or QR card visible */
+  #printable-z-report,
+  #printable-z-report *,
+  #printable-table-card,
+  #printable-table-card * {
+    visibility: visible !important;
+  }
+
+  /* Thermal Receipt: centered 80mm roll, 0 margin, no modal backdrop or buttons */
+  #printable-z-report {
+    position: absolute !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 80mm !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 6mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Acrylic Table Card Stand: clean centered print */
+  #printable-table-card {
+    position: absolute !important;
+    top: 10mm !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90mm !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 6mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    border-radius: 16px !important;
+    page-break-inside: avoid !important;
+  }
+}
+

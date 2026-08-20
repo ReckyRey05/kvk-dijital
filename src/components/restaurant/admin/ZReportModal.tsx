@@ -17,13 +17,13 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in print:bg-transparent print:p-0 print:backdrop-blur-none">
       <div
-        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-[2rem] p-6 space-y-6 shadow-2xl animate-fade-in-up"
+        className="w-full max-w-md bg-[#0a0f0f] border border-white/10 rounded-[2rem] p-6 space-y-6 shadow-2xl animate-fade-in-up print:border-none print:shadow-none print:p-0 print:bg-transparent"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10 print:hidden">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-accent text-black flex items-center justify-center font-extrabold">
               <Receipt className="w-5 h-5" />
@@ -117,7 +117,7 @@ export default function ZReportModal({ isOpen, onClose, report }: ZReportModalPr
         </div>
 
         {/* Footer Actions */}
-        <div className="grid grid-cols-2 gap-3 pt-1">
+        <div className="grid grid-cols-2 gap-3 pt-1 print:hidden">
           <button
             onClick={handlePrint}
             className="py-3.5 rounded-xl bg-accent text-black font-extrabold text-xs flex items-center justify-center gap-2 hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
