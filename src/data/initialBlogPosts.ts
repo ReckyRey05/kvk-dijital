@@ -116,6 +116,14 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
   <li><strong>Özel Entegrasyon & Geliştirme:</strong> İşletmenize özel bir vale takip sistemi, mevcut muhasebe/ERP yazılımı veya özel sadakat kurgusu varsa <strong>KvK Dijital Çözümler</strong> mühendislik kadrosu tarafından dükkanınıza özel kodlanır.</li>
 </ul>
 
+<h2>14. Rol Tabanlı Yetkilendirme & Hızlı PIN Girişi (Garson, Mutfak ve Boss İzolasyonu)</h2>
+<p>Kendi web siteniz altında (Örn: <code>restoraniniz.com/kasa</code> veya <code>pos.restoraniniz.com</code>) çalışan sistemde personel yetkileri kesin çizgilerle birbirinden ayrılmıştır:</p>
+<ul>
+  <li><strong>Garson & Kasiyer Girişi (4 Haneli Hızlı PIN):</strong> Garsonlar serviste vakit kaybetmemek için kendilerine özel 4 haneli PIN kodlarıyla saniyede oturum açar. Yalnızca sipariş alma, masa taşıma ve hesap kapatma yetkileri bulunur. Fiyat değiştiremez, reçete maliyetlerini ve toplam ciroyu göremez, müşteri şikayetlerini <strong>kesinlikle silemezler</strong>.</li>
+  <li><strong>Mutfak (KDS) Girişi:</strong> Aşçılar ve baristalar yalnızca kendi istasyonlarına düşen siparişleri, süre sayaçlarını ve fire giriş ekranını görür; kasa işlemlerine erişemez.</li>
+  <li><strong>Patron / Müdür Paneli (Full Super Admin):**</strong> İşletme sahibi şifreli ana yönetici hesabıyla dilediği yerden (cep telefonu dahil) anlık ciroyu, Z-raporlarını, personel performans dökümlerini, hammadde maliyetlerini ve silinemeyen patron şikayet günlüğünü tam yetkiyle yönetir.</li>
+</ul>
+
 <div class="my-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-accent/20 via-emerald-500/10 to-transparent border border-accent/40 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
   <div class="space-y-1 text-center sm:text-left">
     <h4 class="text-lg font-black text-accent tracking-tight">Canlı Demoyu Hemen Kendi Ekranınızda Test Edin</h4>
@@ -134,6 +142,10 @@ export const initialBlogPosts: ExtendedBlogPost[] = [
       {
         question: "Müşterilerin cep telefonuna herhangi bir uygulama indirmesi gerekir mi?",
         answer: "Kesinlikle hayır. Müşteriler masadaki akrilik QR kodu telefonlarının standart kamera uygulamasıyla okuttuğunda menü 1 saniyenin altında doğrudan Safari veya Chrome tarayıcısında açılır."
+      },
+      {
+        question: "Sisteme nasıl giriş yapılır? Garsonların ve patronun yetkileri ayrı mıdır?",
+        answer: "Evet. Sisteme kendi web siteniz altından güvenli linkle girilir. Garsonlar 4 haneli hızlı PIN koduyla giriş yaparak sadece sipariş ve tahsilat ekranını görür; ciro, maliyet ve şikayetleri göremez veya silemez. Restoran sahibi (Boss) ise şifreli ana panelle fiyat, ciro, Z-raporu, reçete ve silinemeyen şikayet günlüğüne tam yetkilidir."
       },
       {
         question: "Sistemi kendi restoranımızın kurumsal kimliğine ve özel isteklerimize göre özelleştirebilir miyiz?",
