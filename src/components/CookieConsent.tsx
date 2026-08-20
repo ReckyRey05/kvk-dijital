@@ -1,12 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Cookie, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CookieConsent() {
+  const pathname = usePathname();
   const [showConsent, setShowConsent] = useState(false);
+
+  if (
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/restoran") ||
+    pathname?.startsWith("/qr")
+  ) {
+    return null;
+  }
 
   useEffect(() => {
     // Component yüklendiğinde localStorage'ı kontrol et

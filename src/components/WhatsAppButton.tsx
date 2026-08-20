@@ -6,8 +6,12 @@ import { MessageSquare } from "lucide-react";
 export default function WhatsAppButton() {
   const pathname = usePathname();
 
-  // Hide on admin panel routes to prevent clutter
-  if (pathname?.startsWith("/admin")) {
+  // Hide on admin panel, restaurant pos, and qr menu routes
+  if (
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/restoran") ||
+    pathname?.startsWith("/qr")
+  ) {
     return null;
   }
 
