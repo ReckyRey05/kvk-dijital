@@ -167,36 +167,54 @@ export async function POST(req: Request) {
           const exists = currentList.find((p) => p.id === participant.id);
           const groupSettings = state.tableGroupSettings[tableId];
 
-          if (!exists) {
-            const isLeader = !existingLeader;
-            const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
-            const guestCount = currentList.filter((p) => !p.isHost).length + 1;
-
-            const finalName = isLeader
-              ? (participant.name && participant.name !== "Misafir" ? participant.name : "Masa Reisi")
-              : (participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : `Misafir ${guestCount}`);
-
-            const newP: TableParticipant = {
+          if (!existingLeader) {
+            // NO LEADER ON THIS TABLE: This participant is guaranteed to be the Leader!
+            const leaderP: TableParticipant = {
               id: participant.id,
-              name: finalName,
-              isHost: isLeader,
-              status: isLeader ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+              name: participant.name && !participant.name.startsWith("Misafir") ? participant.name : "Masa Reisi",
+              isHost: true,
+              status: "APPROVED",
               joinedAt: participant.joinedAt || new Date().toISOString(),
             };
-            state.tableParticipants[tableId] = [...currentList, newP];
-          } else {
-            // If already registered on this table, sync status & leader role properly
-            const isLeader = existingLeader ? existingLeader.id === participant.id : true;
+            state.tableParticipants[tableId] = [
+              leaderP,
+              ...currentList.filter((p) => p.id !== participant.id),
+            ];
+          } else if (existingLeader.id === participant.id) {
+            // This participant is already the confirmed leader
             state.tableParticipants[tableId] = currentList.map((p) =>
               p.id === participant.id
-                ? {
-                    ...p,
-                    isHost: isLeader,
-                    name: participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : p.name,
-                    status: isLeader ? "APPROVED" : p.status || "PENDING_APPROVAL",
-                  }
+                ? { ...p, isHost: true, status: "APPROVED" }
                 : p
             );
+          } else {
+            // A leader already exists on this table -> This participant is a Guest
+            const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
+            const guestCount = currentList.filter((p) => !p.isHost && p.id !== participant.id).length + 1;
+            const guestName = participant.name && !participant.name.startsWith("Masa Reisi")
+              ? participant.name
+              : `Misafir ${guestCount + 1}`;
+
+            if (!exists) {
+              const newGuest: TableParticipant = {
+                id: participant.id,
+                name: guestName,
+                isHost: false,
+                status: isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+                joinedAt: participant.joinedAt || new Date().toISOString(),
+              };
+              state.tableParticipants[tableId] = [...currentList, newGuest];
+            } else {
+              state.tableParticipants[tableId] = currentList.map((p) =>
+                p.id === participant.id
+                  ? {
+                      ...p,
+                      isHost: false,
+                      status: p.status || (isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL"),
+                    }
+                  : p
+              );
+            }
           }
         }
         break;

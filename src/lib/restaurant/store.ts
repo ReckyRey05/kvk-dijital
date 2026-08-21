@@ -781,44 +781,69 @@ export function useRestaurantStore() {
       const existingLeader = current.find((p) => p.isHost);
       const exists = current.find((p) => p.id === participant.id);
 
-      if (!exists) {
-        const isLeader = !existingLeader;
-        const guestCount = current.filter((p) => !p.isHost).length + 1;
-        const finalName = isLeader
-          ? (participant.name && participant.name !== "Misafir" ? participant.name : "Masa Reisi")
-          : (participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : `Misafir ${guestCount}`);
-
-        const newPart: TableParticipant = {
+      if (!existingLeader) {
+        // No leader on this table: Guaranteed Leader!
+        const leaderPart: TableParticipant = {
           id: participant.id,
-          name: finalName,
-          isHost: isLeader,
-          status: isLeader ? "APPROVED" : "PENDING_APPROVAL",
+          name: participant.name && !participant.name.startsWith("Misafir") ? participant.name : "Masa Reisi",
+          isHost: true,
+          status: "APPROVED",
           joinedAt: participant.joinedAt || new Date().toISOString(),
         };
         globalTableParticipants = {
           ...globalTableParticipants,
-          [tableId]: [...current, newPart],
+          [tableId]: [leaderPart, ...current.filter((p) => p.id !== participant.id)],
         };
         notifyAll();
-        syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: newPart });
-        return newPart;
+        syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: leaderPart });
+        return leaderPart;
       }
 
-      // Existing participant: ensure isHost matches the true table leader
-      const isLeader = existingLeader ? existingLeader.id === participant.id : true;
-      const syncedPart: TableParticipant = {
-        ...exists,
-        isHost: isLeader,
-        name: participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : exists.name,
+      if (existingLeader.id === participant.id) {
+        // Confirmed leader
+        const syncedLeader: TableParticipant = {
+          ...participant,
+          isHost: true,
+          status: "APPROVED",
+        };
+        globalTableParticipants = {
+          ...globalTableParticipants,
+          [tableId]: current.map((p) => (p.id === participant.id ? syncedLeader : p)),
+        };
+        notifyAll();
+        syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: syncedLeader });
+        return syncedLeader;
+      }
+
+      // Guest
+      const guestCount = current.filter((p) => !p.isHost && p.id !== participant.id).length + 1;
+      const guestName = participant.name && !participant.name.startsWith("Masa Reisi")
+        ? participant.name
+        : `Misafir ${guestCount + 1}`;
+
+      const syncedGuest: TableParticipant = {
+        id: participant.id,
+        name: guestName,
+        isHost: false,
+        status: exists?.status || "PENDING_APPROVAL",
+        joinedAt: exists?.joinedAt || participant.joinedAt || new Date().toISOString(),
       };
 
-      globalTableParticipants = {
-        ...globalTableParticipants,
-        [tableId]: current.map((p) => (p.id === participant.id ? syncedPart : p)),
-      };
+      if (!exists) {
+        globalTableParticipants = {
+          ...globalTableParticipants,
+          [tableId]: [...current, syncedGuest],
+        };
+      } else {
+        globalTableParticipants = {
+          ...globalTableParticipants,
+          [tableId]: current.map((p) => (p.id === participant.id ? syncedGuest : p)),
+        };
+      }
+
       notifyAll();
-      syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: syncedPart });
-      return syncedPart;
+      syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: syncedGuest });
+      return syncedGuest;
     },
 
     transferHostRole: (tableId: string, targetParticipantId: string) => {

@@ -138,7 +138,12 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         const liveP = existingList.find((p) => p.id === participant.id);
         if (liveP) {
           participant = liveP;
-        } else if (existingLeader && existingLeader.id !== participant.id) {
+        } else if (!existingLeader) {
+          // No leader exists on this table: This phone is guaranteed to be the Leader!
+          participant.isHost = true;
+          participant.status = "APPROVED";
+          participant.name = participant.name && !participant.name.startsWith("Misafir") ? participant.name : "Masa Reisi";
+        } else if (existingLeader.id !== participant.id) {
           participant.isHost = false;
           if (participant.name === "Masa Reisi") {
             participant.name = `Misafir ${existingList.filter((p) => !p.isHost).length + 1}`;
@@ -170,6 +175,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     }
 
     const registered = registerParticipant(tableId, participant);
+    localStorage.setItem(storageKey, JSON.stringify(registered));
     setCurrentParticipant(registered);
   }, [tableId, tableParticipants]);
 
@@ -701,6 +707,18 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
               <div className="bg-accent h-full w-full animate-pulse" />
             </div>
+
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem(`cg_participant_${tableId}`);
+                  window.location.reload();
+                }
+              }}
+              className="text-[11px] text-foreground/40 hover:text-white underline pt-2 block mx-auto cursor-pointer"
+            >
+              Masa Oturumunu Sıfırla
+            </button>
           </div>
         </div>
       )}
