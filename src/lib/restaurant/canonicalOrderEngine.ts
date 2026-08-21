@@ -75,7 +75,9 @@ export const defaultCanonicalDataSource: CanonicalRestaurantDataSource = {
       (t) =>
         (t.id.toLowerCase() === normalizedTableId ||
           t.tableNumber.toLowerCase() === normalizedTableId ||
-          t.tableNumber.toLowerCase() === `masa ${normalizedTableId.replace(/[^0-9]/g, "")}`) &&
+          (normalizedTableId.startsWith("m-") &&
+            !isNaN(Number(normalizedTableId.slice(2))) &&
+            t.tableNumber.toLowerCase() === `masa ${normalizedTableId.slice(2)}`)) &&
         t.restaurantId === DEMO_RESTAURANT.id
     );
 
