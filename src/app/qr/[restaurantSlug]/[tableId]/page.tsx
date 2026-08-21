@@ -48,6 +48,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     tableGroupSettings,
     configureGroupDining,
     approveParticipant,
+    resetTableParticipants,
     addToSharedCart,
     updateSharedCartQuantity,
     removeFromSharedCart,
@@ -177,7 +178,16 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     const registered = registerParticipant(tableId, participant);
     localStorage.setItem(storageKey, JSON.stringify(registered));
     setCurrentParticipant(registered);
-  }, [tableId, tableParticipants]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableId]);
+
+  const handleResetSession = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(`cg_participant_${tableId}`);
+      resetTableParticipants(tableId);
+      window.location.reload();
+    }
+  };
 
   // Keep local participant in sync when host role or approval status changes
   useEffect(() => {
@@ -390,7 +400,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenComplaint={() => setIsComplaintOpen(true)}
         tableBillTotal={currentTable.activeBillTotal}
         currentParticipant={currentParticipant}
-        participantCount={participants.length || 1}
+        participantCount={participants.filter((p) => p.status === "APPROVED").length || 1}
         onUpdateName={handleUpdateName}
       />
 
@@ -709,12 +719,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             </div>
 
             <button
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem(`cg_participant_${tableId}`);
-                  window.location.reload();
-                }
-              }}
+              onClick={handleResetSession}
               className="text-[11px] text-foreground/40 hover:text-white underline pt-2 block mx-auto cursor-pointer"
             >
               Masa Oturumunu Sıfırla
@@ -739,12 +744,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             </div>
 
             <button
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem(`cg_participant_${tableId}`);
-                  window.location.reload();
-                }
-              }}
+              onClick={handleResetSession}
               className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors cursor-pointer"
             >
               Yeniden Dene

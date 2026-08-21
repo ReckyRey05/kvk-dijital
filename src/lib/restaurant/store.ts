@@ -894,6 +894,17 @@ export function useRestaurantStore() {
       syncWithServer("APPROVE_PARTICIPANT", { tableId, participantId, approved });
     },
 
+    resetTableParticipants: (tableId: string) => {
+      const { [tableId]: _, ...remainingParticipants } = globalTableParticipants;
+      const { [tableId]: __, ...remainingSettings } = globalTableGroupSettings;
+      const { [tableId]: ___, ...remainingCarts } = globalSharedCarts;
+      globalTableParticipants = remainingParticipants;
+      globalTableGroupSettings = remainingSettings;
+      globalSharedCarts = remainingCarts;
+      notifyAll();
+      syncWithServer("RESET_TABLE_PARTICIPANTS", { tableId });
+    },
+
     resetAllTables: () => {
       globalTables = globalTables.map((t) => ({
         ...t,

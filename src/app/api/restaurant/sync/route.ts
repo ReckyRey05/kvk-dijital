@@ -91,7 +91,7 @@ async function saveLiveState(state: LiveRestaurantState): Promise<void> {
   globalForRestaurant._restaurantLiveState = state;
   try {
     const db = getAdminDb();
-    await db.doc("restaurants/rest_aura_bistro/liveSync/state").set(state, { merge: true });
+    await db.doc("restaurants/rest_aura_bistro/liveSync/state").set(state);
   } catch {
     // Admin SDK missing or offline -> in-memory preserved
   }
@@ -470,6 +470,16 @@ export async function POST(req: Request) {
             }
             return t;
           });
+        }
+        break;
+      }
+
+      case "RESET_TABLE_PARTICIPANTS": {
+        const { tableId } = payload || {};
+        if (tableId) {
+          delete state.tableParticipants[tableId];
+          state.sharedCarts[tableId] = [];
+          delete state.tableGroupSettings[tableId];
         }
         break;
       }
