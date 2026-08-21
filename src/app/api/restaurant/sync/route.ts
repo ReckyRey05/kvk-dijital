@@ -8,8 +8,6 @@ import {
   ManagerAlert,
   CustomerVoucher,
   SongRequest,
-  TableParticipant,
-  OrderItem,
 } from "@/types/restaurant";
 import {
   DEMO_RESTAURANT,
@@ -19,8 +17,8 @@ import {
 } from "@/lib/restaurant/mockData";
 import { parseJsonWithByteLimit } from "@/lib/security/rateLimit";
 import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
+import { getAdminDb } from "@/lib/firebase/admin";
 
-// Server-Authoritative Live State across all physical devices & clients
 interface LiveRestaurantState {
   version: number;
   lastUpdated: number;
@@ -76,34 +74,58 @@ const INITIAL_SERVER_STATE: LiveRestaurantState = {
   tableTransfers: {},
 };
 
-// Global singleton state in Node.js server instance
-let serverState: LiveRestaurantState = { ...INITIAL_SERVER_STATE };
+// Global fallback memory state (for local dev / server instances)
+const globalForRestaurant = globalThis as unknown as {
+  _restaurantLiveState?: LiveRestaurantState;
+};
 
-export async function GET(req: Request) {
+if (!globalForRestaurant._restaurantLiveState) {
+  globalForRestaurant._restaurantLiveState = { ...INITIAL_SERVER_STATE };
+}
+
+async function getLiveState(): Promise<LiveRestaurantState> {
   try {
-    const { searchParams } = new URL(req.url);
-    const clientVersion = parseInt(searchParams.get("version") || "0", 10);
-
-    // If client is already up to date, return 304 or light payload
-    if (clientVersion === serverState.version) {
-      return NextResponse.json({
-        upToDate: true,
-        version: serverState.version,
-      });
+    const db = getAdminDb();
+    const snap = await db.doc("restaurants/rest_aura_bistro/liveSync/state").get();
+    if (snap.exists) {
+      const data = snap.data() as LiveRestaurantState;
+      if (data && data.orders) {
+        globalForRestaurant._restaurantLiveState = data;
+        return data;
+      }
     }
+  } catch {
+    // Admin SDK missing or offline -> use in-memory global
+  }
+  return globalForRestaurant._restaurantLiveState || INITIAL_SERVER_STATE;
+}
+
+async function saveLiveState(state: LiveRestaurantState): Promise<void> {
+  globalForRestaurant._restaurantLiveState = state;
+  try {
+    const db = getAdminDb();
+    await db.doc("restaurants/rest_aura_bistro/liveSync/state").set(state, { merge: true });
+  } catch {
+    // Admin SDK missing or offline -> in-memory preserved
+  }
+}
+
+export async function GET() {
+  try {
+    const state = await getLiveState();
 
     return NextResponse.json({
-      upToDate: false,
-      version: serverState.version,
-      lastUpdated: serverState.lastUpdated,
-      orders: serverState.orders,
-      tables: serverState.tables,
-      waiterCalls: serverState.waiterCalls,
-      managerAlerts: serverState.managerAlerts,
-      vouchers: serverState.vouchers,
-      songs: serverState.songs,
-      menuItems: serverState.menuItems,
-      tableTransfers: serverState.tableTransfers,
+      success: true,
+      version: state.version,
+      lastUpdated: state.lastUpdated,
+      orders: state.orders,
+      tables: state.tables,
+      waiterCalls: state.waiterCalls,
+      managerAlerts: state.managerAlerts,
+      vouchers: state.vouchers,
+      songs: state.songs,
+      menuItems: state.menuItems,
+      tableTransfers: state.tableTransfers,
     });
   } catch (error) {
     return createSecureServerErrorResponse("RestaurantSyncGET", error);
@@ -118,23 +140,22 @@ export async function POST(req: Request) {
     const body = parseResult.data || {};
     const { action, payload } = body;
 
-    serverState.version += 1;
-    serverState.lastUpdated = Date.now();
+    const state = await getLiveState();
+    state.version = (state.version || 0) + 1;
+    state.lastUpdated = Date.now();
 
     switch (action) {
       case "CREATE_ORDER": {
-        const newOrder: Order = payload.order;
+        const newOrder: Order = payload?.order;
         if (newOrder) {
-          // Check if already exists to prevent duplicates
-          const existingIdx = serverState.orders.findIndex((o) => o.id === newOrder.id);
+          const existingIdx = state.orders.findIndex((o) => o.id === newOrder.id);
           if (existingIdx >= 0) {
-            serverState.orders[existingIdx] = newOrder;
+            state.orders[existingIdx] = newOrder;
           } else {
-            serverState.orders = [newOrder, ...serverState.orders];
+            state.orders = [newOrder, ...state.orders];
           }
 
-          // Update table status
-          serverState.tables = serverState.tables.map((t) =>
+          state.tables = state.tables.map((t) =>
             t.id === newOrder.tableId
               ? {
                   ...t,
@@ -150,30 +171,36 @@ export async function POST(req: Request) {
       }
 
       case "CONFIRM_ORDER": {
-        const { orderId } = payload;
-        serverState.orders = serverState.orders.map((ord) =>
+        const { orderId } = payload || {};
+        state.orders = state.orders.map((ord) =>
           ord.id === orderId
-            ? { ...ord, status: "PREPARING", updatedAt: new Date().toISOString() }
+            ? { ...ord, status: "PREPARING", confirmedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
             : ord
         );
         break;
       }
 
       case "UPDATE_ORDER_STATUS": {
-        const { orderId, status } = payload;
-        serverState.orders = serverState.orders.map((ord) =>
+        const { orderId, status } = payload || {};
+        state.orders = state.orders.map((ord) =>
           ord.id === orderId
-            ? { ...ord, status, updatedAt: new Date().toISOString() }
+            ? {
+                ...ord,
+                status,
+                readyAt: status === "READY" ? new Date().toISOString() : ord.readyAt,
+                servedAt: status === "SERVED" ? new Date().toISOString() : ord.servedAt,
+                updatedAt: new Date().toISOString(),
+              }
             : ord
         );
         break;
       }
 
       case "CALL_WAITER": {
-        const newCall: WaiterCall = payload.call;
+        const newCall: WaiterCall = payload?.call;
         if (newCall) {
-          serverState.waiterCalls = [newCall, ...serverState.waiterCalls];
-          serverState.tables = serverState.tables.map((t) =>
+          state.waiterCalls = [newCall, ...state.waiterCalls.filter((c) => c.tableId !== newCall.tableId || c.status !== "ACTIVE")];
+          state.tables = state.tables.map((t) =>
             t.id === newCall.tableId
               ? {
                   ...t,
@@ -188,13 +215,13 @@ export async function POST(req: Request) {
       }
 
       case "RESOLVE_CALL": {
-        const { callId } = payload;
-        const call = serverState.waiterCalls.find((c) => c.id === callId);
-        serverState.waiterCalls = serverState.waiterCalls.map((c) =>
+        const { callId } = payload || {};
+        const call = state.waiterCalls.find((c) => c.id === callId);
+        state.waiterCalls = state.waiterCalls.map((c) =>
           c.id === callId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
         );
         if (call) {
-          serverState.tables = serverState.tables.map((t) =>
+          state.tables = state.tables.map((t) =>
             t.id === call.tableId
               ? { ...t, status: t.activeBillTotal > 0 ? "OCCUPIED" : "EMPTY" }
               : t
@@ -204,13 +231,13 @@ export async function POST(req: Request) {
       }
 
       case "CLOSE_TABLE_BILL": {
-        const { tableId } = payload;
-        serverState.orders = serverState.orders.map((ord) =>
+        const { tableId } = payload || {};
+        state.orders = state.orders.map((ord) =>
           ord.tableId === tableId && ord.status !== "CANCELLED"
             ? { ...ord, status: "COMPLETED", paymentStatus: "PAID_CASHIER", completedAt: new Date().toISOString() }
             : ord
         );
-        serverState.tables = serverState.tables.map((t) =>
+        state.tables = state.tables.map((t) =>
           t.id === tableId
             ? {
                 ...t,
@@ -223,34 +250,37 @@ export async function POST(req: Request) {
               }
             : t
         );
-        serverState.waiterCalls = serverState.waiterCalls.map((c) =>
+        state.waiterCalls = state.waiterCalls.map((c) =>
           c.tableId === tableId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
         );
-        delete serverState.tableTransfers[tableId];
+        if (state.tableTransfers) {
+          delete state.tableTransfers[tableId];
+        }
         break;
       }
 
       case "TRANSFER_TABLE": {
-        const { fromTableId, toTableId } = payload;
-        const fromTable = serverState.tables.find((t) => t.id === fromTableId);
-        const toTable = serverState.tables.find((t) => t.id === toTableId);
+        const { fromTableId, toTableId } = payload || {};
+        const fromTable = state.tables.find((t) => t.id === fromTableId);
+        const toTable = state.tables.find((t) => t.id === toTableId);
         if (fromTable && toTable) {
-          serverState.orders = serverState.orders.map((ord) =>
+          state.orders = state.orders.map((ord) =>
             ord.tableId === fromTableId && ord.status !== "COMPLETED" && ord.status !== "CANCELLED"
               ? { ...ord, tableId: toTableId, tableNumber: toTable.tableNumber }
               : ord
           );
-          serverState.waiterCalls = serverState.waiterCalls.map((c) =>
+          state.waiterCalls = state.waiterCalls.map((c) =>
             c.tableId === fromTableId && c.status === "ACTIVE"
               ? { ...c, tableId: toTableId, tableNumber: toTable.tableNumber }
               : c
           );
-          serverState.tableTransfers[fromTableId] = {
+          state.tableTransfers = state.tableTransfers || {};
+          state.tableTransfers[fromTableId] = {
             toTableId,
             toTableNumber: toTable.tableNumber,
             timestamp: Date.now(),
           };
-          serverState.tables = serverState.tables.map((t) => {
+          state.tables = state.tables.map((t) => {
             if (t.id === toTableId) {
               return {
                 ...t,
@@ -276,8 +306,10 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "RESET_DEMO": {
-        serverState = { ...INITIAL_SERVER_STATE, version: serverState.version + 1, lastUpdated: Date.now() };
+      case "FULL_STATE_OVERWRITE": {
+        if (payload?.state) {
+          Object.assign(state, payload.state);
+        }
         break;
       }
 
@@ -285,14 +317,16 @@ export async function POST(req: Request) {
         break;
     }
 
+    await saveLiveState(state);
+
     return NextResponse.json({
       success: true,
-      version: serverState.version,
-      lastUpdated: serverState.lastUpdated,
-      orders: serverState.orders,
-      tables: serverState.tables,
-      waiterCalls: serverState.waiterCalls,
-      managerAlerts: serverState.managerAlerts,
+      version: state.version,
+      lastUpdated: state.lastUpdated,
+      orders: state.orders,
+      tables: state.tables,
+      waiterCalls: state.waiterCalls,
+      managerAlerts: state.managerAlerts,
     });
   } catch (error) {
     return createSecureServerErrorResponse("RestaurantSyncPOST", error);

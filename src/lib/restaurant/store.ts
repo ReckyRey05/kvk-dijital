@@ -341,6 +341,7 @@ async function syncWithServer(action: string, payload?: any) {
     const res = await fetch("/api/restaurant/sync", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      cache: "no-store",
       body: JSON.stringify({ action, payload }),
     });
     if (res.ok) {
@@ -451,10 +452,13 @@ export function useRestaurantStore() {
     // Real-time live server polling for multi-device sync (Phone 1 -> PC -> Phone 2)
     const pollServer = async () => {
       try {
-        const res = await fetch(`/api/restaurant/sync?version=${lastKnownServerVersion}`);
+        const res = await fetch(`/api/restaurant/sync?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { Pragma: "no-cache" },
+        });
         if (res.ok) {
           const data = await res.json();
-          if (!data.upToDate && data.version > lastKnownServerVersion) {
+          if (data && data.version && data.version !== lastKnownServerVersion) {
             const prevOrderCount = globalOrders.length;
             const prevCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
             const prevAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -488,7 +492,7 @@ export function useRestaurantStore() {
     };
 
     pollServer();
-    const serverSyncInterval = setInterval(pollServer, 1500);
+    const serverSyncInterval = setInterval(pollServer, 1000);
 
     // Periodic check for expired discounts
     const checkExpirations = () => {
