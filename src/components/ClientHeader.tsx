@@ -6,8 +6,9 @@ import Header from "./Header";
 export default function ClientHeader() {
   const pathname = usePathname();
 
-  // Admin, Yapım Aşamasında, Konsept Demo, QR Menü ve Restoran POS rotalarında ana site Header'ını gizle
+  // Bakım modunda veya özel rotalarda Header'ı gizle
   if (
+    pathname === "/" ||
     pathname?.startsWith("/admin") ||
     pathname === "/yakinda-buradayiz" ||
     pathname?.endsWith("-demo") ||
