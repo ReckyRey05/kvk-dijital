@@ -583,12 +583,12 @@ export const DEMO_MENU_ITEMS: MenuItem[] = [
 
 export const DEMO_TABLES: Table[] = [
   { id: "m-1", restaurantId: "rest_aura_bistro", tableNumber: "Masa 1", section: "İç Mekan", capacity: 2, status: "EMPTY", activeBillTotal: 0 },
-  { id: "m-2", restaurantId: "rest_aura_bistro", tableNumber: "Masa 2", section: "İç Mekan", capacity: 4, status: "OCCUPIED", activeBillTotal: 745, lastOrderTime: "12 dk önce" },
+  { id: "m-2", restaurantId: "rest_aura_bistro", tableNumber: "Masa 2", section: "İç Mekan", capacity: 4, status: "EMPTY", activeBillTotal: 0 },
   { id: "m-3", restaurantId: "rest_aura_bistro", tableNumber: "Masa 3", section: "İç Mekan", capacity: 4, status: "EMPTY", activeBillTotal: 0 },
-  { id: "m-4", restaurantId: "rest_aura_bistro", tableNumber: "Masa 4", section: "Teras VIP", capacity: 6, status: "WAITER_CALLED", activeBillTotal: 1540, lastCallType: "WAITER", lastCallTime: "2 dk önce" },
-  { id: "m-5", restaurantId: "rest_aura_bistro", tableNumber: "Masa 5", section: "Teras", capacity: 2, status: "BILL_REQUESTED", activeBillTotal: 680, lastCallType: "BILL_CARD", lastCallTime: "1 dk önce" },
+  { id: "m-4", restaurantId: "rest_aura_bistro", tableNumber: "Masa 4", section: "Teras VIP", capacity: 6, status: "EMPTY", activeBillTotal: 0 },
+  { id: "m-5", restaurantId: "rest_aura_bistro", tableNumber: "Masa 5", section: "Teras", capacity: 2, status: "EMPTY", activeBillTotal: 0 },
   { id: "m-6", restaurantId: "rest_aura_bistro", tableNumber: "Masa 6", section: "Bahçe", capacity: 4, status: "EMPTY", activeBillTotal: 0 },
-  { id: "m-7", restaurantId: "rest_aura_bistro", tableNumber: "Masa 7", section: "Bahçe", capacity: 8, status: "OCCUPIED", activeBillTotal: 2480, lastOrderTime: "25 dk önce" },
+  { id: "m-7", restaurantId: "rest_aura_bistro", tableNumber: "Masa 7", section: "Bahçe", capacity: 8, status: "EMPTY", activeBillTotal: 0 },
   { id: "m-8", restaurantId: "rest_aura_bistro", tableNumber: "Masa 8", section: "VIP Lounge", capacity: 10, status: "EMPTY", activeBillTotal: 0 },
 ];
 

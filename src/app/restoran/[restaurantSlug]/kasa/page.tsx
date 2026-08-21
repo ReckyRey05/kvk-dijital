@@ -52,6 +52,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     resolveManagerAlert,
     closeTableBill,
     transferTable,
+    resetAllTables,
   } = useRestaurantStore();
 
   const [kasaTab, setKasaTab] = useState<"TABLES" | "DELIVERY">("TABLES");
@@ -152,6 +153,19 @@ export default function KasaPosPage({ params }: KasaPageProps) {
           >
             <Receipt className="w-4 h-4" />
             <span>Z-Raporu Al</span>
+          </button>
+
+          <button
+            onClick={() => {
+              if (window.confirm("Tüm masaları boşaltmak, açık adisyonları ve siparişleri sıfırlamak istiyor musunuz?")) {
+                resetAllTables();
+              }
+            }}
+            className="px-3 py-1.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-xs font-bold text-red-300 flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+            title="Tüm masaları ve adisyonları temizle"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Tüm Masaları Sıfırla</span>
           </button>
 
           <Link

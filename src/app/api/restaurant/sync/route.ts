@@ -42,34 +42,7 @@ interface LiveRestaurantState {
 const INITIAL_SERVER_STATE: LiveRestaurantState = {
   version: 1,
   lastUpdated: Date.now(),
-  orders: [
-    {
-      id: "ord_101",
-      restaurantId: "rest_aura_bistro",
-      tableId: "m-2",
-      tableNumber: "Masa 2",
-      sessionToken: "sess_demo_101",
-      status: "PREPARING",
-      items: [
-        {
-          id: "item_ord_1",
-          menuItemId: "item_truffle_burger",
-          name: "Trüflü Gurme Dana Burger (180g)",
-          basePrice: 360,
-          finalPrice: 360,
-          quantity: 2,
-        },
-      ],
-      subtotal: 720,
-      taxAmount: 72,
-      serviceCharge: 0,
-      totalAmount: 792,
-      paymentStatus: "PENDING",
-      paymentMethod: "CREDIT_CARD",
-      createdAt: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
-      updatedAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-    },
-  ],
+  orders: [],
   tables: [...DEMO_TABLES],
   waiterCalls: [],
   managerAlerts: [],
@@ -463,6 +436,26 @@ export async function POST(req: Request) {
             return t;
           });
         }
+        break;
+      }
+
+      case "RESET_ALL_TABLES": {
+        state.tables = state.tables.map((t) => ({
+          ...t,
+          status: "EMPTY",
+          activeOrderId: undefined,
+          activeBillTotal: 0,
+          lastOrderTime: undefined,
+          lastCallTime: undefined,
+          lastCallType: undefined,
+        }));
+        state.orders = [];
+        state.waiterCalls = [];
+        state.managerAlerts = [];
+        state.sharedCarts = {};
+        state.tableParticipants = {};
+        state.tableGroupSettings = {};
+        state.tableTransfers = {};
         break;
       }
 

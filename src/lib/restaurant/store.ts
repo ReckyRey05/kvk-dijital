@@ -43,119 +43,9 @@ import {
 import { playOrderAlertSound, playWaiterCallSound } from "./audio";
 import { censorProfanity } from "./profanityFilter";
 
-// Initial Demo Active Orders
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: "ord_101",
-    restaurantId: "rest_aura_bistro",
-    tableId: "m-2",
-    tableNumber: "Masa 2",
-    sessionToken: "sess_demo_101",
-    status: "PREPARING",
-    items: [
-      {
-        id: "item_ord_1",
-        menuItemId: "item_truffle_burger",
-        name: "Trüflü Gurme Dana Burger (180g)",
-        basePrice: 340,
-        finalPrice: 400,
-        quantity: 2,
-        selectedOptions: [
-          {
-            groupId: "opt_burger_doneness",
-            groupTitle: "Köfte Pişme Derecesi",
-            selectedItems: [{ id: "doneness_med", name: "Orta (Medium)", priceDelta: 0 }],
-          },
-          {
-            groupId: "opt_burger_extras",
-            groupTitle: "Ekstra Lezzetler",
-            selectedItems: [{ id: "extra_bacon", name: "Çıtır Dana Füme", priceDelta: 60 }],
-          },
-        ],
-        itemNotes: "Lütfen patatesler ekstra çıtır olsun.",
-      },
-    ],
-    subtotal: 800,
-    taxAmount: 80,
-    serviceCharge: 0,
-    totalAmount: 800,
-    paymentStatus: "PENDING",
-    paymentMethod: "CREDIT_CARD",
-    createdAt: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "ord_102",
-    restaurantId: "rest_aura_bistro",
-    tableId: "m-4",
-    tableNumber: "Masa 4",
-    sessionToken: "sess_demo_102",
-    status: "PENDING_CONFIRMATION", // Kasada Garson Onayı Bekliyor!
-    items: [
-      {
-        id: "item_ord_2",
-        menuItemId: "item_ribeye_steak",
-        name: "Közlenmiş Kuşkonmazlı Antrikot (250g)",
-        basePrice: 680,
-        finalPrice: 680,
-        quantity: 1,
-        selectedOptions: [
-          {
-            groupId: "opt_steak_doneness",
-            groupTitle: "Et Pişme Derecesi",
-            selectedItems: [{ id: "steak_med_rare", name: "Az-Orta (Medium Rare)", priceDelta: 0 }],
-          },
-        ],
-      },
-      {
-        id: "item_ord_3",
-        menuItemId: "item_burrata_pizza",
-        name: "Burrata & Pesto Taş Fırın Pizza",
-        basePrice: 420,
-        finalPrice: 470,
-        quantity: 1,
-        selectedOptions: [
-          {
-            groupId: "opt_pizza_crust",
-            groupTitle: "Kenar Seçeneği",
-            selectedItems: [{ id: "crust_mozzarella", name: "Peynir Dolgulu Kenar", priceDelta: 50 }],
-          },
-        ],
-      },
-    ],
-    subtotal: 1150,
-    taxAmount: 115,
-    serviceCharge: 0,
-    totalAmount: 1150,
-    notes: "Bebek arabamız var, terasın köşesindeyiz.",
-    paymentStatus: "PENDING",
-    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-  },
-];
-
-const INITIAL_CALLS: WaiterCall[] = [
-  {
-    id: "call_1",
-    restaurantId: "rest_aura_bistro",
-    tableId: "m-4",
-    tableNumber: "Masa 4",
-    type: "WAITER",
-    message: "Menü hakkında soru sormak istiyor.",
-    status: "ACTIVE",
-    createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "call_2",
-    restaurantId: "rest_aura_bistro",
-    tableId: "m-5",
-    tableNumber: "Masa 5",
-    type: "BILL_CARD",
-    message: "Hesap İsteği (Kredi Kartı POS)",
-    status: "ACTIVE",
-    createdAt: new Date(Date.now() - 1 * 60 * 1000).toISOString(),
-  },
-];
+// Initial Active Orders (Clean by default)
+const INITIAL_ORDERS: Order[] = [];
+const INITIAL_CALLS: WaiterCall[] = [];
 
 // In-Memory Shared State Across Components (Cross-Tab via BroadcastChannel / CustomEvent)
 let globalOrders = [...INITIAL_ORDERS];
@@ -164,18 +54,7 @@ let globalCalls = [...INITIAL_CALLS];
 let globalMenuItems = [...DEMO_MENU_ITEMS];
 let globalCategories = [...DEMO_CATEGORIES];
 
-let globalManagerAlerts: ManagerAlert[] = [
-  {
-    id: "alert_1",
-    tableId: "m-4",
-    tableNumber: "Masa 4",
-    type: "VIP_VISIT",
-    message: "VIP Düzenli Müşteri Masaya Oturdu (Ahmet Bey)",
-    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-    isResolved: false,
-  },
-];
-
+let globalManagerAlerts: ManagerAlert[] = [];
 let globalVouchers: CustomerVoucher[] = [];
 
 let globalSongRequests: SongRequest[] = [
@@ -961,6 +840,27 @@ export function useRestaurantStore() {
       };
       notifyAll();
       syncWithServer("APPROVE_PARTICIPANT", { tableId, participantId, approved });
+    },
+
+    resetAllTables: () => {
+      globalTables = globalTables.map((t) => ({
+        ...t,
+        status: "EMPTY",
+        activeOrderId: undefined,
+        activeBillTotal: 0,
+        lastOrderTime: undefined,
+        lastCallTime: undefined,
+        lastCallType: undefined,
+      }));
+      globalOrders = [];
+      globalCalls = [];
+      globalManagerAlerts = [];
+      globalSharedCarts = {};
+      globalTableParticipants = {};
+      globalTableGroupSettings = {};
+      globalTableTransfers = {};
+      notifyAll();
+      syncWithServer("RESET_ALL_TABLES", {});
     },
 
     // Priority 0: Recipe & Raw Ingredient Stock Management
