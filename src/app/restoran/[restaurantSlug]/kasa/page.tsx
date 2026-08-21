@@ -25,6 +25,7 @@ import {
   Bike,
   FileCheck2,
   LayoutGrid,
+  Check,
 } from "lucide-react";
 
 import { censorProfanity } from "@/lib/restaurant/profanityFilter";
@@ -113,6 +114,37 @@ export default function KasaPosPage({ params }: KasaPageProps) {
           >
             Müdahale Edildi / Alarmı Kapat
           </button>
+        </div>
+      )}
+
+      {/* Active Waiter Calls Queue Banner (Concurrent Preservation) */}
+      {activeCalls.length > 0 && (
+        <div className="bg-purple-950/80 border-b border-purple-500/40 px-3 sm:px-6 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 animate-fade-in sticky top-0 z-35">
+          <div className="flex items-center gap-2 shrink-0">
+            <Bell className="w-4 h-4 text-purple-400 animate-bounce shrink-0" />
+            <span className="text-xs font-extrabold text-purple-200">
+              AKTİF GARSON ÇAĞRILARI ({activeCalls.length}):
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto sleek-scrollbar pb-1 sm:pb-0">
+            {activeCalls.map((call) => (
+              <div
+                key={call.id}
+                className="px-2.5 py-1 rounded-xl bg-purple-900/60 border border-purple-500/40 flex items-center gap-2 text-xs text-white shrink-0 shadow-sm"
+              >
+                <span className="font-bold text-amber-300">{call.tableNumber}:</span>
+                <span className="text-foreground/90">{call.message || call.type}</span>
+                <button
+                  onClick={() => resolveWaiterCall(call.id)}
+                  className="p-1 rounded-lg bg-green-500/20 hover:bg-green-500/40 text-green-300 font-bold ml-1 transition-colors cursor-pointer"
+                  title="Talebi Tamamla"
+                >
+                  <Check className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

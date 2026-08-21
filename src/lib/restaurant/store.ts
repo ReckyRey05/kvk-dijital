@@ -245,6 +245,8 @@ function mergeOrdersMonotonically(incomingOrders: Order[], currentOrders: Order[
       return {
         ...inc,
         status: curr.status,
+        tableId: curr.tableId,
+        tableNumber: curr.tableNumber,
         readyAt: curr.readyAt || inc.readyAt,
         servedAt: curr.servedAt || inc.servedAt,
         completedAt: curr.completedAt || inc.completedAt,
@@ -522,7 +524,8 @@ export function useRestaurantStore() {
     },
 
     callWaiter: (call: WaiterCall) => {
-      globalCalls = [call, ...globalCalls.filter((c) => c.tableId !== call.tableId || c.status !== "ACTIVE")];
+      // Deduplicate only by unique call.id, preserving all active concurrent requests in queue
+      globalCalls = [call, ...globalCalls.filter((c) => c.id !== call.id)];
       globalTables = globalTables.map((t) =>
         t.id === call.tableId
           ? {
@@ -544,8 +547,19 @@ export function useRestaurantStore() {
         c.id === callId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
       );
       if (call) {
+        const remainingActiveCalls = globalCalls.filter(
+          (c) => c.tableId === call.tableId && c.status === "ACTIVE" && c.id !== callId
+        );
         globalTables = globalTables.map((t) =>
-          t.id === call.tableId ? { ...t, status: t.activeBillTotal > 0 ? "OCCUPIED" : "EMPTY" } : t
+          t.id === call.tableId
+            ? {
+                ...t,
+                status: remainingActiveCalls.length > 0
+                  ? (remainingActiveCalls[0].type.startsWith("BILL") ? "BILL_REQUESTED" : "WAITER_CALLED")
+                  : (t.activeBillTotal > 0 ? "OCCUPIED" : "EMPTY"),
+                lastCallType: remainingActiveCalls.length > 0 ? remainingActiveCalls[0].type : undefined,
+              }
+            : t
         );
       }
       notifyAll();
@@ -553,10 +567,10 @@ export function useRestaurantStore() {
     },
 
     closeTableBill: (tableId: string) => {
-      // 1. Mark orders as COMPLETED
+      // 1. Mark orders as COMPLETED & PAID_CASHIER
       globalOrders = globalOrders.map((ord) =>
         ord.tableId === tableId && ord.status !== "CANCELLED"
-          ? { ...ord, status: "COMPLETED", completedAt: new Date().toISOString() }
+          ? { ...ord, status: "COMPLETED", paymentStatus: "PAID_CASHIER", completedAt: new Date().toISOString() }
           : ord
       );
 
@@ -575,12 +589,17 @@ export function useRestaurantStore() {
           : t
       );
 
-      // 3. Resolve any pending waiter calls
+      // 3. Resolve all pending waiter calls for this table
       globalCalls = globalCalls.map((c) =>
         c.tableId === tableId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
       );
 
-      // 4. Clear any table transfer redirects
+      // 4. Purge table participants, group settings & shared carts immediately
+      delete globalTableParticipants[tableId];
+      delete globalTableGroupSettings[tableId];
+      globalSharedCarts[tableId] = [];
+
+      // 5. Clear any table transfer redirects
       if (globalTableTransfers[tableId]) {
         const nextTransfers = { ...globalTableTransfers };
         delete nextTransfers[tableId];

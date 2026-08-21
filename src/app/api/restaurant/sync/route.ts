@@ -358,7 +358,10 @@ export async function POST(req: Request) {
       case "CALL_WAITER": {
         const newCall: WaiterCall = payload?.call;
         if (newCall) {
-          state.waiterCalls = [newCall, ...state.waiterCalls.filter((c) => c.tableId !== newCall.tableId || c.status !== "ACTIVE")];
+          state.waiterCalls = [
+            newCall,
+            ...state.waiterCalls.filter((c) => c.id !== newCall.id),
+          ];
           state.tables = state.tables.map((t) =>
             t.id === newCall.tableId
               ? {
@@ -380,9 +383,18 @@ export async function POST(req: Request) {
           c.id === callId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
         );
         if (call) {
+          const remainingCalls = state.waiterCalls.filter(
+            (c) => c.tableId === call.tableId && c.status === "ACTIVE"
+          );
           state.tables = state.tables.map((t) =>
             t.id === call.tableId
-              ? { ...t, status: t.activeBillTotal > 0 ? "OCCUPIED" : "EMPTY" }
+              ? {
+                  ...t,
+                  status: remainingCalls.length > 0
+                    ? (remainingCalls[0].type.startsWith("BILL") ? "BILL_REQUESTED" : "WAITER_CALLED")
+                    : (t.activeBillTotal > 0 ? "OCCUPIED" : "EMPTY"),
+                  lastCallType: remainingCalls.length > 0 ? remainingCalls[0].type : undefined,
+                }
               : t
           );
         }
