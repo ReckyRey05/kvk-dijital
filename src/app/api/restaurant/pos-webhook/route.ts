@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { invalidateAllTableSessions } from "@/lib/restaurant/session";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
+import { getClientIp, checkRateLimit, createRateLimitResponse, parseJsonWithByteLimit } from "@/lib/security/rateLimit";
+import { RATE_LIMITS } from "@/config/rateLimit";
 import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 /**
@@ -8,6 +10,13 @@ import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
  */
 export async function POST(req: Request) {
   try {
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`restWebhook:ip:${clientIp}`, RATE_LIMITS.restaurant.webhook.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
+
+    const parseResult = await parseJsonWithByteLimit(req, 1 * 1024 * 1024);
+    if (!parseResult.ok) return parseResult.errorResponse;
+
     const authHeader = req.headers.get("authorization") || req.headers.get("x-pos-key");
     const configuredKey = DEMO_RESTAURANT.settings.posApiKey || "pos_secret_aura_demo";
 
@@ -19,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = await req.json().catch(() => ({}));
+    const body = parseResult.data || {};
     const { event, restaurantId, tableId, ticketId, status } = body;
 
     if (!event || !restaurantId) {

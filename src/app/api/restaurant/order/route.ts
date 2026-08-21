@@ -2,12 +2,21 @@ import { NextResponse } from "next/server";
 import { calculateAndCreateCanonicalOrder } from "@/lib/restaurant/canonicalOrderEngine";
 import { forwardOrderToPos } from "@/lib/restaurant/posBridge";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
+import { getClientIp, checkRateLimit, createRateLimitResponse, parseJsonWithByteLimit } from "@/lib/security/rateLimit";
+import { RATE_LIMITS } from "@/config/rateLimit";
 import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 export async function POST(req: Request) {
   try {
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`restOrder:ip:${clientIp}`, RATE_LIMITS.restaurant.order.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
+
+    const parseResult = await parseJsonWithByteLimit(req, 1 * 1024 * 1024); // 1 MB limit
+    if (!parseResult.ok) return parseResult.errorResponse;
+
     const idempotencyKey = req.headers.get("x-idempotency-key") || undefined;
-    const body = await req.json().catch(() => ({}));
+    const body = parseResult.data || {};
     const { restaurantId, tableId, sessionToken, items, notes, paymentMethod } = body;
 
     // 1. Execute 100% Server-Authoritative Canonical Order Calculation

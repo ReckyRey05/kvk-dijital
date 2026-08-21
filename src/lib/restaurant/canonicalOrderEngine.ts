@@ -446,6 +446,7 @@ export function calculateAndCreateCanonicalOrder(
   return {
     ok: true,
     order: canonicalOrder,
+    isIdempotentReplay: false,
     breakdown: {
       subtotalMinorUnits,
       taxMinorUnits,

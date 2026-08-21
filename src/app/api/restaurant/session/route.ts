@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { createTableSession, validateTableSession } from "@/lib/restaurant/session";
 import { assertTableOwnership } from "@/lib/restaurant/tenantGuard";
+import { getClientIp, checkRateLimit, createRateLimitResponse, parseJsonWithByteLimit } from "@/lib/security/rateLimit";
+import { RATE_LIMITS } from "@/config/rateLimit";
 import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json().catch(() => ({}));
+    const clientIp = getClientIp(req);
+    const ipCheck = checkRateLimit(`restSession:ip:${clientIp}`, RATE_LIMITS.restaurant.session.ip);
+    if (!ipCheck.allowed) return createRateLimitResponse(ipCheck);
+
+    const parseResult = await parseJsonWithByteLimit(req, 1 * 1024 * 1024);
+    if (!parseResult.ok) return parseResult.errorResponse;
+
+    const body = parseResult.data || {};
     const { restaurantId, tableId, deviceFingerprint, action, token } = body;
 
     if (!restaurantId || !tableId) {
