@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { TableSession } from "@/types/restaurant";
 
 // In-memory / Serverless Session Store with Instant Invalidation registry
@@ -8,18 +9,42 @@ const activeSessions = new Map<string, TableSession>();
 const tableSessionIndex = new Map<string, Set<string>>();
 
 const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000; // 15 Minutes (900,000 ms)
+const SESSION_HMAC_SECRET = process.env.SESSION_SECRET || "cep_garson_canonical_hmac_secret_2026";
+
+function signPayload(payload: string): string {
+  const hmac = crypto.createHmac("sha256", SESSION_HMAC_SECRET);
+  hmac.update(payload);
+  return hmac.digest("hex");
+}
 
 /**
- * Generates a simple cryptographic token for the 15-minute table session.
+ * Generates an HMAC-SHA256 cryptographically signed token for the 15-minute table session.
  */
 function generateSessionToken(restaurantId: string, tableId: string, fingerprint: string): string {
   const timestamp = Date.now();
-  const rand = Math.random().toString(36).substring(2, 10);
+  const rand = crypto.randomBytes(8).toString("hex");
   const payload = `${restaurantId}:${tableId}:${fingerprint}:${timestamp}:${rand}`;
-  if (typeof Buffer !== "undefined") {
-    return Buffer.from(payload).toString("base64url");
+  const sig = signPayload(payload);
+  const full = `${payload}.${sig}`;
+  return Buffer.from(full).toString("base64url");
+}
+
+/**
+ * Verifies the cryptographic HMAC signature of a session token.
+ */
+export function verifySessionTokenSignature(token: string): boolean {
+  try {
+    const decoded = Buffer.from(token, "base64url").toString("utf8");
+    const lastDot = decoded.lastIndexOf(".");
+    if (lastDot === -1) return false;
+    const payload = decoded.substring(0, lastDot);
+    const sig = decoded.substring(lastDot + 1);
+    const expectedSig = signPayload(payload);
+    if (sig.length !== expectedSig.length) return false;
+    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig));
+  } catch {
+    return false;
   }
-  return btoa(payload);
 }
 
 /**
@@ -35,7 +60,7 @@ export function createTableSession(
   const now = Date.now();
   const timeoutMs = timeoutMinutes * 60 * 1000;
   const token = generateSessionToken(restaurantId, tableId, deviceFingerprint);
-  const sessionId = `sess_${now}_${Math.random().toString(36).substring(2, 8)}`;
+  const sessionId = `sess_${now}_${crypto.randomBytes(4).toString("hex")}`;
 
   const session: TableSession = {
     sessionId,
