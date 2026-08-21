@@ -220,6 +220,40 @@ function loadFromStorage() {
 
 let lastKnownServerVersion = 0;
 
+const STATUS_RANK: Record<string, number> = {
+  PENDING_CONFIRMATION: 0,
+  PREPARING: 1,
+  READY: 2,
+  SERVED: 3,
+  COMPLETED: 4,
+  CANCELLED: 99,
+};
+
+function mergeOrdersMonotonically(incomingOrders: Order[], currentOrders: Order[]): Order[] {
+  if (!incomingOrders || incomingOrders.length === 0) return currentOrders;
+  const currentMap = new Map(currentOrders.map((o) => [o.id, o]));
+
+  return incomingOrders.map((inc) => {
+    const curr = currentMap.get(inc.id);
+    if (!curr) return inc;
+
+    const incRank = STATUS_RANK[inc.status] ?? 0;
+    const currRank = STATUS_RANK[curr.status] ?? 0;
+
+    // If local state is ahead of incoming server state, prevent backward regression
+    if (currRank > incRank && inc.status !== "CANCELLED") {
+      return {
+        ...inc,
+        status: curr.status,
+        readyAt: curr.readyAt || inc.readyAt,
+        servedAt: curr.servedAt || inc.servedAt,
+        completedAt: curr.completedAt || inc.completedAt,
+      };
+    }
+    return inc;
+  });
+}
+
 async function syncWithServer(action: string, payload?: any) {
   if (typeof window === "undefined") return;
   try {
@@ -232,8 +266,12 @@ async function syncWithServer(action: string, payload?: any) {
     if (res.ok) {
       const data = await res.json();
       if (data && data.version) {
-        lastKnownServerVersion = data.version;
-        if (data.orders) globalOrders = data.orders;
+        if (data.version >= lastKnownServerVersion) {
+          lastKnownServerVersion = data.version;
+        }
+        if (data.orders) {
+          globalOrders = mergeOrdersMonotonically(data.orders, globalOrders);
+        }
         if (data.tables) globalTables = data.tables;
         if (data.waiterCalls) globalCalls = data.waiterCalls;
         if (data.tableParticipants) globalTableParticipants = data.tableParticipants;
@@ -351,13 +389,15 @@ export function useRestaurantStore() {
         });
         if (res.ok) {
           const data = await res.json();
-          if (data && data.version && data.version !== lastKnownServerVersion) {
+          if (data && data.version && data.version > lastKnownServerVersion) {
             const prevOrderCount = globalOrders.length;
             const prevCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
             const prevAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
 
             lastKnownServerVersion = data.version;
-            if (data.orders) globalOrders = data.orders;
+            if (data.orders) {
+              globalOrders = mergeOrdersMonotonically(data.orders, globalOrders);
+            }
             if (data.tables) globalTables = data.tables;
             if (data.waiterCalls) globalCalls = data.waiterCalls;
             if (data.managerAlerts) globalManagerAlerts = data.managerAlerts;

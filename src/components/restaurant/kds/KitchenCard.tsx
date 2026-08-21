@@ -138,7 +138,15 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
 
       {/* Action Footer for Kitchen Chefs */}
       <div className="pt-3 border-t border-white/10 space-y-2">
-        {isPreparing ? (
+        {order.status === "PENDING_CONFIRMATION" ? (
+          <button
+            onClick={() => onUpdateStatus(order.id, "PREPARING")}
+            className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-amber-500/20 cursor-pointer"
+          >
+            <ChefHat className="w-4 h-4" />
+            <span>Hazırlamaya Al (Onayla)</span>
+          </button>
+        ) : isPreparing ? (
           <div className="space-y-1.5">
             <button
               onClick={() => onUpdateStatus(order.id, "READY")}
