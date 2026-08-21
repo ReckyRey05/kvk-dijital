@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Table, Order } from "@/types/restaurant";
-import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, ArrowRightLeft, Check } from "lucide-react";
+import { Table, Order, TableParticipant } from "@/types/restaurant";
+import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, ArrowRightLeft, Check, Users, Crown, User } from "lucide-react";
 import { formatEscPosReceipt } from "@/lib/restaurant/posBridge";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 
@@ -10,6 +10,7 @@ interface BillManagerProps {
   table: Table;
   tableOrders: Order[];
   allTables?: Table[];
+  participants?: TableParticipant[];
   onClose: () => void;
   onCloseBill: (tableId: string) => void;
   onTransferTable?: (fromTableId: string, toTableId: string) => void;
@@ -20,6 +21,7 @@ export default function BillManager({
   table,
   tableOrders,
   allTables = [],
+  participants = [],
   onClose,
   onCloseBill,
   onTransferTable,
@@ -82,6 +84,42 @@ export default function BillManager({
             <X className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Real-time Table Members in POS */}
+        {participants && participants.length > 0 && (
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-bold text-foreground/80">
+              <div className="flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-accent" />
+                <span>Masadaki Aktif Üyeler ({participants.length})</span>
+              </div>
+              <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 font-bold">
+                Canlı
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5">
+              {participants.map((p) => (
+                <div
+                  key={p.id}
+                  className={`px-2.5 py-1 rounded-xl text-[10px] font-extrabold flex items-center gap-1.5 ${
+                    p.isHost
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs"
+                      : "bg-white/5 text-foreground/80 border border-white/5"
+                  }`}
+                >
+                  {p.isHost ? (
+                    <Crown className="w-3 h-3 text-amber-400 shrink-0" />
+                  ) : (
+                    <User className="w-3 h-3 text-accent shrink-0" />
+                  )}
+                  <span>{p.name}</span>
+                  {p.isHost && <span className="text-[9px] text-amber-400/80 font-normal">(Reis)</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bill Items List */}
         <div className="space-y-2 max-h-52 sm:max-h-72 lg:max-h-[calc(100vh-420px)] overflow-y-auto pr-1 sleek-scrollbar">

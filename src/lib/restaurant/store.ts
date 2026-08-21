@@ -942,6 +942,26 @@ export function useRestaurantStore() {
       syncWithServer("APPROVE_PARTICIPANT", { tableId, participantId, approved });
     },
 
+    leaveTable: (tableId: string, participantId: string) => {
+      const current = globalTableParticipants[tableId] || [];
+      const updated = current.filter((p) => p.id !== participantId);
+      if (updated.length === 0) {
+        const { [tableId]: _, ...remParts } = globalTableParticipants;
+        const { [tableId]: __, ...remSet } = globalTableGroupSettings;
+        const { [tableId]: ___, ...remCart } = globalSharedCarts;
+        globalTableParticipants = remParts;
+        globalTableGroupSettings = remSet;
+        globalSharedCarts = remCart;
+      } else {
+        globalTableParticipants = {
+          ...globalTableParticipants,
+          [tableId]: updated,
+        };
+      }
+      notifyAll();
+      syncWithServer("LEAVE_TABLE", { tableId, participantId });
+    },
+
     resetTableParticipants: (tableId: string) => {
       const { [tableId]: _, ...remainingParticipants } = globalTableParticipants;
       const { [tableId]: __, ...remainingSettings } = globalTableGroupSettings;

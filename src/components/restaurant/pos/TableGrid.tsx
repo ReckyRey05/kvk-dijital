@@ -1,12 +1,13 @@
 "use client";
 
-import { Table, WaiterCall } from "@/types/restaurant";
-import { Users, Clock, Bell, Receipt, CheckCircle, AlertCircle } from "lucide-react";
+import { Table, WaiterCall, TableParticipant } from "@/types/restaurant";
+import { Users, Clock, Bell, Receipt, CheckCircle, AlertCircle, Crown } from "lucide-react";
 
 interface TableGridProps {
   tables: Table[];
   waiterCalls: WaiterCall[];
   selectedTableId: string | null;
+  tableParticipants?: Record<string, TableParticipant[]>;
   onSelectTable: (tableId: string) => void;
   onResolveCall: (callId: string) => void;
 }
@@ -15,6 +16,7 @@ export default function TableGrid({
   tables,
   waiterCalls,
   selectedTableId,
+  tableParticipants = {},
   onSelectTable,
   onResolveCall,
 }: TableGridProps) {
@@ -25,11 +27,13 @@ export default function TableGrid({
         const activeCall = waiterCalls.find(
           (c) => c.tableId === table.id && c.status === "ACTIVE"
         );
+        const participants = tableParticipants[table.id] || [];
+        const hostParticipant = participants.find((p) => p.isHost);
 
         // Status styling
         const isBillReq = table.status === "BILL_REQUESTED" || activeCall?.type.startsWith("BILL");
         const isWaiterCalled = table.status === "WAITER_CALLED" || activeCall?.type === "WAITER";
-        const isOccupied = table.status === "OCCUPIED" || table.activeBillTotal > 0;
+        const isOccupied = table.status === "OCCUPIED" || table.activeBillTotal > 0 || participants.length > 0;
 
         let statusBorder = "border-white/10 hover:border-white/20";
         let statusBg = "bg-white/[0.02]";
@@ -70,9 +74,17 @@ export default function TableGrid({
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-foreground/50 mt-0.5">
-                  <Users className="w-3 h-3 shrink-0" />
-                  <span>{table.capacity} Kişilik</span>
+                <div className="flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px] text-foreground/50 mt-0.5">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-3 h-3 shrink-0" />
+                    <span>{table.capacity} Kişilik</span>
+                  </div>
+                  {participants.length > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-md bg-accent/15 text-accent font-extrabold text-[9px] flex items-center gap-0.5">
+                      <Crown className="w-2.5 h-2.5 text-amber-400" />
+                      <span>{participants.length} Üye {hostParticipant ? `(${hostParticipant.name})` : ""}</span>
+                    </span>
+                  )}
                 </div>
               </div>
 

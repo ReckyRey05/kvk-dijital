@@ -401,6 +401,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         tableBillTotal={currentTable.activeBillTotal}
         currentParticipant={currentParticipant}
         participantCount={participants.filter((p) => p.status === "APPROVED").length || 1}
+        participants={participants.filter((p) => p.status === "APPROVED")}
         onUpdateName={handleUpdateName}
       />
 

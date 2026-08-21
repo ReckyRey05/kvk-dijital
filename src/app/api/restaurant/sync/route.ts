@@ -232,6 +232,22 @@ export async function POST(req: Request) {
         break;
       }
 
+      case "LEAVE_TABLE":
+      case "REMOVE_PARTICIPANT": {
+        const { tableId, participantId } = payload || {};
+        if (tableId && participantId && state.tableParticipants[tableId]) {
+          state.tableParticipants[tableId] = state.tableParticipants[tableId].filter(
+            (p) => p.id !== participantId
+          );
+          if (state.tableParticipants[tableId].length === 0) {
+            delete state.tableParticipants[tableId];
+            delete state.tableGroupSettings[tableId];
+            state.sharedCarts[tableId] = [];
+          }
+        }
+        break;
+      }
+
       case "CREATE_ORDER": {
         const newOrder: Order = payload?.order;
         if (newOrder) {

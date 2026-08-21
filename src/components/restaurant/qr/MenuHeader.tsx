@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Restaurant, Table, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
-import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check, AlertTriangle } from "lucide-react";
+import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check, AlertTriangle, X } from "lucide-react";
 import { formatPrice } from "@/lib/restaurant/currency";
 
 interface MenuHeaderProps {
@@ -25,6 +25,7 @@ interface MenuHeaderProps {
   tableBillTotal?: number;
   currentParticipant?: TableParticipant | null;
   participantCount?: number;
+  participants?: TableParticipant[];
   onUpdateName?: (newName: string) => void;
 }
 
@@ -47,10 +48,12 @@ export default function MenuHeader({
   tableBillTotal = 0,
   currentParticipant,
   participantCount = 1,
+  participants = [],
   onUpdateName,
 }: MenuHeaderProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState(currentParticipant?.name || "");
+  const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
 
   const percentLeft = Math.max(0, Math.min(100, (remainingMinutes / 15) * 100));
   const currencies: MenuCurrency[] = ["TRY", "USD", "EUR", "GBP"];
@@ -172,10 +175,14 @@ export default function MenuHeader({
 
             <div className="h-3 w-px bg-white/10" />
 
-            <div className="flex items-center gap-1 text-foreground/60 font-medium shrink-0" title="Masadaki Aktif Kişi Sayısı">
+            <button
+              onClick={() => setIsMembersModalOpen(true)}
+              className="flex items-center gap-1 text-foreground/70 hover:text-accent font-semibold shrink-0 cursor-pointer transition-colors"
+              title="Masa Üyelerini Gör"
+            >
               <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-accent shrink-0" />
               <span>{participantCount} Kişi</span>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -289,6 +296,67 @@ export default function MenuHeader({
           />
         </div>
       </div>
+      {/* Table Members Modal / Drawer on Customer Screen */}
+      {isMembersModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+          onClick={() => setIsMembersModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-sm bg-[#0a0f0f] border border-white/10 rounded-t-[1.5rem] sm:rounded-[2rem] p-4 space-y-3 shadow-2xl animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-accent" />
+                <h3 className="text-sm font-bold text-white">Masaya Bağlı Kişiler ({participants.length || participantCount})</h3>
+              </div>
+              <button
+                onClick={() => setIsMembersModalOpen(false)}
+                className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-foreground/60 hover:text-white cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1 sleek-scrollbar">
+              {(participants.length > 0 ? participants : currentParticipant ? [currentParticipant] : []).map((p) => (
+                <div
+                  key={p.id}
+                  className={`p-2.5 rounded-xl border flex items-center justify-between gap-2 text-xs ${
+                    p.id === currentParticipant?.id
+                      ? "bg-accent/10 border-accent/30"
+                      : "bg-white/[0.02] border-white/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    {p.isHost ? (
+                      <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                        <Crown className="w-3.5 h-3.5 text-amber-400" />
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 rounded-lg bg-white/5 text-accent flex items-center justify-center shrink-0">
+                        <User className="w-3.5 h-3.5" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <span className="font-bold text-white truncate block">{p.name}</span>
+                      <span className="text-[10px] text-foreground/50">
+                        {p.isHost ? "Masa Lideri (Reis)" : "Misafir"}
+                        {p.id === currentParticipant?.id ? " • Siz" : ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-300 font-semibold shrink-0">
+                    Aktif
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

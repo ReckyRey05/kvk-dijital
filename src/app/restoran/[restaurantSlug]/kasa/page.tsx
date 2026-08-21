@@ -46,6 +46,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     managerAlerts,
     vouchers,
     deliveryOrders,
+    tableParticipants,
     confirmOrder,
     updateOrderStatus,
     resolveWaiterCall,
@@ -319,6 +320,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
               tables={filteredTables}
               waiterCalls={waiterCalls}
               selectedTableId={selectedTableId}
+              tableParticipants={tableParticipants}
               onSelectTable={(id) => setSelectedTableId(id)}
               onResolveCall={resolveWaiterCall}
             />
@@ -330,6 +332,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
               table={selectedTable}
               tableOrders={selectedTableOrders}
               allTables={tables}
+              participants={tableParticipants[selectedTable.id] || []}
               onClose={() => setSelectedTableId(null)}
               onCloseBill={closeTableBill}
               onTransferTable={transferTable}

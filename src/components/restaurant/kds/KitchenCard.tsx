@@ -92,9 +92,16 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
                   {item.quantity}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-extrabold text-white text-sm leading-tight">
-                    {item.name}
-                  </h4>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h4 className="font-extrabold text-white text-sm leading-tight">
+                      {item.name}
+                    </h4>
+                    {item.addedBy && (
+                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-white/5 text-foreground/60 font-semibold">
+                        {item.addedBy}
+                      </span>
+                    )}
+                  </div>
 
                   {/* Options */}
                   {item.selectedOptions && item.selectedOptions.length > 0 && (
