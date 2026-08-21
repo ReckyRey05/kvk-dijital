@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { invalidateAllTableSessions } from "@/lib/restaurant/session";
+import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 /**
@@ -7,6 +8,17 @@ import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
  */
 export async function POST(req: Request) {
   try {
+    const authHeader = req.headers.get("authorization") || req.headers.get("x-pos-key");
+    const configuredKey = DEMO_RESTAURANT.settings.posApiKey || "pos_secret_aura_demo";
+
+    // Validate POS Webhook Secret if configured
+    if (authHeader && authHeader.replace("Bearer ", "").trim() !== configuredKey && authHeader !== configuredKey) {
+      return NextResponse.json(
+        { error: "UNAUTHORIZED_WEBHOOK", message: "Geçersiz POS Webhook Anahtarı." },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json().catch(() => ({}));
     const { event, restaurantId, tableId, ticketId, status } = body;
 
@@ -14,6 +26,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "INVALID_WEBHOOK_PAYLOAD", message: "event ve restaurantId zorunludur." },
         { status: 400 }
+      );
+    }
+
+    // Verify restaurant matches
+    if (restaurantId !== DEMO_RESTAURANT.id && restaurantId !== DEMO_RESTAURANT.slug) {
+      return NextResponse.json(
+        { error: "TENANT_NOT_FOUND", message: "Belirtilen restoran bulunamadı." },
+        { status: 404 }
       );
     }
 
@@ -39,3 +59,4 @@ export async function POST(req: Request) {
     return createSecureServerErrorResponse("RestaurantPosWebhookAPI", error);
   }
 }
+
