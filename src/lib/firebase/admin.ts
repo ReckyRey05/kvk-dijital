@@ -27,7 +27,14 @@ export function getAdminDb(): Firestore {
 
     let serviceAccount: Record<string, string>;
     try {
-      serviceAccount = JSON.parse(serviceAccountKey);
+      let rawKey = serviceAccountKey.trim();
+      if (rawKey.startsWith("'") && rawKey.endsWith("'")) {
+        rawKey = rawKey.slice(1, -1);
+      }
+      serviceAccount = JSON.parse(rawKey);
+      if (serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+      }
     } catch {
       throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY is not valid JSON. Make sure it is properly escaped.');
     }
