@@ -8,6 +8,8 @@ import {
   ManagerAlert,
   CustomerVoucher,
   SongRequest,
+  TableParticipant,
+  OrderItem,
 } from "@/types/restaurant";
 import {
   DEMO_RESTAURANT,
@@ -31,6 +33,8 @@ interface LiveRestaurantState {
   menuItems: MenuItem[];
   categories: Category[];
   tableTransfers: Record<string, { toTableId: string; toTableNumber: string; timestamp: number }>;
+  tableParticipants: Record<string, TableParticipant[]>;
+  sharedCarts: Record<string, OrderItem[]>;
 }
 
 const INITIAL_SERVER_STATE: LiveRestaurantState = {
@@ -72,6 +76,8 @@ const INITIAL_SERVER_STATE: LiveRestaurantState = {
   menuItems: [...DEMO_MENU_ITEMS],
   categories: [...DEMO_CATEGORIES],
   tableTransfers: {},
+  tableParticipants: {},
+  sharedCarts: {},
 };
 
 // Global fallback memory state (for local dev / server instances)
@@ -90,8 +96,12 @@ async function getLiveState(): Promise<LiveRestaurantState> {
     if (snap.exists) {
       const data = snap.data() as LiveRestaurantState;
       if (data && data.orders) {
-        globalForRestaurant._restaurantLiveState = data;
-        return data;
+        globalForRestaurant._restaurantLiveState = {
+          ...data,
+          tableParticipants: data.tableParticipants || {},
+          sharedCarts: data.sharedCarts || {},
+        };
+        return globalForRestaurant._restaurantLiveState;
       }
     }
   } catch {
@@ -114,19 +124,30 @@ export async function GET() {
   try {
     const state = await getLiveState();
 
-    return NextResponse.json({
-      success: true,
-      version: state.version,
-      lastUpdated: state.lastUpdated,
-      orders: state.orders,
-      tables: state.tables,
-      waiterCalls: state.waiterCalls,
-      managerAlerts: state.managerAlerts,
-      vouchers: state.vouchers,
-      songs: state.songs,
-      menuItems: state.menuItems,
-      tableTransfers: state.tableTransfers,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        version: state.version,
+        lastUpdated: state.lastUpdated,
+        orders: state.orders,
+        tables: state.tables,
+        waiterCalls: state.waiterCalls,
+        managerAlerts: state.managerAlerts,
+        vouchers: state.vouchers,
+        songs: state.songs,
+        menuItems: state.menuItems,
+        tableTransfers: state.tableTransfers || {},
+        tableParticipants: state.tableParticipants || {},
+        sharedCarts: state.sharedCarts || {},
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      }
+    );
   } catch (error) {
     return createSecureServerErrorResponse("RestaurantSyncGET", error);
   }
@@ -143,6 +164,9 @@ export async function POST(req: Request) {
     const state = await getLiveState();
     state.version = (state.version || 0) + 1;
     state.lastUpdated = Date.now();
+
+    state.tableParticipants = state.tableParticipants || {};
+    state.sharedCarts = state.sharedCarts || {};
 
     switch (action) {
       case "CREATE_ORDER": {
@@ -193,6 +217,80 @@ export async function POST(req: Request) {
               }
             : ord
         );
+        break;
+      }
+
+      case "REGISTER_PARTICIPANT": {
+        const { tableId, participant } = payload || {};
+        if (tableId && participant) {
+          const currentList = state.tableParticipants[tableId] || [];
+          const exists = currentList.find((p) => p.id === participant.id);
+          if (!exists) {
+            const isFirst = currentList.length === 0;
+            const newP = { ...participant, isHost: isFirst || participant.isHost };
+            state.tableParticipants[tableId] = [...currentList, newP];
+          } else {
+            state.tableParticipants[tableId] = currentList.map((p) =>
+              p.id === participant.id ? { ...p, ...participant } : p
+            );
+          }
+        }
+        break;
+      }
+
+      case "UPDATE_PARTICIPANT_NAME": {
+        const { tableId, participantId, newName } = payload || {};
+        if (tableId && participantId && state.tableParticipants[tableId]) {
+          state.tableParticipants[tableId] = state.tableParticipants[tableId].map((p) =>
+            p.id === participantId ? { ...p, name: (newName || p.name).trim() } : p
+          );
+        }
+        break;
+      }
+
+      case "TRANSFER_HOST_ROLE": {
+        const { tableId, targetParticipantId } = payload || {};
+        if (tableId && targetParticipantId && state.tableParticipants[tableId]) {
+          state.tableParticipants[tableId] = state.tableParticipants[tableId].map((p) => ({
+            ...p,
+            isHost: p.id === targetParticipantId,
+          }));
+        }
+        break;
+      }
+
+      case "ADD_TO_SHARED_CART": {
+        const { tableId, item } = payload || {};
+        if (tableId && item) {
+          const currentCart = state.sharedCarts[tableId] || [];
+          state.sharedCarts[tableId] = [...currentCart, item];
+        }
+        break;
+      }
+
+      case "UPDATE_SHARED_CART_QTY": {
+        const { tableId, index, newQty } = payload || {};
+        if (tableId && state.sharedCarts[tableId]) {
+          state.sharedCarts[tableId] = state.sharedCarts[tableId].map((it, idx) =>
+            idx === index ? { ...it, quantity: newQty } : it
+          );
+        }
+        break;
+      }
+
+      case "REMOVE_FROM_SHARED_CART": {
+        const { tableId, index } = payload || {};
+        if (tableId && state.sharedCarts[tableId]) {
+          state.sharedCarts[tableId] = state.sharedCarts[tableId].filter((_, idx) => idx !== index);
+        }
+        break;
+      }
+
+      case "CLEAR_SHARED_CART": {
+        const { tableId } = payload || {};
+        if (tableId) {
+          state.sharedCarts[tableId] = [];
+        }
         break;
       }
 
@@ -256,6 +354,7 @@ export async function POST(req: Request) {
         if (state.tableTransfers) {
           delete state.tableTransfers[tableId];
         }
+        state.sharedCarts[tableId] = [];
         break;
       }
 
@@ -280,6 +379,24 @@ export async function POST(req: Request) {
             toTableNumber: toTable.tableNumber,
             timestamp: Date.now(),
           };
+
+          // Transfer participants & shared cart
+          if (state.tableParticipants[fromTableId]) {
+            state.tableParticipants[toTableId] = [
+              ...(state.tableParticipants[toTableId] || []),
+              ...state.tableParticipants[fromTableId],
+            ];
+            delete state.tableParticipants[fromTableId];
+          }
+
+          if (state.sharedCarts[fromTableId]) {
+            state.sharedCarts[toTableId] = [
+              ...(state.sharedCarts[toTableId] || []),
+              ...state.sharedCarts[fromTableId],
+            ];
+            delete state.sharedCarts[fromTableId];
+          }
+
           state.tables = state.tables.map((t) => {
             if (t.id === toTableId) {
               return {
@@ -306,28 +423,32 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "FULL_STATE_OVERWRITE": {
-        if (payload?.state) {
-          Object.assign(state, payload.state);
-        }
-        break;
-      }
-
       default:
         break;
     }
 
     await saveLiveState(state);
 
-    return NextResponse.json({
-      success: true,
-      version: state.version,
-      lastUpdated: state.lastUpdated,
-      orders: state.orders,
-      tables: state.tables,
-      waiterCalls: state.waiterCalls,
-      managerAlerts: state.managerAlerts,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        version: state.version,
+        lastUpdated: state.lastUpdated,
+        orders: state.orders,
+        tables: state.tables,
+        waiterCalls: state.waiterCalls,
+        managerAlerts: state.managerAlerts,
+        tableParticipants: state.tableParticipants,
+        sharedCarts: state.sharedCarts,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      }
+    );
   } catch (error) {
     return createSecureServerErrorResponse("RestaurantSyncPOST", error);
   }

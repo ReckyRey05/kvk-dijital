@@ -472,6 +472,8 @@ export function useRestaurantStore() {
             if (data.songs) globalSongRequests = data.songs;
             if (data.menuItems) globalMenuItems = data.menuItems;
             if (data.tableTransfers) globalTableTransfers = data.tableTransfers;
+            if (data.tableParticipants) globalTableParticipants = data.tableParticipants;
+            if (data.sharedCarts) globalSharedCarts = data.sharedCarts;
 
             const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
             const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -483,6 +485,7 @@ export function useRestaurantStore() {
             }
 
             saveToStorage();
+            notifyAll(false);
             handler();
           }
         }
@@ -492,7 +495,7 @@ export function useRestaurantStore() {
     };
 
     pollServer();
-    const serverSyncInterval = setInterval(pollServer, 1000);
+    const serverSyncInterval = setInterval(pollServer, 600);
 
     // Periodic check for expired discounts
     const checkExpirations = () => {
@@ -855,6 +858,7 @@ export function useRestaurantStore() {
         [tableId]: [...current, item],
       };
       notifyAll();
+      syncWithServer("ADD_TO_SHARED_CART", { tableId, item });
     },
 
     updateSharedCartQuantity: (tableId: string, index: number, newQty: number) => {
@@ -864,6 +868,7 @@ export function useRestaurantStore() {
         [tableId]: current.map((it, idx) => (idx === index ? { ...it, quantity: newQty } : it)),
       };
       notifyAll();
+      syncWithServer("UPDATE_SHARED_CART_QTY", { tableId, index, newQty });
     },
 
     removeFromSharedCart: (tableId: string, index: number) => {
@@ -873,6 +878,7 @@ export function useRestaurantStore() {
         [tableId]: current.filter((_, idx) => idx !== index),
       };
       notifyAll();
+      syncWithServer("REMOVE_FROM_SHARED_CART", { tableId, index });
     },
 
     clearSharedCart: (tableId: string) => {
@@ -881,6 +887,7 @@ export function useRestaurantStore() {
         [tableId]: [],
       };
       notifyAll();
+      syncWithServer("CLEAR_SHARED_CART", { tableId });
     },
 
     registerParticipant: (tableId: string, participant: TableParticipant) => {
@@ -894,8 +901,10 @@ export function useRestaurantStore() {
           [tableId]: [...current, newPart],
         };
         notifyAll();
+        syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: newPart });
         return newPart;
       }
+      syncWithServer("REGISTER_PARTICIPANT", { tableId, participant });
       return exists;
     },
 
@@ -909,6 +918,7 @@ export function useRestaurantStore() {
         })),
       };
       notifyAll();
+      syncWithServer("TRANSFER_HOST_ROLE", { tableId, targetParticipantId });
     },
 
     updateParticipantName: (tableId: string, participantId: string, newName: string) => {
@@ -920,6 +930,7 @@ export function useRestaurantStore() {
         ),
       };
       notifyAll();
+      syncWithServer("UPDATE_PARTICIPANT_NAME", { tableId, participantId, newName });
     },
 
     // Priority 0: Recipe & Raw Ingredient Stock Management
