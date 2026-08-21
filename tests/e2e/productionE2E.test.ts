@@ -101,11 +101,11 @@ runTest("E2E Lifecycle 1: Complete Customer -> Kitchen -> Waiter -> Cashier -> C
 
   // Verify Minor Units Arithmetic:
   // Burger: 2 * 360 = 720 TL
-  // Cheesecake: 1 * 180 = 180 TL
-  // Subtotal = 900 TL
-  // KDV (%10) = 90.00 TL -> Total = 990.00 TL
-  assertEqual(order.subtotal, 900, "Subtotal is canonical 900.00 TL");
-  assertEqual(order.totalAmount, 990, "Total amount is 990.00 TL");
+  // Cheesecake: 1 * 240 = 240 TL
+  // Subtotal = 960 TL
+  // KDV (%10) = 96.00 TL -> Total = 1056.00 TL
+  assertEqual(order.subtotal, 960, "Subtotal is canonical 960.00 TL");
+  assertEqual(order.totalAmount, 1056, "Total amount is 1056.00 TL");
   assertEqual(order.status, "PENDING_CONFIRMATION", "Initial state is PENDING_CONFIRMATION");
 
   // Step 4: Kitchen (KDS) receives and confirms order -> PREPARING
@@ -119,7 +119,7 @@ runTest("E2E Lifecycle 1: Complete Customer -> Kitchen -> Waiter -> Cashier -> C
   order.status = "READY";
 
   // Step 6: Waiter logs in with PIN and delivers food to Table 4 -> SERVED
-  const waiterAuth = authenticateStaffWithPin(REST_ID, "staff_waiter_1", "1234");
+  const waiterAuth = authenticateStaffWithPin(REST_ID, "staff_1", "1111");
   assert(waiterAuth.success && waiterAuth.token !== undefined, "Waiter successfully authenticated with PIN");
 
   const servedTransition = validateOrderStateTransition(order.status, "SERVED");

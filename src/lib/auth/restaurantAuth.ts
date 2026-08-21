@@ -108,10 +108,11 @@ export function verifySessionToken(token: string): {
     return { valid: false, error: "MALFORMED" };
   }
 
-  const [serialized, signature] = token.split(".");
-  if (!serialized || !signature) {
+  const parts = token.split(".");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
     return { valid: false, error: "MALFORMED" };
   }
+  const [serialized, signature] = parts;
 
   const expectedSignature = crypto
     .createHmac("sha256", AUTH_SECRET)

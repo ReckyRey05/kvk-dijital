@@ -85,7 +85,7 @@ function runTest(testName: string, testFn: () => void) {
 const REST_A = "rest_aura_bistro";
 const REST_B = "rest_rival_cafe";
 const sessionA = createTableSession(REST_A, "m-4", "Masa 4", "device_a", 15);
-const staffLogin = authenticateStaffWithPin(REST_A, "staff_waiter_1", "1234");
+const staffLogin = authenticateStaffWithPin(REST_A, "staff_1", "1111");
 const legitimateStaffToken = staffLogin.token!;
 
 // ==========================================
@@ -95,10 +95,9 @@ console.log("--- 1. AUTHENTICATION & CLAIM FORGERY ATTACKS ---");
 
 runTest("Red Team Auth 1: Reject Tampered HMAC Signature", () => {
   const parts = legitimateStaffToken.split(".");
-  const header = parts[0];
-  const payload = parts[1];
+  const serialized = parts[0];
   const forgedSig = crypto.randomBytes(32).toString("base64url");
-  const tamperedToken = `${header}.${payload}.${forgedSig}`;
+  const tamperedToken = `${serialized}.${forgedSig}`;
 
   const verified = verifySessionToken(tamperedToken);
   assert(!verified.valid, "Tampered HMAC signature must be rejected");
@@ -106,13 +105,13 @@ runTest("Red Team Auth 1: Reject Tampered HMAC Signature", () => {
 
 runTest("Red Team Auth 2: Reject Role Claim Forgery (CUSTOMER -> OWNER Escalation)", () => {
   // Decode legitimate session payload and modify role to OWNER
-  const parts = legitimateStaffToken.split(".");
-  const decodedPayload = JSON.parse(Buffer.from(parts[0], "base64url").toString("utf8"));
+  const [serialized, signature] = legitimateStaffToken.split(".");
+  const decodedPayload = JSON.parse(Buffer.from(serialized, "base64url").toString("utf8"));
   decodedPayload.role = "OWNER";
   decodedPayload.permissions = ["ALL"];
 
   const forgedPayloadBase64 = Buffer.from(JSON.stringify(decodedPayload)).toString("base64url");
-  const forgedToken = `${forgedPayloadBase64}.${parts[1]}`;
+  const forgedToken = `${forgedPayloadBase64}.${signature}`;
 
   const verified = verifySessionToken(forgedToken);
   assert(!verified.valid, "Payload modification must break signature and be rejected");
@@ -135,13 +134,8 @@ runTest("Red Team IDOR 2: Block Cross-Tenant Order Injection", () => {
     tableId: "m-1",
   };
 
-  let blocked = false;
-  try {
-    assertOrderOwnership(REST_A, foreignOrder as any);
-  } catch (e: any) {
-    blocked = true;
-  }
-  assert(blocked, "Tenant A cannot access or mutate Tenant B orders");
+  const res = assertOrderOwnership(REST_A, foreignOrder as any);
+  assert(!res.allowed, "Tenant A cannot access or mutate Tenant B orders");
 });
 
 // ==========================================

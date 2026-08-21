@@ -69,13 +69,13 @@ runTest("Money Invariant 1: Total = Subtotal + Tax + ServiceCharge - Discount", 
   assert(Boolean(res.ok && res.order), "Order created successfully");
   const order = res.order!;
 
-  const subtotalMinor = toMinorUnits(order.subtotal); // 90000 kuruş (900 TL)
-  const taxMinor = toMinorUnits(order.taxAmount);      // 9000 kuruş (90 TL, %10 KDV)
+  const subtotalMinor = toMinorUnits(order.subtotal); // 96000 kuruş (960 TL)
+  const taxMinor = toMinorUnits(order.taxAmount);      // 9600 kuruş (96 TL, %10 KDV)
   const serviceMinor = toMinorUnits(order.serviceCharge); // 0 kuruş
-  const totalMinor = toMinorUnits(order.totalAmount);  // 99000 kuruş (990 TL)
+  const totalMinor = toMinorUnits(order.totalAmount);  // 105600 kuruş (1056 TL)
 
   assertEqual(subtotalMinor + taxMinor + serviceMinor, totalMinor, "Money equation must be exact in minor units");
-  assertEqual(order.totalAmount, 990, "Order total is 990.00 TL");
+  assertEqual(order.totalAmount, 1056, "Order total is 1056.00 TL");
 });
 
 // ==========================================
