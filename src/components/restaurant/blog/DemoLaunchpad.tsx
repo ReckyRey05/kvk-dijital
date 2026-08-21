@@ -31,6 +31,7 @@ export default function DemoLaunchpad() {
           <Link
             href="/qr/aura-bistro/m-4"
             target="_blank"
+            rel="noopener noreferrer"
             className="px-2.5 py-1 rounded-lg bg-accent text-black font-extrabold text-xs hover:bg-accent/90 transition-all inline-flex items-center gap-1 shadow-md shadow-accent/20"
           >
             <QrCode className="w-3.5 h-3.5" />
@@ -40,6 +41,7 @@ export default function DemoLaunchpad() {
           <Link
             href="/restoran/aura-bistro/kasa"
             target="_blank"
+            rel="noopener noreferrer"
             className="px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-extrabold text-xs hover:bg-emerald-400 transition-all inline-flex items-center gap-1 shadow-md shadow-emerald-500/20"
           >
             <Store className="w-3.5 h-3.5" />
@@ -56,6 +58,7 @@ export default function DemoLaunchpad() {
         <Link
           href="/qr/aura-bistro/m-4"
           target="_blank"
+          rel="noopener noreferrer"
           className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-accent/10 border border-white/10 hover:border-accent/50 transition-all flex flex-col justify-between space-y-4"
         >
           <div className="flex items-start justify-between">
@@ -86,6 +89,7 @@ export default function DemoLaunchpad() {
         <Link
           href="/restoran/aura-bistro/kasa"
           target="_blank"
+          rel="noopener noreferrer"
           className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-accent/10 border border-white/10 hover:border-accent/50 transition-all flex flex-col justify-between space-y-4"
         >
           <div className="flex items-start justify-between">
@@ -116,6 +120,7 @@ export default function DemoLaunchpad() {
         <Link
           href="/restoran/aura-bistro/mutfak"
           target="_blank"
+          rel="noopener noreferrer"
           className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-accent/10 border border-white/10 hover:border-accent/50 transition-all flex flex-col justify-between space-y-4"
         >
           <div className="flex items-start justify-between">
@@ -146,6 +151,7 @@ export default function DemoLaunchpad() {
         <Link
           href="/restoran/aura-bistro/yonetim"
           target="_blank"
+          rel="noopener noreferrer"
           className="group p-5 rounded-2xl bg-white/[0.02] hover:bg-accent/10 border border-white/10 hover:border-accent/50 transition-all flex flex-col justify-between space-y-4"
         >
           <div className="flex items-start justify-between">
@@ -192,6 +198,7 @@ export default function DemoLaunchpad() {
           <Link
             href="https://wa.me/905348914905?text=Merhaba,%20Cep%20Garson%20Restoran%20QR%20ve%20POS%20sistemi%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
             target="_blank"
+            rel="noopener noreferrer"
             className="px-5 py-2.5 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-lg shadow-accent/20 cursor-pointer"
           >
             <span>Restoranınız İçin Teklif Alın</span>
