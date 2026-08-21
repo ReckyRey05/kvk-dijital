@@ -778,10 +778,23 @@ export function useRestaurantStore() {
 
     registerParticipant: (tableId: string, participant: TableParticipant) => {
       const current = globalTableParticipants[tableId] || [];
+      const existingLeader = current.find((p) => p.isHost);
       const exists = current.find((p) => p.id === participant.id);
+
       if (!exists) {
-        const isFirst = current.length === 0;
-        const newPart = { ...participant, isHost: isFirst || participant.isHost };
+        const isLeader = !existingLeader;
+        const guestCount = current.filter((p) => !p.isHost).length + 1;
+        const finalName = isLeader
+          ? (participant.name && participant.name !== "Misafir" ? participant.name : "Masa Reisi")
+          : (participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : `Misafir ${guestCount}`);
+
+        const newPart: TableParticipant = {
+          id: participant.id,
+          name: finalName,
+          isHost: isLeader,
+          status: isLeader ? "APPROVED" : "PENDING_APPROVAL",
+          joinedAt: participant.joinedAt || new Date().toISOString(),
+        };
         globalTableParticipants = {
           ...globalTableParticipants,
           [tableId]: [...current, newPart],
@@ -790,8 +803,22 @@ export function useRestaurantStore() {
         syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: newPart });
         return newPart;
       }
-      syncWithServer("REGISTER_PARTICIPANT", { tableId, participant });
-      return exists;
+
+      // Existing participant: ensure isHost matches the true table leader
+      const isLeader = existingLeader ? existingLeader.id === participant.id : true;
+      const syncedPart: TableParticipant = {
+        ...exists,
+        isHost: isLeader,
+        name: participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : exists.name,
+      };
+
+      globalTableParticipants = {
+        ...globalTableParticipants,
+        [tableId]: current.map((p) => (p.id === participant.id ? syncedPart : p)),
+      };
+      notifyAll();
+      syncWithServer("REGISTER_PARTICIPANT", { tableId, participant: syncedPart });
+      return syncedPart;
     },
 
     transferHostRole: (tableId: string, targetParticipantId: string) => {

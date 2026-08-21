@@ -130,24 +130,40 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     let participant: TableParticipant;
 
     const existingList = tableParticipants[tableId] || [];
+    const existingLeader = existingList.find((p) => p.isHost);
 
     if (stored) {
-      participant = JSON.parse(stored);
-      // Sync host state and status with store if changed
-      const liveP = existingList.find((p) => p.id === participant.id);
-      if (liveP) {
-        participant = liveP;
+      try {
+        participant = JSON.parse(stored);
+        const liveP = existingList.find((p) => p.id === participant.id);
+        if (liveP) {
+          participant = liveP;
+        } else if (existingLeader && existingLeader.id !== participant.id) {
+          participant.isHost = false;
+          if (participant.name === "Masa Reisi") {
+            participant.name = `Misafir ${existingList.filter((p) => !p.isHost).length + 1}`;
+          }
+          participant.status = "PENDING_APPROVAL";
+        }
+      } catch {
+        participant = {
+          id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          name: !existingLeader ? "Masa Reisi" : `Misafir ${existingList.filter((p) => !p.isHost).length + 1}`,
+          isHost: !existingLeader,
+          status: !existingLeader ? "APPROVED" : "PENDING_APPROVAL",
+          joinedAt: new Date().toISOString(),
+        };
       }
     } else {
-      const isFirst = existingList.length === 0;
-      const guestNum = existingList.length + 1;
+      const isLeader = !existingLeader;
+      const guestNum = existingList.filter((p) => !p.isHost).length + 1;
       const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
 
       participant = {
         id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        name: isFirst ? "Masa Reisi" : `Misafir ${guestNum}`,
-        isHost: isFirst,
-        status: isFirst ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+        name: isLeader ? "Masa Reisi" : `Misafir ${guestNum}`,
+        isHost: isLeader,
+        status: isLeader ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
         joinedAt: new Date().toISOString(),
       };
       localStorage.setItem(storageKey, JSON.stringify(participant));
@@ -155,7 +171,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
     const registered = registerParticipant(tableId, participant);
     setCurrentParticipant(registered);
-  }, [tableId]);
+  }, [tableId, tableParticipants]);
 
   // Keep local participant in sync when host role or approval status changes
   useEffect(() => {

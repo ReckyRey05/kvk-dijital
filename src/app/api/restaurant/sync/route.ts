@@ -163,22 +163,39 @@ export async function POST(req: Request) {
         const { tableId, participant } = payload || {};
         if (tableId && participant) {
           const currentList = state.tableParticipants[tableId] || [];
+          const existingLeader = currentList.find((p) => p.isHost);
           const exists = currentList.find((p) => p.id === participant.id);
           const groupSettings = state.tableGroupSettings[tableId];
 
           if (!exists) {
-            const isFirst = currentList.length === 0;
+            const isLeader = !existingLeader;
             const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
+            const guestCount = currentList.filter((p) => !p.isHost).length + 1;
+
+            const finalName = isLeader
+              ? (participant.name && participant.name !== "Misafir" ? participant.name : "Masa Reisi")
+              : (participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : `Misafir ${guestCount}`);
 
             const newP: TableParticipant = {
-              ...participant,
-              isHost: isFirst || participant.isHost,
-              status: isFirst ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+              id: participant.id,
+              name: finalName,
+              isHost: isLeader,
+              status: isLeader ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+              joinedAt: participant.joinedAt || new Date().toISOString(),
             };
             state.tableParticipants[tableId] = [...currentList, newP];
           } else {
+            // If already registered on this table, sync status & leader role properly
+            const isLeader = existingLeader ? existingLeader.id === participant.id : true;
             state.tableParticipants[tableId] = currentList.map((p) =>
-              p.id === participant.id ? { ...p, ...participant, status: p.status || participant.status || "APPROVED" } : p
+              p.id === participant.id
+                ? {
+                    ...p,
+                    isHost: isLeader,
+                    name: participant.name && !participant.name.startsWith("Masa Reisi") ? participant.name : p.name,
+                    status: isLeader ? "APPROVED" : p.status || "PENDING_APPROVAL",
+                  }
+                : p
             );
           }
         }
