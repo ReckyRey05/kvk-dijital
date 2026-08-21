@@ -54,6 +54,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
     resolveManagerAlert,
     closeTableBill,
     transferTable,
+    resetSingleTable,
     resetAllTables,
   } = useRestaurantStore();
 
@@ -368,6 +369,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
               onClose={() => setSelectedTableId(null)}
               onCloseBill={closeTableBill}
               onTransferTable={transferTable}
+              onResetSingleTable={resetSingleTable}
               onOpenEFatura={() => setIsEFaturaOpen(true)}
             />
           )}

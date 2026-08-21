@@ -628,10 +628,16 @@ export function useRestaurantStore() {
     },
 
     toggleItemAvailability: (itemId: string) => {
-      globalMenuItems = globalMenuItems.map((item) =>
-        item.id === itemId ? { ...item, isAvailable: !item.isAvailable } : item
-      );
+      let isNowAvailable = false;
+      globalMenuItems = globalMenuItems.map((item) => {
+        if (item.id === itemId) {
+          isNowAvailable = !item.isAvailable;
+          return { ...item, isAvailable: isNowAvailable };
+        }
+        return item;
+      });
       notifyAll();
+      syncWithServer("UPDATE_MENU_ITEM", { itemId, isAvailable: isNowAvailable });
     },
 
     updateItemPrice: (itemId: string, newPrice: number) => {
@@ -647,6 +653,7 @@ export function useRestaurantStore() {
           : item
       );
       notifyAll();
+      syncWithServer("UPDATE_ITEM_PRICE", { itemId, price: Math.round(newPrice) });
     },
 
     setCampaignDiscount: (itemId: string, discountedPrice: number, discountUntil: string) => {
@@ -664,6 +671,7 @@ export function useRestaurantStore() {
         return item;
       });
       notifyAll();
+      syncWithServer("SET_CAMPAIGN_DISCOUNT", { itemId, discountedPrice, discountUntil });
     },
 
     cancelCampaignDiscount: (itemId: string) => {
@@ -679,6 +687,10 @@ export function useRestaurantStore() {
         return item;
       });
       notifyAll();
+      const item = globalMenuItems.find((it) => it.id === itemId);
+      if (item) {
+        syncWithServer("UPDATE_ITEM_PRICE", { itemId, price: item.price });
+      }
     },
 
     transferTable: (fromTableId: string, toTableId: string) => {
@@ -823,10 +835,30 @@ export function useRestaurantStore() {
 
     addToSharedCart: (tableId: string, item: OrderItem) => {
       const current = globalSharedCarts[tableId] || [];
-      globalSharedCarts = {
-        ...globalSharedCarts,
-        [tableId]: [...current, item],
-      };
+      const existingIdx = current.findIndex(
+        (it) =>
+          it.menuItemId === item.menuItemId &&
+          it.addedById === item.addedById &&
+          JSON.stringify(it.selectedOptions || []) === JSON.stringify(item.selectedOptions || []) &&
+          JSON.stringify(it.removedIngredients || []) === JSON.stringify(item.removedIngredients || [])
+      );
+      if (existingIdx >= 0) {
+        globalSharedCarts = {
+          ...globalSharedCarts,
+          [tableId]: current.map((it, idx) =>
+            idx === existingIdx ? { ...it, quantity: it.quantity + (item.quantity || 1) } : it
+          ),
+        };
+      } else {
+        const itemWithId = {
+          ...item,
+          id: item.id || `cart_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        };
+        globalSharedCarts = {
+          ...globalSharedCarts,
+          [tableId]: [...current, itemWithId],
+        };
+      }
       notifyAll();
       syncWithServer("ADD_TO_SHARED_CART", { tableId, item });
     },
@@ -1018,6 +1050,37 @@ export function useRestaurantStore() {
       globalSharedCarts = remainingCarts;
       notifyAll();
       syncWithServer("RESET_TABLE_PARTICIPANTS", { tableId });
+    },
+
+    resetSingleTable: (tableId: string) => {
+      globalTables = globalTables.map((t) =>
+        t.id === tableId
+          ? {
+              ...t,
+              status: "EMPTY",
+              activeOrderId: undefined,
+              activeBillTotal: 0,
+              currentSessionId: undefined,
+              activeSessionId: undefined,
+              lastOrderTime: undefined,
+              lastCallTime: undefined,
+              lastCallType: undefined,
+            }
+          : t
+      );
+      globalCalls = globalCalls.map((c) =>
+        c.tableId === tableId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
+      );
+      delete globalTableParticipants[tableId];
+      delete globalTableGroupSettings[tableId];
+      globalSharedCarts[tableId] = [];
+      if (globalTableTransfers[tableId]) {
+        const nextTransfers = { ...globalTableTransfers };
+        delete nextTransfers[tableId];
+        globalTableTransfers = nextTransfers;
+      }
+      notifyAll();
+      syncWithServer("RESET_SINGLE_TABLE", { tableId });
     },
 
     resetAllTables: () => {

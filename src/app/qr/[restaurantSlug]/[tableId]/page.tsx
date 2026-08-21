@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import { MenuItem, OrderItem, WaiterCallType, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
@@ -384,16 +384,25 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     };
   }, [currentParticipant, tableId, heartbeatParticipant]);
 
-  // Check if current table session was closed by Cashier
-  const completedTableOrders = orders.filter(
-    (o) => o.tableId === currentTable.id && o.status === "COMPLETED"
-  );
-  const isTableClosed =
-    currentTable.status === "EMPTY" &&
-    activeTableOrders.length === 0 &&
-    completedTableOrders.length > 0;
+  // Live Session Closed State: Only show "Afiyet Olsun" if this device was joined to an active table session that was closed in real-time
+  const [hasSessionClosed, setHasSessionClosed] = useState(false);
+  const prevTableStatusRef = useRef(currentTable.status);
+
+  useEffect(() => {
+    // If this table transitioned from OCCUPIED to EMPTY while this user was active on the page
+    if (prevTableStatusRef.current === "OCCUPIED" && currentTable.status === "EMPTY") {
+      setHasSessionClosed(true);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(`cg_participant_${tableId}`);
+      }
+    }
+    prevTableStatusRef.current = currentTable.status;
+  }, [currentTable.status, tableId]);
+
+  const isTableClosed = hasSessionClosed;
 
   const handleStartNewSession = () => {
+    setHasSessionClosed(false);
     if (typeof window !== "undefined") {
       localStorage.removeItem(`cg_participant_${tableId}`);
       window.location.reload();

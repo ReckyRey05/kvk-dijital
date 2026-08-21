@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Table, Order, TableParticipant } from "@/types/restaurant";
-import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, ArrowRightLeft, Check, Users, Crown, User } from "lucide-react";
+import { X, Receipt, Printer, CreditCard, Banknote, ShieldX, ArrowRightLeft, Check, Users, Crown, User, RefreshCw } from "lucide-react";
 import { formatEscPosReceipt } from "@/lib/restaurant/posBridge";
 import { DEMO_RESTAURANT } from "@/lib/restaurant/mockData";
 
@@ -14,6 +14,7 @@ interface BillManagerProps {
   onClose: () => void;
   onCloseBill: (tableId: string) => void;
   onTransferTable?: (fromTableId: string, toTableId: string) => void;
+  onResetSingleTable?: (tableId: string) => void;
   onOpenEFatura?: () => void;
 }
 
@@ -25,6 +26,7 @@ export default function BillManager({
   onClose,
   onCloseBill,
   onTransferTable,
+  onResetSingleTable,
   onOpenEFatura,
 }: BillManagerProps) {
   const [isTransferring, setIsTransferring] = useState(false);
@@ -173,12 +175,27 @@ export default function BillManager({
 
               <button
                 onClick={() => setIsTransferring(!isTransferring)}
-                disabled={totalAmount === 0}
+                disabled={table.status === "EMPTY" && participants.length === 0 && allItems.length === 0}
                 className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/30 text-purple-300 text-xs font-semibold flex items-center gap-1 transition-colors disabled:opacity-30 cursor-pointer"
               >
                 <ArrowRightLeft className="w-3.5 h-3.5" />
                 <span>Masa Taşı</span>
               </button>
+
+              {onResetSingleTable && (
+                <button
+                  onClick={() => {
+                    if (window.confirm(`${table.tableNumber} için aktif oturum, sepet ve bekleyen istekler sıfırlanacak. Onaylıyor musunuz?`)) {
+                      onResetSingleTable(table.id);
+                    }
+                  }}
+                  className="px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                  title="Seçili Masayı Sıfırla"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Sıfırla</span>
+                </button>
+              )}
             </div>
 
             <div className="text-right ml-auto">

@@ -287,13 +287,22 @@ export default function ProductModal({ item, onClose, onAddToCart }: ProductModa
           </div>
 
           {/* Add to Cart Submit Button */}
-          <button
-            onClick={handleSubmit}
-            className="flex-1 py-3.5 px-4 rounded-xl bg-accent text-black font-bold text-xs sm:text-sm flex items-center justify-between hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
-          >
-            <span>Sepete Ekle</span>
-            <span>{totalPrice.toLocaleString("tr-TR")} TL</span>
-          </button>
+          {item.isAvailable ? (
+            <button
+              onClick={handleSubmit}
+              className="flex-1 py-3.5 px-4 rounded-xl bg-accent text-black font-bold text-xs sm:text-sm flex items-center justify-between hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 cursor-pointer"
+            >
+              <span>Sepete Ekle</span>
+              <span>{totalPrice.toLocaleString("tr-TR")} TL</span>
+            </button>
+          ) : (
+            <button
+              disabled
+              className="flex-1 py-3.5 px-4 rounded-xl bg-red-950/60 border border-red-500/30 text-red-300 font-bold text-xs sm:text-sm flex items-center justify-center cursor-not-allowed opacity-80"
+            >
+              <span>Tükendi (Stokta Yok)</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

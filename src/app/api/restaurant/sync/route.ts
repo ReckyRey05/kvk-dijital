@@ -335,7 +335,26 @@ export async function POST(req: Request) {
         const { tableId, item } = payload || {};
         if (tableId && item) {
           const currentCart = state.sharedCarts[tableId] || [];
-          state.sharedCarts[tableId] = [...currentCart, item];
+          const existingIdx = currentCart.findIndex(
+            (it) =>
+              it.menuItemId === item.menuItemId &&
+              it.addedById === item.addedById &&
+              JSON.stringify(it.selectedOptions || []) === JSON.stringify(item.selectedOptions || []) &&
+              JSON.stringify(it.removedIngredients || []) === JSON.stringify(item.removedIngredients || [])
+          );
+          if (existingIdx >= 0) {
+            state.sharedCarts[tableId] = currentCart.map((it, idx) =>
+              idx === existingIdx ? { ...it, quantity: it.quantity + (item.quantity || 1) } : it
+            );
+          } else {
+            state.sharedCarts[tableId] = [
+              ...currentCart,
+              {
+                ...item,
+                id: item.id || `cart_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+              },
+            ];
+          }
         }
         break;
       }
@@ -523,12 +542,79 @@ export async function POST(req: Request) {
         break;
       }
 
+      case "RESET_SINGLE_TABLE": {
+        const { tableId } = payload || {};
+        if (tableId) {
+          state.tables = state.tables.map((t) =>
+            t.id === tableId
+              ? {
+                  ...t,
+                  status: "EMPTY",
+                  activeOrderId: undefined,
+                  activeBillTotal: 0,
+                  currentSessionId: undefined,
+                  activeSessionId: undefined,
+                  lastOrderTime: undefined,
+                  lastCallTime: undefined,
+                  lastCallType: undefined,
+                }
+              : t
+          );
+          state.waiterCalls = state.waiterCalls.map((c) =>
+            c.tableId === tableId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
+          );
+          delete state.tableParticipants[tableId];
+          delete state.tableGroupSettings[tableId];
+          state.sharedCarts[tableId] = [];
+          if (state.tableTransfers?.[tableId]) {
+            delete state.tableTransfers[tableId];
+          }
+        }
+        break;
+      }
+
+      case "UPDATE_MENU_ITEM": {
+        const { itemId, isAvailable } = payload || {};
+        if (itemId) {
+          state.menuItems = state.menuItems.map((it) =>
+            it.id === itemId ? { ...it, isAvailable: !!isAvailable } : it
+          );
+        }
+        break;
+      }
+
+      case "UPDATE_ITEM_PRICE": {
+        const { itemId, price } = payload || {};
+        if (itemId && typeof price === "number" && price >= 0) {
+          state.menuItems = state.menuItems.map((it) =>
+            it.id === itemId
+              ? { ...it, price: Math.round(price), originalPrice: undefined, discountUntil: undefined }
+              : it
+          );
+        }
+        break;
+      }
+
+      case "SET_CAMPAIGN_DISCOUNT": {
+        const { itemId, discountedPrice, discountUntil } = payload || {};
+        if (itemId && typeof discountedPrice === "number" && discountedPrice > 0) {
+          state.menuItems = state.menuItems.map((it) =>
+            it.id === itemId
+              ? { ...it, price: Math.round(discountedPrice), originalPrice: it.originalPrice || it.price, discountUntil }
+              : it
+          );
+        }
+        break;
+      }
+
       case "RESET_ALL_TABLES": {
         state.tables = state.tables.map((t) => ({
           ...t,
           status: "EMPTY",
           activeOrderId: undefined,
           activeBillTotal: 0,
+          currentSessionId: undefined,
+          activeSessionId: undefined,
           lastOrderTime: undefined,
           lastCallTime: undefined,
           lastCallType: undefined,
@@ -558,6 +644,10 @@ export async function POST(req: Request) {
         tables: state.tables,
         waiterCalls: state.waiterCalls,
         managerAlerts: state.managerAlerts,
+        vouchers: state.vouchers,
+        songs: state.songs,
+        menuItems: state.menuItems,
+        tableTransfers: state.tableTransfers || {},
         tableParticipants: state.tableParticipants,
         sharedCarts: state.sharedCarts,
         tableGroupSettings: state.tableGroupSettings,
