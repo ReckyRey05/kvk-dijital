@@ -231,8 +231,16 @@ async function syncWithServer(action: string, payload?: any) {
     });
     if (res.ok) {
       const data = await res.json();
-      if (data.version) {
+      if (data && data.version) {
         lastKnownServerVersion = data.version;
+        if (data.orders) globalOrders = data.orders;
+        if (data.tables) globalTables = data.tables;
+        if (data.waiterCalls) globalCalls = data.waiterCalls;
+        if (data.tableParticipants) globalTableParticipants = data.tableParticipants;
+        if (data.sharedCarts) globalSharedCarts = data.sharedCarts;
+        if (data.tableGroupSettings) globalTableGroupSettings = data.tableGroupSettings;
+        saveToStorage();
+        notifyAll(false);
       }
     }
   } catch (err) {

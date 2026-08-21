@@ -40,6 +40,11 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
   const isPreparing = order.status === "PREPARING";
   const isReady = order.status === "READY";
 
+  if (isReady) {
+    cardBorder = "border-green-500/60 ring-2 ring-green-500/20";
+    timerBadgeColor = "bg-green-500 text-black font-black";
+  }
+
   return (
     <div
       className={`rounded-2xl bg-[#0c1212] border ${cardBorder} p-3.5 sm:p-4 flex flex-col justify-between shadow-2xl transition-all min-h-[340px] sm:min-h-[360px] h-auto`}
@@ -54,12 +59,19 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
                 #{order.id.slice(-6)}
               </span>
             </div>
-            <span className="text-[11px] text-foreground/60">
-              {new Date(order.createdAt).toLocaleTimeString("tr-TR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="text-[11px] text-foreground/60">
+                {new Date(order.createdAt).toLocaleTimeString("tr-TR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+              {isReady && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/40 text-green-300 font-extrabold animate-pulse">
+                  Servis Bekliyor
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Time Badge */}
@@ -67,7 +79,7 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
             className={`px-3 py-1 rounded-full border text-xs font-bold flex items-center gap-1.5 ${timerBadgeColor}`}
           >
             <Clock className="w-3.5 h-3.5" />
-            <span>{elapsedMinutes} dk</span>
+            <span>{isReady ? "Hazır" : `${elapsedMinutes} dk`}</span>
           </div>
         </div>
 
@@ -125,22 +137,30 @@ export default function KitchenCard({ order, onUpdateStatus }: KitchenCardProps)
       </div>
 
       {/* Action Footer for Kitchen Chefs */}
-      <div className="pt-3 border-t border-white/10">
+      <div className="pt-3 border-t border-white/10 space-y-2">
         {isPreparing ? (
-          <button
-            onClick={() => onUpdateStatus(order.id, "READY")}
-            className="w-full py-3.5 rounded-xl bg-green-500 hover:bg-green-400 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-green-500/20 cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Hazır (Garsona Bildir)</span>
-          </button>
+          <div className="space-y-1.5">
+            <button
+              onClick={() => onUpdateStatus(order.id, "READY")}
+              className="w-full py-3.5 rounded-xl bg-green-500 hover:bg-green-400 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-green-500/20 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Hazır (Garsona Bildir)</span>
+            </button>
+            <button
+              onClick={() => onUpdateStatus(order.id, "SERVED")}
+              className="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 text-foreground/60 hover:text-white font-semibold text-[11px] transition-colors cursor-pointer"
+            >
+              Doğrudan Servis Edildi (Tamamla)
+            </button>
+          </div>
         ) : isReady ? (
           <button
             onClick={() => onUpdateStatus(order.id, "SERVED")}
             className="w-full py-3.5 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-accent/20 cursor-pointer"
           >
             <CheckCircle2 className="w-4 h-4" />
-            <span>Servis Edildi Olarak İşaretle</span>
+            <span>Servis Edildi (Kapat)</span>
           </button>
         ) : (
           <div className="py-2.5 text-center text-xs text-green-400 font-bold flex items-center justify-center gap-2">
