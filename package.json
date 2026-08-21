@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx tests/canonicalOrderEngine.test.ts && tsx tests/concurrencyAndIntegrity.test.ts && tsx tests/security/tenant-isolation/tenantIsolation.test.ts"
+    "test": "tsx tests/canonicalOrderEngine.test.ts && tsx tests/concurrencyAndIntegrity.test.ts && tsx tests/security/tenant-isolation/tenantIsolation.test.ts && tsx tests/security/authentication/authSecurity.test.ts && tsx tests/security/session/sessionSecurity.test.ts && tsx tests/security/rbac/rbacPrivilegeEscalation.test.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.3.0",
