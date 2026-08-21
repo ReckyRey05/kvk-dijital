@@ -333,6 +333,27 @@ function loadFromStorage() {
   }
 }
 
+let lastKnownServerVersion = 0;
+
+async function syncWithServer(action: string, payload?: any) {
+  if (typeof window === "undefined") return;
+  try {
+    const res = await fetch("/api/restaurant/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, payload }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.version) {
+        lastKnownServerVersion = data.version;
+      }
+    }
+  } catch (err) {
+    // Silently continue in offline/fallback mode
+  }
+}
+
 function notifyAll(broadcast = true) {
   saveToStorage();
   listeners.forEach((listener) => listener());
@@ -409,17 +430,6 @@ export function useRestaurantStore() {
         if (event.data.staffMembers) globalStaffMembers = event.data.staffMembers;
         if (event.data.rolePermissions) globalRolePermissions = event.data.rolePermissions;
         if (event.data.bossSecurity) globalBossSecurity = event.data.bossSecurity;
-        if (event.data.tables) globalTables = event.data.tables;
-        if (event.data.calls) globalCalls = event.data.calls;
-        if (event.data.menuItems) globalMenuItems = event.data.menuItems;
-        if (event.data.alerts) globalManagerAlerts = event.data.alerts;
-        if (event.data.vouchers) globalVouchers = event.data.vouchers;
-        if (event.data.songs) globalSongRequests = event.data.songs;
-        if (event.data.sharedCarts) globalSharedCarts = event.data.sharedCarts;
-        if (event.data.participants) globalTableParticipants = event.data.participants;
-        if (event.data.ingredients) globalIngredients = event.data.ingredients;
-        if (event.data.wasteLogs) globalWasteLogs = event.data.wasteLogs;
-        if (event.data.happyHourRules) globalHappyHourRules = event.data.happyHourRules;
 
         const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
         const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -437,6 +447,48 @@ export function useRestaurantStore() {
     if (broadcastChannel) {
       broadcastChannel.addEventListener("message", handleBroadcast);
     }
+
+    // Real-time live server polling for multi-device sync (Phone 1 -> PC -> Phone 2)
+    const pollServer = async () => {
+      try {
+        const res = await fetch(`/api/restaurant/sync?version=${lastKnownServerVersion}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!data.upToDate && data.version > lastKnownServerVersion) {
+            const prevOrderCount = globalOrders.length;
+            const prevCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
+            const prevAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
+
+            lastKnownServerVersion = data.version;
+            if (data.orders) globalOrders = data.orders;
+            if (data.tables) globalTables = data.tables;
+            if (data.waiterCalls) globalCalls = data.waiterCalls;
+            if (data.managerAlerts) globalManagerAlerts = data.managerAlerts;
+            if (data.vouchers) globalVouchers = data.vouchers;
+            if (data.songs) globalSongRequests = data.songs;
+            if (data.menuItems) globalMenuItems = data.menuItems;
+            if (data.tableTransfers) globalTableTransfers = data.tableTransfers;
+
+            const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
+            const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
+
+            if (data.orders && data.orders.length > prevOrderCount) {
+              playOrderAlertSound();
+            } else if (newCallCount > prevCallCount || newAlertCount > prevAlertCount) {
+              playWaiterCallSound();
+            }
+
+            saveToStorage();
+            handler();
+          }
+        }
+      } catch {
+        // ignore polling network errors
+      }
+    };
+
+    pollServer();
+    const serverSyncInterval = setInterval(pollServer, 1500);
 
     // Periodic check for expired discounts
     const checkExpirations = () => {
@@ -467,6 +519,7 @@ export function useRestaurantStore() {
       if (broadcastChannel) {
         broadcastChannel.removeEventListener("message", handleBroadcast);
       }
+      clearInterval(serverSyncInterval);
       clearInterval(expiryInterval);
     };
   }, []);
@@ -498,6 +551,7 @@ export function useRestaurantStore() {
       );
       playOrderAlertSound();
       notifyAll();
+      syncWithServer("CREATE_ORDER", { order });
       return order;
     },
 
@@ -508,6 +562,7 @@ export function useRestaurantStore() {
           : ord
       );
       notifyAll();
+      syncWithServer("CONFIRM_ORDER", { orderId });
     },
 
     updateOrderStatus: (orderId: string, status: Order["status"]) => {
@@ -522,6 +577,7 @@ export function useRestaurantStore() {
           : ord
       );
       notifyAll();
+      syncWithServer("UPDATE_ORDER_STATUS", { orderId, status });
     },
 
     callWaiter: (call: WaiterCall) => {
@@ -538,6 +594,7 @@ export function useRestaurantStore() {
       );
       playWaiterCallSound();
       notifyAll();
+      syncWithServer("CALL_WAITER", { call });
     },
 
     resolveWaiterCall: (callId: string) => {
@@ -551,6 +608,7 @@ export function useRestaurantStore() {
         );
       }
       notifyAll();
+      syncWithServer("RESOLVE_CALL", { callId });
     },
 
     closeTableBill: (tableId: string) => {
@@ -589,6 +647,7 @@ export function useRestaurantStore() {
       }
 
       notifyAll();
+      syncWithServer("CLOSE_TABLE_BILL", { tableId });
     },
 
     toggleItemAvailability: (itemId: string) => {
@@ -713,6 +772,7 @@ export function useRestaurantStore() {
       });
 
       notifyAll();
+      syncWithServer("TRANSFER_TABLE", { fromTableId, toTableId });
       return true;
     },
 
