@@ -207,7 +207,13 @@ export interface TableParticipant {
   id: string;
   name: string;
   isHost: boolean;
+  status?: "APPROVED" | "PENDING_APPROVAL" | "REJECTED";
   joinedAt: string;
+}
+
+export interface TableGroupSettings {
+  allowGroup: boolean;
+  configured: boolean;
 }
 
 export interface OrderItem {

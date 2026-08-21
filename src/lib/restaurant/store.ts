@@ -12,6 +12,7 @@ import {
   SongRequest,
   OrderItem,
   TableParticipant,
+  TableGroupSettings,
   Ingredient,
   WasteLog,
   HappyHourRule,
@@ -206,6 +207,7 @@ let globalSongRequests: SongRequest[] = [
 
 let globalSharedCarts: Record<string, OrderItem[]> = {};
 let globalTableParticipants: Record<string, TableParticipant[]> = {};
+let globalTableGroupSettings: Record<string, TableGroupSettings> = {};
 let globalIngredients: Ingredient[] = [...DEMO_INGREDIENTS];
 let globalWasteLogs: WasteLog[] = [...DEMO_WASTE_LOGS];
 let globalHappyHourRules: HappyHourRule[] = [...DEMO_HAPPY_HOUR_RULES];
@@ -247,6 +249,7 @@ function saveToStorage() {
     localStorage.setItem("cg_delivery_orders", JSON.stringify(globalDeliveryOrders));
     localStorage.setItem("cg_efatura_records", JSON.stringify(globalEFaturaRecords));
     localStorage.setItem("cg_table_transfers", JSON.stringify(globalTableTransfers));
+    localStorage.setItem("cg_table_group_settings", JSON.stringify(globalTableGroupSettings));
     localStorage.setItem("cg_staff_members", JSON.stringify(globalStaffMembers));
     localStorage.setItem("cg_role_permissions", JSON.stringify(globalRolePermissions));
     localStorage.setItem("cg_boss_security", JSON.stringify(globalBossSecurity));
@@ -319,6 +322,9 @@ function loadFromStorage() {
         globalTableTransfers = {};
       }
     }
+
+    const groupSettings = localStorage.getItem("cg_table_group_settings");
+    if (groupSettings) globalTableGroupSettings = JSON.parse(groupSettings);
 
     const staffMembers = localStorage.getItem("cg_staff_members");
     if (staffMembers) globalStaffMembers = JSON.parse(staffMembers);
@@ -474,6 +480,7 @@ export function useRestaurantStore() {
             if (data.tableTransfers) globalTableTransfers = data.tableTransfers;
             if (data.tableParticipants) globalTableParticipants = data.tableParticipants;
             if (data.sharedCarts) globalSharedCarts = data.sharedCarts;
+            if (data.tableGroupSettings) globalTableGroupSettings = data.tableGroupSettings;
 
             const newCallCount = globalCalls.filter((c) => c.status === "ACTIVE").length;
             const newAlertCount = globalManagerAlerts.filter((a) => !a.isResolved).length;
@@ -931,6 +938,29 @@ export function useRestaurantStore() {
       };
       notifyAll();
       syncWithServer("UPDATE_PARTICIPANT_NAME", { tableId, participantId, newName });
+    },
+
+    tableGroupSettings: globalTableGroupSettings,
+
+    configureGroupDining: (tableId: string, allowGroup: boolean) => {
+      globalTableGroupSettings = {
+        ...globalTableGroupSettings,
+        [tableId]: { allowGroup, configured: true },
+      };
+      notifyAll();
+      syncWithServer("CONFIGURE_GROUP_DINING", { tableId, allowGroup });
+    },
+
+    approveParticipant: (tableId: string, participantId: string, approved: boolean) => {
+      const current = globalTableParticipants[tableId] || [];
+      globalTableParticipants = {
+        ...globalTableParticipants,
+        [tableId]: current.map((p) =>
+          p.id === participantId ? { ...p, status: approved ? "APPROVED" : "REJECTED" } : p
+        ),
+      };
+      notifyAll();
+      syncWithServer("APPROVE_PARTICIPANT", { tableId, participantId, approved });
     },
 
     // Priority 0: Recipe & Raw Ingredient Stock Management

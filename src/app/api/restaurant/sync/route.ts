@@ -10,6 +10,7 @@ import {
   SongRequest,
   TableParticipant,
   OrderItem,
+  TableGroupSettings,
 } from "@/types/restaurant";
 import {
   DEMO_RESTAURANT,
@@ -35,6 +36,7 @@ interface LiveRestaurantState {
   tableTransfers: Record<string, { toTableId: string; toTableNumber: string; timestamp: number }>;
   tableParticipants: Record<string, TableParticipant[]>;
   sharedCarts: Record<string, OrderItem[]>;
+  tableGroupSettings: Record<string, TableGroupSettings>;
 }
 
 const INITIAL_SERVER_STATE: LiveRestaurantState = {
@@ -78,6 +80,7 @@ const INITIAL_SERVER_STATE: LiveRestaurantState = {
   tableTransfers: {},
   tableParticipants: {},
   sharedCarts: {},
+  tableGroupSettings: {},
 };
 
 // Global fallback memory state (for local dev / server instances)
@@ -100,6 +103,7 @@ async function getLiveState(): Promise<LiveRestaurantState> {
           ...data,
           tableParticipants: data.tableParticipants || {},
           sharedCarts: data.sharedCarts || {},
+          tableGroupSettings: data.tableGroupSettings || {},
         };
         return globalForRestaurant._restaurantLiveState;
       }
@@ -139,6 +143,7 @@ export async function GET() {
         tableTransfers: state.tableTransfers || {},
         tableParticipants: state.tableParticipants || {},
         sharedCarts: state.sharedCarts || {},
+        tableGroupSettings: state.tableGroupSettings || {},
       },
       {
         headers: {
@@ -167,8 +172,58 @@ export async function POST(req: Request) {
 
     state.tableParticipants = state.tableParticipants || {};
     state.sharedCarts = state.sharedCarts || {};
+    state.tableGroupSettings = state.tableGroupSettings || {};
 
     switch (action) {
+      case "CONFIGURE_GROUP_DINING": {
+        const { tableId, allowGroup } = payload || {};
+        if (tableId) {
+          state.tableGroupSettings[tableId] = {
+            allowGroup: Boolean(allowGroup),
+            configured: true,
+          };
+        }
+        break;
+      }
+
+      case "REGISTER_PARTICIPANT": {
+        const { tableId, participant } = payload || {};
+        if (tableId && participant) {
+          const currentList = state.tableParticipants[tableId] || [];
+          const exists = currentList.find((p) => p.id === participant.id);
+          const groupSettings = state.tableGroupSettings[tableId];
+
+          if (!exists) {
+            const isFirst = currentList.length === 0;
+            const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
+
+            const newP: TableParticipant = {
+              ...participant,
+              isHost: isFirst || participant.isHost,
+              status: isFirst ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
+            };
+            state.tableParticipants[tableId] = [...currentList, newP];
+          } else {
+            state.tableParticipants[tableId] = currentList.map((p) =>
+              p.id === participant.id ? { ...p, ...participant, status: p.status || participant.status || "APPROVED" } : p
+            );
+          }
+        }
+        break;
+      }
+
+      case "APPROVE_PARTICIPANT": {
+        const { tableId, participantId, approved } = payload || {};
+        if (tableId && participantId && state.tableParticipants[tableId]) {
+          state.tableParticipants[tableId] = state.tableParticipants[tableId].map((p) =>
+            p.id === participantId
+              ? { ...p, status: approved ? "APPROVED" : "REJECTED" }
+              : p
+          );
+        }
+        break;
+      }
+
       case "CREATE_ORDER": {
         const newOrder: Order = payload?.order;
         if (newOrder) {
@@ -217,24 +272,6 @@ export async function POST(req: Request) {
               }
             : ord
         );
-        break;
-      }
-
-      case "REGISTER_PARTICIPANT": {
-        const { tableId, participant } = payload || {};
-        if (tableId && participant) {
-          const currentList = state.tableParticipants[tableId] || [];
-          const exists = currentList.find((p) => p.id === participant.id);
-          if (!exists) {
-            const isFirst = currentList.length === 0;
-            const newP = { ...participant, isHost: isFirst || participant.isHost };
-            state.tableParticipants[tableId] = [...currentList, newP];
-          } else {
-            state.tableParticipants[tableId] = currentList.map((p) =>
-              p.id === participant.id ? { ...p, ...participant } : p
-            );
-          }
-        }
         break;
       }
 
@@ -355,6 +392,8 @@ export async function POST(req: Request) {
           delete state.tableTransfers[tableId];
         }
         state.sharedCarts[tableId] = [];
+        delete state.tableParticipants[tableId];
+        delete state.tableGroupSettings[tableId];
         break;
       }
 
@@ -380,7 +419,6 @@ export async function POST(req: Request) {
             timestamp: Date.now(),
           };
 
-          // Transfer participants & shared cart
           if (state.tableParticipants[fromTableId]) {
             state.tableParticipants[toTableId] = [
               ...(state.tableParticipants[toTableId] || []),
@@ -395,6 +433,11 @@ export async function POST(req: Request) {
               ...state.sharedCarts[fromTableId],
             ];
             delete state.sharedCarts[fromTableId];
+          }
+
+          if (state.tableGroupSettings[fromTableId]) {
+            state.tableGroupSettings[toTableId] = state.tableGroupSettings[fromTableId];
+            delete state.tableGroupSettings[fromTableId];
           }
 
           state.tables = state.tables.map((t) => {
@@ -440,6 +483,7 @@ export async function POST(req: Request) {
         managerAlerts: state.managerAlerts,
         tableParticipants: state.tableParticipants,
         sharedCarts: state.sharedCarts,
+        tableGroupSettings: state.tableGroupSettings,
       },
       {
         headers: {

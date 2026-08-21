@@ -20,7 +20,7 @@ import OnlinePaymentModal from "@/components/restaurant/qr/OnlinePaymentModal";
 import SpinWheelModal from "@/components/restaurant/qr/SpinWheelModal";
 import JukeboxModal from "@/components/restaurant/qr/JukeboxModal";
 import ComplaintModal from "@/components/restaurant/qr/ComplaintModal";
-import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star, ArrowRightLeft } from "lucide-react";
+import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star, ArrowRightLeft, Users, UserCheck, UserX, Crown, CheckCircle2, Clock } from "lucide-react";
 
 interface QrMenuPageProps {
   params: Promise<{
@@ -45,6 +45,9 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     payTableOnline,
     sharedCarts,
     tableParticipants,
+    tableGroupSettings,
+    configureGroupDining,
+    approveParticipant,
     addToSharedCart,
     updateSharedCartQuantity,
     removeFromSharedCart,
@@ -115,6 +118,10 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   // Multi-user & Table Participant Setup
   const [currentParticipant, setCurrentParticipant] = useState<TableParticipant | null>(null);
   const participants = tableParticipants[tableId] || [];
+  const groupSettings = tableGroupSettings[tableId];
+
+  // State for First Person (Leader) Welcome Question
+  const [isGroupWelcomeDismissed, setIsGroupWelcomeDismissed] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -126,7 +133,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
     if (stored) {
       participant = JSON.parse(stored);
-      // Sync host state with store if changed
+      // Sync host state and status with store if changed
       const liveP = existingList.find((p) => p.id === participant.id);
       if (liveP) {
         participant = liveP;
@@ -134,10 +141,13 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     } else {
       const isFirst = existingList.length === 0;
       const guestNum = existingList.length + 1;
+      const isGroupBlocked = groupSettings?.configured && !groupSettings.allowGroup;
+
       participant = {
         id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
         name: isFirst ? "Masa Reisi" : `Misafir ${guestNum}`,
         isHost: isFirst,
+        status: isFirst ? "APPROVED" : isGroupBlocked ? "REJECTED" : "PENDING_APPROVAL",
         joinedAt: new Date().toISOString(),
       };
       localStorage.setItem(storageKey, JSON.stringify(participant));
@@ -147,16 +157,29 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     setCurrentParticipant(registered);
   }, [tableId]);
 
-  // Keep local participant in sync when host role transfers
+  // Keep local participant in sync when host role or approval status changes
   useEffect(() => {
     if (currentParticipant) {
       const live = participants.find((p) => p.id === currentParticipant.id);
-      if (live && (live.isHost !== currentParticipant.isHost || live.name !== currentParticipant.name)) {
+      if (
+        live &&
+        (live.isHost !== currentParticipant.isHost ||
+          live.status !== currentParticipant.status ||
+          live.name !== currentParticipant.name)
+      ) {
         setCurrentParticipant(live);
         localStorage.setItem(`cg_participant_${tableId}`, JSON.stringify(live));
       }
     }
   }, [participants, currentParticipant, tableId]);
+
+  // Pending guests requesting to join this table (for Host's approval popup)
+  const pendingGuests = currentParticipant?.isHost
+    ? participants.filter((p) => !p.isHost && p.status === "PENDING_APPROVAL")
+    : [];
+
+  const isGuestPending = !currentParticipant?.isHost && currentParticipant?.status === "PENDING_APPROVAL";
+  const isGuestRejected = !currentParticipant?.isHost && currentParticipant?.status === "REJECTED";
 
   // Shared Cart Items
   const cartItems = sharedCarts[tableId] || [];
@@ -548,6 +571,150 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
               <div className="bg-purple-500 h-full w-full animate-pulse" />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 1. MASA REİSİ / İLK KİŞİ HOŞGELDİNİZ SORUSU (Masaya Başka Birisi Oturacak mı?) */}
+      {currentParticipant?.isHost && (!groupSettings || !groupSettings.configured) && !isGroupWelcomeDismissed && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="max-w-sm w-full bg-[#0a0f0f] border border-white/15 rounded-[2rem] p-5 sm:p-6 space-y-5 shadow-2xl animate-fade-in-up text-center">
+            <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 mx-auto flex items-center justify-center shadow-lg shadow-amber-500/10">
+              <Crown className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block">
+                {currentTable.tableNumber} • Masa Lideri
+              </span>
+              <h3 className="text-base sm:text-lg font-extrabold text-white leading-tight">
+                Hoş Geldiniz! Masaya başka birisi oturacak mı?
+              </h3>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Arkadaşlarınız da bu masanın QR kodunu okutup aynı masaya ve sepete katılsın mı?
+              </p>
+            </div>
+
+            <div className="space-y-2.5 pt-2">
+              <button
+                onClick={() => {
+                  configureGroupDining(tableId, true);
+                  setIsGroupWelcomeDismissed(true);
+                }}
+                className="w-full py-3.5 px-4 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-accent/20 transition-all cursor-pointer"
+              >
+                <Users className="w-4 h-4" />
+                <span>Evet, Masayı Paylaşıma Aç (Ortak Masa)</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  configureGroupDining(tableId, false);
+                  setIsGroupWelcomeDismissed(true);
+                }}
+                className="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white font-semibold text-xs transition-colors cursor-pointer"
+              >
+                <span>Hayır, Tek Kişiyim (Masayı Kilitle)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. MASA LİDERİNE CANLI KATILIM ONAY BİLDİRİMİ */}
+      {currentParticipant?.isHost && pendingGuests.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+          <div className="max-w-sm w-full bg-[#0d1414] border border-accent/50 rounded-[2rem] p-5 sm:p-6 space-y-4 shadow-2xl animate-fade-in-up text-center ring-2 ring-accent/20">
+            <div className="w-14 h-14 rounded-full bg-accent/20 text-accent border border-accent/40 mx-auto flex items-center justify-center animate-bounce">
+              <Users className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-accent uppercase tracking-wider block">
+                Masanıza Katılım İsteği
+              </span>
+              <h3 className="text-base font-extrabold text-white leading-tight">
+                <span className="text-accent">{pendingGuests[0].name}</span> masanıza katılmak istiyor.
+              </h3>
+              <p className="text-xs text-foreground/70 leading-relaxed pt-1">
+                Bu kişinin {currentTable.tableNumber}&apos;ye katılıp ortak sepete ürün eklemesini onaylıyor musunuz?
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5 pt-2">
+              <button
+                onClick={() => approveParticipant(tableId, pendingGuests[0].id, false)}
+                className="py-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <UserX className="w-4 h-4" />
+                <span>Reddet</span>
+              </button>
+
+              <button
+                onClick={() => approveParticipant(tableId, pendingGuests[0].id, true)}
+                className="py-3 rounded-xl bg-accent hover:bg-accent/90 text-black font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-accent/20 transition-all cursor-pointer"
+              >
+                <UserCheck className="w-4 h-4" />
+                <span>Onayla (Kabul Et)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. MİSAFİR BEKLEME EKRANI (Masa Lideri Onayı Bekleniyor) */}
+      {isGuestPending && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-lg animate-fade-in text-center">
+          <div className="max-w-xs space-y-5">
+            <div className="w-20 h-20 rounded-full bg-accent/15 border border-accent/30 text-accent mx-auto flex items-center justify-center animate-pulse shadow-xl shadow-accent/10">
+              <Clock className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-accent uppercase tracking-wider">
+                {currentTable.tableNumber} • Katılım Talebi İletildi
+              </span>
+              <h3 className="text-lg font-black text-white leading-tight">
+                Masa Liderinin Onayı Bekleniyor...
+              </h3>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Masanızdaki arkadaşınız (Masa Reisi) onay verdiğinde menü ve ortak sepet anında açılacaktır.
+              </p>
+            </div>
+
+            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-accent h-full w-full animate-pulse" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. MİSAFİR REDDEDİLME EKRANI */}
+      {isGuestRejected && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-lg animate-fade-in text-center">
+          <div className="max-w-xs space-y-5">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 mx-auto flex items-center justify-center">
+              <AlertTriangle className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-black text-white">Masaya Katılım Sağlanamadı</h3>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Masa lideri katılım isteğinizi onaylamadı veya masa tek kişilik olarak kilitlendi.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem(`cg_participant_${tableId}`);
+                  window.location.reload();
+                }
+              }}
+              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors cursor-pointer"
+            >
+              Yeniden Dene
+            </button>
           </div>
         </div>
       )}
