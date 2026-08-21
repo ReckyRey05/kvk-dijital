@@ -304,7 +304,21 @@ function loadFromStorage() {
     if (efaturaRecords) globalEFaturaRecords = JSON.parse(efaturaRecords);
 
     const tableTransfers = localStorage.getItem("cg_table_transfers");
-    if (tableTransfers) globalTableTransfers = JSON.parse(tableTransfers);
+    if (tableTransfers) {
+      try {
+        const parsed = JSON.parse(tableTransfers);
+        const now = Date.now();
+        const fresh: Record<string, { toTableId: string; toTableNumber: string; timestamp: number }> = {};
+        for (const [k, v] of Object.entries(parsed)) {
+          if (v && typeof v === "object" && (v as any).timestamp && now - (v as any).timestamp < 30000) {
+            fresh[k] = v as any;
+          }
+        }
+        globalTableTransfers = fresh;
+      } catch {
+        globalTableTransfers = {};
+      }
+    }
 
     const staffMembers = localStorage.getItem("cg_staff_members");
     if (staffMembers) globalStaffMembers = JSON.parse(staffMembers);
@@ -566,6 +580,13 @@ export function useRestaurantStore() {
       globalCalls = globalCalls.map((c) =>
         c.tableId === tableId ? { ...c, status: "RESOLVED", resolvedAt: new Date().toISOString() } : c
       );
+
+      // 4. Clear any table transfer redirects
+      if (globalTableTransfers[tableId]) {
+        const nextTransfers = { ...globalTableTransfers };
+        delete nextTransfers[tableId];
+        globalTableTransfers = nextTransfers;
+      }
 
       notifyAll();
     },

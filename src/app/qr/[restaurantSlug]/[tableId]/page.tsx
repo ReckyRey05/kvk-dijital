@@ -56,10 +56,12 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
   const [transferAlert, setTransferAlert] = useState<{ toTableNumber: string; toTableId: string } | null>(null);
 
-  // Real-time Table Transfer Auto-Redirect
+  // Real-time Table Transfer Auto-Redirect (Only active for transfers that occurred within 15 seconds)
   useEffect(() => {
     const transfer = tableTransfers[tableId];
-    if (transfer && transfer.toTableId !== tableId) {
+    const isRecent = transfer && transfer.timestamp && (Date.now() - transfer.timestamp < 15000);
+    
+    if (isRecent && transfer.toTableId !== tableId) {
       setTransferAlert({
         toTableNumber: transfer.toTableNumber,
         toTableId: transfer.toTableId,
@@ -77,6 +79,20 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
       }, 2500);
 
       return () => clearTimeout(timer);
+    } else if (transfer && !isRecent) {
+      // Clean up stale transfer from localStorage so it doesn't linger
+      if (typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("cg_table_transfers");
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            delete parsed[tableId];
+            localStorage.setItem("cg_table_transfers", JSON.stringify(parsed));
+          }
+        } catch {
+          // ignore
+        }
+      }
     }
   }, [tableTransfers, tableId, restaurantSlug, router]);
 
