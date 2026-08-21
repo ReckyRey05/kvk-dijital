@@ -248,6 +248,17 @@ export async function POST(req: Request) {
         break;
       }
 
+      case "HEARTBEAT_PARTICIPANT": {
+        const { tableId, participantId } = payload || {};
+        if (tableId && participantId && state.tableParticipants[tableId]) {
+          const now = Date.now();
+          state.tableParticipants[tableId] = state.tableParticipants[tableId]
+            .map((p) => (p.id === participantId ? { ...p, lastActiveAt: now } : p))
+            .filter((p) => p.isHost || !p.lastActiveAt || now - p.lastActiveAt < 45000);
+        }
+        break;
+      }
+
       case "CREATE_ORDER": {
         const newOrder: Order = payload?.order;
         if (newOrder) {

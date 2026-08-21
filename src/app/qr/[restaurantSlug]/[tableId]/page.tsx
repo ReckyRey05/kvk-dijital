@@ -56,6 +56,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
     registerParticipant,
     transferHostRole,
     updateParticipantName,
+    heartbeatParticipant,
   } = useRestaurantStore();
 
   const [transferAlert, setTransferAlert] = useState<{ toTableNumber: string; toTableId: string } | null>(null);
@@ -352,11 +353,94 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
       o.status !== "CANCELLED"
   );
 
+  // Presence Heartbeat & Leave Beacon
+  useEffect(() => {
+    if (!currentParticipant) return;
+    const interval = setInterval(() => {
+      heartbeatParticipant(tableId, currentParticipant.id);
+    }, 15000);
+
+    const handleBeforeUnload = () => {
+      if (currentParticipant && !currentParticipant.isHost) {
+        if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+          navigator.sendBeacon(
+            "/api/restaurant/sync",
+            JSON.stringify({
+              action: "LEAVE_TABLE",
+              payload: { tableId, participantId: currentParticipant.id },
+            })
+          );
+        }
+      }
+    };
+
+    window.addEventListener("pagehide", handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("pagehide", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [currentParticipant, tableId, heartbeatParticipant]);
+
+  // Check if current table session was closed by Cashier
+  const completedTableOrders = orders.filter(
+    (o) => o.tableId === currentTable.id && o.status === "COMPLETED"
+  );
+  const isTableClosed =
+    currentTable.status === "EMPTY" &&
+    activeTableOrders.length === 0 &&
+    completedTableOrders.length > 0;
+
+  const handleStartNewSession = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(`cg_participant_${tableId}`);
+      window.location.reload();
+    }
+  };
+
   const cartTotalAmount = cartItems.reduce((sum, it) => sum + it.finalPrice * it.quantity, 0);
   const cartTotalCount = cartItems.reduce((sum, it) => sum + it.quantity, 0);
 
   return (
     <div className="min-h-screen bg-[#050505] text-foreground pb-24 select-none">
+      {/* Table Session Finished / Afiyet Olsun Overlay */}
+      {isTableClosed && (
+        <div className="fixed inset-0 z-50 bg-[#050505] flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+          <div className="max-w-sm w-full space-y-6">
+            <div className="w-20 h-20 rounded-3xl bg-green-500/15 border border-green-500/30 text-green-400 mx-auto flex items-center justify-center shadow-2xl shadow-green-500/20">
+              <CheckCircle2 className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-2xl font-black text-white tracking-tight">Afiyet Olsun! 👋</h2>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Hesabınız başarıyla ödendi ve masa oturumunuz tamamlandı. {DEMO_RESTAURANT.name}&apos;u tercih ettiğiniz için teşekkür ederiz.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-left space-y-2.5">
+              <div className="flex items-center justify-between text-xs text-foreground/60">
+                <span>Masa</span>
+                <span className="font-bold text-white">{currentTable.tableNumber}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-foreground/60">
+                <span>Durum</span>
+                <span className="font-bold text-green-400">Hesap Ödendi & Masa Kapandı</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleStartNewSession}
+              className="w-full py-3.5 rounded-2xl bg-accent text-black font-extrabold text-xs shadow-xl shadow-accent/25 hover:scale-[1.01] transition-all cursor-pointer"
+            >
+              Yeni Masa Oturumu Başlat
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Session Expired Overlay */}
       {sessionExpired && (
         <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-6 text-center animate-fade-in">

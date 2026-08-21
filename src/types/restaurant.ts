@@ -209,6 +209,7 @@ export interface TableParticipant {
   isHost: boolean;
   status?: "APPROVED" | "PENDING_APPROVAL" | "REJECTED";
   joinedAt: string;
+  lastActiveAt?: number; // timestamp in ms for heartbeat presence
 }
 
 export interface TableGroupSettings {

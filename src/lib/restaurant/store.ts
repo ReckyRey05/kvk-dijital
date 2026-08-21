@@ -455,10 +455,27 @@ export function useRestaurantStore() {
     checkExpirations();
     const expiryInterval = setInterval(checkExpirations, 10000);
 
+    // Network reconnect & background sleep/resume force-reconciliation
+    const handleReconnect = () => {
+      lastKnownServerVersion = 0; // Force immediate refresh from server
+      pollServer();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        pollServer();
+      }
+    };
+
+    window.addEventListener("online", handleReconnect);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       listeners.delete(handler);
       window.removeEventListener("restaurant_state_sync", handler);
       window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("online", handleReconnect);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (broadcastChannel) {
         broadcastChannel.removeEventListener("message", handleBroadcast);
       }
@@ -979,6 +996,17 @@ export function useRestaurantStore() {
       }
       notifyAll();
       syncWithServer("LEAVE_TABLE", { tableId, participantId });
+    },
+
+    heartbeatParticipant: (tableId: string, participantId: string) => {
+      const current = globalTableParticipants[tableId] || [];
+      const now = Date.now();
+      globalTableParticipants = {
+        ...globalTableParticipants,
+        [tableId]: current.map((p) => (p.id === participantId ? { ...p, lastActiveAt: now } : p)),
+      };
+      notifyAll();
+      syncWithServer("HEARTBEAT_PARTICIPANT", { tableId, participantId });
     },
 
     resetTableParticipants: (tableId: string) => {
