@@ -31,7 +31,9 @@ import {
   Search,
   ExternalLink,
   HelpCircle,
-  CheckSquare2
+  CheckSquare2,
+  Gem,
+  AlertCircle
 } from "lucide-react";
 
 interface Treatment {
@@ -49,103 +51,86 @@ interface Treatment {
 
 const TREATMENTS: Treatment[] = [
   {
-    id: "dis-temizligi-ve-beyazlatma",
-    category: "estetik",
-    title: "Diş Temizliği & Lazerli Diş Beyazlatma",
-    shortDesc: "Diş taşı (tartar) temizliği, polisaj ve tek seansta 3-5 tona kadar kalıcı beyazlık sağlayan medikal ofis tipi beyazlatma.",
-    fullDesc: "Ultrasonik kavitron cihazları ile diş minesine hiçbir zarar verilmeden diş taşları ve plaklar temizlenir. Ardından klinik tipi lazer/LED aktivasyonlu özel beyazlatma jeli ile kahve, çay ve sigara lekeleri açılarak ışıltılı bir gülüş kazandırılır.",
-    duration: "45 - 60 Dakika",
-    sessions: "Tek Seans",
-    benefits: [
-      "Diş minesine zarar vermeden güvenli temizlik",
-      "Diş eti çekilmelerini ve kanamayı önler",
-      "Tek seansta 3-5 ton anında beyazlama",
-      "Ağız kokusunu gideren ferahlık"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&auto=format&fit=crop&q=80",
-    badge: "Instagram'da Popüler"
-  },
-  {
-    id: "gulus-tasarimi",
-    category: "estetik",
-    title: "Dijital Gülüş Tasarımı (Hollywood Smile)",
-    shortDesc: "Yüz hatlarınıza, dudak yapınıza ve ten renginize tam uyumlu, kişiye özel bilgisayarlı estetik simülasyon ve gülüş estetiği.",
-    fullDesc: "Dijital gülüş tasarımı; hastanın yüz proporsiyonu, dudak çizgisi ve diş eti simetrisi 3D dijital ortamda taranarak başlar. Tedaviye başlamadan önce hastaya bitiş halinin mockup simülasyonu gösterilir. Lamine porselen veya E-Max materyalleriyle doğal ve kusursuz bir estetik elde edilir.",
-    duration: "4 - 7 Gün",
-    sessions: "2 - 3 Seans",
-    benefits: [
-      "3D Dijital Modelleme ile sonucu önceden görme",
-      "Minimal diş aşındırması ile maksimum koruma",
-      "Doğal ışık geçirgenliği ve leke tutmayan porselen yüzey",
-      "Kişiye özel yüz ve karakter uyumu"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&auto=format&fit=crop&q=80",
-    badge: "Estetik Dönüşüm"
-  },
-  {
-    id: "implant-uygulamalari",
+    id: "implant-tedavisi",
     category: "cerrahi",
-    title: "Dental İmplant Uygulamaları",
-    shortDesc: "Eksik dişlerin yerini alan, titanyum veya zirkonyum köklerle ömür boyu çiğneme fonksiyonu ve estetik sağlayan kalıcı tedavi.",
-    fullDesc: "Tek diş eksikliğinden tam dişsizlik vakalarına kadar, çene kemiğine yerleştirilen biyouyumlu titanyum vidalar üzerine sabit protezler yapılır. Kliniğimizde uluslararası sertifikalı ve pasaportlu premium implant markaları kullanılmaktadır. Dikişsiz ve navigasyonlu cerrahi seçenekleri mevcuttur.",
+    title: "İmplant Tedavisi & Eksik Diş Çözümleri",
+    shortDesc: "Eksik dişlerin yerine titanyum köklerin çene kemiğine yerleştirilmesiyle uygulanan kalıcı ve modern bir tedavi yöntemi.",
+    fullDesc: "DİŞ İMPLANTI, EKSİK DİŞLERİN YERİNE TİTANYUM KÖKLERİN ÇENE KEMİĞİNE YERLEŞTİRİLMESİYLE UYGULANAN MODERN BİR TEDAVİ YÖNTEMİDİR. İMPLANTLAR SAYESİNDE, ÇİĞNEME FONKSİYONU, KONUŞMA VE GÜLÜMSEME DOĞAL FORMUNA KAVUŞUR. AYRICA, KOMŞU DİŞLERE ZARAR VERİLMEDEN UZUN ÖMÜRLÜ BİR ÇÖZÜM SUNAR.",
     duration: "15 - 30 Dakika (İmplant Başı)",
     sessions: "Cerrahi + Protez Aşaması",
     benefits: [
-      "Komşu sağlıklı dişlere hiçbir zarar verilmez",
-      "Doğal diş kökü hissi ve %100 çiğneme konforu",
-      "Çene kemiği erimesini engelleyen biyolojik yapı",
-      "Ömür boyu üretici garantisi ve resmi implant pasaportu"
+      "Doğal Bir Görünüm ve estetik çiğneme konforu",
+      "Gelişmiş Ağız Sağlığı ve kemik yapısının korunması",
+      "Dayanıklı ve Uzun Ömürlü biyouyumlu titanyum altyapı",
+      "Komşu dişlere hiçbir aşındırma veya zarar verilmez"
     ],
     imageUrl: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&auto=format&fit=crop&q=80",
-    badge: "Ömür Boyu Garanti"
+    badge: "@damlaakarsu.klinik Özel"
   },
   {
     id: "zirkonyum-kaplama",
     category: "estetik",
-    title: "Zirkonyum & E-Max Porselen Kaplama",
-    shortDesc: "Metal desteksiz, yüksek biyouyumluluğa ve üstün ışık geçirgenliğine sahip yeni nesil estetik diş kaplamaları.",
-    fullDesc: "Zirkonyum oksit altyapı, diş etinde kararma veya alerjik reaksiyon yapmaz. Doğal diş minesiyle birebir aynı optik özelliklere sahip olan zirkonyum ve E-Max kronlar, hem ön diş estetiğinde hem de arka çiğneme bölgelerinde yüksek mukavemet sağlar.",
+    title: "Zirkonyum Kaplama (Gülüşünüzü Yenilemenin En Estetik Yolu)",
+    shortDesc: "Doğal ve estetik görünüm, yüksek dayanıklılık ve diş eti ile tam uyumlu yapısıyla estetik ve sağlıklı bir gülüş için zirkonyum kaplama.",
+    fullDesc: "Zirkonyum kaplamalar; metal desteksiz, ışık geçirgenliği doğal diş minesiyle birebir aynı olan ve diş etlerinde morarma/kararma yapmayan biyouyumlu estetik restorasyonlardır. VITA renk skalasıyla ten ve dudak renginize en uygun beyazlık tonu belirlenir.",
     duration: "3 - 5 Gün",
     sessions: "2 Seans",
     benefits: [
-      "Diş eti kenarlarında gri-mor gölgelenme yapmaz",
-      "Yüksek dayanıklılık ve kırılma direnci",
-      "Biyouyumlu malzeme ile %0 alerji riski",
-      "Sıcak-soğuk hassasiyetine karşı mükemmel yalıtım"
+      "⭐ Doğal ve estetik görünüm",
+      "💎 Dayanıklı ve uzun ömürlü mukavemet",
+      "🦷 Diş eti ile %100 uyumlu biyouyumlu yapı",
+      "Sıcak-soğuk hassasiyeti oluşturmayan özel yalıtım"
     ],
     imageUrl: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80",
-    badge: "Doğal Estetik"
+    badge: "Estetik Zirve"
   },
   {
-    id: "dis-teli-ortodonti",
+    id: "dis-temizligi-ve-beyazlatma",
+    category: "estetik",
+    title: "Rutin Diş Temizliği & Lazerli Beyazlatma",
+    shortDesc: "Diş taşı (tartar) temizliği, polisaj ve tek seansta 3-5 tona kadar kalıcı beyazlık sağlayan klinik tipi beyazlatma.",
+    fullDesc: "Diş taşı temizliği diş minesine kesinlikle zarar vermez. Aksine, diş taşları zamanla diş etlerine baskı yaparak iltihaplanmaya ve diş eti çekilmelerine yol açar. Düzenli olarak yapılan diş temizliği ve lazerli beyazlatma diş eti hastalıklarını önler ve ışıltılı beyazlık kazandırır.",
+    duration: "45 - 60 Dakika",
+    sessions: "Tek Seans",
+    benefits: [
+      "Diş minesini koruyan ultrasonik kavitron teknolojisi",
+      "Diş eti kanaması ve çekilmesini durdurur",
+      "Tek seansta 3-5 ton anında beyazlama",
+      "Kalıcı ferahlık ve sağlıklı ağız florası"
+    ],
+    imageUrl: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&auto=format&fit=crop&q=80",
+    badge: "Düzenli Bakım"
+  },
+  {
+    id: "dis-teli-ve-seffaf-plak",
     category: "ortodonti",
     title: "Diş Teli & Şeffaf Plak Ortodontik Tedaviler",
-    shortDesc: "Çapraşık, aralıklı ve kapanış bozukluğu olan dişlerin şeffaf plaklar (Invisalign) veya estetik braketlerle düzeltilmesi.",
-    fullDesc: "3D ağız içi tarama yapılarak hastanın dijital tedavi planı çıkarılır. Telsiz şeffaf plaklar sosyal hayatı kısıtlamadan dişleri milimetrik olarak hizalar. Geleneksel braket tedavileri de her yaş grubuna özel olarak uygulanır.",
+    shortDesc: "Görünmeyen şeffaf plaklar (Invisalign) veya estetik braketler ile çapraşık dişlerin ve kapanış bozukluklarının tedavisi.",
+    fullDesc: "3D ağız içi tarama ile dijital ortamda planlanan şeffaf plaklar, yemek yerken çıkarılabilme konforuyla telsiz ortodonti imkanı sunar. Her yaş grubunda estetik ve fonksiyonel hizalama sağlanır.",
     duration: "6 - 14 Ay",
     sessions: "Aylık Kontrol",
     benefits: [
-      "Şeffaf plaklarda yemek yerken çıkarabilme özgürlüğü",
-      "Dışarıdan neredeyse tamamen görünmez estetik",
-      "Yara veya batma yapmayan yumuşak materyal",
-      "Doğru kapanış ile çiğneme ve çene eklemi sağlığı"
+      "Şeffaf plaklarda yemek yerken çıkarma özgürlüğü",
+      "Sosyal hayatta dışarıdan fark edilmeyen estetik",
+      "Yumuşak yapısıyla yara ve batma yapmaz",
+      "Çiğneme ve çene eklemi sağlığının restorasyonu"
     ],
     imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&auto=format&fit=crop&q=80",
-    badge: "Telsiz & Konforlu"
+    badge: "Telsiz Konfor"
   },
   {
     id: "kanal-tedavisi",
     category: "tedavi",
     title: "Ağrısız Kanal Tedavisi (Endodonti)",
     shortDesc: "İleri çürük veya travma nedeniyle enfekte olan diş köklerinin mikrocerrahi ve dijital apeks bulucularla kurtarılması.",
-    fullDesc: "Kendi doğal dişinizi ağızda tutmak birinci önceliğimizdir. Döner alet sistemleri ve dijital apeks bulucular ile enfekte sinir dokusu temizlenir, dezenfekte edilir ve biyouyumlu kanal dolgusuyla kapatılır. Gelişmiş lokal anestezi sayesinde işlem tamamen ağrısızdır.",
+    fullDesc: "Doğal dişinizi korumak birinci önceliğimizdir. Döner alet sistemleri ve dijital apeks bulucular ile enfekte sinir kanalları temizlenir, sterilize edilir ve kapatılır. Gelişmiş lokal anestezi sayesinde işlem tamamen ağrısızdır.",
     duration: "45 - 60 Dakika",
     sessions: "1 - 2 Seans",
     benefits: [
-      "Kendi doğal dişinizi çekilmekten kurtarır",
-      "İleri teknoloji anestezi ile %100 ağrısız süreç",
-      "Mikroskopik hassasiyette kanal temizliği",
-      "Uzun ömürlü çiğneme sağlığı"
+      "Doğal dişin çekilmesini önler",
+      "İleri anestezi ile %100 ağrısız operasyon",
+      "Mikroskopik hassasiyette kanal sterilizasyonu",
+      "Ömür boyu çiğneme fonksiyonu"
     ],
     imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
     badge: "Diş Kurtarma"
@@ -154,15 +139,15 @@ const TREATMENTS: Treatment[] = [
     id: "20lik-dis-cekimi",
     category: "cerrahi",
     title: "20'lik Diş Çekimi & Gömülü Diş Cerrahisi",
-    shortDesc: "Çene kemiğinde gömülü, yarı gömülü veya çapraşıklığa yol açan 20 yaş dişlerinin ağrısız ve hızlı cerrahi çekimi.",
-    fullDesc: "Panoramik röntgen ile sinir komşuluğu hassas bir şekilde analiz edilen 20'lik dişler, lokal anestezi altında travmasız cerrahi tekniklerle çekilir. Şişlik ve ağrıyı minimize eden ameliyat sonrası bakım protokolü uygulanır.",
+    shortDesc: "Çene kavsinde yer bulamayan, gömülü kalan veya apse yapan 20 yaş dişlerinin ağrısız ve hızlı cerrahi çekimi.",
+    fullDesc: "Panoramik röntgen analizi ile sinir komşuluğu hassas bir şekilde incelenen 20'lik dişler, lokal anestezi altında travmasız cerrahi tekniklerle çekilir. Şişlik ve ağrıyı minimize eden dikiş ve bakım protokolü uygulanır.",
     duration: "20 - 40 Dakika",
     sessions: "Tek Seans",
     benefits: [
       "Diğer dişlerin sıkışmasını ve bozulmasını önler",
-      "Tekrarlayan diş eti apsesi ve enfeksiyonları bitirir",
-      "Lokal anestezi ile işlem esnasında sıfır ağrı",
-      "Hızlı iyileşme ve özel dikiş protokolü"
+      "Tekrarlayan iltihap ve çene ağrılarını sonlandırır",
+      "Sıfır ağrı ile konforlu lokal anestezi",
+      "Hızlı doku iyileşmesi"
     ],
     imageUrl: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&auto=format&fit=crop&q=80",
     badge: "Uzman Cerrahi"
@@ -170,42 +155,59 @@ const TREATMENTS: Treatment[] = [
   {
     id: "estetik-dolgu",
     category: "tedavi",
-    title: "Estetik Kompozit Dolgu & Restoratif İşlemler",
-    shortDesc: "Çürük veya kırık dişlerin, dişin kendi doğal rengi ve anatomik formuyla birebir örtüşen kompozit materyallerle onarılması.",
-    fullDesc: "Eski amalgam (siyah) dolguların estetik beyaz dolgularla değiştirilmesi, ön diş kırıklarının bonding tekniğiyle kapatılması ve çiğneme yüzeylerinin doğal diş tepeciklerine uygun şekilde restore edilmesidir.",
+    title: "Estetik Kompozit Dolgu & Restorasyon",
+    shortDesc: "Çürük veya kırık dişlerin, dişin kendi rengiyle birebir eşleşen kompozit materyallerle estetik onarımı.",
+    fullDesc: "Eski amalgam siyah dolguların beyaz dolgularla yenilenmesi, ön diş kırıklarının bonding tekniğiyle kapatılması ve çiğneme yüzeylerinin doğal diş formunda yeniden inşa edilmesidir.",
     duration: "30 - 45 Dakika",
     sessions: "Tek Seans",
     benefits: [
-      "Dişin doğal rengiyle %100 renk uyumu",
-      "Güçlü kimyasal bağlanma ile uzun ömür",
-      "Tek seansta anında estetik sonuç",
-      "Cıva içermeyen güvenli kompozit reçine"
+      "Diş rengiyle %100 görünmez uyum",
+      "Güçlü kimyasal bağlanma ile uzun dayanıklılık",
+      "Tek seansta anında estetik çözüm",
+      "Biyouyumlu cıvasız materyal"
     ],
     imageUrl: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80",
     badge: "Doğal Restorasyon"
+  },
+  {
+    id: "acil-mudahale",
+    category: "tedavi",
+    title: "Acil Diş Müdahalesi & Ağrı Tedavisi",
+    shortDesc: "Şiddetli diş ağrısı, kırık, travma veya düşen dolgularda aynı gün içinde uygulanan acil diş hekimliği müdahalesi.",
+    fullDesc: "Ani gelişen apseli diş ağrıları, kırılan kaplamalar veya kaza sonucu oluşan travmalarda hastalarımız aynı gün öncelikli olarak kabul edilir ve ağrısı anında dindirilir.",
+    duration: "30 Dakika",
+    sessions: "Acil Seans",
+    benefits: [
+      "Aynı gün acil randevu önceliği",
+      "Anında ağrı kesici ve rahatlatıcı müdahale",
+      "Dijital röntgen ile hızlı tanı",
+      "Geçici veya kalıcı anında tedavi"
+    ],
+    imageUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
+    badge: "Acil Destek"
   }
 ];
 
 const INSTAGRAM_QA = [
   {
     question: "Diş taşı temizliği yaptırmak diş minesine zarar verir mi?",
-    answer: "Hayır, diş taşı temizliği diş minesine kesinlikle zarar vermez. Aksine, diş taşları zamanla diş etlerine baskı yaparak iltihaplanmaya, kanamaya ve diş eti çekilmelerine yol açar. Düzenli olarak 6 ayda bir yapılan profesyonel diş temizliği, diş eti hastalıklarını önlemenin en temel ve etkili yoludur.",
-    tag: "Ağız Hijyeni"
+    answer: "Hayır, diş taşı temizliği diş minesine kesinlikle zarar vermez. Aksine, diş taşları zamanla diş etlerine baskı yaparak iltihaplanmaya, kanamaya ve diş eti çekilmelerine yol açar. Düzenli olarak yapılan diş temizliği, diş eti hastalıklarını önlemeye yardımcı olur.",
+    tag: "Diş Hijyeni"
   },
   {
-    question: "20'lik dişler her durumda çekilmek zorunda mıdır?",
-    answer: "Hayır. Çene kavsinde yeterli yer olan, düzgün çıkan ve çiğnemeye katılan 20'lik dişlerin çekilmesine gerek yoktur. Ancak gömülü kalan, komşu dişi çürüten veya sürekli apse yapan dişler panoramik röntgen kontrolü sonrasında çekilmelidir.",
-    tag: "Cerrahi"
-  },
-  {
-    question: "İmplant tedavisi sırasında ağrı hissedilir mi?",
-    answer: "İmplant cerrahisi gelişmiş lokal anestezi altında gerçekleştirilir, bu nedenle işlem esnasında hasta hiçbir ağrı veya acı hissetmez. Operasyon sonrası için reçete edilen hafif ağrı kesicilerle iyileşme süreci son derece konforlu geçer.",
+    question: "İmplant tedavisi sırasında veya sonrasında çok ağrı olur mu?",
+    answer: "Hayır. İmplant cerrahisi gelişmiş lokal anestezi altında yapıldığı için operasyon sırasında hiçbir ağrı hissedilmez. Operasyon sonrasında da basit ağrı kesicilerle günlük yaşantınıza rahatlıkla devam edebilirsiniz.",
     tag: "İmplant"
   },
   {
-    question: "Diş beyazlatma (bleaching) dişleri ne kadar süre beyaz tutar?",
-    answer: "Klinik tipi profesyonel beyazlatma sonuçları ortalama 1 - 2 yıl kalıcılığını korur. Çay, kahve ve sigara tüketim alışkanlığı ile düzenli diş fırçalama beyazlığın kalıcılık süresini doğrudan etkiler.",
-    tag: "Estetik"
+    question: "Zirkonyum kaplama neden metal destekli kaplamalardan daha üstündür?",
+    answer: "Zirkonyum kaplamalar doğal ışık geçirgenliğine sahiptir ve diş eti kenarlarında gri-mor çizgi oluşturmaz. Biyouyumludur, ağız kokusu veya alerji yapmaz ve uzun yıllar kırılmadan estetiğini korur.",
+    tag: "Zirkonyum"
+  },
+  {
+    question: "Şeffaf plak tedavisi (telsiz ortodonti) kimlere uygulanabilir?",
+    answer: "Hem gençlere hem de yetişkinlere güvenle uygulanabilir. Sosyal ve profesyonel hayatı etkilemez, yemek yerken kolayca çıkarılabilir ve dışarıdan neredeyse hiç görünmez.",
+    tag: "Ortodonti"
   }
 ];
 
@@ -236,7 +238,7 @@ const REVIEWS = [
   {
     name: "Selin Yılmaz",
     district: "Kartal, İstanbul",
-    treatment: "Gülüş Tasarımı & Zirkonyum",
+    treatment: "Zirkonyum & Gülüş Tasarımı",
     rating: 5,
     comment: "Damla Hanım'ın titizliği ve yaklaşımı inanılmaz. Yıllardır gülerken dişlerimi saklardım, şimdi aynaya her baktığımda kendime güvenim yerine geliyor. Tedavi süresince hiçbir ağrı hissetmedim.",
     date: "1 Hafta Önce"
@@ -264,20 +266,22 @@ export default function DamlaAkarsuClient() {
   const [activeFilter, setActiveFilter] = useState<"all" | "estetik" | "cerrahi" | "tedavi" | "ortodonti">("all");
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null);
   const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
-  const [selectedServiceForAppointment, setSelectedServiceForAppointment] = useState("Genel Diş Muayenesi & Check-Up");
+  const [selectedServiceForAppointment, setSelectedServiceForAppointment] = useState("Ücretsiz Ön Muayene & Teşhis");
 
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    service: "Genel Diş Muayenesi & Check-Up",
+    service: "Ücretsiz Ön Muayene & Teşhis",
     preferredDate: "",
     preferredTime: "Öğleden Önce (10:00 - 13:00)",
     notes: ""
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Exact Verified Phone from Instagram: 0544 577 58 56
+  // Exact Verified Instagram Phone & Handle
   const primaryPhone = "0544 577 58 56";
+  const instagramHandle = "@damlaakarsu.klinik";
+  const instagramUrl = "https://instagram.com/damlaakarsu.klinik";
   const whatsappPhone = "905445775856";
   const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
     "Merhaba Dt. Damla Akarsu Diş Muayenehanesi, randevu ve tedavi hakkında bilgi almak istiyorum."
@@ -323,16 +327,20 @@ export default function DamlaAkarsuClient() {
         </div>
       </div>
 
-      {/* 1. CLINIC TOP INFO BAR */}
+      {/* 1. CLINIC TOP INFO BAR WITH INSTAGRAM HANDLE */}
       <div className="bg-[#0369A1] text-white py-2.5 px-4 text-xs font-medium border-b border-[#0284C7]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div className="flex items-center gap-4 text-xs">
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#BAE6FD]" />
-              <span>Pzt - Cmt: 09:30 - 19:30</span>
+            <span className="flex items-center gap-1.5 font-semibold text-[#BAE6FD]">
+              <span>{instagramHandle}</span>
             </span>
             <span className="hidden md:inline text-white/30">|</span>
             <span className="hidden md:flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#BAE6FD]" />
+              <span>Pzt - Cmt: 09:30 - 19:30</span>
+            </span>
+            <span className="hidden lg:inline text-white/30">|</span>
+            <span className="hidden lg:flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-[#BAE6FD]" />
               <span>Pendik & Kartal / İstanbul</span>
             </span>
@@ -351,18 +359,21 @@ export default function DamlaAkarsuClient() {
         </div>
       </div>
 
-      {/* 2. CLINIC HEADER */}
+      {/* 2. CLINIC HEADER WITH TOOTH SHIELD EMBLEM */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 gap-4">
             
-            {/* Logo */}
+            {/* Logo: Official Shield & Tooth Emblem */}
             <Link href="#hero" className="flex items-center gap-3 shrink-0 group">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center shadow-md shadow-[#0284C7]/20 group-hover:scale-105 transition-transform">
-                <Smile className="w-6 h-6" />
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center shadow-md shadow-[#0284C7]/20 group-hover:scale-105 transition-transform border border-white/20">
+                {/* Tooth Shield Symbol */}
+                <div className="relative flex items-center justify-center">
+                  <ShieldCheck className="w-7 h-7 text-white" />
+                </div>
               </div>
               <div>
-                <div className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight flex items-center gap-1">
+                <div className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight flex items-center gap-1.5">
                   <span>Dt. Damla Akarsu</span>
                 </div>
                 <div className="text-[11px] font-bold text-[#0369A1] tracking-wider uppercase">
@@ -372,24 +383,24 @@ export default function DamlaAkarsuClient() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
               <a href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Anasayfa
               </a>
-              <a href="#hizmetler-ozet" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+              <a href="#hizmetler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Hizmetlerimiz
               </a>
-              <a href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
-                Tedaviler
+              <a href="#zirkonyum" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+                Zirkonyum
+              </a>
+              <a href="#implant" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+                İmplant
               </a>
               <a href="#soru-cevap" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Soru & Cevap
               </a>
               <a href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Hakkımızda
-              </a>
-              <a href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
-                Yorumlar
               </a>
               <a href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 İletişim
@@ -410,7 +421,7 @@ export default function DamlaAkarsuClient() {
               </a>
 
               <button
-                onClick={() => openAppointmentFor("Genel Diş Muayenesi")}
+                onClick={() => openAppointmentFor("Ücretsiz Ön Muayene")}
                 className="px-5 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all shadow-md shadow-[#0284C7]/20 hover:shadow-lg cursor-pointer"
               >
                 Randevu Al
@@ -433,11 +444,11 @@ export default function DamlaAkarsuClient() {
           <div className="lg:hidden bg-white border-t border-[#E2E8F0] px-6 py-5 space-y-3 shadow-xl">
             <nav className="flex flex-col space-y-2.5">
               <a onClick={() => setMobileMenuOpen(false)} href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Anasayfa</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#hizmetler-ozet" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Kliniğimizdeki Hizmetler</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Tedavi Kataloğu</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#hizmetler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Hizmetlerimiz</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#zirkonyum" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Zirkonyum Kaplama</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#implant" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">İmplant Tedavisi</a>
               <a onClick={() => setMobileMenuOpen(false)} href="#soru-cevap" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Soru & Cevap Rehberi</a>
               <a onClick={() => setMobileMenuOpen(false)} href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Hakkımızda</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Hasta Yorumları</a>
               <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">İletişim & Konum</a>
             </nav>
             <div className="pt-2 flex flex-col gap-2">
@@ -464,10 +475,10 @@ export default function DamlaAkarsuClient() {
         )}
       </header>
 
-      {/* 3. HERO SECTION (WITH INSTAGRAM MOTTO & VISUAL IDENTITY) */}
+      {/* 3. HERO SECTION (WITH VERIFIED INSTAGRAM HEADLINE & PILLARS) */}
       <section id="hero" className="relative py-16 sm:py-24 bg-gradient-to-br from-[#F0F9FF] via-[#FFFFFF] to-[#E0F2FE] border-b border-[#E2E8F0] overflow-hidden">
         
-        {/* Decorative Background Glows */}
+        {/* Decorative Glows */}
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#0284C7]/15 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#10B981]/10 blur-3xl pointer-events-none" />
 
@@ -478,26 +489,47 @@ export default function DamlaAkarsuClient() {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#0284C7]/30 text-[#0369A1] text-xs font-bold shadow-sm">
-                <Sparkles className="w-4 h-4 text-[#0284C7]" />
-                <span>Profosyonel DENTAL KLİNİK — Ağız ve Diş Sağlığınız Bizim İçin Önemlidir</span>
+                <span className="w-2 h-2 rounded-full bg-[#0284C7] inline-block" />
+                <span>{instagramHandle} — Diş Bakımında Güvenli Ellerdesiniz</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
-                Sağlıklı Gülüşler İçin <br />
+                SAĞLIKLI GÜLÜŞLER <br />
                 <span className="bg-gradient-to-r from-[#0369A1] to-[#0284C7] bg-clip-text text-transparent">
-                  Düzenli Diş Muayenesi
-                </span>{" "}
-                Olmalısınız
+                  MUTLU YÜZLER
+                </span>
               </h1>
 
               <p className="text-sm sm:text-base text-[#475569] leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Dt. Damla Akarsu Diş Muayenehanesi’nde; diş temizliğinden implant uygulamalarına, şeffaf plak ortodontiden estetik dolgu ve gülüş tasarımına kadar tüm tedavilerinizi yüksek sterilizasyon ve ağrısız anestezi konforuyla gerçekleştiriyoruz.
+                Sağlıklı bir gülümseme düzenli diş bakımı ile olur. Çocuklardan yaşlılara kadar tüm aile için hassas, önleyici, koruyucu ve kozmetik diş hekimliği hizmeti sağlıyoruz.
               </p>
+
+              {/* 3 Verified Instagram Bullets */}
+              <div className="space-y-2.5 max-w-md mx-auto lg:mx-0 text-left">
+                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                  <div className="w-6 h-6 rounded-full bg-[#0284C7]/10 text-[#0284C7] flex items-center justify-center font-black text-xs shrink-0">
+                    ▶
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#1E293B]">Ücretsiz Ön Muayene & Danışma</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                  <div className="w-6 h-6 rounded-full bg-[#0284C7]/10 text-[#0284C7] flex items-center justify-center font-black text-xs shrink-0">
+                    ▶
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#1E293B]">Genel Diş Sağlığı Kontrolü ve Teşhis</span>
+                </div>
+                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                  <div className="w-6 h-6 rounded-full bg-[#0284C7]/10 text-[#0284C7] flex items-center justify-center font-black text-xs shrink-0">
+                    ▶
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#1E293B]">Profesyonel Dental Klinik Hizmetleri</span>
+                </div>
+              </div>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
                 <button
-                  onClick={() => openAppointmentFor("İlk Muayene Randevusu")}
+                  onClick={() => openAppointmentFor("Ücretsiz Ön Muayene Randevusu")}
                   className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#0284C7]/25 hover:shadow-xl cursor-pointer"
                 >
                   <Calendar className="w-4 h-4" />
@@ -505,85 +537,66 @@ export default function DamlaAkarsuClient() {
                 </button>
 
                 <a
-                  href="#soru-cevap"
+                  href="#hizmetler"
                   className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white hover:bg-[#F1F5F9] text-[#334155] font-bold text-sm border border-[#CBD5E1] flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
-                  <HelpCircle className="w-4 h-4 text-[#0284C7]" />
-                  <span>Sıkça Sorulan Sorular</span>
+                  <span>Tüm Hizmetleri Gör</span>
+                  <ChevronRight className="w-4 h-4" />
                 </a>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="pt-6 border-t border-[#E2E8F0] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto lg:mx-0 text-left">
-                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#0284C7]">0544 577 58 56</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">Hızlı Randevu Hattı</div>
-                </div>
-                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#059669]">A+ Otoklav</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">%100 Steril Ortam</div>
-                </div>
-                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#0284C7]">Ağrısız</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">Konforlu Anestezi</div>
-                </div>
-                <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#7C3AED]">5.0 ★★★★★</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">Hasta Memnuniyeti</div>
-                </div>
               </div>
 
             </div>
 
-            {/* Right Card: Instagram Reel Format / Treatment Checklist Card */}
+            {/* Right Card: Quick Action Reel Card */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-2xl space-y-5">
                 
                 <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#10B981] animate-ping" />
+                  <div>
+                    <span className="text-[11px] font-bold text-[#0369A1] block font-mono">{instagramHandle}</span>
                     <span className="text-xs font-bold text-[#0F172A]">Kliniğimizdeki Hizmetler</span>
                   </div>
-                  <div className="text-right">
-                    <span className="text-[10px] text-[#64748B] block font-mono">Randevu Al</span>
-                    <span className="text-xs font-black text-[#0284C7]">{primaryPhone}</span>
+                  <div className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#059669] font-black text-xs flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
+                    <span>Açık</span>
                   </div>
                 </div>
 
-                {/* Checklist from Instagram Reel */}
-                <div className="space-y-2.5">
+                {/* Service Highlights */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
                   {[
-                    "Diş Temizliği ve Diş Beyazlatma",
-                    "Diş Teli & Ortodontik Tedaviler",
-                    "İmplant Uygulamaları",
+                    "Rutin Diş Bakımı",
+                    "Diş Beyazlatma & Tel",
+                    "İmplant & Protez",
+                    "Acil Diş Müdahalesi",
                     "Ağrısız Kanal Tedavisi",
-                    "20'lik Diş Çekimi & Cerrahi",
-                    "Estetik Dolgu İşlemleri"
-                  ].map((service, i) => (
-                    <div
-                      key={i}
-                      className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between hover:bg-[#F0F9FF] hover:border-[#BAE6FD] transition-colors"
+                    "20'lik Diş Çekimi"
+                  ].map((srv, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => openAppointmentFor(srv)}
+                      className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] hover:bg-[#F0F9FF] hover:border-[#BAE6FD] text-left transition-colors flex items-center justify-between group cursor-pointer"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <CheckSquare2 className="w-4 h-4 text-[#10B981] shrink-0" />
-                        <span className="text-xs font-bold text-[#1E293B]">{service}</span>
-                      </div>
-                      <button
-                        onClick={() => openAppointmentFor(service)}
-                        className="text-[11px] font-bold text-[#0284C7] hover:underline"
-                      >
-                        Seç
-                      </button>
-                    </div>
+                      <span className="font-bold text-[#1E293B] group-hover:text-[#0284C7]">{srv}</span>
+                      <Check className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
+                    </button>
                   ))}
                 </div>
 
-                <button
-                  onClick={() => openAppointmentFor("Hızlı Randevu Talebi")}
-                  className="w-full py-3.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all shadow-md shadow-[#0284C7]/20 text-center cursor-pointer"
-                >
-                  Muayene Randevusu Oluştur
-                </button>
+                <div className="p-4 rounded-2xl bg-[#ECFDF5] border border-[#A7F3D0] flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] text-[#047857] block font-semibold">Doğrudan Telefon & WhatsApp</span>
+                    <span className="text-sm font-black text-[#065F46]">{primaryPhone}</span>
+                  </div>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold transition-colors shadow-sm"
+                  >
+                    Yazın
+                  </a>
+                </div>
 
               </div>
             </div>
@@ -592,17 +605,165 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 4. INSTAGRAM Q&A & DOCTOR RECOMMENDATIONS SECTION */}
+      {/* 4. FEATURED SPECIALTY 1: ZİRKONYUM KAPLAMA (FROM INSTAGRAM REEL) */}
+      <section id="zirkonyum" className="py-16 sm:py-24 bg-white border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-3xl p-8 sm:p-12 text-white shadow-2xl overflow-hidden relative">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              <div className="lg:col-span-7 space-y-6">
+                
+                <div className="inline-block px-4 py-1.5 rounded-full bg-[#10B981] text-[#0F172A] font-black text-xs tracking-wider uppercase">
+                  Gülüşünüzü Yenilemenin En Estetik Yolu
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
+                  Estetik ve Sağlıklı Bir Gülüş İçin Zirkonyum Kaplama
+                </h2>
+
+                <p className="text-sm text-[#94A3B8] leading-relaxed">
+                  Doğal diş minesiyle birebir ışık geçirgenliğine sahip, metal desteksiz ve diş etiyle %100 biyouyumlu yeni nesil estetik porselen kaplama teknolojisi.
+                </p>
+
+                {/* 3 Verified Reel Badges */}
+                <div className="space-y-3 pt-1 max-w-lg">
+                  <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                    <span className="text-base">⭐</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">Doğal ve Estetik Görünüm</span>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                    <span className="text-base">💎</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">Dayanıklı ve Uzun Ömürlü Mukavemet</span>
+                  </div>
+                  <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3">
+                    <span className="text-base">🦷</span>
+                    <span className="text-xs sm:text-sm font-bold text-white">Diş Eti ile Tam Uyumlu Biyouyumlu Yapı</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                  <button
+                    onClick={() => openAppointmentFor("Zirkonyum Kaplama Ön Muayenesi")}
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-[#0F172A] hover:text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    Zirkonyum Randevusu Al
+                  </button>
+                  <a
+                    href={`tel:+905445775856`}
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center justify-center gap-2 border border-white/15 transition-colors"
+                  >
+                    <Phone className="w-4 h-4 text-[#10B981]" />
+                    <span>{primaryPhone}</span>
+                  </a>
+                </div>
+
+              </div>
+
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="relative w-full max-w-md bg-white/5 p-4 rounded-3xl border border-white/10 backdrop-blur-md">
+                  <img
+                    src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&auto=format&fit=crop&q=80"
+                    alt="Zirkonyum Diş Renk Skalası ve Estetik Gülüş"
+                    className="w-full h-72 object-cover rounded-2xl"
+                  />
+                  <div className="mt-3 p-3 rounded-xl bg-black/50 text-center">
+                    <span className="text-xs text-[#67E8F9] font-bold">Kişiye Özel VITA Renk Skalası Eşleştirmesi</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 5. FEATURED SPECIALTY 2: İMPLANT TEDAVİSİ (EXACT INSTAGRAM COPY) */}
+      <section id="implant" className="py-16 sm:py-24 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="bg-white rounded-3xl border border-[#E2E8F0] p-8 sm:p-12 shadow-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+              
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="relative w-full max-w-md bg-[#EFF6FF] p-6 rounded-3xl border border-[#BFDBFE] text-center space-y-4">
+                  <div className="w-16 h-16 rounded-2xl bg-[#0284C7] text-white flex items-center justify-center mx-auto shadow-md">
+                    <ShieldCheck className="w-9 h-9" />
+                  </div>
+                  <h3 className="text-xl font-black text-[#0F172A]">İMPLANT TEDAVİSİ</h3>
+                  <p className="text-xs text-[#0369A1] font-bold uppercase tracking-wider">
+                    Eksik Dişler İçin Kalıcı Çözümler
+                  </p>
+                  <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] space-y-2 text-xs font-bold text-[#334155] text-left">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-[#10B981]" />
+                      <span>Doğal Bir Görünüm</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-[#10B981]" />
+                      <span>Gelişmiş Ağız Sağlığı</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-[#10B981]" />
+                      <span>Dayanıklı ve Uzun Ömürlü</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 space-y-5">
+                <span className="text-xs font-bold font-mono text-[#0284C7] uppercase tracking-wider">
+                  Sağlıklı Bir Gülüşe Kavuşmak Artık Çok Kolay
+                </span>
+                
+                <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] leading-tight">
+                  Dental İmplant ile Doğal Çiğneme ve Estetik Fonksiyonu Geri Kazanın
+                </h2>
+
+                <div className="p-5 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs sm:text-sm text-[#334155] leading-relaxed space-y-2 font-medium">
+                  <p>
+                    <strong>DİŞ İMPLANTI</strong>, EKSİK DİŞLERİN YERİNE TİTANYUM KÖKLERİN ÇENE KEMİĞİNE YERLEŞTİRİLMESİYLE UYGULANAN MODERN BİR TEDAVİ YÖNTEMİDİR.
+                  </p>
+                  <p className="text-[#64748B]">
+                    İMPLANTLAR SAYESİNDE; ÇİĞNEME FONKSİYONU, KONUŞMA VE GÜLÜMSEME DOĞAL FORMUNA KAVUŞUR. AYRICA, KOMŞU DİŞLERE ZARAR VERİLMEDEN UZUN ÖMÜRLÜ BİR ÇÖZÜM SUNAR.
+                  </p>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                  <button
+                    onClick={() => openAppointmentFor("Dental İmplant Muayenesi")}
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-xs uppercase tracking-wider transition-colors"
+                  >
+                    İmplant Danışma Randevusu
+                  </button>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0] font-bold text-xs flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>WhatsApp'tan Fiyat/Süreç Sorun</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. INSTAGRAM Q&A SECTION */}
       <section id="soru-cevap" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center mb-12 space-y-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] text-[#0284C7] text-xs font-bold">
               <HelpCircle className="w-3.5 h-3.5" />
-              <span>Dt. Damla Akarsu ile Diş Sağlığı Rehberi</span>
+              <span>{instagramHandle} ile Diş Sağlığı Rehberi</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F172A]">
-              Sıkça Sorulan Sorular & Yanıtlar
+              Sıkça Sorulan Sorular & Hekim Yanıtları
             </h2>
             <p className="text-xs sm:text-sm text-[#64748B]">
               Sosyal medyada ve klinikte hastalarımızın en çok merak ettiği konuları hekimimiz yanıtlıyor.
@@ -638,14 +799,14 @@ export default function DamlaAkarsuClient() {
                 </div>
 
                 <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
-                  <span className="text-[#64748B]">Sorunuz mu var?</span>
+                  <span className="text-[#64748B]">Detaylı bilgi almak ister misiniz?</span>
                   <a
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold text-[#0284C7] hover:underline inline-flex items-center gap-1"
                   >
-                    <span>Hekime WhatsApp'tan Sorun</span>
+                    <span>Hekime Yazın</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -656,8 +817,8 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 5. TREATMENTS & SERVICES (DETAILED CATALOG) */}
-      <section id="tedaviler" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+      {/* 7. ALL TREATMENTS CATALOG */}
+      <section id="hizmetler" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
@@ -677,9 +838,9 @@ export default function DamlaAkarsuClient() {
             <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-white border border-[#E2E8F0]">
               {[
                 { id: "all", label: "Tüm Hizmetler" },
-                { id: "estetik", label: "Estetik & Beyazlatma" },
+                { id: "estetik", label: "Estetik & Zirkonyum" },
                 { id: "cerrahi", label: "İmplant & 20'lik Çekim" },
-                { id: "tedavi", label: "Kanal & Dolgu" },
+                { id: "tedavi", label: "Kanal & Acil" },
                 { id: "ortodonti", label: "Şeffaf Plak & Tel" }
               ].map((tab) => (
                 <button
@@ -760,7 +921,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 6. ABOUT DT. DAMLA AKARSU & CLINIC QUALITY PILLARS */}
+      {/* 8. ABOUT DT. DAMLA AKARSU & CLINIC QUALITY PILLARS */}
       <section id="hakkimizda" className="py-16 sm:py-24 bg-white border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -776,7 +937,7 @@ export default function DamlaAkarsuClient() {
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-transparent to-transparent p-6 flex flex-col justify-end text-white">
-                    <span className="text-xs uppercase font-bold text-[#BAE6FD] tracking-wider">Kurucu Diş Hekimi</span>
+                    <span className="text-xs uppercase font-bold text-[#BAE6FD] tracking-wider">{instagramHandle}</span>
                     <h3 className="text-2xl font-black">Dt. Damla Akarsu</h3>
                     <p className="text-xs text-white/80 mt-0.5">İstanbul Yeni Yüzyıl Üniversitesi Mezunu</p>
                   </div>
@@ -873,7 +1034,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 7. PATIENT REVIEWS */}
+      {/* 9. PATIENT REVIEWS */}
       <section id="yorumlar" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -926,7 +1087,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 8. ONLINE APPOINTMENT & CONTACT FORM */}
+      {/* 10. ONLINE APPOINTMENT & CONTACT FORM */}
       <section id="randevu" className="py-16 sm:py-24 bg-gradient-to-b from-[#F8FAFC] to-[#EFF6FF] border-b border-[#E2E8F0]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -957,7 +1118,7 @@ export default function DamlaAkarsuClient() {
                     setFormData({
                       fullName: "",
                       phone: "",
-                      service: "Genel Diş Muayenesi & Check-Up",
+                      service: "Ücretsiz Ön Muayene & Teşhis",
                       preferredDate: "",
                       preferredTime: "Öğleden Önce (10:00 - 13:00)",
                       notes: ""
@@ -1004,15 +1165,15 @@ export default function DamlaAkarsuClient() {
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors"
                     >
-                      <option value="Genel Diş Muayenesi & Check-Up">Genel Diş Muayenesi & Check-Up</option>
-                      <option value="Diş Temizliği ve Diş Beyazlatma">Diş Temizliği ve Diş Beyazlatma</option>
+                      <option value="Ücretsiz Ön Muayene & Teşhis">Ücretsiz Ön Muayene & Teşhis</option>
+                      <option value="Zirkonyum Kaplama (Gülüş Estetiği)">Zirkonyum Kaplama (Gülüş Estetiği)</option>
+                      <option value="Dental İmplant Uygulamaları">Dental İmplant Uygulamaları</option>
+                      <option value="Rutin Diş Temizliği & Beyazlatma">Rutin Diş Temizliği & Beyazlatma</option>
                       <option value="Diş Teli & Şeffaf Plak Ortodonti">Diş Teli & Şeffaf Plak Ortodonti</option>
-                      <option value="İmplant Uygulamaları">İmplant Uygulamaları</option>
                       <option value="Ağrısız Kanal Tedavisi">Ağrısız Kanal Tedavisi</option>
                       <option value="20'lik Diş Çekimi & Cerrahi">20'lik Diş Çekimi & Cerrahi</option>
-                      <option value="Estetik Dolgu İşlemleri">Estetik Dolgu İşlemleri</option>
-                      <option value="Dijital Gülüş Tasarımı (Hollywood Smile)">Dijital Gülüş Tasarımı (Hollywood Smile)</option>
-                      <option value="Zirkonyum / E-Max Kaplama">Zirkonyum / E-Max Kaplama</option>
+                      <option value="Estetik Kompozit Dolgu">Estetik Kompozit Dolgu</option>
+                      <option value="Acil Diş Müdahalesi">Acil Diş Müdahalesi</option>
                     </select>
                   </div>
 
@@ -1067,7 +1228,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 9. CONTACT & MAP LOCATION */}
+      {/* 11. CONTACT & MAP LOCATION */}
       <section id="iletisim" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1181,7 +1342,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 10. FLOATING WHATSAPP BUTTON (DEDICATED) */}
+      {/* 12. FLOATING WHATSAPP BUTTON (DEDICATED) */}
       <a
         href={whatsappUrl}
         target="_blank"
@@ -1197,7 +1358,7 @@ export default function DamlaAkarsuClient() {
         <span className="hidden sm:inline font-bold">WhatsApp ({primaryPhone})</span>
       </a>
 
-      {/* 11. CLINIC FOOTER */}
+      {/* 13. CLINIC FOOTER */}
       <footer className="bg-[#0F172A] text-[#94A3B8] text-xs pt-16 pb-8 border-t border-[#1E293B]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1206,8 +1367,8 @@ export default function DamlaAkarsuClient() {
             {/* Column 1: Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center font-bold">
-                  <Smile className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="text-base font-bold text-white">Dt. Damla Akarsu</div>
@@ -1215,11 +1376,11 @@ export default function DamlaAkarsuClient() {
                 </div>
               </div>
               <p className="text-xs text-[#94A3B8] leading-relaxed">
-                Profosyonel DENTAL KLİNİK — Ağız ve diş sağlığınız bizim için önemlidir. Sağlıklı ve doğal gülüşler için düzenli diş muayenesi olmalısınız.
+                SAĞLIKLI GÜLÜŞLER MUTLU YÜZLER — Diş bakımında güvenli ellerdesiniz. Çocuklardan yaşlılara tüm aile için koruyucu ve estetik diş hekimliği.
               </p>
               <div className="pt-1 flex items-center gap-2 text-white font-bold text-xs">
                 <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-                <span>Hasta Kabulü Açık</span>
+                <span>{instagramHandle}</span>
               </div>
             </div>
 
@@ -1227,12 +1388,12 @@ export default function DamlaAkarsuClient() {
             <div className="space-y-3">
               <div className="font-bold text-white uppercase tracking-wider text-xs">Kliniğimizdeki Hizmetler</div>
               <ul className="space-y-2 text-[#CBD5E1]">
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Diş Temizliği & Beyazlatma</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Diş Teli & Şeffaf Plak</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Dental İmplant Uygulamaları</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Ağrısız Kanal Tedavisi</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">20'lik Diş Çekimi Cerrahisi</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Estetik Dolgu İşlemleri</a></li>
+                <li><a href="#zirkonyum" className="hover:text-[#BAE6FD] transition-colors">Zirkonyum Kaplama</a></li>
+                <li><a href="#implant" className="hover:text-[#BAE6FD] transition-colors">İmplant Tedavisi</a></li>
+                <li><a href="#hizmetler" className="hover:text-[#BAE6FD] transition-colors">Rutin Diş Temizliği</a></li>
+                <li><a href="#hizmetler" className="hover:text-[#BAE6FD] transition-colors">Diş Teli & Şeffaf Plak</a></li>
+                <li><a href="#hizmetler" className="hover:text-[#BAE6FD] transition-colors">Ağrısız Kanal Tedavisi</a></li>
+                <li><a href="#hizmetler" className="hover:text-[#BAE6FD] transition-colors">20'lik Diş Çekimi Cerrahisi</a></li>
               </ul>
             </div>
 
@@ -1272,7 +1433,7 @@ export default function DamlaAkarsuClient() {
           {/* Bottom Bar */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#64748B]">
             <div>
-              © {new Date().getFullYear()} Dt. Damla Akarsu Diş Muayenehanesi — Tüm hakları saklıdır.
+              © {new Date().getFullYear()} Dt. Damla Akarsu Diş Muayenehanesi ({instagramHandle}) — Tüm hakları saklıdır.
             </div>
             <div>
               Web Konsept & Tasarım: <Link href="/" className="text-[#CBD5E1] hover:text-white font-bold">KvK Dijital Çözümler</Link>
