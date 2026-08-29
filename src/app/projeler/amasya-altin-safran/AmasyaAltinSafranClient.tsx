@@ -514,15 +514,13 @@ export default function AmasyaAltinSafranClient() {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-[#F5F6F7]">
-                  <a
-                    href={cert.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 rounded-lg bg-[#F5F6F7] hover:bg-[#7B2CBF] hover:text-white text-[#39404A] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                  <button
+                    onClick={() => setSelectedCert(cert)}
+                    className="w-full py-2.5 rounded-lg bg-[#F5F6F7] hover:bg-[#7B2CBF] hover:text-white text-[#39404A] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <span>Resmi Belgeyi Görüntüle (PDF)</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                    <Eye className="w-4 h-4" />
+                    <span>Belgeyi Site İçinde İncele</span>
+                  </button>
                 </div>
               </div>
             ))}
@@ -973,9 +971,9 @@ export default function AmasyaAltinSafranClient() {
             <div className="space-y-2">
               <div className="font-bold text-white uppercase tracking-wider text-xs">Belgelerimiz</div>
               <ul className="space-y-1.5 text-[#D1D5DB]">
-                <li><a href="https://www.amasyaaltinsafran.com/muayene-analiz-raporu.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white">Muayene ve Analiz Raporu</a></li>
-                <li><a href="https://www.amasyaaltinsafran.com/orser-sertifikasi.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white">Orser Sertifikası</a></li>
-                <li><a href="https://www.amasyaaltinsafran.com/tohum-uretici-belgesi.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-white">Tohum Üretici Belgesi</a></li>
+                <li><button onClick={() => setSelectedCert(CERTIFICATES[0])} className="hover:text-white text-left transition-colors cursor-pointer">Muayene ve Analiz Raporu</button></li>
+                <li><button onClick={() => setSelectedCert(CERTIFICATES[1])} className="hover:text-white text-left transition-colors cursor-pointer">Orser Sertifikası</button></li>
+                <li><button onClick={() => setSelectedCert(CERTIFICATES[2])} className="hover:text-white text-left transition-colors cursor-pointer">Tohum Üretici Belgesi</button></li>
               </ul>
             </div>
 
@@ -1133,6 +1131,75 @@ export default function AmasyaAltinSafranClient() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* IN-APP CERTIFICATE & DOCUMENT READER MODAL (SEAMLESS MOBILE & DESKTOP RENDERING) */}
+      {selectedCert && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+          <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] border border-[#E8E8E8]">
+            
+            {/* Modal Header */}
+            <div className="px-4 sm:px-6 py-3.5 border-b border-[#E8E8E8] flex items-center justify-between bg-[#F8F9FA]">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-[#7B2CBF]/10 text-[#7B2CBF]">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono font-bold text-[#7B2CBF]">{selectedCert.code}</span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      Tescilli Resmi Belge
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-bold text-[#1E293B]">{selectedCert.title}</h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedCert(null)}
+                className="p-2 rounded-lg bg-white hover:bg-[#E8E8E8] text-[#39404A] border border-[#E8E8E8] transition-colors"
+                aria-label="Kapat"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Embedded In-App Viewer (No Download on Mobile) */}
+            <div className="flex-1 w-full bg-[#F5F6F7] p-2 sm:p-4 overflow-hidden relative">
+              <iframe
+                title={selectedCert.title}
+                src={`https://docs.google.com/viewer?url=${encodeURIComponent(selectedCert.pdfUrl)}&embedded=true`}
+                className="w-full h-[60vh] sm:h-[70vh] rounded-xl border border-[#E8E8E8] bg-white shadow-inner"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Modal Footer Bar */}
+            <div className="px-4 sm:px-6 py-3 border-t border-[#E8E8E8] bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <div className="text-[#555555]">
+                <strong>Onaylayan Makam:</strong> {selectedCert.authority}
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <a
+                  href={selectedCert.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 rounded-lg bg-[#F5F6F7] hover:bg-[#E8E8E8] text-[#39404A] font-bold inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <span>Harici Sekmede Aç / İndir</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <button
+                  onClick={() => setSelectedCert(null)}
+                  className="px-4 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white font-bold transition-colors"
+                >
+                  Kapat
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
