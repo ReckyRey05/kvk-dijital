@@ -1078,16 +1078,25 @@ export default function AmasyaAltinSafranClient() {
                 </a>
               </div>
 
-              {/* Google Maps Iframe with Pinned Coordinate */}
-              <div className="relative w-full h-80 sm:h-96 bg-[#F5F6F7]">
+              {/* Interactive Street Map with Pinned Coordinate */}
+              <div className="relative w-full h-80 sm:h-96 bg-[#E5E7EB]">
                 <iframe
-                  title="Amasya Altın Safran Google Haritası"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3032.548987456123!2d35.82925347656645!3d40.6504262713838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40876f0003fbf4a7%3A0xdb5847629236d946!2sAmasya%20Alt%C4%B1n%20Safran!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
+                  title="Amasya Altın Safran Harita Konumu"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=35.8248%2C40.6454%2C35.8388%2C40.6554&layer=mapnik&marker=40.6504263%2C35.8318284"
                   className="w-full h-full border-0"
                   loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
                 />
+
+                {/* Floating Branded Pin Overlay */}
+                <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-sm p-3 rounded-xl border border-[#E8E8E8] shadow-md max-w-xs hidden sm:block">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#1E293B]">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#7B2CBF] animate-pulse" />
+                    <span>Amasya Altın Safran</span>
+                  </div>
+                  <p className="text-[11px] text-[#555555] mt-0.5">
+                    Dere Mah. Özkan Yalçın Cad. No:11/D Merkez / Amasya
+                  </p>
+                </div>
               </div>
             </div>
 
