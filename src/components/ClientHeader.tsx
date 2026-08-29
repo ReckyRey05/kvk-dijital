@@ -13,6 +13,7 @@ export default function ClientHeader() {
     pathname?.endsWith("-demo") ||
     pathname?.startsWith("/projeler/pomak-lazer") ||
     pathname?.startsWith("/projeler/amasya-altin-safran") ||
+    pathname?.startsWith("/projeler/damla-akarsu") ||
     pathname?.startsWith("/restoran") ||
     pathname?.startsWith("/qr")
   ) {
