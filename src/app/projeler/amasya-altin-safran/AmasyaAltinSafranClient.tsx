@@ -913,10 +913,11 @@ export default function AmasyaAltinSafranClient() {
               <div className="relative w-full h-80 sm:h-96 bg-[#F5F6F7]">
                 <iframe
                   title="Amasya Altın Safran Google Haritası"
-                  src="https://maps.google.com/maps?q=Amasya+Alt%C4%B1n+Safran,+Dere+Mah.+%C3%96zkan+Yal%C3%A7%C4%B1n+Cad.+No:11/D+Merkez+Amasya&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3032.548987456123!2d35.82925347656645!3d40.6504262713838!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40876f0003fbf4a7%3A0xdb5847629236d946!2sAmasya%20Alt%C4%B1n%20Safran!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
                   className="w-full h-full border-0"
                   loading="lazy"
                   allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
             </div>
