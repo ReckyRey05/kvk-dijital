@@ -64,7 +64,7 @@ const FEATURED_MACHINES: Machine[] = [
       "EtherCAT bus kontrollü endüstriyel CNC yönetim ünitesi",
       "Bölmeli pnömatik duman emme ve partikül filtreleme kanalları"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80"
+    imageUrl: "/images/pomak-lazer/machines/pl-fiber-3015.png"
   },
   {
     id: "pl-mark-50",
@@ -84,7 +84,7 @@ const FEATURED_MACHINES: Machine[] = [
       "Otomatik seri numarası, 2D QR ve Datamatrix üretimi",
       "Döner divizör (rotary) opsiyonu ile silindirik markalama"
     ],
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/fiberkafa.png"
+    imageUrl: "/images/pomak-lazer/machines/pl-mark-50.png"
   },
   {
     id: "pl-tube-6020",
@@ -104,7 +104,7 @@ const FEATURED_MACHINES: Machine[] = [
       "Kurt ağzı, kilitli geçme ve açılı kaynak ağzı açma",
       "Sıfır fire boru sonu kesim teknolojisi"
     ],
-    imageUrl: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80"
+    imageUrl: "/images/pomak-lazer/machines/pl-tube-6020.png"
   },
   {
     id: "pl-co2-1390",
@@ -124,7 +124,7 @@ const FEATURED_MACHINES: Machine[] = [
       "Otomatik motorlu aşağı/yukarı hareketli Z ekseni",
       "Endüstriyel CW-5200 su soğutucu (chiller) entegrasyonu"
     ],
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/lazer-tup-2.jpg"
+    imageUrl: "/images/pomak-lazer/machines/pl-co2-1390.png"
   }
 ];
 
@@ -205,25 +205,25 @@ const SPARE_PARTS_ITEMS = [
     title: "Kesim Kafaları & Nozullar",
     desc: "Raytools, Precitec ve WSX uyumlu tekli/çiftli krom nozullar, nozul tutucu gövdeler ve seramik izolasyon halkaları.",
     specs: "Çap: 1.0mm - 4.5mm | Orijinal Krom Kaplama",
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/fiberkafa.png"
+    imageUrl: "/images/pomak-lazer/spare-parts/fiber-kafa.png"
   },
   {
     title: "Koruyucu Camlar & Odak Lensleri",
     desc: "Yüksek saflıkta eritilmiş silika ve kuvars koruyucu camlar, ZnSe CO2 odaklama mercekleri ve kolimatör lens grupları.",
     specs: "Dalga Boyu: 1064nm / 10.6μm | AR Kaplama",
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/fiber-f-theta-lens-lazer.png"
+    imageUrl: "/images/pomak-lazer/spare-parts/f-theta-lens.png"
   },
   {
     title: "Lazer Güç Kaynakları & Rezonatörler",
     desc: "Raycus ve Maxphotonics fiber lazer güç modülleri, Q-switch ve MOPA lazer kaynakları, Reci CO2 lazer cam tüpleri.",
     specs: "30W MOPA'dan 30kW Fiber Rezonatöre Kadar",
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/60w-80w-lazer-guc-kaynagi.png"
+    imageUrl: "/images/pomak-lazer/spare-parts/guc-kaynagi.png"
   },
   {
     title: "Endüstriyel Chiller & Soğutma",
     desc: "Çift devreli akıllı su soğutma üniteleri (S&A CWFL serisi), kapasitif yükseklik takip sensörleri ve kablo setleri.",
     specs: "PID Sıcaklık Kontrolü | 380V / 220V Uyumlu",
-    imageUrl: "https://www.pomaklazer.com/wp-content/uploads/2025/01/cw5200-lazer-su-sogutucu.png"
+    imageUrl: "/images/pomak-lazer/spare-parts/cw5200-chiller.png"
   }
 ];
 
@@ -418,7 +418,7 @@ export default function PomakLazerClient() {
               <a onClick={() => setMobileMenuOpen(false)} href="#uygulamalar" className="text-base font-bold text-slate-900 hover:text-[#C6371F] py-1 border-b border-slate-100">Uygulamalar</a>
               <a onClick={() => setMobileMenuOpen(false)} href="#yedek-parca" className="text-base font-bold text-slate-900 hover:text-[#C6371F] py-1 border-b border-slate-100">Yedek Parçalar</a>
               <a onClick={() => setMobileMenuOpen(false)} href="#neden-pomak" className="text-base font-bold text-slate-900 hover:text-[#C6371F] py-1 border-b border-slate-100">Hakkımızda</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-base font-bold text-slate-900 hover:text-[#C6371F] py-1">İletişim</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-base font-bold text-slate-900 hover:text-[#C6371F] py-1 border-b border-slate-100">İletişim</a>
             </nav>
             <div className="pt-3 border-t border-slate-200 flex flex-col gap-3">
               <button
@@ -444,7 +444,7 @@ export default function PomakLazerClient() {
         )}
       </header>
 
-      {/* 2. HERO SECTION (SOLID INDUSTRIAL GRAPHITE CONTRAST WITH HIGH LEGIBILITY) */}
+      {/* 2. HERO SECTION (SOLID INDUSTRIAL GRAPHITE CONTRAST WITH REAL HERO IMAGE) */}
       <section id="hero" className="relative bg-[#161A22] text-white py-16 lg:py-24 border-b border-slate-800">
         
         {/* Subtle CAD Blueprint Grid Lines */}
@@ -512,7 +512,7 @@ export default function PomakLazerClient() {
 
             </div>
 
-            {/* Right Machine Technical Card with CAD Corner Marks */}
+            {/* Right Machine Technical Card with Real Pomak Lazer Machine Photo */}
             <div className="lg:col-span-5 relative">
               <div className="relative bg-[#0F131A] rounded-lg border border-slate-700 p-3.5 shadow-2xl">
                 
@@ -522,16 +522,16 @@ export default function PomakLazerClient() {
                 <div className="absolute bottom-1 left-1 text-xs font-mono text-slate-500 select-none">⌞</div>
                 <div className="absolute bottom-1 right-1 text-xs font-mono text-slate-500 select-none">⌟</div>
 
-                <div className="relative aspect-[16/11] rounded bg-slate-900 overflow-hidden border border-slate-800">
+                <div className="relative aspect-[16/11] rounded bg-white overflow-hidden border border-slate-700 p-3 flex items-center justify-center">
                   <img
-                    src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&auto=format&fit=crop&q=80"
-                    alt="Endüstriyel Fiber Lazer Sac Kesim Makinesi Gövdesi"
-                    className="w-full h-full object-cover opacity-90"
+                    src="/images/pomak-lazer/machines/hero-fiber-laser.png"
+                    alt="Pomak Lazer Endüstriyel Kapalı Kasa Fiber Lazer Kesim Makinesi"
+                    className="max-w-full max-h-full object-contain"
                   />
-                  <div className="absolute bottom-0 inset-x-0 bg-[#0F131A]/95 border-t border-slate-800 p-4 flex items-center justify-between">
+                  <div className="absolute bottom-0 inset-x-0 bg-[#0F131A]/95 border-t border-slate-800 p-3 sm:p-4 flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-mono uppercase text-[#C6371F] font-black block">MODEL: PL-FIBER 3015 PRO</span>
-                      <span className="text-sm font-bold text-white">1500 x 3000 mm Çift Tabla / 6kW - 12kW</span>
+                      <span className="text-xs font-mono uppercase text-[#C6371F] font-black block">MODEL: ELGO-HOUSE PRO</span>
+                      <span className="text-xs sm:text-sm font-bold text-white">Tam Korumalı Kabinli Fiber Sac Kesim</span>
                     </div>
                     <button
                       onClick={() => setSelectedMachine(FEATURED_MACHINES[0])}
@@ -899,7 +899,7 @@ export default function PomakLazerClient() {
         </div>
       </section>
 
-      {/* 6. FEATURED MACHINES (HIGH LEGIBILITY CARDS) */}
+      {/* 6. FEATURED MACHINES (HIGH LEGIBILITY CARDS WITH REAL POMAK LAZER PRODUCT PHOTOS) */}
       <section id="makineler" className="py-20 bg-[#F4F5F7]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -934,19 +934,19 @@ export default function PomakLazerClient() {
               >
                 <div>
                   {/* Photo with technical tags */}
-                  <div className="relative aspect-[16/9] bg-slate-100 border-b border-slate-300 overflow-hidden">
+                  <div className="relative aspect-[16/10] bg-white border-b border-slate-200 p-6 flex items-center justify-center overflow-hidden">
                     <img
                       src={machine.imageUrl}
                       alt={machine.name}
-                      className="w-full h-full object-contain p-6 bg-white"
+                      className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105"
                     />
                     <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1.5 rounded bg-[#1A1D21] text-white text-xs font-mono font-bold">
+                      <span className="px-3 py-1.5 rounded bg-[#1A1D21] text-white text-xs font-mono font-bold shadow-sm">
                         {machine.code}
                       </span>
                     </div>
                     <div className="absolute top-3 right-3">
-                      <span className="px-3 py-1.5 rounded bg-slate-200 text-slate-900 text-xs font-mono uppercase font-bold border border-slate-300">
+                      <span className="px-3 py-1.5 rounded bg-slate-100 text-slate-900 text-xs font-mono uppercase font-bold border border-slate-300 shadow-sm">
                         {machine.categoryLabel}
                       </span>
                     </div>
@@ -1183,7 +1183,7 @@ export default function PomakLazerClient() {
                     <img
                       src={part.imageUrl}
                       alt={part.title}
-                      className="max-h-full max-w-full object-contain"
+                      className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                   <div className="p-5 space-y-2.5">
