@@ -928,29 +928,33 @@ export default function DamlaAkarsuClient() {
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
             
-            {/* Left Doctor Photo */}
+            {/* Left Doctor Photo - Official Dt. Damla Akarsu Portrait */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-md">
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#E2E8F0] bg-white aspect-[4/5]">
+                <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#E2E8F0] bg-white aspect-[3/4]">
                   <img
-                    src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&auto=format&fit=crop&q=80"
+                    src="/images/damla-akarsu/dt-damla-akarsu-profil.jpg"
                     alt="Dt. Damla Akarsu - Diş Hekimi"
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-transparent to-transparent p-6 flex flex-col justify-end text-white">
                     <span className="text-xs uppercase font-bold text-[#BAE6FD] tracking-wider">{instagramHandle}</span>
                     <h3 className="text-2xl font-black">Dt. Damla Akarsu</h3>
-                    <p className="text-xs text-white/80 mt-0.5">İstanbul Yeni Yüzyıl Üniversitesi Mezunu</p>
+                    <p className="text-xs text-white/80 mt-0.5">İstanbul Yeni Yüzyıl Üniversitesi Mezunu • Diş Hekimi</p>
                   </div>
                 </div>
 
-                <div className="absolute -bottom-5 -right-5 bg-white p-4 rounded-2xl shadow-xl border border-[#E2E8F0] flex items-center gap-3 max-w-[200px]">
-                  <div className="w-10 h-10 rounded-xl bg-[#0284C7]/10 text-[#0284C7] flex items-center justify-center shrink-0">
-                    <Award className="w-6 h-6 text-[#0284C7]" />
+                <div className="absolute -bottom-5 -right-5 bg-white p-4 rounded-2xl shadow-xl border border-[#E2E8F0] flex items-center gap-3 max-w-[210px]">
+                  <div className="w-11 h-11 rounded-xl bg-[#0A3D78] overflow-hidden shrink-0 flex items-center justify-center border border-white/20">
+                    <img
+                      src="/images/damla-akarsu/mk-dis-klinigi-logo.png"
+                      alt="MK Logo"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
-                    <div className="text-sm font-black text-[#0F172A]">Tescilli</div>
-                    <div className="text-[11px] text-[#64748B]">Modern Muayenehane</div>
+                    <div className="text-sm font-black text-[#0F172A]">MK Diş Kliniği</div>
+                    <div className="text-[11px] text-[#64748B]">Kurucu Diş Hekimi</div>
                   </div>
                 </div>
               </div>
