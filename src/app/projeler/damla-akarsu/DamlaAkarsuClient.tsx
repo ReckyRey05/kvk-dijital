@@ -29,7 +29,9 @@ import {
   Menu,
   Check,
   Search,
-  ExternalLink
+  ExternalLink,
+  HelpCircle,
+  CheckSquare2
 } from "lucide-react";
 
 interface Treatment {
@@ -47,6 +49,23 @@ interface Treatment {
 
 const TREATMENTS: Treatment[] = [
   {
+    id: "dis-temizligi-ve-beyazlatma",
+    category: "estetik",
+    title: "Diş Temizliği & Lazerli Diş Beyazlatma",
+    shortDesc: "Diş taşı (tartar) temizliği, polisaj ve tek seansta 3-5 tona kadar kalıcı beyazlık sağlayan medikal ofis tipi beyazlatma.",
+    fullDesc: "Ultrasonik kavitron cihazları ile diş minesine hiçbir zarar verilmeden diş taşları ve plaklar temizlenir. Ardından klinik tipi lazer/LED aktivasyonlu özel beyazlatma jeli ile kahve, çay ve sigara lekeleri açılarak ışıltılı bir gülüş kazandırılır.",
+    duration: "45 - 60 Dakika",
+    sessions: "Tek Seans",
+    benefits: [
+      "Diş minesine zarar vermeden güvenli temizlik",
+      "Diş eti çekilmelerini ve kanamayı önler",
+      "Tek seansta 3-5 ton anında beyazlama",
+      "Ağız kokusunu gideren ferahlık"
+    ],
+    imageUrl: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&auto=format&fit=crop&q=80",
+    badge: "Instagram'da Popüler"
+  },
+  {
     id: "gulus-tasarimi",
     category: "estetik",
     title: "Dijital Gülüş Tasarımı (Hollywood Smile)",
@@ -61,12 +80,12 @@ const TREATMENTS: Treatment[] = [
       "Kişiye özel yüz ve karakter uyumu"
     ],
     imageUrl: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&auto=format&fit=crop&q=80",
-    badge: "En Çok Tercih Edilen"
+    badge: "Estetik Dönüşüm"
   },
   {
-    id: "implant-tedavisi",
+    id: "implant-uygulamalari",
     category: "cerrahi",
-    title: "Dental İmplant & Cerrahi Uygulamalar",
+    title: "Dental İmplant Uygulamaları",
     shortDesc: "Eksik dişlerin yerini alan, titanyum veya zirkonyum köklerle ömür boyu çiğneme fonksiyonu ve estetik sağlayan kalıcı tedavi.",
     fullDesc: "Tek diş eksikliğinden tam dişsizlik vakalarına kadar, çene kemiğine yerleştirilen biyouyumlu titanyum vidalar üzerine sabit protezler yapılır. Kliniğimizde uluslararası sertifikalı ve pasaportlu premium implant markaları kullanılmaktadır. Dikişsiz ve navigasyonlu cerrahi seçenekleri mevcuttur.",
     duration: "15 - 30 Dakika (İmplant Başı)",
@@ -98,38 +117,21 @@ const TREATMENTS: Treatment[] = [
     badge: "Doğal Estetik"
   },
   {
-    id: "dis-beyazlatma",
-    category: "estetik",
-    title: "Lazerli Ofis Tipi Diş Beyazlatma (Bleaching)",
-    shortDesc: "Klinik ortamında özel medikal jel ve mavi LED/lazer aktivasyonu ile tek seansta 3-5 tona kadar kalıcı beyazlık.",
-    fullDesc: "Kahve, çay, tütün ve yaşa bağlı renklenmeler, diş minesine zarar vermeyen onaylı klinik beyazlatma ajanları ile güvenle açılır. İşlem öncesi diş eti koruyucu bariyer uygulanarak sıfır hassasiyet hedeflenir.",
-    duration: "45 - 60 Dakika",
-    sessions: "Tek Seans",
-    benefits: [
-      "Tek seansta gözle görülür 3-5 ton beyazlama",
-      "Mine dostu pH dengeli medikal beyazlatma",
-      "Diş etlerini koruyan özel bariyer sistemi",
-      "Uzun süreli ve ışıltılı beyazlık"
-    ],
-    imageUrl: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&auto=format&fit=crop&q=80",
-    badge: "Hızlı Sonuç"
-  },
-  {
-    id: "seffaf-plak",
+    id: "dis-teli-ortodonti",
     category: "ortodonti",
-    title: "Şeffaf Plak Tedavisi (Telsiz Ortodonti)",
-    shortDesc: "Geleneksel metal tellere gerek kalmadan, dışarıdan fark edilmeyen şeffaf plaklarla çapraşık dişlerin düzeltilmesi.",
-    fullDesc: "3D ağız içi tarama yapılarak haftalık değişen kişiye özel şeffaf plaklar üretilir. Yemek yerken veya özel günlerde kolayca çıkarılabilir. Sosyal ve profesyonel hayatı etkilemeden estetik bir ortodontik tedavi sunar.",
+    title: "Diş Teli & Şeffaf Plak Ortodontik Tedaviler",
+    shortDesc: "Çapraşık, aralıklı ve kapanış bozukluğu olan dişlerin şeffaf plaklar (Invisalign) veya estetik braketlerle düzeltilmesi.",
+    fullDesc: "3D ağız içi tarama yapılarak hastanın dijital tedavi planı çıkarılır. Telsiz şeffaf plaklar sosyal hayatı kısıtlamadan dişleri milimetrik olarak hizalar. Geleneksel braket tedavileri de her yaş grubuna özel olarak uygulanır.",
     duration: "6 - 14 Ay",
     sessions: "Aylık Kontrol",
     benefits: [
-      "Tamamen şeffaf ve dışarıdan neredeyse görünmez",
-      "Yemek yerken çıkarılabilme özgürlüğü",
+      "Şeffaf plaklarda yemek yerken çıkarabilme özgürlüğü",
+      "Dışarıdan neredeyse tamamen görünmez estetik",
       "Yara veya batma yapmayan yumuşak materyal",
-      "Dijital simülasyonla ay ay düzelmeyi izleme"
+      "Doğru kapanış ile çiğneme ve çene eklemi sağlığı"
     ],
     imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&auto=format&fit=crop&q=80",
-    badge: "Görünmez Konfor"
+    badge: "Telsiz & Konforlu"
   },
   {
     id: "kanal-tedavisi",
@@ -149,38 +151,61 @@ const TREATMENTS: Treatment[] = [
     badge: "Diş Kurtarma"
   },
   {
-    id: "cocuk-dis-hekimligi",
-    category: "tedavi",
-    title: "Çocuk Diş Hekimliği (Pedodonti)",
-    shortDesc: "0-14 yaş çocuklarda süt ve daimi dişlerin sağlığı, koruyucu flor uygulamaları, fissür örtücüler ve yer tutucular.",
-    fullDesc: "Çocuklara diş hekimi korkusu (dental fobi) yaşatmadan, oyun temelli yaklaşımla koruyucu tedaviler uygulanır. Çürük oluşumunu engelleyen florlama ve fissür örtücü uygulamaları ile gelecekteki diş dizilim sorunları önceden engellenir.",
-    duration: "30 Dakika",
-    sessions: "6 Aylık Rutin",
+    id: "20lik-dis-cekimi",
+    category: "cerrahi",
+    title: "20'lik Diş Çekimi & Gömülü Diş Cerrahisi",
+    shortDesc: "Çene kemiğinde gömülü, yarı gömülü veya çapraşıklığa yol açan 20 yaş dişlerinin ağrısız ve hızlı cerrahi çekimi.",
+    fullDesc: "Panoramik röntgen ile sinir komşuluğu hassas bir şekilde analiz edilen 20'lik dişler, lokal anestezi altında travmasız cerrahi tekniklerle çekilir. Şişlik ve ağrıyı minimize eden ameliyat sonrası bakım protokolü uygulanır.",
+    duration: "20 - 40 Dakika",
+    sessions: "Tek Seans",
     benefits: [
-      "Pedodontik pedagojik ve şefkatli yaklaşım",
-      "Çürüğü %80'e kadar önleyen fissür örtücüler",
-      "Erken diş kaybında yer tutucu uygulaması",
-      "Gelecek nesillere diş fırçalama sevgisi aşılama"
+      "Diğer dişlerin sıkışmasını ve bozulmasını önler",
+      "Tekrarlayan diş eti apsesi ve enfeksiyonları bitirir",
+      "Lokal anestezi ile işlem esnasında sıfır ağrı",
+      "Hızlı iyileşme ve özel dikiş protokolü"
     ],
     imageUrl: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&auto=format&fit=crop&q=80",
-    badge: "Korkusuz Tedavi"
+    badge: "Uzman Cerrahi"
   },
   {
-    id: "dis-eti-tedavisi",
+    id: "estetik-dolgu",
     category: "tedavi",
-    title: "Periodontoloji & Pembe Estetik",
-    shortDesc: "Diş eti kanamaları, diş eti çekilmeleri ve gülüş sırasında fazla görünen diş etlerinin lazerle estetik şekillendirilmesi.",
-    fullDesc: "Sağlıklı dişlerin temeli sağlıklı diş etleridir. Ultrasonik aletler ve lazer teknolojisiyle diş eti iltihapları tedavi edilir. 'Gummy smile' (gülünce diş etinin fazla görünmesi) durumunda lazer ile kanamasız ve dikişsiz estetik şekillendirme yapılır.",
+    title: "Estetik Kompozit Dolgu & Restoratif İşlemler",
+    shortDesc: "Çürük veya kırık dişlerin, dişin kendi doğal rengi ve anatomik formuyla birebir örtüşen kompozit materyallerle onarılması.",
+    fullDesc: "Eski amalgam (siyah) dolguların estetik beyaz dolgularla değiştirilmesi, ön diş kırıklarının bonding tekniğiyle kapatılması ve çiğneme yüzeylerinin doğal diş tepeciklerine uygun şekilde restore edilmesidir.",
     duration: "30 - 45 Dakika",
-    sessions: "1 - 2 Seans",
+    sessions: "Tek Seans",
     benefits: [
-      "Kanamasız ve dikişsiz lazerli şekillendirme",
-      "Diş eti çekilmesini durdurma ve kök yüzeyi koruma",
-      "Ağız kokusunun ana kaynağını yok etme",
-      "Simetrik ve estetik pembe gülüş hattı"
+      "Dişin doğal rengiyle %100 renk uyumu",
+      "Güçlü kimyasal bağlanma ile uzun ömür",
+      "Tek seansta anında estetik sonuç",
+      "Cıva içermeyen güvenli kompozit reçine"
     ],
     imageUrl: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80",
-    badge: "Lazer Destekli"
+    badge: "Doğal Restorasyon"
+  }
+];
+
+const INSTAGRAM_QA = [
+  {
+    question: "Diş taşı temizliği yaptırmak diş minesine zarar verir mi?",
+    answer: "Hayır, diş taşı temizliği diş minesine kesinlikle zarar vermez. Aksine, diş taşları zamanla diş etlerine baskı yaparak iltihaplanmaya, kanamaya ve diş eti çekilmelerine yol açar. Düzenli olarak 6 ayda bir yapılan profesyonel diş temizliği, diş eti hastalıklarını önlemenin en temel ve etkili yoludur.",
+    tag: "Ağız Hijyeni"
+  },
+  {
+    question: "20'lik dişler her durumda çekilmek zorunda mıdır?",
+    answer: "Hayır. Çene kavsinde yeterli yer olan, düzgün çıkan ve çiğnemeye katılan 20'lik dişlerin çekilmesine gerek yoktur. Ancak gömülü kalan, komşu dişi çürüten veya sürekli apse yapan dişler panoramik röntgen kontrolü sonrasında çekilmelidir.",
+    tag: "Cerrahi"
+  },
+  {
+    question: "İmplant tedavisi sırasında ağrı hissedilir mi?",
+    answer: "İmplant cerrahisi gelişmiş lokal anestezi altında gerçekleştirilir, bu nedenle işlem esnasında hasta hiçbir ağrı veya acı hissetmez. Operasyon sonrası için reçete edilen hafif ağrı kesicilerle iyileşme süreci son derece konforlu geçer.",
+    tag: "İmplant"
+  },
+  {
+    question: "Diş beyazlatma (bleaching) dişleri ne kadar süre beyaz tutar?",
+    answer: "Klinik tipi profesyonel beyazlatma sonuçları ortalama 1 - 2 yıl kalıcılığını korur. Çay, kahve ve sigara tüketim alışkanlığı ile düzenli diş fırçalama beyazlığın kalıcılık süresini doğrudan etkiler.",
+    tag: "Estetik"
   }
 ];
 
@@ -204,30 +229,6 @@ const CLINIC_PILLARS = [
     icon: FileCheck2,
     title: "Şeffaf Tedavi & Garanti Belgesi",
     desc: "Sürpriz maliyetler olmadan, tedaviye başlamadan önce net planlama, malzeme kalite sertifikaları ve resmi garanti belgeleri."
-  }
-];
-
-const BEFORE_AFTER = [
-  {
-    id: 1,
-    title: "E-Max Lamine Gülüş Tasarımı",
-    desc: "Renklenme ve aralık (diastema) şikayeti olan hastamıza 6 üye E-Max lamine porselen uygulaması.",
-    treatment: "Gülüş Tasarımı",
-    timeframe: "5 Gün"
-  },
-  {
-    id: 2,
-    title: "Zirkonyum Kaplama & Diş Eti Şekillendirme",
-    desc: "Eski metal destekli kaplamaların zirkonyum ile değiştirilmesi ve lazerle pembe estetik uyumu.",
-    treatment: "Zirkonyum & Gingivektomi",
-    timeframe: "6 Gün"
-  },
-  {
-    id: 3,
-    title: "Lazerli Ofis Tipi Diş Beyazlatma",
-    desc: "Tek seansta 4 ton renk açılması sağlanan, diş minesi korumalı medikal beyazlatma protokolü.",
-    treatment: "Bleaching",
-    timeframe: "45 Dakika"
   }
 ];
 
@@ -263,19 +264,21 @@ export default function DamlaAkarsuClient() {
   const [activeFilter, setActiveFilter] = useState<"all" | "estetik" | "cerrahi" | "tedavi" | "ortodonti">("all");
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null);
   const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
-  const [selectedServiceForAppointment, setSelectedServiceForAppointment] = useState("Genel Muayene & Check-Up");
+  const [selectedServiceForAppointment, setSelectedServiceForAppointment] = useState("Genel Diş Muayenesi & Check-Up");
 
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
-    service: "Genel Muayene & Check-Up",
+    service: "Genel Diş Muayenesi & Check-Up",
     preferredDate: "",
     preferredTime: "Öğleden Önce (10:00 - 13:00)",
     notes: ""
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const whatsappPhone = "905441105856";
+  // Exact Verified Phone from Instagram: 0544 577 58 56
+  const primaryPhone = "0544 577 58 56";
+  const whatsappPhone = "905445775856";
   const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
     "Merhaba Dt. Damla Akarsu Diş Muayenehanesi, randevu ve tedavi hakkında bilgi almak istiyorum."
   )}`;
@@ -297,13 +300,13 @@ export default function DamlaAkarsuClient() {
       : TREATMENTS.filter((t) => t.category === activeFilter);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-[#0E7490] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans antialiased selection:bg-[#0284C7] selection:text-white">
       
       {/* 0. KVK DIJITAL CONCEPT TOP BAR */}
       <div className="bg-[#0F172A] text-[#94A3B8] border-b border-[#1E293B] py-2 px-4 text-xs font-mono">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#06B6D4] inline-block shrink-0 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#0284C7] inline-block shrink-0 animate-pulse" />
             <span className="font-bold text-white">KvK Dijital Çözümler</span>
             <span className="text-[#475569] hidden sm:inline">|</span>
             <span className="text-[#CBD5E1] hidden sm:inline font-sans">
@@ -312,7 +315,7 @@ export default function DamlaAkarsuClient() {
           </div>
           <Link
             href="/projeler"
-            className="inline-flex items-center gap-1 text-white hover:text-[#06B6D4] font-sans font-semibold transition-colors shrink-0"
+            className="inline-flex items-center gap-1 text-white hover:text-[#0284C7] font-sans font-semibold transition-colors shrink-0"
           >
             <span>Tüm Projeler</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -321,28 +324,28 @@ export default function DamlaAkarsuClient() {
       </div>
 
       {/* 1. CLINIC TOP INFO BAR */}
-      <div className="bg-[#0E7490] text-white py-2 px-4 text-xs font-medium border-b border-[#0891B2]">
+      <div className="bg-[#0369A1] text-white py-2.5 px-4 text-xs font-medium border-b border-[#0284C7]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div className="flex items-center gap-4 text-xs">
             <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#67E8F9]" />
+              <Clock className="w-3.5 h-3.5 text-[#BAE6FD]" />
               <span>Pzt - Cmt: 09:30 - 19:30</span>
             </span>
             <span className="hidden md:inline text-white/30">|</span>
             <span className="hidden md:flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#67E8F9]" />
-              <span>Kartal & Pendik / İstanbul</span>
+              <MapPin className="w-3.5 h-3.5 text-[#BAE6FD]" />
+              <span>Pendik & Kartal / İstanbul</span>
             </span>
           </div>
           <div className="flex items-center gap-4 text-xs">
-            <a href="tel:+905441105856" className="hover:underline flex items-center gap-1 font-bold">
-              <Phone className="w-3.5 h-3.5 text-[#67E8F9]" />
-              <span>(+90) 544 110 58 56</span>
+            <a href={`tel:+905445775856`} className="hover:underline flex items-center gap-1.5 font-bold text-white">
+              <Phone className="w-3.5 h-3.5 text-[#BAE6FD]" />
+              <span>Randevu: {primaryPhone}</span>
             </a>
             <span className="text-white/30">|</span>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1 text-[#6EE7B7] font-bold">
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>WhatsApp Danışma</span>
+              <span>WhatsApp Randevu</span>
             </a>
           </div>
         </div>
@@ -355,40 +358,40 @@ export default function DamlaAkarsuClient() {
             
             {/* Logo */}
             <Link href="#hero" className="flex items-center gap-3 shrink-0 group">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#0E7490] to-[#06B6D4] text-white flex items-center justify-center shadow-md shadow-[#0E7490]/20 group-hover:scale-105 transition-transform">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center shadow-md shadow-[#0284C7]/20 group-hover:scale-105 transition-transform">
                 <Smile className="w-6 h-6" />
               </div>
               <div>
                 <div className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight flex items-center gap-1">
                   <span>Dt. Damla Akarsu</span>
                 </div>
-                <div className="text-[11px] font-bold text-[#0E7490] tracking-wider uppercase">
-                  Diş Muayenehanesi & Estetik Gülüş
+                <div className="text-[11px] font-bold text-[#0369A1] tracking-wider uppercase">
+                  Diş Muayenehanesi & Dental Klinik
                 </div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-              <a href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
+              <a href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Anasayfa
               </a>
-              <a href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
-                Tedavilerimiz
+              <a href="#hizmetler-ozet" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+                Hizmetlerimiz
               </a>
-              <a href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
+              <a href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+                Tedaviler
+              </a>
+              <a href="#soru-cevap" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
+                Soru & Cevap
+              </a>
+              <a href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Hakkımızda
               </a>
-              <a href="#teknoloji" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
-                Klinik & Teknoloji
-              </a>
-              <a href="#donusumler" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
-                Gülüş Galerisi
-              </a>
-              <a href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
+              <a href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 Yorumlar
               </a>
-              <a href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] transition-colors">
+              <a href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] transition-colors">
                 İletişim
               </a>
             </nav>
@@ -407,10 +410,10 @@ export default function DamlaAkarsuClient() {
               </a>
 
               <button
-                onClick={() => openAppointmentFor("Genel Muayene & Randevu")}
-                className="px-5 py-2.5 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white text-xs font-bold transition-all shadow-md shadow-[#0E7490]/20 hover:shadow-lg cursor-pointer"
+                onClick={() => openAppointmentFor("Genel Diş Muayenesi")}
+                className="px-5 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all shadow-md shadow-[#0284C7]/20 hover:shadow-lg cursor-pointer"
               >
-                Online Randevu Al
+                Randevu Al
               </button>
             </div>
 
@@ -420,7 +423,7 @@ export default function DamlaAkarsuClient() {
               className="lg:hidden p-2 rounded-xl bg-[#F1F5F9] text-[#334155] border border-[#E2E8F0]"
               aria-label="Menü"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-[#0E7490]" />}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-[#0284C7]" />}
             </button>
           </div>
         </div>
@@ -429,13 +432,13 @@ export default function DamlaAkarsuClient() {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-t border-[#E2E8F0] px-6 py-5 space-y-3 shadow-xl">
             <nav className="flex flex-col space-y-2.5">
-              <a onClick={() => setMobileMenuOpen(false)} href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Anasayfa</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Tedavilerimiz</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Hakkımızda</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#teknoloji" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Klinik & Teknoloji</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#donusumler" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Gülüş Galerisi</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">Hasta Yorumları</a>
-              <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0E7490] py-1 border-b border-[#F8FAFC]">İletişim & Konum</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#hero" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Anasayfa</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#hizmetler-ozet" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Kliniğimizdeki Hizmetler</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#tedaviler" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Tedavi Kataloğu</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#soru-cevap" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Soru & Cevap Rehberi</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#hakkimizda" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Hakkımızda</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#yorumlar" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">Hasta Yorumları</a>
+              <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-sm font-bold text-[#334155] hover:text-[#0284C7] py-1 border-b border-[#F8FAFC]">İletişim & Konum</a>
             </nav>
             <div className="pt-2 flex flex-col gap-2">
               <button
@@ -443,7 +446,7 @@ export default function DamlaAkarsuClient() {
                   setMobileMenuOpen(false);
                   openAppointmentFor("Mobil Randevu Talebi");
                 }}
-                className="w-full py-3 rounded-xl bg-[#0E7490] text-white font-bold text-xs text-center shadow-md"
+                className="w-full py-3 rounded-xl bg-[#0284C7] text-white font-bold text-xs text-center shadow-md"
               >
                 Online Randevu Oluştur
               </button>
@@ -454,18 +457,18 @@ export default function DamlaAkarsuClient() {
                 className="w-full py-3 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] text-[#059669] font-bold text-xs text-center flex items-center justify-center gap-1.5"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>WhatsApp'tan Yazın</span>
+                <span>WhatsApp ({primaryPhone})</span>
               </a>
             </div>
           </div>
         )}
       </header>
 
-      {/* 3. HERO SECTION */}
-      <section id="hero" className="relative py-16 sm:py-24 bg-gradient-to-br from-[#ECFEFF] via-[#F8FAFC] to-[#EFF6FF] border-b border-[#E2E8F0] overflow-hidden">
+      {/* 3. HERO SECTION (WITH INSTAGRAM MOTTO & VISUAL IDENTITY) */}
+      <section id="hero" className="relative py-16 sm:py-24 bg-gradient-to-br from-[#F0F9FF] via-[#FFFFFF] to-[#E0F2FE] border-b border-[#E2E8F0] overflow-hidden">
         
-        {/* Decorative Background Circles */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#06B6D4]/10 blur-3xl pointer-events-none" />
+        {/* Decorative Background Glows */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#0284C7]/15 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#10B981]/10 blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -474,54 +477,54 @@ export default function DamlaAkarsuClient() {
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#0E7490]/20 text-[#0E7490] text-xs font-bold shadow-sm">
-                <Sparkles className="w-4 h-4 text-[#06B6D4]" />
-                <span>Modern Diş Hekimliği & Estetik Gülüş Tasarımı</span>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#0284C7]/30 text-[#0369A1] text-xs font-bold shadow-sm">
+                <Sparkles className="w-4 h-4 text-[#0284C7]" />
+                <span>Profosyonel DENTAL KLİNİK — Ağız ve Diş Sağlığınız Bizim İçin Önemlidir</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
-                Sağlıklı, Doğal ve <br className="hidden sm:inline" />
-                <span className="bg-gradient-to-r from-[#0E7490] to-[#06B6D4] bg-clip-text text-transparent">
-                  Kusursuz Gülüşler İçin
+                Sağlıklı Gülüşler İçin <br />
+                <span className="bg-gradient-to-r from-[#0369A1] to-[#0284C7] bg-clip-text text-transparent">
+                  Düzenli Diş Muayenesi
                 </span>{" "}
-                Uzman Dokunuş
+                Olmalısınız
               </h1>
 
               <p className="text-sm sm:text-base text-[#475569] leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Dt. Damla Akarsu Diş Muayenehanesi’nde; estetik diş hekimliği, implant cerrahisi, zirkonyum kaplama ve şeffaf plak tedavilerini ileri teknoloji, steril ortam ve ağrısız tedavi prensibiyle sunuyoruz.
+                Dt. Damla Akarsu Diş Muayenehanesi’nde; diş temizliğinden implant uygulamalarına, şeffaf plak ortodontiden estetik dolgu ve gülüş tasarımına kadar tüm tedavilerinizi yüksek sterilizasyon ve ağrısız anestezi konforuyla gerçekleştiriyoruz.
               </p>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
                 <button
-                  onClick={() => openAppointmentFor("Ücretsiz Ön Muayene & Tanışma")}
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#0E7490]/25 hover:shadow-xl cursor-pointer"
+                  onClick={() => openAppointmentFor("İlk Muayene Randevusu")}
+                  className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#0284C7]/25 hover:shadow-xl cursor-pointer"
                 >
                   <Calendar className="w-4 h-4" />
-                  <span>Ücretsiz Ön Muayene Randevusu</span>
+                  <span>Randevu Al: {primaryPhone}</span>
                 </button>
 
                 <a
-                  href="#tedaviler"
+                  href="#soru-cevap"
                   className="w-full sm:w-auto px-6 py-4 rounded-xl bg-white hover:bg-[#F1F5F9] text-[#334155] font-bold text-sm border border-[#CBD5E1] flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
-                  <span>Tedavileri İncele</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <HelpCircle className="w-4 h-4 text-[#0284C7]" />
+                  <span>Sıkça Sorulan Sorular</span>
                 </a>
               </div>
 
               {/* Trust Badges */}
               <div className="pt-6 border-t border-[#E2E8F0] grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto lg:mx-0 text-left">
                 <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#0E7490]">10+ Yıl</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">Klinik Tecrübe</div>
+                  <div className="text-lg font-black text-[#0284C7]">0544 577 58 56</div>
+                  <div className="text-[11px] text-[#64748B] font-medium">Hızlı Randevu Hattı</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#059669]">3D Dijital</div>
-                  <div className="text-[11px] text-[#64748B] font-medium">Ağız İçi Tarama</div>
+                  <div className="text-lg font-black text-[#059669]">A+ Otoklav</div>
+                  <div className="text-[11px] text-[#64748B] font-medium">%100 Steril Ortam</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
-                  <div className="text-lg font-black text-[#0284C7]">%100 Ağrısız</div>
+                  <div className="text-lg font-black text-[#0284C7]">Ağrısız</div>
                   <div className="text-[11px] text-[#64748B] font-medium">Konforlu Anestezi</div>
                 </div>
                 <div className="p-3 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
@@ -532,45 +535,55 @@ export default function DamlaAkarsuClient() {
 
             </div>
 
-            {/* Right Clinic Hero Card */}
+            {/* Right Card: Instagram Reel Format / Treatment Checklist Card */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-md bg-white rounded-3xl p-5 border border-[#E2E8F0] shadow-2xl space-y-4">
+              <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-[#E2E8F0] shadow-2xl space-y-5">
                 
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-[#F1F5F9]">
-                  <img
-                    src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80"
-                    alt="Dt. Damla Akarsu Diş Muayenehanesi Modern Klinik Ortamı"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#0F172A]/85 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
-                    <span>A+ Otoklav Sterilizasyon</span>
+                <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-[#10B981] animate-ping" />
+                    <span className="text-xs font-bold text-[#0F172A]">Kliniğimizdeki Hizmetler</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-[#64748B] block font-mono">Randevu Al</span>
+                    <span className="text-xs font-black text-[#0284C7]">{primaryPhone}</span>
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-1">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-[#0F172A]">Kişiye Özel Gülüş Simülasyonu</h3>
-                      <p className="text-xs text-[#64748B]">Dijital mockup ile tedavi sonucunu önceden görün.</p>
+                {/* Checklist from Instagram Reel */}
+                <div className="space-y-2.5">
+                  {[
+                    "Diş Temizliği ve Diş Beyazlatma",
+                    "Diş Teli & Ortodontik Tedaviler",
+                    "İmplant Uygulamaları",
+                    "Ağrısız Kanal Tedavisi",
+                    "20'lik Diş Çekimi & Cerrahi",
+                    "Estetik Dolgu İşlemleri"
+                  ].map((service, i) => (
+                    <div
+                      key={i}
+                      className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between hover:bg-[#F0F9FF] hover:border-[#BAE6FD] transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <CheckSquare2 className="w-4 h-4 text-[#10B981] shrink-0" />
+                        <span className="text-xs font-bold text-[#1E293B]">{service}</span>
+                      </div>
+                      <button
+                        onClick={() => openAppointmentFor(service)}
+                        className="text-[11px] font-bold text-[#0284C7] hover:underline"
+                      >
+                        Seç
+                      </button>
                     </div>
-                    <span className="px-2.5 py-1 rounded-lg bg-[#ECFEFF] text-[#0E7490] text-xs font-bold">
-                      3D CAD/CAM
-                    </span>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between text-xs">
-                    <span className="text-[#64748B]">İlk Muayene & Röntgen Değerlendirmesi</span>
-                    <span className="font-bold text-[#059669]">Ücretsiz Ön Görüşme</span>
-                  </div>
-
-                  <button
-                    onClick={() => openAppointmentFor("İlk Muayene & Gülüş Analizi")}
-                    className="w-full py-3 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white text-xs font-bold transition-colors text-center cursor-pointer shadow-sm"
-                  >
-                    Randevu Saatini Seçin
-                  </button>
+                  ))}
                 </div>
+
+                <button
+                  onClick={() => openAppointmentFor("Hızlı Randevu Talebi")}
+                  className="w-full py-3.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all shadow-md shadow-[#0284C7]/20 text-center cursor-pointer"
+                >
+                  Muayene Randevusu Oluştur
+                </button>
 
               </div>
             </div>
@@ -579,38 +592,102 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 4. TREATMENTS & SERVICES (INTERACTIVE CATALOG) */}
-      <section id="tedaviler" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
+      {/* 4. INSTAGRAM Q&A & DOCTOR RECOMMENDATIONS SECTION */}
+      <section id="soru-cevap" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="max-w-3xl mx-auto text-center mb-12 space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] text-[#0284C7] text-xs font-bold">
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Dt. Damla Akarsu ile Diş Sağlığı Rehberi</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F172A]">
+              Sıkça Sorulan Sorular & Yanıtlar
+            </h2>
+            <p className="text-xs sm:text-sm text-[#64748B]">
+              Sosyal medyada ve klinikte hastalarımızın en çok merak ettiği konuları hekimimiz yanıtlıyor.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {INSTAGRAM_QA.map((item, idx) => (
+              <div
+                key={idx}
+                className="p-6 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] shadow-sm space-y-4 hover:border-[#0284C7] transition-all flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-1 rounded-lg bg-[#FEF3C7] text-[#B45309] text-xs font-bold">
+                      Soru
+                    </span>
+                    <span className="text-[11px] font-mono text-[#64748B]">{item.tag}</span>
+                  </div>
+
+                  <h3 className="text-base font-bold text-[#0F172A] leading-snug">
+                    {item.question}
+                  </h3>
+
+                  <div className="pt-2 border-t border-[#E2E8F0]/70">
+                    <div className="inline-block px-2.5 py-0.5 rounded bg-[#DBEAFE] text-[#1D4ED8] text-xs font-bold mb-2">
+                      Cevap
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#475569] leading-relaxed">
+                      {item.answer}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
+                  <span className="text-[#64748B]">Sorunuz mu var?</span>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[#0284C7] hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Hekime WhatsApp'tan Sorun</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. TREATMENTS & SERVICES (DETAILED CATALOG) */}
+      <section id="tedaviler" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-bold font-mono text-[#0E7490] uppercase tracking-wider">
-                Kapsamlı Diş Sağlığı Çözümleri
+              <span className="text-xs font-bold font-mono text-[#0284C7] uppercase tracking-wider">
+                Kapsamlı Tedavi Kataloğu
               </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F172A] mt-1">
-                Uyguladığımız Tedaviler
+                Klinik Tedavi Hizmetlerimiz
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-xl">
-                En güncel medikal protokoller ve ileri teknoloji ekipmanlarla estetik, cerrahi ve koruyucu diş hekimliği hizmetleri.
+                Modern cihazlar, dijital görüntüleme ve steril klinik ortamında uygulanan tüm diş sağlığı prosedürleri.
               </p>
             </div>
 
             {/* Category Filter Tabs */}
-            <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0]">
+            <div className="flex flex-wrap gap-1.5 p-1 rounded-xl bg-white border border-[#E2E8F0]">
               {[
-                { id: "all", label: "Tüm Tedaviler" },
-                { id: "estetik", label: "Estetik Diş Hekimliği" },
-                { id: "cerrahi", label: "İmplant & Cerrahi" },
-                { id: "tedavi", label: "Kanal & Diş Eti" },
-                { id: "ortodonti", label: "Şeffaf Plak" }
+                { id: "all", label: "Tüm Hizmetler" },
+                { id: "estetik", label: "Estetik & Beyazlatma" },
+                { id: "cerrahi", label: "İmplant & 20'lik Çekim" },
+                { id: "tedavi", label: "Kanal & Dolgu" },
+                { id: "ortodonti", label: "Şeffaf Plak & Tel" }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id as any)}
                   className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     activeFilter === tab.id
-                      ? "bg-[#0E7490] text-white shadow-sm"
+                      ? "bg-[#0284C7] text-white shadow-sm"
                       : "text-[#64748B] hover:text-[#0F172A]"
                   }`}
                 >
@@ -625,7 +702,7 @@ export default function DamlaAkarsuClient() {
             {filteredTreatments.map((t) => (
               <div
                 key={t.id}
-                className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#0E7490] transition-all flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl group"
+                className="bg-white rounded-2xl border border-[#E2E8F0] hover:border-[#0284C7] transition-all flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl group"
               >
                 <div>
                   {/* Image */}
@@ -644,14 +721,14 @@ export default function DamlaAkarsuClient() {
                   </div>
 
                   <div className="p-5 space-y-3">
-                    <div className="flex items-center gap-2 text-xs text-[#0E7490] font-semibold">
+                    <div className="flex items-center gap-2 text-xs text-[#0284C7] font-semibold">
                       <Clock className="w-3.5 h-3.5" />
                       <span>{t.duration}</span>
                       <span className="text-[#CBD5E1]">•</span>
                       <span>{t.sessions}</span>
                     </div>
 
-                    <h3 className="text-base font-bold text-[#0F172A] group-hover:text-[#0E7490] transition-colors leading-snug">
+                    <h3 className="text-base font-bold text-[#0F172A] group-hover:text-[#0284C7] transition-colors leading-snug">
                       {t.title}
                     </h3>
 
@@ -670,7 +747,7 @@ export default function DamlaAkarsuClient() {
                   </button>
                   <button
                     onClick={() => openAppointmentFor(t.title)}
-                    className="flex-1 py-2 rounded-lg bg-[#0E7490] hover:bg-[#0891B2] text-white text-xs font-bold inline-flex items-center justify-center gap-1 transition-colors cursor-pointer shadow-sm"
+                    className="flex-1 py-2 rounded-lg bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold inline-flex items-center justify-center gap-1 transition-colors cursor-pointer shadow-sm"
                   >
                     <span>Randevu Al</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -683,13 +760,13 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 5. ABOUT DT. DAMLA AKARSU & CLINIC QUALITY PILLARS */}
-      <section id="hakkimizda" className="py-16 sm:py-24 bg-[#F8FAFC] border-b border-[#E2E8F0]">
+      {/* 6. ABOUT DT. DAMLA AKARSU & CLINIC QUALITY PILLARS */}
+      <section id="hakkimizda" className="py-16 sm:py-24 bg-white border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
             
-            {/* Left Doctor Photo / Showcase */}
+            {/* Left Doctor Photo */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative w-full max-w-md">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#E2E8F0] bg-white aspect-[4/5]">
@@ -699,20 +776,19 @@ export default function DamlaAkarsuClient() {
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/90 via-transparent to-transparent p-6 flex flex-col justify-end text-white">
-                    <span className="text-xs uppercase font-bold text-[#67E8F9] tracking-wider">Kurucu Hekim</span>
+                    <span className="text-xs uppercase font-bold text-[#BAE6FD] tracking-wider">Kurucu Diş Hekimi</span>
                     <h3 className="text-2xl font-black">Dt. Damla Akarsu</h3>
-                    <p className="text-xs text-white/80 mt-0.5">Estetik Diş Hekimliği & İmplantoloji</p>
+                    <p className="text-xs text-white/80 mt-0.5">İstanbul Yeni Yüzyıl Üniversitesi Mezunu</p>
                   </div>
                 </div>
 
-                {/* Floating Experience Badge */}
                 <div className="absolute -bottom-5 -right-5 bg-white p-4 rounded-2xl shadow-xl border border-[#E2E8F0] flex items-center gap-3 max-w-[200px]">
-                  <div className="w-10 h-10 rounded-xl bg-[#0E7490]/10 text-[#0E7490] flex items-center justify-center shrink-0">
-                    <Award className="w-6 h-6 text-[#0E7490]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#0284C7]/10 text-[#0284C7] flex items-center justify-center shrink-0">
+                    <Award className="w-6 h-6 text-[#0284C7]" />
                   </div>
                   <div>
                     <div className="text-sm font-black text-[#0F172A]">Tescilli</div>
-                    <div className="text-[11px] text-[#64748B]">Modern Klinik Standartları</div>
+                    <div className="text-[11px] text-[#64748B]">Modern Muayenehane</div>
                   </div>
                 </div>
               </div>
@@ -721,7 +797,7 @@ export default function DamlaAkarsuClient() {
             {/* Right Bio & Vision */}
             <div className="lg:col-span-7 space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ECFEFF] text-[#0E7490] text-xs font-bold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFF6FF] text-[#0284C7] text-xs font-bold">
                 <Stethoscope className="w-4 h-4" />
                 <span>Hasta Odaklı, Bilimsel ve Şeffaf Tedavi Anlayışı</span>
               </div>
@@ -732,27 +808,27 @@ export default function DamlaAkarsuClient() {
 
               <div className="space-y-4 text-sm sm:text-base text-[#475569] leading-relaxed">
                 <p>
-                  Dt. Damla Akarsu Diş Muayenehanesi; diş hekimliği alanındaki en güncel akademik gelişmeleri, dijital teknolojileri ve sanatsal estetik bakış açısını bir araya getirmek amacıyla kurulmuştur.
+                  Dt. Damla Akarsu Diş Muayenehanesi; diş hekimliği alanındaki en güncel medikal standartları, hijyen protokollerini ve hasta konforunu bir araya getirmek amacıyla kurulmuştur.
                 </p>
                 <p>
-                  Bizim için her gülüş benzersiz bir kimliktir. Hastalarımızın beklentilerini derinlemesine dinliyor, 3D dijital analizlerle yüz proporsiyonuna en uygun tedavi planını hazırlıyor ve süreci tamamen ağrısız ve konforlu bir deneyime dönüştürüyoruz.
+                  İstanbul Yeni Yüzyıl Üniversitesi Diş Hekimliği Fakültesi mezunu olan Dt. Damla Akarsu; estetik diş hekimliği, implantoloji, diş taşı temizliği ve koruyucu hekimlik alanlarında her hastasına özel, ağrısız ve şeffaf bir tedavi süreci sunmaktadır.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
                   <CheckCircle2 className="w-5 h-5 text-[#059669] shrink-0" />
-                  <span className="text-xs font-bold text-[#1E293B]">Sürekli Eğitim & Güncel Teknikler</span>
+                  <span className="text-xs font-bold text-[#1E293B]">Sürekli Sterilizasyon & Hijyen</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
                   <CheckCircle2 className="w-5 h-5 text-[#059669] shrink-0" />
                   <span className="text-xs font-bold text-[#1E293B]">Detaylı Bilgilendirme & Şeffaflık</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
                   <CheckCircle2 className="w-5 h-5 text-[#059669] shrink-0" />
-                  <span className="text-xs font-bold text-[#1E293B]">Korkusuz & Dinlendirici Klinik Ortamı</span>
+                  <span className="text-xs font-bold text-[#1E293B]">Korkusuz & Sakin Klinik Ortamı</span>
                 </div>
-                <div className="p-3.5 rounded-xl bg-white border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center gap-3 shadow-sm">
                   <CheckCircle2 className="w-5 h-5 text-[#059669] shrink-0" />
                   <span className="text-xs font-bold text-[#1E293B]">Tedavi Sonrası Düzenli Takip</span>
                 </div>
@@ -760,8 +836,8 @@ export default function DamlaAkarsuClient() {
 
               <div className="pt-2">
                 <button
-                  onClick={() => openAppointmentFor("Dt. Damla Akarsu ile Konsültasyon")}
-                  className="px-6 py-3.5 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white text-xs font-bold transition-all shadow-md"
+                  onClick={() => openAppointmentFor("Dt. Damla Akarsu ile Ön Görüşme")}
+                  className="px-6 py-3.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold transition-all shadow-md"
                 >
                   Dt. Damla Akarsu ile Görüşün
                 </button>
@@ -778,10 +854,10 @@ export default function DamlaAkarsuClient() {
               return (
                 <div
                   key={idx}
-                  className="p-6 rounded-2xl bg-white border border-[#E2E8F0] hover:border-[#0E7490] transition-all shadow-sm flex flex-col justify-between"
+                  className="p-6 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#0284C7] transition-all shadow-sm flex flex-col justify-between"
                 >
                   <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#ECFEFF] text-[#0E7490] flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center">
                       <IconComp className="w-6 h-6" />
                     </div>
                     <h3 className="text-base font-bold text-[#0F172A]">{pillar.title}</h3>
@@ -797,142 +873,12 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 6. SMILE MAKEOVER / BEFORE-AFTER GALLERY */}
-      <section id="donusumler" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
+      {/* 7. PATIENT REVIEWS */}
+      <section id="yorumlar" className="py-16 sm:py-20 bg-[#F8FAFC] border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center mb-12 space-y-3">
-            <span className="text-xs font-bold font-mono text-[#0E7490] uppercase tracking-wider">
-              Estetik Vaka Sonuçları
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F172A]">
-              Gülüş Dönüşümü Başarı Hikayeleri
-            </h2>
-            <p className="text-xs sm:text-sm text-[#64748B]">
-              Kliniğimizde tamamlanan estetik gülüş tasarımı, lamine ve kaplama tedavilerimizden örnekler.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {BEFORE_AFTER.map((item) => (
-              <div
-                key={item.id}
-                className="bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] p-5 shadow-sm space-y-4 hover:border-[#0E7490] transition-all"
-              >
-                <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-white border border-[#E2E8F0] flex items-center justify-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&auto=format&fit=crop&q=80"
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute bottom-2 left-2 bg-[#0F172A]/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded">
-                    Tamamlanan Vaka
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between text-xs font-bold text-[#0E7490] mb-1">
-                    <span>{item.treatment}</span>
-                    <span className="text-[#64748B]">{item.timeframe}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-[#0F172A]">{item.title}</h3>
-                  <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => openAppointmentFor(`${item.title} Hakkında Bilgi`)}
-                  className="w-full py-2.5 rounded-xl bg-white hover:bg-[#0E7490] hover:text-white text-[#0E7490] border border-[#0E7490]/30 text-xs font-bold transition-colors text-center"
-                >
-                  Benzer Gülüş İçin Randevu Al
-                </button>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 7. DIGITAL CLINIC TECHNOLOGY */}
-      <section id="teknoloji" className="py-16 sm:py-20 bg-[#0F172A] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-xs font-bold font-mono text-[#67E8F9] uppercase tracking-wider">
-                Yüksek Medikal Teknoloji
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight">
-                Geleneksel Yöntemleri Geride Bırakan Dijital Diş Hekimliği
-              </h2>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Kliniğimizde uygulanan her adım, hata payını sıfıra indiren ve hasta konforunu en üst düzeye çıkaran dijital cihazlarla desteklenmektedir.
-              </p>
-
-              <div className="space-y-4 pt-2">
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="w-10 h-10 rounded-lg bg-[#06B6D4]/20 text-[#67E8F9] flex items-center justify-center shrink-0">
-                    <Cpu className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">3D Ağız İçi Tarayıcı (CAD/CAM)</h3>
-                    <p className="text-xs text-[#94A3B8] mt-0.5">Bulantı hissi yaratan kaşık ölçüler yerine dakikalar içinde yüksek çözünürlüklü dijital 3D modelleme.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="w-10 h-10 rounded-lg bg-[#10B981]/20 text-[#6EE7B7] flex items-center justify-center shrink-0">
-                    <Microscope className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">Düşük Radyasyonlu Dijital Panoramik Röntgen</h3>
-                    <p className="text-xs text-[#94A3B8] mt-0.5">Minimum radyasyon dozu ile çene kemiği, gömülü dişler ve kök yapısının anında yüksek netlikte analizi.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="w-10 h-10 rounded-lg bg-[#F59E0B]/20 text-[#FCD34D] flex items-center justify-center shrink-0">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-white">Lazerli Yumuşak Doku Şekillendirme</h3>
-                    <p className="text-xs text-[#94A3B8] mt-0.5">Kanamasız, dikişsiz ve hızlı iyileşen diş eti tedavileri ve gülüş çizgisi düzenlemeleri.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="relative w-full max-w-lg bg-gradient-to-br from-white/10 to-white/5 p-6 rounded-3xl border border-white/15 backdrop-blur-md shadow-2xl space-y-4">
-                <img
-                  src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&auto=format&fit=crop&q=80"
-                  alt="Dijital Diş Hekimliği Cihazları"
-                  className="w-full h-64 object-cover rounded-2xl border border-white/10"
-                />
-                <div className="p-4 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-[#10B981]" />
-                    <span className="text-xs font-bold text-white">CE & FDA Onaylı Biyouyumlu Materyaller</span>
-                  </div>
-                  <span className="text-xs text-[#67E8F9] font-mono font-bold">100% Orijinal</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* 8. PATIENT REVIEWS */}
-      <section id="yorumlar" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="max-w-3xl mx-auto text-center mb-12 space-y-3">
-            <span className="text-xs font-bold font-mono text-[#0E7490] uppercase tracking-wider">
+            <span className="text-xs font-bold font-mono text-[#0284C7] uppercase tracking-wider">
               Gerçek Hasta Deneyimleri
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0F172A]">
@@ -947,7 +893,7 @@ export default function DamlaAkarsuClient() {
             {REVIEWS.map((r, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-4 hover:border-[#0E7490] transition-all"
+                className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col justify-between space-y-4 hover:border-[#0284C7] transition-all"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -969,7 +915,7 @@ export default function DamlaAkarsuClient() {
                     <div className="text-xs font-bold text-[#0F172A]">{r.name}</div>
                     <div className="text-[11px] text-[#64748B]">{r.district}</div>
                   </div>
-                  <span className="text-[11px] font-bold text-[#0E7490] bg-[#ECFEFF] px-2 py-0.5 rounded border border-[#A5F3FC]">
+                  <span className="text-[11px] font-bold text-[#0284C7] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
                     {r.treatment}
                   </span>
                 </div>
@@ -980,21 +926,21 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 9. ONLINE APPOINTMENT & CONTACT FORM */}
-      <section id="randevu" className="py-16 sm:py-24 bg-gradient-to-b from-[#F8FAFC] to-[#ECFEFF] border-b border-[#E2E8F0]">
+      {/* 8. ONLINE APPOINTMENT & CONTACT FORM */}
+      <section id="randevu" className="py-16 sm:py-24 bg-gradient-to-b from-[#F8FAFC] to-[#EFF6FF] border-b border-[#E2E8F0]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="bg-white rounded-3xl border border-[#E2E8F0] p-6 sm:p-10 shadow-xl space-y-8">
             
             <div className="text-center space-y-2 max-w-2xl mx-auto">
-              <span className="text-xs font-bold font-mono text-[#0E7490] uppercase tracking-wider">
+              <span className="text-xs font-bold font-mono text-[#0284C7] uppercase tracking-wider">
                 Hızlı & Kolay Randevu
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A]">
                 Online Randevu & Ön Muayene Formu
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B]">
-                Formu doldurun, klinik asistanımız size en uygun gün ve saat için anında dönüş sağlasın.
+                Formu doldurun veya doğrudan <strong>{primaryPhone}</strong> numarasını arayarak anında randevu oluşturun.
               </p>
             </div>
 
@@ -1003,7 +949,7 @@ export default function DamlaAkarsuClient() {
                 <CheckCircle2 className="w-12 h-12 text-[#059669] mx-auto" />
                 <h3 className="text-lg font-bold text-[#0F172A]">Randevu Talebiniz Alındı!</h3>
                 <p className="text-xs sm:text-sm text-[#475569] max-w-md mx-auto">
-                  Sayın <strong>{formData.fullName || "Hastamız"}</strong>, talebiniz klinik sistemimize başarıyla iletildi. En kısa sürede telefon ile onay için sizinle iletişime geçilecektir.
+                  Sayın <strong>{formData.fullName || "Hastamız"}</strong>, talebiniz klinik sistemimize iletildi. En kısa sürede telefon ile onay için sizinle iletişime geçilecektir.
                 </p>
                 <button
                   onClick={() => {
@@ -1011,13 +957,13 @@ export default function DamlaAkarsuClient() {
                     setFormData({
                       fullName: "",
                       phone: "",
-                      service: "Genel Muayene & Check-Up",
+                      service: "Genel Diş Muayenesi & Check-Up",
                       preferredDate: "",
                       preferredTime: "Öğleden Önce (10:00 - 13:00)",
                       notes: ""
                     });
                   }}
-                  className="mt-4 px-6 py-2.5 rounded-xl bg-[#0E7490] text-white text-xs font-bold"
+                  className="mt-4 px-6 py-2.5 rounded-xl bg-[#0284C7] text-white text-xs font-bold"
                 >
                   Yeni Randevu Oluştur
                 </button>
@@ -1034,7 +980,7 @@ export default function DamlaAkarsuClient() {
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                       placeholder="Adınız Soyadınız"
-                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] focus:bg-white transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors"
                     />
                   </div>
                   <div>
@@ -1045,7 +991,7 @@ export default function DamlaAkarsuClient() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="05XX XXX XX XX"
-                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] focus:bg-white transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors"
                     />
                   </div>
                 </div>
@@ -1056,17 +1002,17 @@ export default function DamlaAkarsuClient() {
                     <select
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] focus:bg-white transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors"
                     >
-                      <option value="Genel Muayene & Check-Up">Genel Muayene & Check-Up</option>
-                      <option value="Gülüş Tasarımı (Hollywood Smile)">Gülüş Tasarımı (Hollywood Smile)</option>
-                      <option value="Dental İmplant & Cerrahi">Dental İmplant & Cerrahi</option>
-                      <option value="Zirkonyum / E-Max Kaplama">Zirkonyum / E-Max Kaplama</option>
-                      <option value="Lazerli Diş Beyazlatma">Lazerli Diş Beyazlatma</option>
-                      <option value="Şeffaf Plak (Invisalign)">Şeffaf Plak (Invisalign)</option>
+                      <option value="Genel Diş Muayenesi & Check-Up">Genel Diş Muayenesi & Check-Up</option>
+                      <option value="Diş Temizliği ve Diş Beyazlatma">Diş Temizliği ve Diş Beyazlatma</option>
+                      <option value="Diş Teli & Şeffaf Plak Ortodonti">Diş Teli & Şeffaf Plak Ortodonti</option>
+                      <option value="İmplant Uygulamaları">İmplant Uygulamaları</option>
                       <option value="Ağrısız Kanal Tedavisi">Ağrısız Kanal Tedavisi</option>
-                      <option value="Çocuk Diş Hekimliği (Pedodonti)">Çocuk Diş Hekimliği (Pedodonti)</option>
-                      <option value="Diş Eti Tedavisi & Pembe Estetik">Diş Eti Tedavisi & Pembe Estetik</option>
+                      <option value="20'lik Diş Çekimi & Cerrahi">20'lik Diş Çekimi & Cerrahi</option>
+                      <option value="Estetik Dolgu İşlemleri">Estetik Dolgu İşlemleri</option>
+                      <option value="Dijital Gülüş Tasarımı (Hollywood Smile)">Dijital Gülüş Tasarımı (Hollywood Smile)</option>
+                      <option value="Zirkonyum / E-Max Kaplama">Zirkonyum / E-Max Kaplama</option>
                     </select>
                   </div>
 
@@ -1075,7 +1021,7 @@ export default function DamlaAkarsuClient() {
                     <select
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] focus:bg-white transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors"
                     >
                       <option value="Öğleden Önce (10:00 - 13:00)">Öğleden Önce (10:00 - 13:00)</option>
                       <option value="Öğleden Sonra (13:00 - 16:30)">Öğleden Sonra (13:00 - 16:30)</option>
@@ -1085,20 +1031,20 @@ export default function DamlaAkarsuClient() {
                 </div>
 
                 <div>
-                  <label className="block text-[#334155] font-bold mb-1">Şikayetiniz veya Eklemek İstedikleriniz (Opsiyonel)</label>
+                  <label className="block text-[#334155] font-bold mb-1">Şikayetiniz veya Notunuz (Opsiyonel)</label>
                   <textarea
                     rows={3}
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     placeholder="Mevcut diş şikayetiniz veya belirtmek istediğiniz detaylar..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] focus:bg-white transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] focus:bg-white transition-colors resize-none"
                   />
                 </div>
 
                 <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                   <button
                     type="submit"
-                    className="w-full sm:flex-1 py-4 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-[#0E7490]/20 cursor-pointer"
+                    className="w-full sm:flex-1 py-4 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-[#0284C7]/20 cursor-pointer"
                   >
                     Randevu Talebini Gönder
                   </button>
@@ -1109,7 +1055,7 @@ export default function DamlaAkarsuClient() {
                     className="w-full sm:w-auto px-6 py-4 rounded-xl bg-[#ECFDF5] hover:bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0] font-bold text-xs flex items-center justify-center gap-2 transition-colors"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>WhatsApp'tan Anında Yazın</span>
+                    <span>WhatsApp'tan Yazın ({primaryPhone})</span>
                   </a>
                 </div>
 
@@ -1121,7 +1067,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 10. CONTACT & MAP LOCATION */}
+      {/* 9. CONTACT & MAP LOCATION */}
       <section id="iletisim" className="py-16 sm:py-20 bg-white border-b border-[#E2E8F0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1130,49 +1076,50 @@ export default function DamlaAkarsuClient() {
             {/* Contact Details */}
             <div className="lg:col-span-5 space-y-6">
               <div>
-                <span className="text-xs font-bold font-mono text-[#0E7490] uppercase tracking-wider">
+                <span className="text-xs font-bold font-mono text-[#0284C7] uppercase tracking-wider">
                   Ulaşım & İletişim
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] mt-1">
                   Kliniğimize Kolayca Ulaşın
                 </h2>
                 <p className="text-xs sm:text-sm text-[#64748B] mt-1">
-                  Merkezi lokasyon, ferah muayenehane ortamı ve otopark imkanı ile hizmetinizdeyiz.
+                  Merkezi lokasyon, modern muayenehane ortamı ve hasta konforu ile hizmetinizdeyiz.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#0E7490] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-[#0F172A] uppercase tracking-wide">Klinik Adresi</h3>
                     <p className="text-xs sm:text-sm text-[#475569] font-medium mt-0.5">
-                      Atalar Caddesi No: 6A, Kartal / İstanbul (veya Esenler Mah. Nebi Sok. No: 6B, Pendik / İstanbul)
+                      Esenler Mah. Nebi Sok. No: 6/B, Pendik / İstanbul<br />
+                      (veya Atalar Caddesi No: 6A, Kartal / İstanbul)
                     </p>
                   </div>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#0E7490] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-[#0F172A] uppercase tracking-wide">Telefon & WhatsApp</h3>
+                    <h3 className="text-xs font-bold text-[#0F172A] uppercase tracking-wide">Randevu & Danışma Hattı</h3>
                     <div className="flex flex-col gap-1 mt-0.5">
-                      <a href="tel:+905441105856" className="text-xs sm:text-sm font-bold text-[#0E7490] hover:underline">
-                        (+90) 544 110 58 56
+                      <a href={`tel:+905445775856`} className="text-xs sm:text-sm font-bold text-[#0284C7] hover:underline">
+                        (+90) 544 577 58 56
                       </a>
-                      <a href="tel:+905547991384" className="text-xs text-[#64748B] hover:underline">
-                        (+90) 554 799 13 84
+                      <a href="tel:+905441105856" className="text-xs text-[#64748B] hover:underline">
+                        (+90) 544 110 58 56
                       </a>
                     </div>
                   </div>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#0E7490] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#0284C7] flex items-center justify-center shrink-0">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -1196,10 +1143,10 @@ export default function DamlaAkarsuClient() {
                     <span className="text-xs font-bold text-[#0F172A]">Dt. Damla Akarsu Diş Muayenehanesi Konumu</span>
                   </div>
                   <a
-                    href="https://maps.google.com/?q=Kartal+Istanbul"
+                    href="https://maps.google.com/?q=Pendik+Istanbul"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-[#0E7490] text-white text-xs font-bold inline-flex items-center gap-1 hover:bg-[#0891B2] transition-colors"
+                    className="px-3 py-1.5 rounded-lg bg-[#0284C7] text-white text-xs font-bold inline-flex items-center gap-1 hover:bg-[#0369A1] transition-colors"
                   >
                     <span>Yol Tarifi Al</span>
                     <ExternalLink className="w-3 h-3" />
@@ -1209,7 +1156,7 @@ export default function DamlaAkarsuClient() {
                 <div className="relative w-full h-80 sm:h-96 bg-[#E2E8F0]">
                   <iframe
                     title="Dt. Damla Akarsu Klinik Haritası"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=29.1750%2C40.8850%2C29.2150%2C40.9050&layer=mapnik&marker=40.8938%2C29.1915"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=29.2200%2C40.8750%2C29.2600%2C40.8950&layer=mapnik&marker=40.8845%2C29.2410"
                     className="w-full h-full border-0"
                     loading="lazy"
                   />
@@ -1217,11 +1164,11 @@ export default function DamlaAkarsuClient() {
                   {/* Floating Pin Card */}
                   <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#E2E8F0] shadow-lg max-w-xs hidden sm:block">
                     <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A]">
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#0E7490]" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#0284C7]" />
                       <span>Dt. Damla Akarsu Kliniği</span>
                     </div>
                     <p className="text-[11px] text-[#64748B] mt-1">
-                      Atalar Cd. No:6A, Kartal / İstanbul
+                      Esenler Mah. Nebi Sk. No:6/B, Pendik / İstanbul
                     </p>
                   </div>
                 </div>
@@ -1234,7 +1181,7 @@ export default function DamlaAkarsuClient() {
         </div>
       </section>
 
-      {/* 11. FLOATING WHATSAPP BUTTON (DEDICATED) */}
+      {/* 10. FLOATING WHATSAPP BUTTON (DEDICATED) */}
       <a
         href={whatsappUrl}
         target="_blank"
@@ -1247,10 +1194,10 @@ export default function DamlaAkarsuClient() {
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-white animate-ping opacity-75" />
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-white" />
         </div>
-        <span className="hidden sm:inline font-bold">WhatsApp Randevu</span>
+        <span className="hidden sm:inline font-bold">WhatsApp ({primaryPhone})</span>
       </a>
 
-      {/* 12. CLINIC FOOTER */}
+      {/* 11. CLINIC FOOTER */}
       <footer className="bg-[#0F172A] text-[#94A3B8] text-xs pt-16 pb-8 border-t border-[#1E293B]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -1259,16 +1206,16 @@ export default function DamlaAkarsuClient() {
             {/* Column 1: Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#0E7490] to-[#06B6D4] text-white flex items-center justify-center font-bold">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center font-bold">
                   <Smile className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-base font-bold text-white">Dt. Damla Akarsu</div>
-                  <div className="text-[10px] text-[#67E8F9] uppercase tracking-wider font-bold">Diş Muayenehanesi</div>
+                  <div className="text-[10px] text-[#BAE6FD] uppercase tracking-wider font-bold">Diş Muayenehanesi</div>
                 </div>
               </div>
               <p className="text-xs text-[#94A3B8] leading-relaxed">
-                İstanbul'da estetik gülüş tasarımı, implantoloji, zirkonyum kaplama ve genel diş tedavilerinde modern, güvenilir ve hasta odaklı sağlık hizmeti.
+                Profosyonel DENTAL KLİNİK — Ağız ve diş sağlığınız bizim için önemlidir. Sağlıklı ve doğal gülüşler için düzenli diş muayenesi olmalısınız.
               </p>
               <div className="pt-1 flex items-center gap-2 text-white font-bold text-xs">
                 <span className="w-2 h-2 rounded-full bg-[#10B981]" />
@@ -1278,27 +1225,26 @@ export default function DamlaAkarsuClient() {
 
             {/* Column 2: Treatments */}
             <div className="space-y-3">
-              <div className="font-bold text-white uppercase tracking-wider text-xs">Öne Çıkan Tedaviler</div>
+              <div className="font-bold text-white uppercase tracking-wider text-xs">Kliniğimizdeki Hizmetler</div>
               <ul className="space-y-2 text-[#CBD5E1]">
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Dijital Gülüş Tasarımı</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Dental İmplant Cerrahisi</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Zirkonyum & E-Max Kaplama</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Lazerli Diş Beyazlatma</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Şeffaf Plak (Invisalign)</a></li>
-                <li><a href="#tedaviler" className="hover:text-[#67E8F9] transition-colors">Ağrısız Kanal Tedavisi</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Diş Temizliği & Beyazlatma</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Diş Teli & Şeffaf Plak</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Dental İmplant Uygulamaları</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Ağrısız Kanal Tedavisi</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">20'lik Diş Çekimi Cerrahisi</a></li>
+                <li><a href="#tedaviler" className="hover:text-[#BAE6FD] transition-colors">Estetik Dolgu İşlemleri</a></li>
               </ul>
             </div>
 
             {/* Column 3: Quick Links */}
             <div className="space-y-3">
-              <div className="font-bold text-white uppercase tracking-wider text-xs">Kurumsal & Klinik</div>
+              <div className="font-bold text-white uppercase tracking-wider text-xs">Kurumsal & Rehber</div>
               <ul className="space-y-2 text-[#CBD5E1]">
-                <li><a href="#hakkimizda" className="hover:text-[#67E8F9] transition-colors">Dt. Damla Akarsu Hakkında</a></li>
-                <li><a href="#teknoloji" className="hover:text-[#67E8F9] transition-colors">Klinik Teknolojimiz</a></li>
-                <li><a href="#donusumler" className="hover:text-[#67E8F9] transition-colors">Gülüş Dönüşümleri</a></li>
-                <li><a href="#yorumlar" className="hover:text-[#67E8F9] transition-colors">Hasta Yorumları</a></li>
-                <li><a href="#randevu" className="hover:text-[#67E8F9] transition-colors">Online Randevu</a></li>
-                <li><a href="#iletisim" className="hover:text-[#67E8F9] transition-colors">Ulaşım ve Harita</a></li>
+                <li><a href="#soru-cevap" className="hover:text-[#BAE6FD] transition-colors">Sıkça Sorulan Sorular</a></li>
+                <li><a href="#hakkimizda" className="hover:text-[#BAE6FD] transition-colors">Dt. Damla Akarsu Hakkında</a></li>
+                <li><a href="#yorumlar" className="hover:text-[#BAE6FD] transition-colors">Hasta Yorumları</a></li>
+                <li><a href="#randevu" className="hover:text-[#BAE6FD] transition-colors">Online Randevu Al</a></li>
+                <li><a href="#iletisim" className="hover:text-[#BAE6FD] transition-colors">Ulaşım & Harita</a></li>
               </ul>
             </div>
 
@@ -1306,10 +1252,13 @@ export default function DamlaAkarsuClient() {
             <div className="space-y-3">
               <div className="font-bold text-white uppercase tracking-wider text-xs">İletişim & Randevu</div>
               <ul className="space-y-2 text-[#CBD5E1]">
+                <li>Esenler Mah. Nebi Sok. No: 6/B, Pendik / İstanbul</li>
                 <li>Atalar Cd. No: 6A, Kartal / İstanbul</li>
-                <li>Esenler Mah. Nebi Sok. No: 6B, Pendik / İstanbul</li>
-                <li>Tel: (+90) 544 110 58 56</li>
-                <li>Mobil: (+90) 554 799 13 84</li>
+                <li>
+                  <a href={`tel:+905445775856`} className="text-white font-bold hover:underline">
+                    Tel: (+90) 544 577 58 56
+                  </a>
+                </li>
                 <li>
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#6EE7B7] hover:underline font-bold">
                     WhatsApp Randevu Hattı
@@ -1340,7 +1289,7 @@ export default function DamlaAkarsuClient() {
             
             <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4">
               <div>
-                <span className="text-xs font-mono font-bold text-[#0E7490] uppercase">{selectedTreatment.badge}</span>
+                <span className="text-xs font-mono font-bold text-[#0284C7] uppercase">{selectedTreatment.badge}</span>
                 <h3 className="text-lg sm:text-xl font-bold text-[#0F172A]">{selectedTreatment.title}</h3>
               </div>
               <button
@@ -1400,7 +1349,7 @@ export default function DamlaAkarsuClient() {
                   setSelectedTreatment(null);
                   openAppointmentFor(sTitle);
                 }}
-                className="px-6 py-2.5 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white text-xs font-bold"
+                className="px-6 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold"
               >
                 Bu Tedavi İçin Randevu Al
               </button>
@@ -1417,7 +1366,7 @@ export default function DamlaAkarsuClient() {
             
             <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
               <div>
-                <span className="text-[11px] font-bold text-[#0E7490] uppercase font-mono">Hızlı Randevu</span>
+                <span className="text-[11px] font-bold text-[#0284C7] uppercase font-mono">Hızlı Randevu</span>
                 <h3 className="text-base font-bold text-[#0F172A]">{selectedServiceForAppointment}</h3>
               </div>
               <button
@@ -1438,7 +1387,7 @@ export default function DamlaAkarsuClient() {
                     setAppointmentModalOpen(false);
                     setFormSubmitted(false);
                   }}
-                  className="mt-2 px-5 py-2 rounded-xl bg-[#0E7490] text-white text-xs font-bold"
+                  className="mt-2 px-5 py-2 rounded-xl bg-[#0284C7] text-white text-xs font-bold"
                 >
                   Tamam
                 </button>
@@ -1453,7 +1402,7 @@ export default function DamlaAkarsuClient() {
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="Adınız Soyadınız"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
                   />
                 </div>
 
@@ -1465,7 +1414,7 @@ export default function DamlaAkarsuClient() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="05XX XXX XX XX"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
                   />
                 </div>
 
@@ -1474,7 +1423,7 @@ export default function DamlaAkarsuClient() {
                   <select
                     value={formData.preferredTime}
                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7]"
                   >
                     <option value="Öğleden Önce (10:00 - 13:00)">Öğleden Önce (10:00 - 13:00)</option>
                     <option value="Öğleden Sonra (13:00 - 16:30)">Öğleden Sonra (13:00 - 16:30)</option>
@@ -1489,7 +1438,7 @@ export default function DamlaAkarsuClient() {
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     placeholder="Varsa özel notunuz..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0E7490] resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#0F172A] focus:outline-none focus:border-[#0284C7] resize-none"
                   />
                 </div>
 
@@ -1503,7 +1452,7 @@ export default function DamlaAkarsuClient() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-[#0E7490] hover:bg-[#0891B2] text-white font-bold"
+                    className="px-5 py-2.5 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold"
                   >
                     Randevu Al
                   </button>
