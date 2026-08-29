@@ -1294,30 +1294,35 @@ export default function DamlaAkarsuClient() {
               </div>
             </div>
 
-            {/* Interactive OpenStreetMap Embed */}
+            {/* Interactive Map Embed */}
             <div className="lg:col-span-7">
               <div className="rounded-3xl overflow-hidden border border-[#E2E8F0] bg-white shadow-xl relative">
                 
-                <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
+                <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse" />
-                    <span className="text-xs font-bold text-[#0F172A]">Dt. Damla Akarsu Diş Muayenehanesi Konumu</span>
+                    <div className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse shrink-0" />
+                    <div>
+                      <span className="text-xs font-bold text-[#0F172A] block">Dt. Damla Akarsu Diş Muayenesi</span>
+                      <span className="text-[11px] text-[#64748B]">Google Haritalar Kayıtlı Konumu</span>
+                    </div>
                   </div>
-                  <a
-                    href="https://maps.google.com/?q=Pendik+Istanbul"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-[#0284C7] text-white text-xs font-bold inline-flex items-center gap-1 hover:bg-[#0369A1] transition-colors"
-                  >
-                    <span>Yol Tarifi Al</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="https://www.google.com/maps/place/Dt.+Damla+Akarsu+Di%C5%9F+Muayenesi/@40.879287,29.2717134,18z/data=!4m6!3m5!1s0x14cadb006ba225c9:0x3dd38ef5eaceeeaf!8m2!3d40.879287!4d29.2717134!16s%2Fg%2F11wqzc3d8y"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 rounded-lg bg-[#0284C7] text-white text-xs font-bold inline-flex items-center gap-1 hover:bg-[#0369A1] transition-colors"
+                    >
+                      <span>Google Haritalar'da Aç</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
                 </div>
 
                 <div className="relative w-full h-80 sm:h-96 bg-[#E2E8F0]">
                   <iframe
-                    title="Dt. Damla Akarsu Klinik Haritası"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=29.2200%2C40.8750%2C29.2600%2C40.8950&layer=mapnik&marker=40.8845%2C29.2410"
+                    title="Dt. Damla Akarsu Diş Muayenesi Konumu"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=29.2550%2C40.8700%2C29.2880%2C40.8880&layer=mapnik&marker=40.879287%2C29.2717134"
                     className="w-full h-full border-0"
                     loading="lazy"
                   />
@@ -1326,11 +1331,20 @@ export default function DamlaAkarsuClient() {
                   <div className="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#E2E8F0] shadow-lg max-w-xs hidden sm:block">
                     <div className="flex items-center gap-2 text-xs font-bold text-[#0F172A]">
                       <div className="w-2.5 h-2.5 rounded-full bg-[#0284C7]" />
-                      <span>Dt. Damla Akarsu Kliniği</span>
+                      <span>Dt. Damla Akarsu Diş Muayenesi</span>
                     </div>
                     <p className="text-[11px] text-[#64748B] mt-1">
-                      Esenler Mah. Nebi Sk. No:6/B, Pendik / İstanbul
+                      Pendik, İstanbul (Koordinat: 40.879287, 29.2717134)
                     </p>
+                    <a
+                      href="https://www.google.com/maps/dir/?api=1&destination=40.879287,29.2717134"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 text-[11px] font-bold text-[#0284C7] hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>Yol Tarifi Başlat</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </a>
                   </div>
                 </div>
 
