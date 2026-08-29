@@ -23,7 +23,15 @@ import {
   HeartHandshake,
   Sparkles,
   MapPin,
-  Mail
+  Mail,
+  User,
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  Lock,
+  CreditCard,
+  CheckCircle
 } from "lucide-react";
 
 // ==========================================
@@ -40,6 +48,11 @@ interface Product {
   originalPrice?: number;
   description: string;
   imageUrl: string;
+}
+
+interface CartItem {
+  product: Product;
+  quantity: number;
 }
 
 const PRODUCTS: Product[] = [
@@ -166,6 +179,17 @@ export default function AmasyaAltinSafranClient() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteSubject, setQuoteSubject] = useState("");
 
+  // E-Commerce & Membership States
+  const [cart, setCart] = useState<CartItem[]>([
+    { product: PRODUCTS[0], quantity: 1 }
+  ]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginTab, setLoginTab] = useState<"login" | "register">("login");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -183,6 +207,49 @@ export default function AmasyaAltinSafranClient() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
+  };
+
+  // Cart Functions
+  const addToCart = (product: Product) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, { product, quantity: 1 }];
+    });
+    setCartOpen(true);
+  };
+
+  const updateQuantity = (productId: string, delta: number) => {
+    setCart((prev) =>
+      prev
+        .map((item) => {
+          if (item.product.id === productId) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean) as CartItem[]
+    );
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+  };
+
+  const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const cartSubtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggedIn(true);
+    setLoginModalOpen(false);
   };
 
   const filteredProducts =
@@ -207,7 +274,7 @@ export default function AmasyaAltinSafranClient() {
             <span className="font-bold text-white">KvK Dijital Çözümler</span>
             <span className="text-[#6B7280] hidden sm:inline">|</span>
             <span className="text-[#9CA3AF] hidden sm:inline font-sans">
-              Amasya Altın Safran Kurumsal Web Tasarım Demosu
+              Amasya Altın Safran Kurumsal & E-Ticaret Web Tasarım Demosu
             </span>
           </div>
           <Link
@@ -220,13 +287,32 @@ export default function AmasyaAltinSafranClient() {
         </div>
       </div>
 
-      {/* 1. ORIGINAL WELCOME TOP BAR */}
-      <div className="bg-[#7B2CBF] text-white py-2 px-4 text-xs sm:text-sm font-medium text-center border-b border-[#6A1B9A]">
-        <p>Amasya Altın Safran’a Hoş Geldiniz — Safranın Gerçek Lezzetiyle Tanışın!</p>
+      {/* 1. ORIGINAL WELCOME TOP BAR (WITH MEMBERSHIP & CART STATUS) */}
+      <div className="bg-[#7B2CBF] text-white py-2 px-4 text-xs font-medium border-b border-[#6A1B9A]">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <p className="hidden sm:block">Amasya Altın Safran’a Hoş Geldiniz — Safranın Gerçek Lezzetiyle Tanışın!</p>
+          <div className="flex items-center justify-end gap-4 w-full sm:w-auto text-xs">
+            <button
+              onClick={() => setLoginModalOpen(true)}
+              className="hover:underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>{isLoggedIn ? "Hesabım (Giriş Yapıldı)" : "Üye Girişi / Kayıt Ol"}</span>
+            </button>
+            <span className="opacity-40">|</span>
+            <button
+              onClick={() => setCartOpen(true)}
+              className="hover:underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+              <span>Sepetim ({totalCartCount})</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 2. MAIN HEADER (FIXED NAVBAR OVERFLOW & CLEAN ALIGNMENT) */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#E8E8E8] shadow-sm">
+      <header className="sticky top-0 z-40 bg-white border-b border-[#E8E8E8] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 gap-4">
             
@@ -285,23 +371,51 @@ export default function AmasyaAltinSafranClient() {
               </a>
             </nav>
 
-            {/* Action Buttons */}
+            {/* Action Buttons & Widgets */}
             <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+              {/* Member Button */}
+              <button
+                onClick={() => setLoginModalOpen(true)}
+                className="p-2 rounded-lg bg-[#F5F6F7] hover:bg-[#E8E8E8] text-[#39404A] border border-[#E8E8E8] transition-colors cursor-pointer"
+                title="Üye Girişi"
+                aria-label="Üye Girişi"
+              >
+                <User className="w-4 h-4 text-[#7B2CBF]" />
+              </button>
+
+              {/* Cart Button */}
+              <button
+                onClick={() => setCartOpen(true)}
+                className="px-3 py-2 rounded-lg bg-[#F5F6F7] hover:bg-[#E8E8E8] text-[#39404A] border border-[#E8E8E8] text-xs font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer relative"
+                title="Sepetim"
+              >
+                <ShoppingCart className="w-4 h-4 text-[#7B2CBF]" />
+                <span className="hidden md:inline">₺ {cartSubtotal.toLocaleString("tr-TR")},00</span>
+                {totalCartCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-[#7B2CBF] text-white text-[10px] flex items-center justify-center font-bold">
+                    {totalCartCount}
+                  </span>
+                )}
+              </button>
+
+              {/* WhatsApp Button */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3.5 py-2 rounded-lg bg-[#E8F8F0] hover:bg-[#D1F2E2] text-[#11B76B] border border-[#B8ECD3] text-xs font-bold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap"
+                className="px-3 py-2 rounded-lg bg-[#E8F8F0] hover:bg-[#D1F2E2] text-[#11B76B] border border-[#B8ECD3] text-xs font-bold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap"
                 title="WhatsApp İletişim Hattı"
               >
                 <MessageSquare className="w-4 h-4 text-[#11B76B]" />
                 <span>WhatsApp</span>
               </a>
+
+              {/* Quote Button */}
               <button
                 onClick={() => openQuoteFor("Sipariş & Bilgi Talebi")}
-                className="px-4 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white text-xs font-bold transition-colors cursor-pointer whitespace-nowrap shadow-sm"
+                className="px-3.5 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white text-xs font-bold transition-colors cursor-pointer whitespace-nowrap shadow-sm"
               >
-                Sipariş / Teklif Al
+                Teklif Al
               </button>
             </div>
 
@@ -329,6 +443,28 @@ export default function AmasyaAltinSafranClient() {
               <a onClick={() => setMobileMenuOpen(false)} href="#iletisim" className="text-sm font-bold text-[#39404A] hover:text-[#7B2CBF] py-1 border-b border-[#F5F6F7]">İletişim</a>
             </nav>
             <div className="pt-2 flex flex-col gap-2">
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoginModalOpen(true);
+                  }}
+                  className="py-2.5 rounded-lg bg-[#F5F6F7] text-[#39404A] font-bold text-xs flex items-center justify-center gap-1 border border-[#E8E8E8]"
+                >
+                  <User className="w-3.5 h-3.5 text-[#7B2CBF]" />
+                  <span>Üye Girişi</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setCartOpen(true);
+                  }}
+                  className="py-2.5 rounded-lg bg-[#F5F6F7] text-[#39404A] font-bold text-xs flex items-center justify-center gap-1 border border-[#E8E8E8]"
+                >
+                  <ShoppingCart className="w-3.5 h-3.5 text-[#7B2CBF]" />
+                  <span>Sepet ({totalCartCount})</span>
+                </button>
+              </div>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -529,7 +665,7 @@ export default function AmasyaAltinSafranClient() {
         </div>
       </section>
 
-      {/* 6. PRODUCTS (ACCURATE REAL SITE PRODUCTS & PRICES) */}
+      {/* 6. PRODUCTS (ACCURATE REAL SITE PRODUCTS, PRICES & DIRECT IYZICO CART INTEGRATION) */}
       <section id="urunler" className="py-16 bg-white border-b border-[#E8E8E8]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -620,14 +756,47 @@ export default function AmasyaAltinSafranClient() {
                     Detay
                   </button>
                   <button
-                    onClick={() => openQuoteFor(p.name)}
-                    className="px-4 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white text-xs font-bold transition-colors"
+                    onClick={() => addToCart(p)}
+                    className="flex-1 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    Sipariş Ver
+                    <ShoppingCart className="w-3.5 h-3.5" />
+                    <span>Sepete Ekle</span>
                   </button>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* IYZICO PAYMENT & SECURITY STRIP */}
+          <div className="mt-12 p-6 rounded-2xl bg-[#F8F9FA] border border-[#E8E8E8] flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+              <img
+                src="/images/amasya-altin-safran/payment/iyzico.png"
+                alt="iyzico Güvenli Ödeme"
+                className="h-9 w-auto object-contain"
+              />
+              <div>
+                <div className="text-xs font-bold text-[#1E293B] flex items-center justify-center sm:justify-start gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-[#11B76B]" />
+                  <span>iyzico ile 256-Bit SSL Korumalı Güvenli Ödeme Altyapısı</span>
+                </div>
+                <p className="text-[11px] text-[#555555] mt-0.5">
+                  Tüm kredi kartlarına peşin fiyatına taksit ve 3D Secure güvencesiyle anında sipariş verin.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="px-3 py-1.5 rounded-lg bg-white border border-[#E8E8E8] text-[11px] font-bold text-[#39404A]">
+                Visa / MasterCard
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-white border border-[#E8E8E8] text-[11px] font-bold text-[#39404A]">
+                Troy
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-white border border-[#E8E8E8] text-[11px] font-bold text-[#11B76B]">
+                3D Secure
+              </div>
+            </div>
           </div>
 
         </div>
@@ -933,7 +1102,7 @@ export default function AmasyaAltinSafranClient() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Amasya Altın Safran WhatsApp İletişim Hattı"
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#11B76B] hover:bg-[#0EA25E] text-white font-bold text-xs sm:text-sm tracking-wide shadow-2xl hover:scale-105 transition-all duration-300 border border-white/20 group cursor-pointer"
+        className="fixed bottom-6 right-6 z-30 flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#11B76B] hover:bg-[#0EA25E] text-white font-bold text-xs sm:text-sm tracking-wide shadow-2xl hover:scale-105 transition-all duration-300 border border-white/20 group cursor-pointer"
       >
         <div className="relative flex items-center justify-center">
           <MessageSquare className="w-5 h-5 fill-white/20 text-white" />
@@ -943,7 +1112,7 @@ export default function AmasyaAltinSafranClient() {
         <span className="hidden sm:inline font-bold">WhatsApp İletişim</span>
       </a>
 
-      {/* 10. FOOTER (SITE REAL FOOTER INFO) */}
+      {/* 10. FOOTER (SITE REAL FOOTER INFO & IYZICO BADGES) */}
       <footer className="bg-[#1E242B] text-[#9CA3AF] text-xs pt-12 pb-8 border-t border-[#374151]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-[#374151]">
@@ -957,6 +1126,13 @@ export default function AmasyaAltinSafranClient() {
               <p className="text-xs text-[#9CA3AF] leading-relaxed">
                 Amasya Altın Safran, doğallığın ve kalitenin birleştiği noktadır. Her tel safran, özenle seçilip sofralarınıza ulaştırılır.
               </p>
+              <div className="pt-2 flex items-center gap-2">
+                <img
+                  src="/images/amasya-altin-safran/payment/iyzico.png"
+                  alt="iyzico ile Güvenli Ödeme"
+                  className="h-6 w-auto object-contain bg-white px-2 py-0.5 rounded"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -1001,6 +1177,241 @@ export default function AmasyaAltinSafranClient() {
         </div>
       </footer>
 
+      {/* CART DRAWER (INTERACTIVE SHOPPING BAG WITH IYZICO CHECKOUT) */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end">
+          <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden">
+            
+            {/* Drawer Header */}
+            <div className="p-4 sm:p-5 border-b border-[#E8E8E8] flex items-center justify-between bg-[#F8F9FA]">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5 text-[#7B2CBF]" />
+                <h3 className="text-base font-bold text-[#1E293B]">Alışveriş Sepetim</h3>
+                <span className="text-xs font-bold text-[#7B2CBF] bg-[#7B2CBF]/10 px-2 py-0.5 rounded-full">
+                  {totalCartCount} Ürün
+                </span>
+              </div>
+              <button
+                onClick={() => setCartOpen(false)}
+                className="p-1.5 rounded-lg bg-white text-[#39404A] border border-[#E8E8E8] hover:bg-[#E8E8E8] transition-colors"
+                aria-label="Sepeti Kapat"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Drawer Items List */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+              {cart.length === 0 ? (
+                <div className="py-16 text-center space-y-3">
+                  <ShoppingCart className="w-12 h-12 text-[#D1D5DB] mx-auto" />
+                  <h4 className="text-base font-bold text-[#39404A]">Sepetiniz Boş</h4>
+                  <p className="text-xs text-[#777777]">Ürünlerimiz arasından dilediğinizi sepetinize ekleyebilirsiniz.</p>
+                  <button
+                    onClick={() => setCartOpen(false)}
+                    className="mt-2 px-5 py-2 rounded-lg bg-[#7B2CBF] text-white text-xs font-bold"
+                  >
+                    Alışverişe Devam Et
+                  </button>
+                </div>
+              ) : checkoutSuccess ? (
+                <div className="py-16 text-center space-y-3 bg-[#E8F8F0] p-6 rounded-2xl border border-[#B8ECD3]">
+                  <CheckCircle className="w-12 h-12 text-[#11B76B] mx-auto" />
+                  <h4 className="text-base font-bold text-[#1E293B]">Siparişiniz Başarıyla Alındı!</h4>
+                  <p className="text-xs text-[#555555]">
+                    iyzico 256-Bit SSL korumalı ödeme onayı alındı. Sipariş takip numaranız SMS ve e-posta ile iletilmiştir.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCart([]);
+                      setCheckoutSuccess(false);
+                      setCartOpen(false);
+                    }}
+                    className="mt-2 px-5 py-2 rounded-lg bg-[#7B2CBF] text-white text-xs font-bold"
+                  >
+                    Tamam
+                  </button>
+                </div>
+              ) : (
+                cart.map((item) => (
+                  <div
+                    key={item.product.id}
+                    className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E8E8E8] flex gap-3 items-center justify-between"
+                  >
+                    <div className="w-14 h-14 bg-white rounded-lg p-1 border border-[#E8E8E8] shrink-0 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={item.product.imageUrl}
+                        alt={item.product.name}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xs font-bold text-[#1E293B] truncate">{item.product.name}</h4>
+                      <span className="text-[11px] text-[#777777] font-mono block">{item.product.packageSize}</span>
+                      <span className="text-xs font-bold text-[#7B2CBF]">
+                        ₺ {(item.product.price * item.quantity).toLocaleString("tr-TR")},00
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center border border-[#D1D5DB] rounded-lg bg-white overflow-hidden">
+                        <button
+                          onClick={() => updateQuantity(item.product.id, -1)}
+                          className="p-1 hover:bg-[#F5F6F7] text-[#39404A]"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="px-2 text-xs font-bold text-[#1E293B]">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.product.id, 1)}
+                          className="p-1 hover:bg-[#F5F6F7] text-[#39404A]"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => removeFromCart(item.product.id)}
+                        className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Ürünü Çıkar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Drawer Footer & Checkout */}
+            {cart.length > 0 && !checkoutSuccess && (
+              <div className="p-4 sm:p-5 border-t border-[#E8E8E8] bg-white space-y-3">
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <span className="text-[#555555]">Ara Toplam:</span>
+                  <span className="text-base sm:text-lg font-black text-[#1E293B]">
+                    ₺ {cartSubtotal.toLocaleString("tr-TR")},00
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded">
+                  <span>Kargo Ücreti:</span>
+                  <span>Ücretsiz Kargo</span>
+                </div>
+
+                <button
+                  onClick={() => setCheckoutSuccess(true)}
+                  className="w-full py-3 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>iyzico ile Güvenli Öde</span>
+                </button>
+
+                <div className="pt-2 flex items-center justify-center gap-3 opacity-75">
+                  <img
+                    src="/images/amasya-altin-safran/payment/iyzico.png"
+                    alt="iyzico"
+                    className="h-5 w-auto object-contain"
+                  />
+                  <span className="text-[10px] text-[#777777]">256-Bit SSL & 3D Secure</span>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* MEMBER LOGIN / REGISTER MODAL */}
+      {loginModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 border border-[#E8E8E8]">
+            
+            <div className="flex items-center justify-between border-b border-[#E8E8E8] pb-3">
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-[#7B2CBF]" />
+                <h3 className="text-base font-bold text-[#1E293B]">Müşteri Hesabı</h3>
+              </div>
+              <button
+                onClick={() => setLoginModalOpen(false)}
+                className="p-1.5 rounded-lg bg-[#F5F6F7] text-[#39404A]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Tab Switches */}
+            <div className="grid grid-cols-2 p-1 rounded-lg bg-[#F5F6F7] border border-[#E8E8E8] text-xs font-bold">
+              <button
+                onClick={() => setLoginTab("login")}
+                className={`py-2 rounded-md transition-colors ${
+                  loginTab === "login" ? "bg-white text-[#7B2CBF] shadow-sm" : "text-[#555555]"
+                }`}
+              >
+                Üye Girişi
+              </button>
+              <button
+                onClick={() => setLoginTab("register")}
+                className={`py-2 rounded-md transition-colors ${
+                  loginTab === "register" ? "bg-white text-[#7B2CBF] shadow-sm" : "text-[#555555]"
+                }`}
+              >
+                Yeni Üye Kaydı
+              </button>
+            </div>
+
+            <form onSubmit={handleLoginSubmit} className="space-y-3 text-xs">
+              {loginTab === "register" && (
+                <div>
+                  <label className="block font-bold text-[#39404A] mb-1">Adınız Soyadınız *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Adınız Soyadınız"
+                    className="w-full px-3 py-2 rounded-lg bg-[#F8F9FA] border border-[#E8E8E8] text-[#39404A] focus:outline-none focus:border-[#7B2CBF]"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block font-bold text-[#39404A] mb-1">E-posta Adresiniz *</label>
+                <input
+                  type="email"
+                  required
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  placeholder="ornek@email.com"
+                  className="w-full px-3 py-2 rounded-lg bg-[#F8F9FA] border border-[#E8E8E8] text-[#39404A] focus:outline-none focus:border-[#7B2CBF]"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-[#39404A] mb-1">Şifreniz *</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  className="w-full px-3 py-2 rounded-lg bg-[#F8F9FA] border border-[#E8E8E8] text-[#39404A] focus:outline-none focus:border-[#7B2CBF]"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+                >
+                  {loginTab === "login" ? "Giriş Yap" : "Hesap Oluştur"}
+                </button>
+              </div>
+
+              <p className="text-[11px] text-[#777777] text-center pt-1">
+                Siparişlerinizi ve kargo durumunuzu üye panelinizden anlık takip edebilirsiniz.
+              </p>
+            </form>
+
+          </div>
+        </div>
+      )}
+
       {/* PRODUCT DETAIL MODAL */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
@@ -1036,13 +1447,13 @@ export default function AmasyaAltinSafranClient() {
               </button>
               <button
                 onClick={() => {
-                  const pName = selectedProduct.name;
+                  const p = selectedProduct;
                   setSelectedProduct(null);
-                  openQuoteFor(pName);
+                  addToCart(p);
                 }}
                 className="px-4 py-2 rounded-lg bg-[#7B2CBF] text-white text-xs font-bold"
               >
-                Sipariş Ver
+                Sepete Ekle
               </button>
             </div>
           </div>
