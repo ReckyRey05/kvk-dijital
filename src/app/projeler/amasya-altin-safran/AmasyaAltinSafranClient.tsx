@@ -887,10 +887,62 @@ export default function AmasyaAltinSafranClient() {
               </form>
             )}
 
+            {/* Interactive Branded Google Maps Section */}
+            <div className="mt-8 rounded-2xl overflow-hidden border border-[#E8E8E8] bg-white shadow-sm relative">
+              <div className="p-4 sm:p-5 border-b border-[#E8E8E8] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F8F9FA]">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#7B2CBF]/10 text-[#7B2CBF] flex items-center justify-center shrink-0">
+                    <MapPin className="w-5 h-5 text-[#7B2CBF]" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-[#1E293B]">Amasya Altın Safran — Mağaza & Satış Ofisi</h3>
+                    <p className="text-xs text-[#555555]">Dere Mah. Özkan Yalçın Cad. No:11/D Merkez / Amasya</p>
+                  </div>
+                </div>
+                <a
+                  href="https://www.google.com/maps/place/Amasya+Alt%C4%B1n+Safran/@40.650429,35.8317757,17z/data=!4m17!1m10!3m9!1s0x40876f0003fbf4a7:0xdb5847629236d946!2sAmasya+Alt%C4%B1n+Safran!8m2!3d40.6504263!4d35.8318284!10e5!14m1!1BCgwKCC9tLzBjZ2g0MAE!16s%2Fg%2F11yw4rdq8c!3m5!1s0x40876f0003fbf4a7:0xdb5847629236d946!8m2!3d40.6504263!4d35.8318284!16s%2Fg%2F11yw4rdq8c!18m1!1e1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg bg-[#7B2CBF] hover:bg-[#6A1B9A] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors shrink-0 shadow-sm"
+                >
+                  <MapPin className="w-4 h-4" />
+                  <span>Google Haritalar'da Aç / Yol Tarifi</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
+              {/* Google Maps Iframe with Pinned Coordinate */}
+              <div className="relative w-full h-80 sm:h-96 bg-[#F5F6F7]">
+                <iframe
+                  title="Amasya Altın Safran Google Haritası"
+                  src="https://maps.google.com/maps?q=Amasya+Alt%C4%B1n+Safran,+Dere+Mah.+%C3%96zkan+Yal%C3%A7%C4%B1n+Cad.+No:11/D+Merkez+Amasya&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
           </div>
 
         </div>
       </section>
+
+      {/* FLOATING WHATSAPP BUTTON (DEDICATED FOR AMASYA ALTIN SAFRAN) */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Amasya Altın Safran WhatsApp İletişim Hattı"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#11B76B] hover:bg-[#0EA25E] text-white font-bold text-xs sm:text-sm tracking-wide shadow-2xl hover:scale-105 transition-all duration-300 border border-white/20 group cursor-pointer"
+      >
+        <div className="relative flex items-center justify-center">
+          <MessageSquare className="w-5 h-5 fill-white/20 text-white" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-white animate-ping opacity-75" />
+          <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-white" />
+        </div>
+        <span className="hidden sm:inline font-bold">WhatsApp İletişim</span>
+      </a>
 
       {/* 10. FOOTER (SITE REAL FOOTER INFO) */}
       <footer className="bg-[#1E242B] text-[#9CA3AF] text-xs pt-12 pb-8 border-t border-[#374151]">
