@@ -364,20 +364,21 @@ export default function DamlaAkarsuClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 gap-4">
             
-            {/* Logo: Official Shield & Tooth Emblem */}
-            <Link href="#hero" className="flex items-center gap-3 shrink-0 group">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center shadow-md shadow-[#0284C7]/20 group-hover:scale-105 transition-transform border border-white/20">
-                {/* Tooth Shield Symbol */}
-                <div className="relative flex items-center justify-center">
-                  <ShieldCheck className="w-7 h-7 text-white" />
-                </div>
+            {/* Official MK Diş Kliniği & Dt. Damla Akarsu Logo */}
+            <Link href="#hero" className="flex items-center gap-3.5 shrink-0 group">
+              <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-md shadow-[#0A3D78]/20 group-hover:scale-105 transition-transform border border-[#E2E8F0] bg-[#0B3B60]">
+                <img
+                  src="/images/damla-akarsu/mk-dis-klinigi-logo.png"
+                  alt="MK Diş Kliniği - Dt. Damla Akarsu Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <div className="text-lg sm:text-xl font-black text-[#0F172A] tracking-tight flex items-center gap-1.5">
                   <span>Dt. Damla Akarsu</span>
                 </div>
                 <div className="text-[11px] font-bold text-[#0369A1] tracking-wider uppercase">
-                  Diş Muayenehanesi & Dental Klinik
+                  MK Diş Kliniği & Muayenehane
                 </div>
               </div>
             </Link>
@@ -1381,12 +1382,16 @@ export default function DamlaAkarsuClient() {
             {/* Column 1: Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0284C7] to-[#0EA5E9] text-white flex items-center justify-center font-bold">
-                  <ShieldCheck className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-xl overflow-hidden bg-[#0A3D78] border border-white/15 shrink-0 shadow-md">
+                  <img
+                    src="/images/damla-akarsu/mk-dis-klinigi-logo.png"
+                    alt="MK Diş Kliniği Logo"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <div className="text-base font-bold text-white">Dt. Damla Akarsu</div>
-                  <div className="text-[10px] text-[#BAE6FD] uppercase tracking-wider font-bold">Diş Muayenehanesi</div>
+                  <div className="text-[10px] text-[#BAE6FD] uppercase tracking-wider font-bold">MK Diş Kliniği & Muayenehane</div>
                 </div>
               </div>
               <p className="text-xs text-[#94A3B8] leading-relaxed">
