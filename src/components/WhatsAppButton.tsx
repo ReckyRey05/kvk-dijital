@@ -6,11 +6,12 @@ import { MessageSquare } from "lucide-react";
 export default function WhatsAppButton() {
   const pathname = usePathname();
 
-  // Hide on admin panel, restaurant pos, and qr menu routes
+  // Hide on admin panel, restaurant pos, qr menu and pomak lazer demo
   if (
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/restoran") ||
-    pathname?.startsWith("/qr")
+    pathname?.startsWith("/qr") ||
+    pathname?.startsWith("/projeler/pomak-lazer")
   ) {
     return null;
   }
