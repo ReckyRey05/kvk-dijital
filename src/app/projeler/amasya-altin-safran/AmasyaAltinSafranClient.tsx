@@ -1118,11 +1118,13 @@ export default function AmasyaAltinSafranClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-[#374151]">
             
             <div className="space-y-3">
-              <img
-                src="/images/amasya-altin-safran/logo.png"
-                alt="Amasya Altın Safran"
-                className="h-10 w-auto object-contain brightness-0 invert"
-              />
+              <div className="inline-block bg-white px-3 py-2 rounded-xl border border-white/20 shadow-sm">
+                <img
+                  src="/images/amasya-altin-safran/logo.png"
+                  alt="Amasya Altın Safran"
+                  className="h-9 w-auto object-contain"
+                />
+              </div>
               <p className="text-xs text-[#9CA3AF] leading-relaxed">
                 Amasya Altın Safran, doğallığın ve kalitenin birleştiği noktadır. Her tel safran, özenle seçilip sofralarınıza ulaştırılır.
               </p>
