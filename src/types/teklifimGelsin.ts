@@ -15,6 +15,9 @@ export type TeklifimRequestStatus =
 export type TeklifimOfferStatus =
   | "submitted"
   | "viewed"
+  | "negotiating"
+  | "countered"
+  | "accepted"
   | "selected"
   | "rejected"
   | "expired"
@@ -206,10 +209,133 @@ export interface TeklifimOffer {
   createdAt: number;
   updatedAt: number;
 
+  // Negotiation & Versioning
+  version?: number;
+  negotiationCount?: number;
+  lastCounterBy?: "business" | "supplier";
+  businessId?: string;
+
   // Computed badge markers for comparison
   isCheapest?: boolean;
   isFastest?: boolean;
   isBestValue?: boolean;
+}
+
+export interface TeklifimConversation {
+  id: string; // conv_{offerId}
+  requestId: string;
+  requestTitle: string;
+  offerId: string;
+  businessId: string;
+  businessName: string;
+  supplierId: string;
+  supplierName: string;
+  lastMessageText?: string;
+  lastMessageAt: number;
+  lastMessageSenderId?: string;
+  unreadCountBusiness: number;
+  unreadCountSupplier: number;
+  status: "active" | "archived";
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type TeklifimMessageType = "text" | "counter_offer" | "system" | "agreement";
+
+export interface TeklifimMessageAttachment {
+  url: string;
+  name: string;
+  size: number;
+  type: string; // image/png, application/pdf, etc.
+}
+
+export interface TeklifimMessage {
+  id: string;
+  conversationId: string;
+  requestId: string;
+  offerId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: "business" | "supplier";
+  content: string;
+  type: TeklifimMessageType;
+  attachment?: TeklifimMessageAttachment;
+  counterOfferData?: {
+    version: number;
+    price: number;
+    unitPrice?: number;
+    deliveryDays: number;
+    quantity?: number;
+    note?: string;
+    proposedBy: "business" | "supplier";
+  };
+  isRead: boolean;
+  readAt?: number;
+  status: "sent" | "delivered" | "read";
+  createdAt: number;
+}
+
+export interface TeklifimOfferVersion {
+  id: string;
+  offerId: string;
+  requestId: string;
+  version: number; // 1, 2, 3 ... (Max 10)
+  proposedBy: "supplier" | "business";
+  proposerId: string;
+  proposerName: string;
+  totalPrice: number;
+  unitPrice: number;
+  deliveryDays: number;
+  quantity: number;
+  description: string;
+  status: "submitted" | "countered" | "accepted" | "rejected" | "superseded";
+  createdAt: number;
+}
+
+export type TeklifimAgreementStatus =
+  | "agreement_reached"
+  | "preparing"
+  | "shipped"
+  | "delivered"
+  | "completed"
+  | "cancelled"
+  | "disputed";
+
+export interface TeklifimAgreement {
+  id: string;
+  agreementNumber: string; // Örn: ANL-2026-0142
+  requestId: string;
+  requestTitle: string;
+  offerId: string;
+  businessId: string;
+  businessName: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  supplierId: string;
+  supplierName: string;
+  supplierPhone?: string;
+  supplierEmail?: string;
+  productName: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  acceptedPrice: number;
+  unitPrice: number;
+  currency: string;
+  deliveryDays: number;
+  city: string;
+  district?: string;
+  termsNotes?: string;
+  finalVersion: number;
+  status: TeklifimAgreementStatus;
+  statusHistory: {
+    status: TeklifimAgreementStatus;
+    changedBy: string;
+    timestamp: number;
+    note?: string;
+  }[];
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface TeklifimNotification {

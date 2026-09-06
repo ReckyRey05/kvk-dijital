@@ -17,6 +17,7 @@ import {
   Edit3,
   X,
   Lock,
+  MessageSquare,
 } from "lucide-react";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import { auth } from "@/lib/firebase/auth";
@@ -156,11 +157,20 @@ export default function SupplierOffersPage() {
 
   const getStatusBadge = (status: TeklifimOfferStatus) => {
     switch (status) {
+      case "accepted":
       case "selected":
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-300 dark:border-emerald-800">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Teklifiniz Seçildi</span>
+            <span>Anlaşma Sağlandı</span>
+          </span>
+        );
+      case "countered":
+      case "negotiating":
+        return (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-xs font-bold border border-amber-300 dark:border-amber-800">
+            <Clock className="w-3.5 h-3.5 text-amber-600" />
+            <span>Pazarlıkta (Karşı Teklif)</span>
           </span>
         );
       case "viewed":
@@ -344,6 +354,14 @@ export default function SupplierOffersPage() {
                       >
                         <span>Talebi Gör</span>
                         <ArrowRight className="w-3 h-3" />
+                      </Link>
+
+                      <Link
+                        href={`/teklifim-gelsin/messages?c=conv_${offer.id}`}
+                        className="px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-bold transition-colors flex items-center gap-1.5"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>Müşteri ile Konuş</span>
                       </Link>
 
                       {!isLocked && !isExpired && (

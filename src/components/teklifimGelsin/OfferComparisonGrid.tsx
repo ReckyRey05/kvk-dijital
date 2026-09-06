@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Award,
   Zap,
@@ -36,7 +37,25 @@ export default function OfferComparisonGrid({
   onOpenContact,
   selectingId,
 }: OfferComparisonGridProps) {
+  const router = useRouter();
   const [filterMode, setFilterMode] = useState<"all" | "best" | "cheapest" | "fastest">("all");
+  const [startingChatId, setStartingChatId] = useState<string | null>(null);
+
+  const handleStartChat = async (offer: TeklifimOffer) => {
+    setStartingChatId(offer.id);
+    try {
+      await fetch("/api/teklifim-gelsin/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: offer.requestId, offerId: offer.id }),
+      });
+      router.push(`/teklifim-gelsin/messages?c=conv_${offer.id}`);
+    } catch {
+      router.push(`/teklifim-gelsin/messages?c=conv_${offer.id}`);
+    } finally {
+      setStartingChatId(null);
+    }
+  };
 
   const filteredOffers = [...offers].sort((a, b) => {
     if (filterMode === "cheapest") return a.totalPrice - b.totalPrice;
@@ -263,37 +282,53 @@ export default function OfferComparisonGrid({
               <div className="pt-5 border-t border-slate-100 dark:border-slate-800/80 mt-4 space-y-2">
                 {isBusinessOwner ? (
                   <>
+                    {/* PRIMARY ACTION: PLATFORMDA KONUŞ */}
+                    <button
+                      onClick={() => handleStartChat(offer)}
+                      disabled={startingChatId === offer.id}
+                      className="w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                    >
+                      {startingChatId === offer.id ? (
+                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          <MessageSquare className="w-3.5 h-3.5 text-emerald-400 dark:text-emerald-600" />
+                          <span>Platformda Konuş & Pazarlık Yap</span>
+                        </>
+                      )}
+                    </button>
+
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => onOpenContact(offer)}
-                        className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                        className="py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-emerald-200/60 dark:border-emerald-900/50"
                       >
                         <Phone className="w-3.5 h-3.5" />
-                        <span>İletişim</span>
-                      </button>
-
-                      <button
-                        onClick={() => onOpenContact(offer)}
-                        className="py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <MessageSquare className="w-3.5 h-3.5" />
                         <span>WhatsApp</span>
                       </button>
-                    </div>
 
-                    {!isSelected && (
-                      <button
-                        onClick={() => onSelectOffer(offer.id)}
-                        disabled={selectingId === offer.id}
-                        className="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                      >
-                        {selectingId === offer.id ? (
-                          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                        ) : (
-                          <span>Bu Teklifi Seç ve Anlaş</span>
-                        )}
-                      </button>
-                    )}
+                      {!isSelected ? (
+                        <button
+                          onClick={() => onSelectOffer(offer.id)}
+                          disabled={selectingId === offer.id}
+                          className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50 shadow-xs"
+                        >
+                          {selectingId === offer.id ? (
+                            <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Kabul Et</span>
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <div className="py-2 px-3 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Seçildi</span>
+                        </div>
+                      )}
+                    </div>
                   </>
                 ) : (
                   <div className="text-center text-[11px] text-slate-400 font-medium py-1">

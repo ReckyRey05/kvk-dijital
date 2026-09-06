@@ -14,6 +14,14 @@ import {
   TeklifimReportReason,
   TeklifimReportStatus,
   TeklifimBlock,
+  TeklifimConversation,
+  TeklifimMessage,
+  TeklifimMessageAttachment,
+  TeklifimMessageType,
+  TeklifimOfferVersion,
+  TeklifimAgreementStatus,
+  TeklifimAgreement,
+  TeklifimOfferStatus,
 } from "@/types/teklifimGelsin";
 
 function getDb() {
@@ -1464,4 +1472,749 @@ export async function getCloneableRequestData(
     description: r.description,
     sampleRequired: r.sampleRequired,
   };
+}
+
+// ==========================================
+// FAZ 4: İLETİŞİM, PAZARLIK & ANLAŞMA MOTORU
+// ==========================================
+
+/**
+ * Get or create unique conversation for a quote offer
+ */
+export async function getOrCreateConversation(
+  requestId: string,
+  offerId: string,
+  requestingUserId: string
+): Promise<TeklifimConversation> {
+  const db = getDb();
+  const convId = `conv_${offerId}`;
+  const convRef = db.collection("teklifim_conversations").doc(convId);
+  const convDoc = await convRef.get();
+
+  if (convDoc.exists) {
+    const convData = convDoc.data() as TeklifimConversation;
+    if (convData.businessId !== requestingUserId && convData.supplierId !== requestingUserId) {
+      throw new Error("Bu konuşmaya erişim yetkiniz bulunmamaktadır.");
+    }
+    const blocked = await isUserBlocked(convData.businessId, convData.supplierId);
+    if (blocked) {
+      throw new Error("Engellenmiş kullanıcılar arasında iletişim kurulamaz.");
+    }
+    return convData;
+  }
+
+  // Conversation does not exist yet; verify request and offer
+  const reqDoc = await db.collection("teklifim_requests").doc(requestId).get();
+  if (!reqDoc.exists) throw new Error("Talep bulunamadı.");
+  const reqData = reqDoc.data() as TeklifimRequest;
+
+  const offerDoc = await db.collection("teklifim_offers").doc(offerId).get();
+  if (!offerDoc.exists) throw new Error("Teklif bulunamadı.");
+  const offerData = offerDoc.data() as TeklifimOffer;
+
+  if (requestingUserId !== reqData.businessId && requestingUserId !== offerData.supplierId) {
+    throw new Error("Bu teklif için konuşma başlatma yetkiniz bulunmamaktadır.");
+  }
+
+  const blocked = await isUserBlocked(reqData.businessId, offerData.supplierId);
+  if (blocked) {
+    throw new Error("Engellenmiş kullanıcılar arasında iletişim kurulamaz.");
+  }
+
+  const now = Date.now();
+  const newConversation: TeklifimConversation = {
+    id: convId,
+    requestId,
+    requestTitle: reqData.title,
+    offerId,
+    businessId: reqData.businessId,
+    businessName: reqData.businessName || "İşletme",
+    supplierId: offerData.supplierId,
+    supplierName: offerData.supplierName || "Tedarikçi",
+    lastMessageText: "Görüşme başlatıldı.",
+    lastMessageAt: now,
+    unreadCountBusiness: 0,
+    unreadCountSupplier: 0,
+    status: "active",
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  await convRef.set(newConversation);
+  return newConversation;
+}
+
+/**
+ * Get all conversations for a user (either as business or supplier)
+ */
+export async function getUserConversations(userId: string): Promise<TeklifimConversation[]> {
+  const db = getDb();
+  const [bizSnap, supSnap] = await Promise.all([
+    db.collection("teklifim_conversations").where("businessId", "==", userId).get(),
+    db.collection("teklifim_conversations").where("supplierId", "==", userId).get(),
+  ]);
+
+  const map = new Map<string, TeklifimConversation>();
+  bizSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimConversation));
+  supSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimConversation));
+
+  return Array.from(map.values()).sort(
+    (a, b) => (b.lastMessageAt || b.updatedAt || 0) - (a.lastMessageAt || a.updatedAt || 0)
+  );
+}
+
+/**
+ * Get conversation details including current offer and request
+ */
+export async function getConversationDetails(
+  conversationId: string,
+  userId: string
+): Promise<{ conversation: TeklifimConversation; offer: TeklifimOffer; request: TeklifimRequest }> {
+  const db = getDb();
+  const convDoc = await db.collection("teklifim_conversations").doc(conversationId).get();
+  if (!convDoc.exists) throw new Error("Konuşma bulunamadı.");
+
+  const conv = convDoc.data() as TeklifimConversation;
+  if (conv.businessId !== userId && conv.supplierId !== userId) {
+    throw new Error("Bu konuşmaya erişim yetkiniz yok.");
+  }
+
+  const [offerDoc, reqDoc] = await Promise.all([
+    db.collection("teklifim_offers").doc(conv.offerId).get(),
+    db.collection("teklifim_requests").doc(conv.requestId).get(),
+  ]);
+
+  if (!offerDoc.exists) throw new Error("İlgili teklif bulunamadı.");
+  if (!reqDoc.exists) throw new Error("İlgili talep bulunamadı.");
+
+  return {
+    conversation: conv,
+    offer: offerDoc.data() as TeklifimOffer,
+    request: reqDoc.data() as TeklifimRequest,
+  };
+}
+
+/**
+ * Get messages of a conversation and mark received messages as read
+ */
+export async function getConversationMessages(
+  conversationId: string,
+  userId: string
+): Promise<TeklifimMessage[]> {
+  const db = getDb();
+  const convDoc = await db.collection("teklifim_conversations").doc(conversationId).get();
+  if (!convDoc.exists) throw new Error("Konuşma bulunamadı.");
+
+  const conv = convDoc.data() as TeklifimConversation;
+  if (conv.businessId !== userId && conv.supplierId !== userId) {
+    throw new Error("Bu konuşmaya erişim yetkiniz yok.");
+  }
+
+  const snap = await db
+    .collection("teklifim_messages")
+    .where("conversationId", "==", conversationId)
+    .get();
+
+  const messages: TeklifimMessage[] = [];
+  snap.docs.forEach((d) => messages.push(d.data() as TeklifimMessage));
+
+  // Sort ascending by createdAt
+  messages.sort((a, b) => a.createdAt - b.createdAt);
+
+  return messages;
+}
+
+/**
+ * Mark messages as read by current user
+ */
+export async function markMessagesAsRead(conversationId: string, userId: string): Promise<void> {
+  const db = getDb();
+  const convRef = db.collection("teklifim_conversations").doc(conversationId);
+  const convDoc = await convRef.get();
+  if (!convDoc.exists) return;
+
+  const conv = convDoc.data() as TeklifimConversation;
+  if (conv.businessId !== userId && conv.supplierId !== userId) return;
+
+  const isBusiness = conv.businessId === userId;
+  const now = Date.now();
+
+  const unreadSnap = await db
+    .collection("teklifim_messages")
+    .where("conversationId", "==", conversationId)
+    .where("isRead", "==", false)
+    .get();
+
+  const batch = db.batch();
+  let updatedCount = 0;
+
+  unreadSnap.docs.forEach((doc) => {
+    const msg = doc.data() as TeklifimMessage;
+    if (msg.senderId !== userId) {
+      batch.update(doc.ref, {
+        isRead: true,
+        readAt: now,
+        status: "read",
+      });
+      updatedCount++;
+    }
+  });
+
+  if (isBusiness) {
+    batch.update(convRef, { unreadCountBusiness: 0, updatedAt: now });
+  } else {
+    batch.update(convRef, { unreadCountSupplier: 0, updatedAt: now });
+  }
+
+  if (updatedCount > 0 || isBusiness || !isBusiness) {
+    await batch.commit();
+  }
+}
+
+/**
+ * Send a message within a conversation
+ */
+export async function sendTeklifimMessage(
+  conversationId: string,
+  senderId: string,
+  data: {
+    content: string;
+    type?: TeklifimMessageType;
+    attachment?: TeklifimMessageAttachment;
+    counterOfferData?: TeklifimMessage["counterOfferData"];
+  }
+): Promise<TeklifimMessage> {
+  const db = getDb();
+  const convRef = db.collection("teklifim_conversations").doc(conversationId);
+  const convDoc = await convRef.get();
+  if (!convDoc.exists) throw new Error("Konuşma bulunamadı.");
+
+  const conv = convDoc.data() as TeklifimConversation;
+  if (conv.businessId !== senderId && conv.supplierId !== senderId) {
+    throw new Error("Bu konuşmaya mesaj gönderme yetkiniz yok.");
+  }
+
+  // Check if users are blocked
+  const blocked = await isUserBlocked(conv.businessId, conv.supplierId);
+  if (blocked) {
+    throw new Error("Engellenmiş kullanıcılar arasında mesaj gönderilemez.");
+  }
+
+  const now = Date.now();
+
+  // Spam rate limiting: check messages sent in the last 60 seconds
+  const recentSnap = await db
+    .collection("teklifim_messages")
+    .where("senderId", "==", senderId)
+    .where("createdAt", ">=", now - 60000)
+    .get();
+
+  if (recentSnap.size >= 20) {
+    throw new Error("Çok hızlı mesaj gönderiyorsunuz. Lütfen biraz bekleyin.");
+  }
+
+  const isBusiness = senderId === conv.businessId;
+  const senderRole: "business" | "supplier" = isBusiness ? "business" : "supplier";
+  const senderName = isBusiness ? conv.businessName : conv.supplierName;
+  const recipientId = isBusiness ? conv.supplierId : conv.businessId;
+
+  const msgRef = db.collection("teklifim_messages").doc();
+  const newMsg: TeklifimMessage = {
+    id: msgRef.id,
+    conversationId,
+    requestId: conv.requestId,
+    offerId: conv.offerId,
+    senderId,
+    senderName,
+    senderRole,
+    content: (data.content || "").trim(),
+    type: data.type || "text",
+    attachment: data.attachment,
+    counterOfferData: data.counterOfferData,
+    isRead: false,
+    status: "sent",
+    createdAt: now,
+  };
+
+  await msgRef.set(newMsg);
+
+  // Update conversation last message & unread counter
+  const updateData: any = {
+    lastMessageText: data.content || (data.attachment ? `[Dosya: ${data.attachment.name}]` : "Mesaj"),
+    lastMessageAt: now,
+    lastMessageSenderId: senderId,
+    updatedAt: now,
+  };
+
+  if (isBusiness) {
+    updateData.unreadCountSupplier = (conv.unreadCountSupplier || 0) + 1;
+  } else {
+    updateData.unreadCountBusiness = (conv.unreadCountBusiness || 0) + 1;
+  }
+
+  await convRef.update(updateData);
+
+  // Send notification to recipient
+  try {
+    await sendTeklifimNotification({
+      userId: recipientId,
+      title: `${senderName} Mesaj Gönderdi`,
+      message: data.content ? data.content.slice(0, 100) : "Yeni bir dosya veya teklif gönderildi.",
+      link: `/teklifim-gelsin/messages?c=${conversationId}`,
+    });
+  } catch (err) {
+    console.warn("Notification error:", err);
+  }
+
+  return newMsg;
+}
+
+/**
+ * Submit a counter-offer (pazarlık revizyonu)
+ */
+export async function submitCounterOffer(
+  offerId: string,
+  userId: string,
+  counterData: {
+    price: number;
+    unitPrice?: number;
+    deliveryDays: number;
+    quantity?: number;
+    note?: string;
+  }
+): Promise<{ version: TeklifimOfferVersion; message: TeklifimMessage }> {
+  const db = getDb();
+  const offerRef = db.collection("teklifim_offers").doc(offerId);
+  const offerDoc = await offerRef.get();
+  if (!offerDoc.exists) throw new Error("Teklif bulunamadı.");
+  const offer = offerDoc.data() as TeklifimOffer;
+
+  const reqDoc = await db.collection("teklifim_requests").doc(offer.requestId).get();
+  if (!reqDoc.exists) throw new Error("Talep bulunamadı.");
+  const req = reqDoc.data() as TeklifimRequest;
+
+  // Authorization check
+  if (userId !== req.businessId && userId !== offer.supplierId) {
+    throw new Error("Bu teklife karşı teklif verme yetkiniz yok.");
+  }
+
+  // Check request status
+  if (
+    req.status === "cancelled" ||
+    req.status === "completed" ||
+    req.status === "expired" ||
+    checkRequestDeadlineExpired(req)
+  ) {
+    throw new Error("Bu talep kapatılmıştır veya süresi dolmuştur.");
+  }
+
+  // Check offer status
+  if (offer.status === "accepted" || offer.status === "selected") {
+    throw new Error("Kabul edilmiş bir teklife karşı teklif verilemez.");
+  }
+  if (offer.status === "rejected" || offer.status === "expired") {
+    throw new Error("Reddedilmiş veya süresi dolmuş bir teklife karşı teklif verilemez.");
+  }
+
+  // Block check
+  const blocked = await isUserBlocked(req.businessId, offer.supplierId);
+  if (blocked) {
+    throw new Error("Engellenmiş kullanıcılar arasında pazarlık yapılamaz.");
+  }
+
+  // Check existing versions
+  const versionsSnap = await db
+    .collection("teklifim_offer_versions")
+    .where("offerId", "==", offerId)
+    .get();
+
+  if (versionsSnap.size >= 10) {
+    throw new Error("Maksimum 10 pazarlık revizyon sınırına ulaşıldı.");
+  }
+
+  const proposedBy: "business" | "supplier" = userId === req.businessId ? "business" : "supplier";
+  const proposerName = proposedBy === "business" ? req.businessName : offer.supplierName;
+  const now = Date.now();
+
+  // If this is the first counter-offer, archive the initial offer as version 1
+  if (versionsSnap.empty) {
+    const v1Ref = db.collection("teklifim_offer_versions").doc(`${offerId}_v1`);
+    await v1Ref.set({
+      id: v1Ref.id,
+      offerId,
+      requestId: offer.requestId,
+      version: 1,
+      proposedBy: "supplier",
+      proposerId: offer.supplierId,
+      proposerName: offer.supplierName,
+      totalPrice: offer.totalPrice,
+      unitPrice: offer.unitPrice,
+      deliveryDays: offer.deliveryDays,
+      quantity: req.quantity,
+      description: offer.description || "İlk Teklif",
+      status: "superseded",
+      createdAt: offer.createdAt || now,
+    });
+  }
+
+  const nextVersionNum = (versionsSnap.size === 0 ? 1 : versionsSnap.size) + 1;
+  const newPrice = Number(counterData.price);
+  const targetQuantity = Number(counterData.quantity) || req.quantity || 1;
+  const newUnitPrice =
+    Number(counterData.unitPrice) || Math.round((newPrice / targetQuantity) * 100) / 100;
+  const newDeliveryDays = Number(counterData.deliveryDays) || offer.deliveryDays;
+
+  // Create new version doc
+  const vRef = db.collection("teklifim_offer_versions").doc(`${offerId}_v${nextVersionNum}`);
+  const newVersion: TeklifimOfferVersion = {
+    id: vRef.id,
+    offerId,
+    requestId: offer.requestId,
+    version: nextVersionNum,
+    proposedBy,
+    proposerId: userId,
+    proposerName,
+    totalPrice: newPrice,
+    unitPrice: newUnitPrice,
+    deliveryDays: newDeliveryDays,
+    quantity: targetQuantity,
+    description: counterData.note || "",
+    status: "submitted",
+    createdAt: now,
+  };
+
+  await vRef.set(newVersion);
+
+  // Update offer live data
+  await offerRef.update({
+    totalPrice: newPrice,
+    unitPrice: newUnitPrice,
+    deliveryDays: newDeliveryDays,
+    version: nextVersionNum,
+    negotiationCount: nextVersionNum,
+    lastCounterBy: proposedBy,
+    status: "countered",
+    updatedAt: now,
+  });
+
+  // Ensure conversation exists and post counter_offer message
+  const conv = await getOrCreateConversation(req.id, offer.id, userId);
+
+  const messageText = `${proposerName} karşı teklif sundu (Revizyon #${nextVersionNum}): ${newPrice.toLocaleString("tr-TR")} TL, ${newDeliveryDays} gün teslimat.${counterData.note ? ` Not: "${counterData.note}"` : ""}`;
+
+  const message = await sendTeklifimMessage(conv.id, userId, {
+    content: messageText,
+    type: "counter_offer",
+    counterOfferData: {
+      version: nextVersionNum,
+      price: newPrice,
+      unitPrice: newUnitPrice,
+      deliveryDays: newDeliveryDays,
+      quantity: targetQuantity,
+      note: counterData.note,
+      proposedBy,
+    },
+  });
+
+  return { version: newVersion, message };
+}
+
+/**
+ * Get all revision versions for an offer
+ */
+export async function getOfferVersionHistory(
+  offerId: string,
+  userId: string
+): Promise<TeklifimOfferVersion[]> {
+  const db = getDb();
+  const offerDoc = await db.collection("teklifim_offers").doc(offerId).get();
+  if (!offerDoc.exists) throw new Error("Teklif bulunamadı.");
+  const offer = offerDoc.data() as TeklifimOffer;
+
+  const reqDoc = await db.collection("teklifim_requests").doc(offer.requestId).get();
+  if (!reqDoc.exists) throw new Error("Talep bulunamadı.");
+  const req = reqDoc.data() as TeklifimRequest;
+
+  if (userId !== req.businessId && userId !== offer.supplierId) {
+    throw new Error("Teklif geçmişini görme yetkiniz yok.");
+  }
+
+  const snap = await db
+    .collection("teklifim_offer_versions")
+    .where("offerId", "==", offerId)
+    .get();
+
+  if (snap.empty) {
+    // Return synthetic initial version
+    return [
+      {
+        id: `${offerId}_v1`,
+        offerId,
+        requestId: offer.requestId,
+        version: 1,
+        proposedBy: "supplier",
+        proposerId: offer.supplierId,
+        proposerName: offer.supplierName,
+        totalPrice: offer.totalPrice,
+        unitPrice: offer.unitPrice,
+        deliveryDays: offer.deliveryDays,
+        quantity: req.quantity,
+        description: offer.description || "İlk Teklif",
+        status: "submitted",
+        createdAt: offer.createdAt || Date.now(),
+      },
+    ];
+  }
+
+  const versions: TeklifimOfferVersion[] = [];
+  snap.docs.forEach((d) => versions.push(d.data() as TeklifimOfferVersion));
+  return versions.sort((a, b) => a.version - b.version);
+}
+
+/**
+ * Accept a final offer, generate official Agreement contract ANL-2026-XXXX
+ */
+export async function acceptTeklifimOffer(
+  offerId: string,
+  acceptingUserId: string
+): Promise<TeklifimAgreement> {
+  const db = getDb();
+  const offerRef = db.collection("teklifim_offers").doc(offerId);
+  const offerDoc = await offerRef.get();
+  if (!offerDoc.exists) throw new Error("Teklif bulunamadı.");
+  const offer = offerDoc.data() as TeklifimOffer;
+
+  const reqRef = db.collection("teklifim_requests").doc(offer.requestId);
+  const reqDoc = await reqRef.get();
+  if (!reqDoc.exists) throw new Error("Talep bulunamadı.");
+  const req = reqDoc.data() as TeklifimRequest;
+
+  // Authorization: Only business owner can accept offer
+  if (acceptingUserId !== req.businessId) {
+    throw new Error("Yalnızca talep sahibi işletme teklifi kabul edebilir.");
+  }
+
+  // State checks
+  if (
+    req.status === "cancelled" ||
+    req.status === "completed" ||
+    req.status === "expired" ||
+    checkRequestDeadlineExpired(req)
+  ) {
+    throw new Error("Bu talep kapatılmıştır veya süresi dolmuştur.");
+  }
+
+  if (offer.status === "accepted" || offer.status === "selected") {
+    throw new Error("Bu teklif zaten kabul edilmiştir.");
+  }
+  if (offer.status === "rejected" || offer.status === "expired") {
+    throw new Error("Reddedilmiş veya süresi dolmuş teklif kabul edilemez.");
+  }
+
+  const now = Date.now();
+
+  // Load profiles for contact info
+  const [bizProfile, supProfile] = await Promise.all([
+    getTeklifimProfile(req.businessId),
+    getTeklifimProfile(offer.supplierId),
+  ]);
+
+  // Generate agreement number: ANL-2026-XXXX
+  const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+  const agreementNumber = `ANL-2026-${randomSuffix}`;
+  const agreementId = `agr_${offerId}`;
+
+  const agreement: TeklifimAgreement = {
+    id: agreementId,
+    agreementNumber,
+    requestId: req.id,
+    requestTitle: req.title,
+    offerId: offer.id,
+    businessId: req.businessId,
+    businessName: req.businessName || "İşletme",
+    businessPhone: bizProfile?.phone || req.businessPhone || "",
+    businessEmail: bizProfile?.email || req.businessEmail || "",
+    supplierId: offer.supplierId,
+    supplierName: offer.supplierName || "Tedarikçi",
+    supplierPhone: supProfile?.phone || offer.supplierPhone || "",
+    supplierEmail: supProfile?.email || offer.supplierEmail || "",
+    productName: req.productName || req.title,
+    category: req.category,
+    quantity: req.quantity,
+    unit: req.unit,
+    acceptedPrice: offer.totalPrice,
+    unitPrice: offer.unitPrice,
+    currency: offer.currency || "TL",
+    deliveryDays: offer.deliveryDays,
+    city: req.city,
+    district: req.district || "",
+    termsNotes: offer.description || "",
+    finalVersion: offer.version || 1,
+    status: "agreement_reached",
+    statusHistory: [
+      {
+        status: "agreement_reached",
+        changedBy: acceptingUserId,
+        timestamp: now,
+        note: "Teklif işletme tarafından onaylandı ve resmi anlaşma sağlandı.",
+      },
+    ],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  // Save agreement
+  await db.collection("teklifim_agreements").doc(agreementId).set(agreement);
+
+  // Update offer to accepted & selected
+  await offerRef.update({
+    status: "accepted",
+    updatedAt: now,
+  });
+
+  // Update request to supplier_selected
+  await reqRef.update({
+    status: "supplier_selected",
+    selectedOfferId: offer.id,
+    selectedSupplierId: offer.supplierId,
+    updatedAt: now,
+  });
+
+  // Increment completed deals counter on supplier profile
+  try {
+    const sProfRef = db.collection("teklifim_profiles").doc(offer.supplierId);
+    const sDoc = await sProfRef.get();
+    if (sDoc.exists) {
+      const currentDeals = sDoc.data()?.completedDeals || 0;
+      await sProfRef.update({ completedDeals: currentDeals + 1, updatedAt: now });
+    }
+  } catch (err) {
+    console.warn("Supplier deal increment notice:", err);
+  }
+
+  // Ensure conversation exists and send agreement notification & message
+  const conv = await getOrCreateConversation(req.id, offer.id, acceptingUserId);
+
+  await sendTeklifimMessage(conv.id, acceptingUserId, {
+    content: `Resmi Anlaşma Sağlandı! Sözleşme No: ${agreementNumber}. Tutar: ${offer.totalPrice.toLocaleString("tr-TR")} TL, Teslimat: ${offer.deliveryDays} gün.`,
+    type: "agreement",
+  });
+
+  // Notifications
+  try {
+    await Promise.all([
+      sendTeklifimNotification({
+        userId: offer.supplierId,
+        title: "Tebrikler, Teklifiniz Kabul Edildi!",
+        message: `"${req.title}" için ${offer.totalPrice.toLocaleString("tr-TR")} TL tutarındaki teklifiniz onaylandı. Anlaşma No: ${agreementNumber}.`,
+        link: `/teklifim-gelsin/messages?c=${conv.id}`,
+      }),
+      sendTeklifimNotification({
+        userId: req.businessId,
+        title: "Anlaşma Oluşturuldu",
+        message: `"${req.title}" talebiniz için ${offer.supplierName} ile anlaşma sağlandı. Anlaşma No: ${agreementNumber}.`,
+        link: `/teklifim-gelsin/messages?c=${conv.id}`,
+      }),
+    ]);
+  } catch (err) {
+    console.warn("Notification notice:", err);
+  }
+
+  return agreement;
+}
+
+/**
+ * Get single agreement details
+ */
+export async function getAgreementDetails(
+  agreementId: string,
+  userId: string
+): Promise<TeklifimAgreement> {
+  const db = getDb();
+  const doc = await db.collection("teklifim_agreements").doc(agreementId).get();
+  if (!doc.exists) throw new Error("Anlaşma kaydı bulunamadı.");
+
+  const agreement = doc.data() as TeklifimAgreement;
+  if (agreement.businessId !== userId && agreement.supplierId !== userId) {
+    throw new Error("Bu anlaşmayı görüntüleme yetkiniz yok.");
+  }
+
+  return agreement;
+}
+
+/**
+ * Get all agreements for a user
+ */
+export async function getUserAgreements(userId: string): Promise<TeklifimAgreement[]> {
+  const db = getDb();
+  const [bizSnap, supSnap] = await Promise.all([
+    db.collection("teklifim_agreements").where("businessId", "==", userId).get(),
+    db.collection("teklifim_agreements").where("supplierId", "==", userId).get(),
+  ]);
+
+  const map = new Map<string, TeklifimAgreement>();
+  bizSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimAgreement));
+  supSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimAgreement));
+
+  return Array.from(map.values()).sort((a, b) => b.createdAt - a.createdAt);
+}
+
+/**
+ * Update agreement milestone status
+ */
+export async function updateAgreementStatus(
+  agreementId: string,
+  userId: string,
+  newStatus: TeklifimAgreementStatus,
+  note?: string
+): Promise<TeklifimAgreement> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_agreements").doc(agreementId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Anlaşma bulunamadı.");
+
+  const agreement = doc.data() as TeklifimAgreement;
+  if (agreement.businessId !== userId && agreement.supplierId !== userId) {
+    throw new Error("Bu anlaşmayı güncelleme yetkiniz yok.");
+  }
+
+  const now = Date.now();
+  const historyItem = {
+    status: newStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: note || `Durum güncellendi: ${newStatus}`,
+  };
+
+  const updatedHistory = [...(agreement.statusHistory || []), historyItem];
+
+  await docRef.update({
+    status: newStatus,
+    statusHistory: updatedHistory,
+    updatedAt: now,
+  });
+
+  // If status is completed, update request to completed
+  if (newStatus === "completed") {
+    await db
+      .collection("teklifim_requests")
+      .doc(agreement.requestId)
+      .update({ status: "completed", updatedAt: now });
+  }
+
+  // Notify other party
+  const recipientId = userId === agreement.businessId ? agreement.supplierId : agreement.businessId;
+  const senderName = userId === agreement.businessId ? agreement.businessName : agreement.supplierName;
+
+  try {
+    await sendTeklifimNotification({
+      userId: recipientId,
+      title: "Anlaşma Durumu Güncellendi",
+      message: `${senderName}, ${agreement.agreementNumber} numaralı anlaşmayı "${newStatus}" olarak güncelledi.`,
+      link: `/teklifim-gelsin/messages?c=conv_${agreement.offerId}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimAgreement;
 }

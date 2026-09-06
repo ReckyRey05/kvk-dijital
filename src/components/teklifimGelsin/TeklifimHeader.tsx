@@ -33,6 +33,7 @@ export default function TeklifimHeader() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<TeklifimProfile | null>(null);
   const [notifications, setNotifications] = useState<TeklifimNotification[]>([]);
+  const [unreadConvCount, setUnreadConvCount] = useState<number>(0);
   const [showNotifs, setShowNotifs] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,10 +53,11 @@ export default function TeklifimHeader() {
       } else {
         setProfile(null);
         setNotifications([]);
+        setUnreadConvCount(0);
       }
     });
     return () => unsub();
-  }, [pathname]);
+  }, []);
 
   const loadUserData = async (currentUser: any) => {
     try {
@@ -83,6 +85,21 @@ export default function TeklifimHeader() {
         const nData = await nRes.json();
         if (nData.notifications) {
           setNotifications(nData.notifications);
+        }
+      }
+
+      // Load conversations for unread badge
+      const cRes = await fetch("/api/teklifim-gelsin/conversations", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (cRes.ok) {
+        const cData = await cRes.json();
+        if (cData.conversations) {
+          const totalUnread = cData.conversations.reduce((acc: number, c: any) => {
+            const isBiz = c.businessId === currentUser.uid;
+            return acc + (isBiz ? (c.unreadCountBusiness || 0) : (c.unreadCountSupplier || 0));
+          }, 0);
+          setUnreadConvCount(totalUnread);
         }
       }
     } catch {}
@@ -182,6 +199,23 @@ export default function TeklifimHeader() {
                 }`}
               >
                 Favorilerim
+              </Link>
+            )}
+            {user && (
+              <Link
+                href="/teklifim-gelsin/messages"
+                className={`relative px-3 py-2 rounded-lg text-xs font-semibold transition-colors inline-flex items-center gap-1.5 ${
+                  pathname.startsWith("/teklifim-gelsin/messages")
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                <span>Mesajlar</span>
+                {unreadConvCount > 0 && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white leading-none">
+                    {unreadConvCount}
+                  </span>
+                )}
               </Link>
             )}
             <Link
@@ -396,6 +430,20 @@ export default function TeklifimHeader() {
               className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
             >
               Favorilerim
+            </Link>
+          )}
+          {user && (
+            <Link
+              href="/teklifim-gelsin/messages"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              <span>Mesajlar</span>
+              {unreadConvCount > 0 && (
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-600 px-1.5 text-xs font-bold text-white leading-none">
+                  {unreadConvCount}
+                </span>
+              )}
             </Link>
           )}
           <Link
