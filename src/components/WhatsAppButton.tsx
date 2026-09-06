@@ -15,7 +15,8 @@ export default function WhatsAppButton() {
     pathname?.startsWith("/projeler/amasya-altin-safran") ||
     pathname?.startsWith("/projeler/damla-akarsu") ||
     pathname?.startsWith("/teklink") ||
-    pathname?.startsWith("/f/")
+    pathname?.startsWith("/f/") ||
+    pathname?.startsWith("/teklifim-gelsin")
   ) {
     return null;
   }

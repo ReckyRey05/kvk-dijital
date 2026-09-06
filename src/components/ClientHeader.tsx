@@ -17,7 +17,8 @@ export default function ClientHeader() {
     pathname?.startsWith("/restoran") ||
     pathname?.startsWith("/qr") ||
     pathname?.startsWith("/teklink") ||
-    pathname?.startsWith("/f/")
+    pathname?.startsWith("/f/") ||
+    pathname?.startsWith("/teklifim-gelsin")
   ) {
     return null;
   }
