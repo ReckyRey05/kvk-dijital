@@ -53,24 +53,107 @@ export default function FormResponsesPage() {
   const loadData = async (currentUser: any) => {
     try {
       setLoading(true);
-      const token = await currentUser.getIdToken();
+      setError("");
+      let currentForm: TekLinkForm | null = null;
+      let currentSubmissions: TekLinkSubmission[] = [];
 
-      // Load form details
-      const formRes = await fetch(`/api/teklink/forms/${formId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!formRes.ok) throw new Error("Form bulunamadı");
-      const formData = await formRes.json();
-      setForm(formData.form);
+      // Tier 1: Try Server API
+      try {
+        const token = await currentUser.getIdToken();
+        const formRes = await fetch(`/api/teklink/forms/${formId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (formRes.ok) {
+          const formData = await formRes.json();
+          currentForm = formData.form;
+        }
 
-      // Load submissions
-      const subRes = await fetch(`/api/teklink/forms/${formId}/responses`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!subRes.ok) throw new Error("Yanıtlar yüklenemedi");
-      const subData = await subRes.json();
-      setSubmissions(subData.submissions || []);
+        const subRes = await fetch(`/api/teklink/forms/${formId}/responses`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (subRes.ok) {
+          const subData = await subRes.json();
+          currentSubmissions = subData.submissions || [];
+        }
+      } catch (apiErr) {
+        console.warn("Server API notice in responses page:", apiErr);
+      }
+
+      // Tier 2: Client Firestore fallback (reads directly from kvk-dijital Firestore)
+      if (!currentForm || currentSubmissions.length === 0) {
+        try {
+          const { db } = await import("@/lib/firebase/firestore");
+          const { doc, getDoc, collection, query, where, getDocs } = await import("firebase/firestore");
+
+          // 1. Find the form
+          if (!currentForm) {
+            const formDocSnap = await getDoc(doc(db, "teklink_forms", formId));
+            if (formDocSnap.exists()) {
+              currentForm = { id: formDocSnap.id, ...(formDocSnap.data() as any) };
+            } else {
+              // Try searching by slug
+              const qSlug = query(collection(db, "teklink_forms"), where("slug", "==", formId));
+              const sSnap = await getDocs(qSlug);
+              if (!sSnap.empty) {
+                currentForm = { id: sSnap.docs[0].id, ...(sSnap.docs[0].data() as any) };
+              }
+            }
+
+            // Also check localStorage
+            if (!currentForm) {
+              const localForms = JSON.parse(localStorage.getItem(`teklink_forms_${currentUser.uid}`) || "[]");
+              currentForm = localForms.find((f: any) => f.id === formId || f.slug === formId) || null;
+            }
+          }
+
+          // 2. Find submissions for this form
+          const targetFormId = currentForm?.id || formId;
+          const targetSlug = currentForm?.slug || "";
+
+          let subsSnap = await getDocs(
+            query(collection(db, "teklink_submissions"), where("formId", "==", targetFormId))
+          );
+
+          const cSubs: TekLinkSubmission[] = [];
+          subsSnap.forEach((d) => cSubs.push({ id: d.id, ...(d.data() as any) }));
+
+          // If not found by formId, try by slug
+          if (cSubs.length === 0 && targetSlug) {
+            const slugSnap = await getDocs(
+              query(collection(db, "teklink_submissions"), where("formId", "==", targetSlug))
+            );
+            slugSnap.forEach((d) => cSubs.push({ id: d.id, ...(d.data() as any) }));
+          }
+
+          // If still not found and tenant has submissions, find matching formTitle
+          if (cSubs.length === 0 && currentUser.uid) {
+            const tenantSnap = await getDocs(
+              query(collection(db, "teklink_submissions"), where("tenantId", "==", currentUser.uid))
+            );
+            tenantSnap.forEach((d) => {
+              const data = d.data() as any;
+              if (data.formId === targetFormId || data.formId === targetSlug || (currentForm && data.formTitle === currentForm.title)) {
+                cSubs.push({ id: d.id, ...data });
+              }
+            });
+          }
+
+          if (cSubs.length > 0) {
+            currentSubmissions = cSubs.sort((a, b) => b.createdAt - a.createdAt);
+          }
+        } catch (clientDbErr) {
+          console.warn("Client Firestore read notice in responses page:", clientDbErr);
+        }
+      }
+
+      if (!currentForm) {
+        throw new Error("Form bulunamadı");
+      }
+
+      setForm(currentForm);
+      setSubmissions(currentSubmissions);
     } catch (err: any) {
+      console.error(err);
       setError(err.message || "Veriler alınırken hata oluştu.");
     } finally {
       setLoading(false);
