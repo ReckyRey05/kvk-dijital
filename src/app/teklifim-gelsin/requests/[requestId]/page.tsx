@@ -37,6 +37,7 @@ import { TeklifimThemeProvider } from "@/context/TeklifimThemeContext";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import OfferComparisonGrid from "@/components/teklifimGelsin/OfferComparisonGrid";
 import SupplierQuoteModal from "@/components/teklifimGelsin/SupplierQuoteModal";
+import RecommendedSuppliersList from "@/components/teklifimGelsin/RecommendedSuppliersList";
 
 export default function TeklifimRequestDetailPage({
   params,
@@ -206,6 +207,30 @@ export default function TeklifimRequestDetailPage({
     },
   ];
 
+  const getDeadlineInfo = () => {
+    if (!request) return null;
+    const deadlineMs =
+      request.deadlineTimestamp ||
+      (request.deadline ? new Date(request.deadline).getTime() : null);
+    if (!deadlineMs) return null;
+
+    const diff = deadlineMs - Date.now();
+    if (diff <= 0 || request.status === "expired") {
+      return { isExpired: true, label: "Süresi Doldu (Teklife Kapalı)" };
+    }
+    const totalHours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(totalHours / 24);
+    const hours = totalHours % 24;
+    if (days > 0) {
+      return { isExpired: false, label: `Kalan Süre: ${days} Gün ${hours} Saat` };
+    }
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return { isExpired: false, label: `Kalan Süre: ${totalHours} Saat ${mins} Dk` };
+  };
+
+  const deadlineInfo = getDeadlineInfo();
+  const isExpired = !!deadlineInfo?.isExpired || request?.status === "expired";
+
   const mySubmittedOffer = !isBusinessOwner
     ? offers.find((o) => o.supplierId === user?.uid)
     : null;
@@ -275,17 +300,37 @@ export default function TeklifimRequestDetailPage({
                     </span>
                   </div>
 
-                  {request.status === "supplier_selected" ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-xs font-bold">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Tedarikçi Seçildi & Anlaşma Sağlandı</span>
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                      <span>Teklifler Toplanıyor ({request.offerCount} Teklif)</span>
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {deadlineInfo && (
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                          deadlineInfo.isExpired
+                            ? "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                            : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900"
+                        }`}
+                      >
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{deadlineInfo.label}</span>
+                      </span>
+                    )}
+
+                    {request.status === "supplier_selected" ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-xs font-bold">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Tedarikçi Seçildi & Anlaşma Sağlandı</span>
+                      </span>
+                    ) : isExpired ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold">
+                        <AlertCircle className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Teklif Toplama Sona Erdi</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                        <span>Teklifler Toplanıyor ({request.offerCount} Teklif)</span>
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* TITLE & DETAILS */}
@@ -383,26 +428,54 @@ export default function TeklifimRequestDetailPage({
                   <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900">
                     <div>
                       <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                        {mySubmittedOffer
+                        {isExpired
+                          ? "Teklif Toplama Süresi Doldu"
+                          : mySubmittedOffer
                           ? "Bu Talebe Daha Önce Teklif Verdiniz"
                           : "Bu Talebe Henüz Teklif Vermediniz"}
                       </h4>
                       <p className="text-xs text-slate-500">
-                        {mySubmittedOffer
+                        {isExpired
+                          ? "Bu talep için son teklif verme süresi dolduğundan yeni teklif girişi kapatılmıştır."
+                          : mySubmittedOffer
                           ? `Verdiğiniz Tutar: ${mySubmittedOffer.totalPrice.toLocaleString("tr-TR")} ₺ (${mySubmittedOffer.deliveryDays} Gün)`
                           : "Hemen fiyat ve teslimat sürenizi sunarak teklifinizi işletmeye iletin."}
                       </p>
                     </div>
 
-                    <button
-                      onClick={() => setShowQuoteModal(true)}
-                      className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/25 transition-all cursor-pointer whitespace-nowrap"
-                    >
-                      {mySubmittedOffer ? "Teklifimi Güncelle" : "Hemen Teklif Ver"}
-                    </button>
+                    {!isExpired && (
+                      <button
+                        onClick={() => setShowQuoteModal(true)}
+                        className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/25 transition-all cursor-pointer whitespace-nowrap"
+                      >
+                        {mySubmittedOffer ? "Teklifimi Güncelle" : "Hemen Teklif Ver"}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
+
+              {/* RECOMMENDED MATCHING SUPPLIERS (For Business Owner) */}
+              {isBusinessOwner && request.status !== "supplier_selected" && (
+                <RecommendedSuppliersList
+                  requestId={request.id}
+                  requestTitle={request.title}
+                  invitedSupplierIds={request.invitedSupplierIds || []}
+                  onSupplierInvited={(supId) => {
+                    setRequest((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            invitedSupplierIds: [
+                              ...(prev.invitedSupplierIds || []),
+                              supId,
+                            ],
+                          }
+                        : prev
+                    );
+                  }}
+                />
+              )}
 
               {/* ================= OFFERS SECTION ================= */}
               <div className="space-y-4">

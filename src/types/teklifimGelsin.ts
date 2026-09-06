@@ -1,22 +1,32 @@
 export type TeklifimUserRole = "business" | "supplier";
 
+export type TeklifimVerificationStatus = "unverified" | "pending" | "verified";
+
 export type TeklifimRequestStatus =
   | "published"
   | "bidding"
   | "offers_received"
   | "supplier_selected"
   | "completed"
-  | "cancelled";
+  | "cancelled"
+  | "expired"
+  | "open";
 
-export type TeklifimOfferStatus = "submitted" | "viewed" | "selected" | "rejected";
+export type TeklifimOfferStatus =
+  | "submitted"
+  | "viewed"
+  | "selected"
+  | "rejected"
+  | "expired"
+  | "pending";
 
 export interface TeklifimProfile {
   uid: string;
   role: TeklifimUserRole;
   companyName: string;
-  contactName: string;
-  phone: string;
-  email: string;
+  contactName?: string;
+  phone?: string;
+  email?: string;
   city: string;
   district?: string;
   categories: string[];
@@ -24,12 +34,46 @@ export interface TeklifimProfile {
   deliveryRegions?: string[];
   minOrder?: string;
   isVerified: boolean;
+  verificationStatus?: TeklifimVerificationStatus;
+  logoUrl?: string;
   yearFounded?: number;
   completedDeals?: number;
   responseRate?: string;
   taxVerified?: boolean;
   createdAt: number;
-  updatedAt: number;
+  updatedAt?: number;
+}
+
+export interface TeklifimProduct {
+  id: string;
+  supplierId: string;
+  name: string;
+  category: string;
+  description?: string;
+  imageUrl?: string;
+  minOrder?: string;
+  unit?: string;
+  estimatedPrice?: number;
+  createdAt: number;
+  updatedAt?: number;
+}
+
+export interface TeklifimFavorite {
+  id: string;
+  userId: string;
+  supplierId: string;
+  supplierName: string;
+  supplierCity: string;
+  supplierCategories: string[];
+  supplierMinOrder?: string;
+  supplierResponseRate?: string;
+  createdAt: number;
+}
+
+export interface TeklifimSupplierMatch {
+  supplier: TeklifimProfile;
+  matchScore: number; // 0 - 100
+  matchReasons: string[];
 }
 
 export interface TeklifimRequest {
@@ -49,12 +93,14 @@ export interface TeklifimRequest {
   district?: string;
   description: string;
   deadline?: string;
+  deadlineTimestamp?: number;
   imageUrl?: string;
   sampleRequired?: boolean;
   status: TeklifimRequestStatus;
   offerCount: number;
   selectedOfferId?: string;
   selectedSupplierId?: string;
+  invitedSupplierIds?: string[];
   createdAt: number;
   updatedAt: number;
 }
@@ -72,6 +118,7 @@ export interface TeklifimOffer {
   supplierDeals?: number;
   unitPrice: number;
   totalPrice: number;
+  price?: number;
   currency?: string; // TL, USD, EUR
   deliveryDays: number;
   minOrderQuantity?: string;

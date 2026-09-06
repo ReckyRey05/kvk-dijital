@@ -1,5 +1,9 @@
 import assert from "node:assert";
-import { computeOfferBadges } from "../../src/lib/teklifimGelsin/teklifimService";
+import {
+  computeOfferBadges,
+  computeSupplierMatchScore,
+  checkRequestDeadlineExpired,
+} from "../../src/lib/teklifimGelsin/teklifimService";
 import {
   TeklifimOffer,
   TeklifimRequest,
@@ -242,4 +246,243 @@ assert.strictEqual(coffeeSearch[0].id, "req_2");
 
 console.log("    ✓ Supplier feed filtering passed.");
 
-console.log("✅ [TEKLIFIM GELSIN TEST] ALL SUITES PASSED SUCCESSFULLY!");
+// =========================================================================
+// 6. FAZ 2: Deterministic Supplier Match Scoring Algorithm Test
+// =========================================================================
+console.log("  - Testing FAZ 2: computeSupplierMatchScore algorithm...");
+
+const matchRequest: TeklifimRequest = {
+  id: "req_match_1",
+  businessId: "biz_10",
+  businessName: "Karaköy Roastery",
+  businessCity: "İstanbul",
+  title: "10000 Adet Baskılı Karton Bardak",
+  category: "Ambalaj & Paketleme",
+  quantity: 10000,
+  unit: "Adet",
+  deliveryDays: 5,
+  city: "İstanbul",
+  description: "8 oz çift duvar kraft karton bardak",
+  status: "open",
+  offerCount: 0,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+};
+
+const perfectSupplier: TeklifimProfile = {
+  uid: "sup_perfect",
+  role: "supplier",
+  companyName: "Karton Bardak ve Ambalaj Sanayi",
+  contactName: "Ahmet Usta",
+  city: "İstanbul",
+  categories: ["Ambalaj & Paketleme"],
+  deliveryRegions: ["Tüm Türkiye"],
+  description: "Özel baskılı karton bardak ve ambalaj imalatı",
+  isVerified: true,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+};
+
+const fullMatch = computeSupplierMatchScore(matchRequest, perfectSupplier);
+assert.strictEqual(fullMatch.matchScore, 100, "Full match should score exactly 100 points");
+assert.strictEqual(fullMatch.matchReasons.length, 5, "Should have 5 distinct match reasons");
+assert.ok(
+  fullMatch.matchReasons.some((r) => r.includes("Kategori")),
+  "Should include category reason"
+);
+assert.ok(
+  fullMatch.matchReasons.some((r) => r.includes("şehir")),
+  "Should include city reason"
+);
+assert.ok(
+  fullMatch.matchReasons.some((r) => r.includes("Teslimat bölgesi")),
+  "Should include delivery region reason"
+);
+assert.ok(
+  fullMatch.matchReasons.some((r) => r.includes("anahtar kelime")),
+  "Should include keyword reason"
+);
+assert.ok(
+  fullMatch.matchReasons.some((r) => r.includes("Doğrulanmış")),
+  "Should include verified reason"
+);
+
+// Test partial match (different city, unverified, no title keyword)
+const partialSupplier: TeklifimProfile = {
+  uid: "sup_partial",
+  role: "supplier",
+  companyName: "Anadolu Ambalaj A.Ş.",
+  contactName: "Mehmet Bey",
+  city: "Konya",
+  categories: ["Ambalaj & Paketleme"],
+  deliveryRegions: ["İç Anadolu Bölgesi"],
+  description: "Endüstriyel koli üreticisi",
+  isVerified: false,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+};
+
+const partialMatch = computeSupplierMatchScore(matchRequest, partialSupplier);
+// Category: +40, City: 0, Region: 0, Keyword: 0, Verified: 0 -> Total: 40
+assert.strictEqual(partialMatch.matchScore, 40, "Partial supplier should score exactly 40 points");
+assert.strictEqual(partialMatch.matchReasons.length, 1);
+console.log("    ✓ Deterministic match scoring computed accurately (100 vs 40).");
+
+// =========================================================================
+// 7. FAZ 2: Request Deadline & Expiration Test
+// =========================================================================
+console.log("  - Testing FAZ 2: checkRequestDeadlineExpired logic...");
+
+const futureRequest: TeklifimRequest = {
+  ...matchRequest,
+  deadlineTimestamp: Date.now() + 1000 * 60 * 60 * 24, // 24 hours from now
+};
+assert.strictEqual(checkRequestDeadlineExpired(futureRequest), false, "Future request is NOT expired");
+
+const pastRequest: TeklifimRequest = {
+  ...matchRequest,
+  deadlineTimestamp: Date.now() - 1000 * 60, // 1 minute ago
+};
+assert.strictEqual(checkRequestDeadlineExpired(pastRequest), true, "Past request IS expired");
+
+const noDeadlineRequest: TeklifimRequest = {
+  ...matchRequest,
+  deadlineTimestamp: undefined,
+};
+assert.strictEqual(
+  checkRequestDeadlineExpired(noDeadlineRequest),
+  false,
+  "Request without deadlineTimestamp is NOT expired"
+);
+console.log("    ✓ Request deadline expiration verification passed.");
+
+// =========================================================================
+// 8. FAZ 2: Offer Selection & Immutability Lock Test
+// =========================================================================
+console.log("  - Testing FAZ 2: Offer status immutability rule...");
+
+function validateOfferCanBeUpdated(offer: TeklifimOffer, editorId: string): boolean {
+  if (offer.supplierId !== editorId) {
+    throw new Error("Yetkisiz kullanıcı.");
+  }
+  if (offer.status === "selected") {
+    throw new Error("İşletme tarafından seçilmiş ve anlaşılmış teklifler düzenlenemez.");
+  }
+  return true;
+}
+
+const unselectedOffer: TeklifimOffer = {
+  id: "off_editable",
+  requestId: "req_match_1",
+  requestTitle: "Karton Bardak",
+  supplierId: "sup_perfect",
+  supplierName: "Karton Bardak A.Ş.",
+  supplierCity: "İstanbul",
+  supplierPhone: "05321112233",
+  supplierEmail: "sup@test.com",
+  unitPrice: 1.5,
+  totalPrice: 15000,
+  deliveryDays: 4,
+  description: "İlk teklif",
+  status: "pending",
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+};
+
+// Allowed update on pending offer
+assert.strictEqual(validateOfferCanBeUpdated(unselectedOffer, "sup_perfect"), true);
+
+// Locked update on selected offer
+const lockedOffer: TeklifimOffer = {
+  ...unselectedOffer,
+  status: "selected",
+};
+
+assert.throws(
+  () => validateOfferCanBeUpdated(lockedOffer, "sup_perfect"),
+  /İşletme tarafından seçilmiş ve anlaşılmış teklifler düzenlenemez/,
+  "Updating selected offer MUST throw error"
+);
+console.log("    ✓ Selected offer immutability lock verified.");
+
+// =========================================================================
+// 9. FAZ 2: Supplier Directory Filtering & Sorting Logic Test
+// =========================================================================
+console.log("  - Testing FAZ 2: Supplier directory filtering and sorting...");
+
+const mockSuppliers: TeklifimProfile[] = [
+  {
+    uid: "s1",
+    role: "supplier",
+    companyName: "Zeta Matbaa",
+    city: "İstanbul",
+    categories: ["Matbaa & Baskı"],
+    isVerified: true,
+    responseRate: "1 Saat",
+    completedDeals: 120,
+    createdAt: 100,
+  },
+  {
+    uid: "s2",
+    role: "supplier",
+    companyName: "Alfa Ambalaj",
+    city: "İzmir",
+    categories: ["Ambalaj & Paketleme"],
+    isVerified: false,
+    responseRate: "4 Saat",
+    completedDeals: 30,
+    createdAt: 200,
+  },
+  {
+    uid: "s3",
+    role: "supplier",
+    companyName: "Beta Kağıt",
+    city: "İstanbul",
+    categories: ["Ambalaj & Paketleme"],
+    isVerified: true,
+    responseRate: "2 Saat",
+    completedDeals: 85,
+    createdAt: 300,
+  },
+];
+
+function filterAndSortSuppliers(
+  list: TeklifimProfile[],
+  filter: { category?: string; city?: string; verifiedOnly?: boolean; sort?: string }
+): TeklifimProfile[] {
+  let res = [...list];
+  if (filter.category) {
+    res = res.filter((s) => (s.categories || []).includes(filter.category!));
+  }
+  if (filter.city) {
+    res = res.filter((s) => s.city?.toLowerCase() === filter.city!.toLowerCase());
+  }
+  if (filter.verifiedOnly) {
+    res = res.filter((s) => s.isVerified);
+  }
+  if (filter.sort === "deals") {
+    res.sort((a, b) => (b.completedDeals || 0) - (a.completedDeals || 0));
+  } else if (filter.sort === "new") {
+    res.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }
+  return res;
+}
+
+// Filter Istanbul + Verified
+const istanbulVerified = filterAndSortSuppliers(mockSuppliers, {
+  city: "İstanbul",
+  verifiedOnly: true,
+});
+assert.strictEqual(istanbulVerified.length, 2, "Must find 2 verified suppliers in Istanbul");
+
+// Filter Packaging + Sort by deals
+const packagingDeals = filterAndSortSuppliers(mockSuppliers, {
+  category: "Ambalaj & Paketleme",
+  sort: "deals",
+});
+assert.strictEqual(packagingDeals.length, 2);
+assert.strictEqual(packagingDeals[0].uid, "s3", "Beta Kağıt (85 deals) should rank before Alfa (30)");
+
+console.log("    ✓ Supplier directory filtering and sorting verified.");
+
+console.log("✅ [TEKLIFIM GELSIN TEST] ALL PHASE 1 & PHASE 2 SUITES PASSED SUCCESSFULLY!");

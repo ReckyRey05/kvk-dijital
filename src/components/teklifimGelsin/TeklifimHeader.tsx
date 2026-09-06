@@ -143,13 +143,47 @@ export default function TeklifimHeader() {
             <Link
               href="/teklifim-gelsin/dashboard"
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
-                pathname.includes("/dashboard")
+                pathname === "/teklifim-gelsin/dashboard"
                   ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
                   : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
               }`}
             >
               Panel
             </Link>
+            <Link
+              href="/teklifim-gelsin/suppliers"
+              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                pathname.startsWith("/teklifim-gelsin/suppliers")
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              Tedarikçiler
+            </Link>
+            {user && profile?.role === "supplier" && (
+              <Link
+                href="/teklifim-gelsin/offers"
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                  pathname.startsWith("/teklifim-gelsin/offers")
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                Tekliflerim
+              </Link>
+            )}
+            {user && profile?.role !== "supplier" && (
+              <Link
+                href="/teklifim-gelsin/favorites"
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                  pathname.startsWith("/teklifim-gelsin/favorites")
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                Favorilerim
+              </Link>
+            )}
             <Link
               href="/teklifim-gelsin#akisi-gor"
               className="px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
@@ -236,14 +270,33 @@ export default function TeklifimHeader() {
                       <span>Kontrol Paneli</span>
                     </Link>
 
-                    {profile?.role === "supplier" && (
+                    {profile?.role === "supplier" ? (
+                      <>
+                        <Link
+                          href="/teklifim-gelsin/offers"
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        >
+                          <PackageCheck className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Tekliflerim</span>
+                        </Link>
+                        <Link
+                          href={`/teklifim-gelsin/suppliers/${user.uid}`}
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        >
+                          <Truck className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Firma Profilim</span>
+                        </Link>
+                      </>
+                    ) : (
                       <Link
-                        href={`/teklifim-gelsin/suppliers/${user.uid}`}
+                        href="/teklifim-gelsin/favorites"
                         onClick={() => setShowUserMenu(false)}
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                       >
-                        <Truck className="w-3.5 h-3.5 text-slate-500" />
-                        <span>Firma Profilim</span>
+                        <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Favori Tedarikçilerim</span>
                       </Link>
                     )}
 
@@ -320,6 +373,31 @@ export default function TeklifimHeader() {
           >
             Kontrol Paneli
           </Link>
+          <Link
+            href="/teklifim-gelsin/suppliers"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            Tedarikçiler
+          </Link>
+          {user && profile?.role === "supplier" && (
+            <Link
+              href="/teklifim-gelsin/offers"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Tekliflerim
+            </Link>
+          )}
+          {user && profile?.role !== "supplier" && (
+            <Link
+              href="/teklifim-gelsin/favorites"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Favorilerim
+            </Link>
+          )}
           <Link
             href="/teklifim-gelsin#akisi-gor"
             onClick={() => setMobileMenuOpen(false)}
