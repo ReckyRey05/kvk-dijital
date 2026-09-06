@@ -113,5 +113,26 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 7. FAZ 6: ÖDEME, FİNANS & FATURALANDIRMA
+    match /teklifim_payments/{paymentId} {
+      allow read: if request.auth != null && (resource.data.businessId == request.auth.uid || resource.data.supplierId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_invoices/{invoiceId} {
+      allow read: if request.auth != null && (resource.data.businessId == request.auth.uid || resource.data.supplierId == request.auth.uid || isAdmin());
+      allow create, update: if request.auth != null && (request.resource.data.supplierId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /teklifim_payouts/{payoutId} {
+      allow read: if request.auth != null && (resource.data.supplierId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_webhook_events/{eventId} {
+      allow read, write: if isAdmin();
+    }
+
   }
 }

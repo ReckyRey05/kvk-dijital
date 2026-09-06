@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { TeklifimOrder, TeklifimOrderStatus } from "@/types/teklifimGelsin";
+import { TeklifimOrder, TeklifimOrderStatus, TeklifimInvoice, TeklifimPayment } from "@/types/teklifimGelsin";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import OrderTimeline from "@/components/teklifimGelsin/OrderTimeline";
 import TrackingModal from "@/components/teklifimGelsin/TrackingModal";
@@ -13,6 +13,10 @@ import DeliveryProofModal from "@/components/teklifimGelsin/DeliveryProofModal";
 import DisputeModal from "@/components/teklifimGelsin/DisputeModal";
 import CancelOrderModal from "@/components/teklifimGelsin/CancelOrderModal";
 import ReviewModal from "@/components/teklifimGelsin/ReviewModal";
+import PaymentStatusBadge from "@/components/teklifimGelsin/PaymentStatusBadge";
+import PaymentCountdown from "@/components/teklifimGelsin/PaymentCountdown";
+import InvoiceUploadModal from "@/components/teklifimGelsin/InvoiceUploadModal";
+import RefundModal from "@/components/teklifimGelsin/RefundModal";
 import {
   Package,
   Clock,
@@ -36,6 +40,9 @@ import {
   ChevronLeft,
   RotateCcw,
   Sparkles,
+  CreditCard,
+  FileText,
+  Download,
 } from "lucide-react";
 
 export default function OrderDetailPage() {
@@ -57,6 +64,10 @@ export default function OrderDetailPage() {
   const [disputeModalOpen, setDisputeModalOpen] = useState<boolean>(false);
   const [cancelModalOpen, setCancelModalOpen] = useState<boolean>(false);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState<boolean>(false);
+  const [refundModalOpen, setRefundModalOpen] = useState<boolean>(false);
+  const [invoices, setInvoices] = useState<TeklifimInvoice[]>([]);
+  const [payment, setPayment] = useState<TeklifimPayment | null>(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -82,6 +93,29 @@ export default function OrderDetailPage() {
       if (!res.ok) throw new Error(data.error || "Sipariş detayları alınamadı.");
       setOrder(data.order);
       setDeliveryStatusSignal(data.deliveryStatusSignal);
+
+      // Fetch invoices
+      try {
+        const invRes = await fetch(`/api/teklifim-gelsin/payments/invoices?orderId=${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (invRes.ok) {
+          const invData = await invRes.json();
+          setInvoices(invData.invoices || []);
+        }
+      } catch {}
+
+      // Fetch payment record
+      try {
+        const payRes = await fetch(`/api/teklifim-gelsin/payments?role=buyer`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (payRes.ok) {
+          const payData = await payRes.json();
+          const match = (payData.payments || []).find((p: any) => p.orderId === id);
+          if (match) setPayment(match);
+        }
+      } catch {}
     } catch (err: any) {
       setErrorMsg(err.message || "Sipariş verisi yüklenirken bir hata oluştu.");
     } finally {
@@ -230,6 +264,7 @@ export default function OrderDetailPage() {
                 <span className="font-mono text-base font-black text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-xl">
                   {order.orderNumber}
                 </span>
+                <PaymentStatusBadge status={order.paymentStatus || "unpaid"} />
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
                   Oluşturulma: {new Date(order.createdAt).toLocaleDateString("tr-TR", {
                     day: "numeric",
@@ -258,6 +293,32 @@ export default function OrderDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Unpaid Alert & Direct Checkout Gateway */}
+        {(!order.paymentStatus || order.paymentStatus === "unpaid" || order.paymentStatus === "failed") && isBuyer && (
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+                <CreditCard className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-white">Güvenli Ödeme Bekleniyor</h4>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Tedarikçinin sipariş hazırlığına başlayabilmesi için tutar güvenli havuz hesabında bloke edilmelidir.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <PaymentCountdown initialSeconds={900} />
+              <Link
+                href={`/teklifim-gelsin/checkout/${order.id}`}
+                className="flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-600/25 hover:bg-emerald-500 transition-all cursor-pointer whitespace-nowrap"
+              >
+                <span>Ödemeye Geç ({Number(order.totalPrice).toLocaleString("tr-TR")} TL)</span>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Visual Process Timeline */}
         <OrderTimeline order={order} deliveryStatusSignal={deliveryStatusSignal} />
@@ -454,6 +515,68 @@ export default function OrderDetailPage() {
                 </div>
               </div>
             )}
+
+            {/* Commercial Invoice Card */}
+            <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-800">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-emerald-600" />
+                  <span>Resmi Ticari Fatura</span>
+                </h3>
+                {isSupplier && (
+                  <button
+                    onClick={() => setInvoiceModalOpen(true)}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-500 cursor-pointer"
+                  >
+                    <span>{invoices.length > 0 ? "Fatura Güncelle" : "Fatura Yükle"}</span>
+                  </button>
+                )}
+              </div>
+
+              {invoices.length > 0 ? (
+                <div className="mt-4 space-y-3">
+                  {invoices.map((inv) => (
+                    <div
+                      key={inv.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-zinc-100 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-800/40 text-xs"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                            {inv.invoiceNumber}
+                          </span>
+                          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                            Onaylı Ticari Fatura
+                          </span>
+                        </div>
+                        <p className="text-zinc-400 text-[11px] mt-1">
+                          Tarih: {new Date(inv.uploadedAt || Date.now()).toLocaleDateString("tr-TR")} • Tutar: {inv.amount.toLocaleString("tr-TR")} TL
+                        </p>
+                      </div>
+
+                      {inv.fileUrl && (
+                        <a
+                          href={inv.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                        >
+                          <Download className="h-3.5 w-3.5 text-emerald-600" />
+                          <span>Fatura Belgesi İndir</span>
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4 py-4 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                  <FileText className="mx-auto h-8 w-8 text-zinc-300 dark:text-zinc-700 mb-2" />
+                  {isSupplier
+                    ? "Alıcıya iletilecek e-Fatura / e-Arşiv faturayı yükleyebilirsiniz."
+                    : "Tedarikçinin ticari faturayı sisteme yüklemesi bekleniyor."}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Column: Tracking Card & Parties & Actions */}
@@ -592,6 +715,14 @@ export default function OrderDetailPage() {
                       Kargoya Ver & Takip No Ekle
                     </button>
                   )}
+
+                  <button
+                    onClick={() => setInvoiceModalOpen(true)}
+                    className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-xs font-bold text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 transition cursor-pointer"
+                  >
+                    <FileText className="h-3.5 w-3.5 text-emerald-500" />
+                    <span>{invoices.length > 0 ? "Fatura Güncelle" : "Ticari Fatura Yükle"}</span>
+                  </button>
                 </div>
               )}
 
@@ -614,6 +745,16 @@ export default function OrderDetailPage() {
                       className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-700 transition disabled:opacity-50"
                     >
                       Siparişi Onayla & Tamamla
+                    </button>
+                  )}
+
+                  {order.paymentStatus === "paid" && order.status !== "cancelled" && (
+                    <button
+                      onClick={() => setRefundModalOpen(true)}
+                      className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50/60 px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-100 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-400 transition cursor-pointer"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      <span>İade Talebi Oluştur</span>
                     </button>
                   )}
                 </div>
@@ -704,6 +845,27 @@ export default function OrderDetailPage() {
         onSuccess={() => {
           setReviewModalOpen(false);
           alert("Değerlendirmeniz başarıyla kaydedildi. Teşekkür ederiz!");
+        }}
+      />
+
+      <InvoiceUploadModal
+        isOpen={invoiceModalOpen}
+        onClose={() => setInvoiceModalOpen(false)}
+        order={order}
+        onSuccess={(inv) => {
+          setInvoices((prev) => [...prev, inv]);
+          setInvoiceModalOpen(false);
+        }}
+      />
+
+      <RefundModal
+        isOpen={refundModalOpen}
+        onClose={() => setRefundModalOpen(false)}
+        order={order}
+        payment={payment}
+        onSuccess={() => {
+          setRefundModalOpen(false);
+          if (currentUser) loadOrderDetails(currentUser, orderId);
         }}
       />
     </div>

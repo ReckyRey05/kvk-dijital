@@ -458,6 +458,21 @@ export interface TeklifimOrder {
   dispute?: TeklifimOrderDispute;
   cancellation?: TeklifimOrderCancellation;
 
+  // FAZ 6: Payment, Finance & Invoice Fields
+  paymentId?: string;
+  paymentNumber?: string;
+  paymentStatus?: TeklifimPaymentStatus;
+  paymentMethod?: string;
+  paidAt?: number;
+  paymentExpiresAt?: number;
+  platformFeeRate?: number;
+  platformFee?: number;
+  supplierAmount?: number;
+  invoiceStatus?: TeklifimInvoiceStatus;
+  invoiceUrl?: string;
+  invoiceNumber?: string;
+  invoiceUploadedAt?: number;
+
   // Status & History
   status: TeklifimOrderStatus;
   statusHistory: {
@@ -589,3 +604,123 @@ export const TURKEY_CITIES = [
   "Trabzon",
   "Diğer",
 ] as const;
+
+// ==========================================
+// FAZ 6: ÖDEME, FİNANS & FATURALANDIRMA
+// ==========================================
+
+export type TeklifimPaymentStatus =
+  | "unpaid"
+  | "pending"
+  | "processing"
+  | "paid"
+  | "failed"
+  | "cancelled"
+  | "partially_refunded"
+  | "refunded"
+  | "disputed";
+
+export type TeklifimInvoiceStatus =
+  | "invoice_needed"
+  | "invoice_pending"
+  | "invoice_uploaded"
+  | "invoice_verified";
+
+export interface TeklifimRefundItem {
+  refundId: string;
+  amount: number;
+  reason: string;
+  refundedAt: number;
+  refundedBy: string;
+  providerRefundId?: string;
+  status: "success" | "pending" | "failed";
+}
+
+export interface TeklifimPayment {
+  id: string; // pay_{orderId}
+  paymentNumber: string; // ODE-2026-XXXXXX
+  orderId: string;
+  orderNumber: string;
+  agreementId: string;
+  agreementNumber: string;
+  businessId: string;
+  businessName: string;
+  supplierId: string;
+  supplierName: string;
+
+  // Amount & Split details
+  amount: number; // Toplam çekilen tutar (KDV Dahil TL)
+  currency: string; // TRY
+  platformFeeRate: number; // Örnek: 0.03 (%3)
+  platformFee: number; // Platform komisyon tutarı (TL)
+  supplierAmount: number; // Tedarikçiye aktarılacak net hakediş (TL)
+
+  // Status & Provider details
+  status: TeklifimPaymentStatus;
+  statusHistory: {
+    status: TeklifimPaymentStatus;
+    changedBy: string;
+    timestamp: number;
+    note?: string;
+  }[];
+  provider: string; // "iyzico_marketplace" | "paytr_marketplace" | "mock_provider"
+  providerPaymentId?: string;
+  providerPaymentToken?: string;
+  paymentMethod?: string; // "credit_card" | "debit_card" | "bank_transfer"
+  cardLastFour?: string;
+  cardBrand?: string; // "Bonus", "Maximum", "World" vb.
+
+  // Idempotency & Expiration
+  idempotencyKey: string;
+  expiresAt: number; // Zaman aşımı (örn: 24 saat sonra)
+
+  // Timestamps
+  createdAt: number;
+  updatedAt: number;
+  paidAt?: number;
+  failedAt?: number;
+  failureReason?: string;
+
+  // Refunds
+  refundedAmount?: number;
+  refunds?: TeklifimRefundItem[];
+
+  // Payout Status to Supplier
+  payoutStatus?: "pending_delivery" | "ready_for_payout" | "payout_completed" | "payout_held";
+  payoutCompletedAt?: number;
+  payoutReference?: string;
+}
+
+export interface TeklifimInvoice {
+  id: string; // inv_{orderId}_{type}
+  orderId: string;
+  orderNumber: string;
+  businessId: string;
+  businessName: string;
+  supplierId: string;
+  supplierName: string;
+  invoiceType: "commercial_supplier" | "platform_commission";
+  invoiceNumber?: string;
+  amount: number;
+  currency: string;
+  fileUrl: string;
+  fileName: string;
+  fileSize: number;
+  mimeType: string;
+  status: TeklifimInvoiceStatus;
+  uploadedAt: number;
+  uploadedBy: string;
+  notes?: string;
+}
+
+export interface TeklifimSupplierPayoutSummary {
+  supplierId: string;
+  totalSalesVolume: number; // Toplam brüt satış
+  totalCommissionPaid: number; // Toplam kesilen platform komisyonu
+  totalRefundedVolume: number; // Toplam yapılan iadeler
+  netPayoutEarned: number; // Toplam net hak edilen
+  pendingPayout: number; // Henüz teslimatı tamamlanmamış bekleyen bakiye
+  completedPayout: number; // Tedarikçinin banka hesabına aktarılmış tutar
+  transactionsCount: number;
+}
+

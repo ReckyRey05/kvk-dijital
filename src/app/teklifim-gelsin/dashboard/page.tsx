@@ -26,6 +26,7 @@ import {
   Inbox,
   ShieldCheck,
   ShoppingBag,
+  CreditCard,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -528,6 +529,13 @@ export default function TeklifimDashboardPage() {
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>Siparişler ({activeOrdersCount})</span>
+                    </Link>
+                    <Link
+                      href="/teklifim-gelsin/payments"
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-sm inline-flex items-center gap-1.5"
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      <span>Finans & Hakediş</span>
                     </Link>
                   </div>
                 </div>

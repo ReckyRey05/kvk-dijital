@@ -4,6 +4,7 @@ import { getAuth } from "firebase-admin/auth";
 export interface TeklifimAuthUser {
   uid: string;
   email: string;
+  role?: string;
 }
 
 /**
@@ -33,6 +34,7 @@ export async function verifyTeklifimUser(req: Request): Promise<TeklifimAuthUser
         return {
           uid: decoded.uid,
           email: decoded.email || "",
+          role: (decoded.role as string) || (decoded.admin ? "admin" : undefined),
         };
       }
     } catch (adminErr) {
@@ -79,6 +81,7 @@ export async function verifyTeklifimUser(req: Request): Promise<TeklifimAuthUser
           return {
             uid: payload.user_id || payload.sub,
             email: payload.email || "",
+            role: payload.role || (payload.admin ? "admin" : undefined),
           };
         }
       } catch (jwtErr) {
@@ -108,7 +111,7 @@ export async function verifyTeklifimAdmin(req: Request): Promise<TeklifimAuthUse
     emailLower === "iletisim@kvkdijitalcozumler.com";
 
   if (isCorporateAdmin) {
-    return user;
+    return { ...user, role: "admin" };
   }
 
   // Check role in teklifim_profiles
@@ -116,7 +119,7 @@ export async function verifyTeklifimAdmin(req: Request): Promise<TeklifimAuthUse
     const db = getAdminDb();
     const doc = await db.collection("teklifim_profiles").doc(user.uid).get();
     if (doc.exists && doc.data()?.role === "admin") {
-      return user;
+      return { ...user, role: "admin" };
     }
   } catch (err) {
     console.warn("Admin profile check notice:", err);
