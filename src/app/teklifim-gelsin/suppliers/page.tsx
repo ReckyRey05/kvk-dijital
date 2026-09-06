@@ -288,6 +288,7 @@ function SuppliersContent() {
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer"
             >
               <option value="relevant">Sıralama: En Alakalı</option>
+              <option value="rating">Sıralama: En Yüksek Puan</option>
               <option value="speed">Sıralama: En Hızlı Yanıt</option>
               <option value="deals">Sıralama: En Çok İşlem</option>
               <option value="new">Sıralama: En Yeni Firmalar</option>

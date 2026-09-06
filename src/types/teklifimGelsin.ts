@@ -1,6 +1,6 @@
-export type TeklifimUserRole = "business" | "supplier";
+export type TeklifimUserRole = "business" | "supplier" | "admin" | "user";
 
-export type TeklifimVerificationStatus = "unverified" | "pending" | "verified";
+export type TeklifimVerificationStatus = "unverified" | "pending" | "verified" | "rejected";
 
 export type TeklifimRequestStatus =
   | "published"
@@ -36,10 +36,18 @@ export interface TeklifimProfile {
   isVerified: boolean;
   verificationStatus?: TeklifimVerificationStatus;
   logoUrl?: string;
+  website?: string;
+  taxNumber?: string;
+  taxOffice?: string;
+  tradeRegistryNumber?: string;
   yearFounded?: number;
   completedDeals?: number;
   responseRate?: string;
+  responseMinutes?: number;
+  rating?: number;
+  reviewCount?: number;
   taxVerified?: boolean;
+  verifiedAt?: number;
   createdAt: number;
   updatedAt?: number;
 }
@@ -74,6 +82,76 @@ export interface TeklifimSupplierMatch {
   supplier: TeklifimProfile;
   matchScore: number; // 0 - 100
   matchReasons: string[];
+}
+
+export interface TeklifimReview {
+  id: string;
+  requestId: string;
+  requestTitle: string;
+  businessId: string;
+  businessName: string;
+  supplierId: string;
+  supplierName?: string;
+  rating: number; // 1 - 5
+  comment: string;
+  isAnonymous?: boolean;
+  createdAt: number;
+  updatedAt?: number;
+}
+
+export type VerificationRequestStatus = "pending" | "approved" | "rejected";
+
+export interface TeklifimVerificationRequest {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  supplierCity: string;
+  supplierCategory: string;
+  legalTitle: string;
+  taxNumber: string;
+  taxOffice: string;
+  tradeRegistryNumber?: string;
+  documentUrl?: string;
+  notes?: string;
+  status: VerificationRequestStatus;
+  rejectionReason?: string;
+  createdAt: number;
+  processedAt?: number;
+  processedBy?: string;
+}
+
+export type TeklifimReportReason =
+  | "fake_company"
+  | "misleading_info"
+  | "spam"
+  | "inappropriate"
+  | "other";
+
+export type TeklifimReportStatus = "pending" | "reviewed" | "dismissed" | "action_taken";
+
+export interface TeklifimReport {
+  id: string;
+  reporterId: string;
+  reporterEmail?: string;
+  reporterRole?: string;
+  targetId: string;
+  targetName?: string;
+  targetType: "supplier" | "business" | "request";
+  reason: TeklifimReportReason;
+  description: string;
+  status: TeklifimReportStatus;
+  createdAt: number;
+  resolvedAt?: number;
+  adminNotes?: string;
+}
+
+export interface TeklifimBlock {
+  id: string;
+  blockerId: string;
+  blockedId: string;
+  blockedName?: string;
+  reason?: string;
+  createdAt: number;
 }
 
 export interface TeklifimRequest {

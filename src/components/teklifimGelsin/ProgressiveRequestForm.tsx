@@ -28,6 +28,7 @@ import CategorySelector from "./CategorySelector";
 interface ProgressiveRequestFormProps {
   profile: TeklifimProfile | null;
   initialPrompt?: string;
+  initialData?: Partial<TeklifimRequest> | null;
   onSubmit: (data: Partial<TeklifimRequest>) => Promise<void>;
   submitting: boolean;
 }
@@ -35,6 +36,7 @@ interface ProgressiveRequestFormProps {
 export default function ProgressiveRequestForm({
   profile,
   initialPrompt = "",
+  initialData,
   onSubmit,
   submitting,
 }: ProgressiveRequestFormProps) {
@@ -42,21 +44,35 @@ export default function ProgressiveRequestForm({
   const [error, setError] = useState("");
 
   // Step 1: What are you looking for?
-  const [title, setTitle] = useState(initialPrompt || "");
-  const [category, setCategory] = useState<string>("Ambalaj & Paketleme");
+  const [title, setTitle] = useState(initialData?.title || initialPrompt || "");
+  const [category, setCategory] = useState<string>(initialData?.category || "Ambalaj & Paketleme");
 
   // Step 2: Quantity & Where?
-  const [quantity, setQuantity] = useState("500");
-  const [unit, setUnit] = useState<string>("Adet");
-  const [city, setCity] = useState(profile?.city || "İstanbul");
-  const [district, setDistrict] = useState(profile?.district || "");
-  const [deliveryDays, setDeliveryDays] = useState("7");
+  const [quantity, setQuantity] = useState(initialData?.quantity ? String(initialData.quantity) : "500");
+  const [unit, setUnit] = useState<string>(initialData?.unit || "Adet");
+  const [city, setCity] = useState(initialData?.city || profile?.city || "İstanbul");
+  const [district, setDistrict] = useState(initialData?.district || profile?.district || "");
+  const [deliveryDays, setDeliveryDays] = useState(initialData?.deliveryDays ? String(initialData.deliveryDays) : "7");
 
   // Step 3: Specific terms & notes
-  const [description, setDescription] = useState("");
-  const [sampleRequired, setSampleRequired] = useState(false);
+  const [description, setDescription] = useState(initialData?.description || "");
+  const [sampleRequired, setSampleRequired] = useState(initialData?.sampleRequired ?? false);
   const [deadline, setDeadline] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+
+  React.useEffect(() => {
+    if (initialData) {
+      if (initialData.title) setTitle(initialData.title);
+      if (initialData.category) setCategory(initialData.category);
+      if (initialData.quantity) setQuantity(String(initialData.quantity));
+      if (initialData.unit) setUnit(initialData.unit);
+      if (initialData.city) setCity(initialData.city);
+      if (initialData.district) setDistrict(initialData.district);
+      if (initialData.deliveryDays) setDeliveryDays(String(initialData.deliveryDays));
+      if (initialData.description) setDescription(initialData.description);
+      if (typeof initialData.sampleRequired === "boolean") setSampleRequired(initialData.sampleRequired);
+    }
+  }, [initialData]);
 
   const handleStep1Next = (e: React.FormEvent) => {
     e.preventDefault();

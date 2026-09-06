@@ -92,3 +92,35 @@ export async function verifyTeklifimUser(req: Request): Promise<TeklifimAuthUser
     return null;
   }
 }
+
+/**
+ * Verifies that the incoming request is made by an authorized administrator.
+ * Checks corporate admin email domains or role === 'admin' in teklifim_profiles.
+ */
+export async function verifyTeklifimAdmin(req: Request): Promise<TeklifimAuthUser | null> {
+  const user = await verifyTeklifimUser(req);
+  if (!user) return null;
+
+  const emailLower = (user.email || "").toLowerCase();
+  const isCorporateAdmin =
+    emailLower.endsWith("@kvkdijitalcozumler.com") ||
+    emailLower === "alihaydarkvk@kvkdijitalcozumler.com" ||
+    emailLower === "iletisim@kvkdijitalcozumler.com";
+
+  if (isCorporateAdmin) {
+    return user;
+  }
+
+  // Check role in teklifim_profiles
+  try {
+    const db = getAdminDb();
+    const doc = await db.collection("teklifim_profiles").doc(user.uid).get();
+    if (doc.exists && doc.data()?.role === "admin") {
+      return user;
+    }
+  } catch (err) {
+    console.warn("Admin profile check notice:", err);
+  }
+
+  return null;
+}

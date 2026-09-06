@@ -25,6 +25,8 @@ import {
   HelpCircle,
   AlertCircle,
   Share2,
+  Repeat,
+  Star,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -38,6 +40,7 @@ import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import OfferComparisonGrid from "@/components/teklifimGelsin/OfferComparisonGrid";
 import SupplierQuoteModal from "@/components/teklifimGelsin/SupplierQuoteModal";
 import RecommendedSuppliersList from "@/components/teklifimGelsin/RecommendedSuppliersList";
+import ReviewModal from "@/components/teklifimGelsin/ReviewModal";
 
 export default function TeklifimRequestDetailPage({
   params,
@@ -64,6 +67,11 @@ export default function TeklifimRequestDetailPage({
   const [contactModalOffer, setContactModalOffer] = useState<TeklifimOffer | null>(null);
   const [selectingOfferId, setSelectingOfferId] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Review Modal State
+  const [canReview, setCanReview] = useState(false);
+  const [existingReview, setExistingReview] = useState<any>(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
@@ -110,6 +118,24 @@ export default function TeklifimRequestDetailPage({
       if (oRes.ok) {
         const oData = await oRes.json();
         setOffers(oData.offers || []);
+      }
+
+      // 3. Check Review Eligibility (if owner and supplier selected/completed)
+      if (isOwner && currentRequest.selectedSupplierId) {
+        try {
+          const revCheck = await fetch(`/api/teklifim-gelsin/reviews?requestId=${requestId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (revCheck.ok) {
+            const revData = await revCheck.json();
+            setCanReview(!!revData.canReview);
+            if (revData.existingReview) {
+              setExistingReview(revData.existingReview);
+            }
+          }
+        } catch (e) {
+          console.warn("Review check notice:", e);
+        }
       }
     } catch (err: any) {
       setError(err.message || "Bilgiler alınamadı.");
@@ -423,6 +449,38 @@ export default function TeklifimRequestDetailPage({
                   </div>
                 </div>
 
+                {/* BUSINESS OWNER ACTION STRIP */}
+                {isBusinessOwner && (
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => router.push(`/teklifim-gelsin/requests/new?cloneFrom=${requestId}`)}
+                        className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Repeat className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Benzer Talep Oluştur (Tekrar Sipariş)</span>
+                      </button>
+
+                      {canReview && (
+                        <button
+                          onClick={() => setShowReviewModal(true)}
+                          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        >
+                          <Star className="w-3.5 h-3.5 fill-white" />
+                          <span>Tedarikçiyi Değerlendir</span>
+                        </button>
+                      )}
+
+                      {existingReview && (
+                        <span className="inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-bold border border-amber-200 dark:border-amber-900">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                          <span>Değerlendirmeniz: {existingReview.rating}/5</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* SUPPLIER ACTION BANNER (If supplier viewing) */}
                 {!isBusinessOwner && (
                   <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900">
@@ -577,6 +635,21 @@ export default function TeklifimRequestDetailPage({
               </div>
             </div>
           </div>
+        )}
+
+        {/* REVIEW MODAL */}
+        {showReviewModal && request && (
+          <ReviewModal
+            requestId={request.id}
+            requestTitle={request.title}
+            supplierName={request.selectedSupplierId}
+            onClose={() => setShowReviewModal(false)}
+            onSuccess={() => {
+              setShowReviewModal(false);
+              setCanReview(false);
+              if (user) loadData(user);
+            }}
+          />
         )}
       </div>
     </TeklifimThemeProvider>

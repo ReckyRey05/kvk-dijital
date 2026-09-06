@@ -36,3 +36,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Profil kaydedilirken hata oluştu." }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const user = await verifyTeklifimUser(req);
+    if (!user) {
+      return NextResponse.json({ error: "Yetkisiz erişim. Lütfen giriş yapın." }, { status: 401 });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const { updateTeklifimProfile } = await import("@/lib/teklifimGelsin/teklifimService");
+    const updated = await updateTeklifimProfile(user.uid, body);
+
+    return NextResponse.json({ success: true, profile: updated });
+  } catch (err: any) {
+    console.error("Teklifim PUT profile error:", err);
+    return NextResponse.json(
+      { error: err.message || "Profil güncellenirken hata oluştu." },
+      { status: 400 }
+    );
+  }
+}

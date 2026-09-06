@@ -15,6 +15,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { TeklifimProfile } from "@/types/teklifimGelsin";
+import TrustSignals from "./TrustSignals";
 
 interface SupplierCardProps {
   supplier: TeklifimProfile;
@@ -121,28 +122,9 @@ export default function SupplierCard({
           )}
         </div>
 
-        {/* COMMERCIAL METRICS STRIP */}
-        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800/80 grid grid-cols-3 gap-2 text-center text-xs">
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Min. Sipariş</span>
-            <strong className="text-slate-900 dark:text-white truncate block">
-              {supplier.minOrder || "1 Koli"}
-            </strong>
-          </div>
-
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">Yanıt Hızı</span>
-            <strong className="text-emerald-600 dark:text-emerald-400 truncate block">
-              {supplier.responseRate || "2 Saat"}
-            </strong>
-          </div>
-
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-bold block">İşlem</span>
-            <strong className="text-slate-900 dark:text-white truncate block">
-              {supplier.completedDeals || "50+"} Anlaşma
-            </strong>
-          </div>
+        {/* TRUST SIGNALS */}
+        <div className="pt-1">
+          <TrustSignals supplier={supplier} compact={true} />
         </div>
 
         {/* DELIVERY REGIONS */}

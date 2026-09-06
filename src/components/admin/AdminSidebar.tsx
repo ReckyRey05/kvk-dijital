@@ -10,12 +10,16 @@ import {
   Layers, 
   MessageSquare, 
   LogOut,
-  PenTool 
+  PenTool,
+  ShieldCheck,
+  AlertTriangle,
 } from "lucide-react";
 import { LogoHorizontal } from "@/components/Logo";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Firma Doğrulamaları", href: "/admin/verifications", icon: ShieldCheck },
+  { name: "Pazaryeri Şikayetleri", href: "/admin/reports", icon: AlertTriangle },
   { name: "Projeler", href: "/admin/projects", icon: FolderKanban },
   { name: "Hizmetler", href: "/admin/services", icon: Layers },
   { name: "Blog / Makaleler", href: "/admin/blog", icon: PenTool },

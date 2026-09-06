@@ -40,5 +40,50 @@ service cloud.firestore {
       allow create: if false;
     }
 
+    // 4. TEKLIFIM GELSIN / TOPTANCIM CEBIMDE B2B MARKETPLACE
+    match /teklifim_profiles/{profileId} {
+      allow read: if true;
+      allow write: if request.auth != null && (request.auth.uid == profileId || isAdmin());
+    }
+
+    match /teklifim_requests/{requestId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (resource.data.businessId == request.auth.uid || isAdmin());
+    }
+
+    match /teklifim_offers/{offerId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && (resource.data.supplierId == request.auth.uid || isAdmin());
+    }
+
+    match /teklifim_reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.businessId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /teklifim_verifications/{verificationId} {
+      allow read: if request.auth != null && (resource.data.supplierId == request.auth.uid || isAdmin());
+      allow create: if request.auth != null && request.resource.data.supplierId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /teklifim_reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if request.auth != null && request.resource.data.reporterId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /teklifim_blocks/{blockId} {
+      allow read, write: if request.auth != null && (resource.data.blockerId == request.auth.uid || request.resource.data.blockerId == request.auth.uid || isAdmin());
+    }
+
+    match /teklifim_notifications/{notifId} {
+      allow read, update: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create, delete: if isAdmin();
+    }
+
   }
 }

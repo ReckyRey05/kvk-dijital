@@ -204,7 +204,7 @@ export default function FavoritesPage() {
                 categories: fav.supplierCategories,
                 minOrder: fav.supplierMinOrder,
                 responseRate: fav.supplierResponseRate,
-                isVerified: true,
+                isVerified: (fav as any).isVerified ?? false,
                 createdAt: fav.createdAt,
                 updatedAt: fav.createdAt,
               };
