@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   TeklifimConversation,
   TeklifimOffer,
@@ -30,6 +31,7 @@ import {
   Calendar,
   X,
   RefreshCw,
+  ShoppingBag,
 } from "lucide-react";
 
 interface ConversationPaneProps {
@@ -329,13 +331,22 @@ export default function ConversationPane({
 
               {/* Agreement Contract View Button */}
               {(isOfferAccepted || agreement) && (
-                <button
-                  onClick={() => setShowAgreementModal(true)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800"
-                >
-                  <FileCheck className="h-3.5 w-3.5" />
-                  Sözleşmeyi İncele
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowAgreementModal(true)}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800"
+                  >
+                    <FileCheck className="h-3.5 w-3.5" />
+                    Sözleşmeyi İncele
+                  </button>
+                  <Link
+                    href={`/teklifim-gelsin/orders/${agreement?.orderId || ('ord_' + (agreement?.id || ''))}`}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-blue-700 transition"
+                  >
+                    <ShoppingBag className="h-3.5 w-3.5" />
+                    <span>Siparişi Gör</span>
+                  </Link>
+                </>
               )}
 
               {/* Version History Drawer Trigger */}
@@ -407,13 +418,21 @@ export default function ConversationPane({
                   <h4 className="mt-2 text-sm font-bold text-emerald-900 dark:text-emerald-200">
                     Resmi Anlaşma Kaydı Oluşturuldu
                   </h4>
-                  <p className="mt-1 text-xs text-emerald-800 dark:text-emerald-300">{msg.content}</p>
-                  <button
-                    onClick={() => setShowAgreementModal(true)}
-                    className="mt-3 inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
-                  >
-                    Sözleşme Detayını Aç
-                  </button>
+                  <div className="mt-3 flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => setShowAgreementModal(true)}
+                      className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
+                    >
+                      Sözleşme Detayını Aç
+                    </button>
+                    <Link
+                      href={`/teklifim-gelsin/orders/${agreement?.orderId || ('ord_' + (agreement?.id || ''))}`}
+                      className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
+                    >
+                      <ShoppingBag className="h-3.5 w-3.5" />
+                      <span>Siparişe Git</span>
+                    </Link>
+                  </div>
                 </div>
               );
             }

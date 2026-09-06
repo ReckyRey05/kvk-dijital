@@ -13,11 +13,13 @@ import {
   PenTool,
   ShieldCheck,
   AlertTriangle,
+  ShoppingBag,
 } from "lucide-react";
 import { LogoHorizontal } from "@/components/Logo";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Sipariş & İşlemler", href: "/admin/orders", icon: ShoppingBag },
   { name: "Firma Doğrulamaları", href: "/admin/verifications", icon: ShieldCheck },
   { name: "Pazaryeri Şikayetleri", href: "/admin/reports", icon: AlertTriangle },
   { name: "Projeler", href: "/admin/projects", icon: FolderKanban },

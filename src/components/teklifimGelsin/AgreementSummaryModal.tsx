@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { TeklifimAgreement, TeklifimAgreementStatus } from "@/types/teklifimGelsin";
 import {
   X,
@@ -15,6 +16,7 @@ import {
   Printer,
   ChevronRight,
   RefreshCw,
+  ShoppingBag,
 } from "lucide-react";
 
 interface AgreementSummaryModalProps {
@@ -306,12 +308,22 @@ export default function AgreementSummaryModal({
           <span className="text-2xs text-zinc-400">
             Toptancım Cebimde B2B Güvenli Tedarik Ağı
           </span>
-          <button
-            onClick={onClose}
-            className="rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-          >
-            Kapat
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/teklifim-gelsin/orders/${currentAgreement.orderId || ('ord_' + currentAgreement.id)}`}
+              onClick={onClose}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition"
+            >
+              <ShoppingBag className="h-3.5 w-3.5" />
+              <span>Siparişe & Kargo Takibine Git</span>
+            </Link>
+            <button
+              onClick={onClose}
+              className="rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              Kapat
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -320,13 +320,16 @@ export interface TeklifimAgreement {
   quantity: number;
   unit: string;
   acceptedPrice: number;
+  totalPrice?: number;
   unitPrice: number;
   currency: string;
   deliveryDays: number;
-  city: string;
+  city?: string;
   district?: string;
   termsNotes?: string;
-  finalVersion: number;
+  finalVersion?: number;
+  orderId?: string;
+  orderNumber?: string;
   status: TeklifimAgreementStatus;
   statusHistory: {
     status: TeklifimAgreementStatus;
@@ -336,6 +339,137 @@ export interface TeklifimAgreement {
   }[];
   createdAt: number;
   updatedAt: number;
+}
+
+// ==========================================
+// FAZ 5: SİPARİŞ & TESLİMAT VERİ MODELLERİ
+// ==========================================
+
+export type TeklifimOrderStatus =
+  | "preparing"
+  | "ready_for_dispatch"
+  | "shipped"
+  | "delivered"
+  | "completed"
+  | "cancelled"
+  | "disputed";
+
+export type TeklifimDeliveryMethod =
+  | "cargo"
+  | "supplier_delivery"
+  | "hand_delivery"
+  | "other";
+
+export interface TeklifimDeliveryAddress {
+  contactName: string;
+  phone: string;
+  addressLine: string;
+  city: string;
+  district?: string;
+}
+
+export interface TeklifimOrderItem {
+  productName: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface TeklifimOrderTracking {
+  carrier: string; // Yurtiçi Kargo, Aras Kargo, MNG, Tedarikçi Aracı vb.
+  trackingNumber: string;
+  trackingUrl?: string;
+  shippedAt: number;
+}
+
+export interface TeklifimDeliveryProof {
+  deliveredAt: number;
+  receivedBy: string;
+  proofNote?: string;
+  proofPhotoUrl?: string;
+}
+
+export interface TeklifimOrderDispute {
+  disputedAt: number;
+  disputedBy: string;
+  reason:
+    | "missing_items"
+    | "damaged_items"
+    | "wrong_items"
+    | "delivery_delay"
+    | "not_delivered"
+    | "price_discrepancy"
+    | "other";
+  description: string;
+  resolvedAt?: number;
+  resolutionNotes?: string;
+  resolvedBy?: string;
+}
+
+export interface TeklifimOrderCancellation {
+  cancelledAt: number;
+  cancelledBy: string;
+  reason:
+    | "customer_request"
+    | "out_of_stock"
+    | "delivery_problem"
+    | "mutual_agreement"
+    | "other";
+  note?: string;
+}
+
+export interface TeklifimOrder {
+  id: string; // ord_{agreementId}
+  orderNumber: string; // SIP-2026-XXXXXX
+  agreementId: string;
+  agreementNumber: string;
+  requestId: string;
+  requestTitle: string;
+  offerId: string;
+  businessId: string;
+  businessName: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  supplierId: string;
+  supplierName: string;
+  supplierPhone?: string;
+  supplierEmail?: string;
+
+  // Snapshot Specifications (Never changes after order creation)
+  items: TeklifimOrderItem[];
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+  totalPrice: number;
+  currency: string;
+  deliveryDays: number;
+  expectedDeliveryDate: number;
+
+  // Delivery configuration
+  deliveryMethod: TeklifimDeliveryMethod;
+  deliveryAddress: TeklifimDeliveryAddress;
+  notes?: string;
+
+  // Tracking & Execution
+  trackingInfo?: TeklifimOrderTracking;
+  deliveryProof?: TeklifimDeliveryProof;
+  dispute?: TeklifimOrderDispute;
+  cancellation?: TeklifimOrderCancellation;
+
+  // Status & History
+  status: TeklifimOrderStatus;
+  statusHistory: {
+    status: TeklifimOrderStatus;
+    changedBy: string;
+    timestamp: number;
+    note?: string;
+  }[];
+
+  createdAt: number;
+  updatedAt: number;
+  completedAt?: number;
 }
 
 export interface TeklifimNotification {

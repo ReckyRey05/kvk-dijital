@@ -22,6 +22,15 @@ import {
   TeklifimAgreementStatus,
   TeklifimAgreement,
   TeklifimOfferStatus,
+  TeklifimOrderStatus,
+  TeklifimDeliveryMethod,
+  TeklifimDeliveryAddress,
+  TeklifimOrderItem,
+  TeklifimOrderTracking,
+  TeklifimDeliveryProof,
+  TeklifimOrderDispute,
+  TeklifimOrderCancellation,
+  TeklifimOrder,
 } from "@/types/teklifimGelsin";
 
 function getDb() {
@@ -2120,6 +2129,13 @@ export async function acceptTeklifimOffer(
     console.warn("Notification notice:", err);
   }
 
+  // Auto-generate initial order from accepted agreement
+  try {
+    await createOrderFromAgreement(agreementId, acceptingUserId);
+  } catch (orderErr) {
+    console.warn("Auto order generation notice:", orderErr);
+  }
+
   return agreement;
 }
 
@@ -2218,3 +2234,802 @@ export async function updateAgreementStatus(
   const updatedDoc = await docRef.get();
   return updatedDoc.data() as TeklifimAgreement;
 }
+
+// ==========================================
+// FAZ 5: SİPARİŞ, TESLİMAT & İŞLEM MOTORU
+// ==========================================
+
+/**
+ * Generate human-readable, collision-free order number (SIP-2026-XXXXXX)
+ */
+export async function generateUniqueOrderNumber(): Promise<string> {
+  const db = getDb();
+  let attempts = 0;
+  while (attempts < 10) {
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
+    const candidate = `SIP-2026-${randomNum}`;
+    const snap = await db
+      .collection("teklifim_orders")
+      .where("orderNumber", "==", candidate)
+      .limit(1)
+      .get();
+    if (snap.empty) {
+      return candidate;
+    }
+    attempts++;
+  }
+  return `SIP-2026-${Date.now().toString().slice(-6)}`;
+}
+
+/**
+ * Compute real-time delivery status (remaining days or delay signal)
+ */
+export function computeDeliveryStatus(order: TeklifimOrder): {
+  isDelayed: boolean;
+  isApproaching: boolean;
+  daysLeft: number;
+  text: string;
+} {
+  if (order.status === "completed" || order.status === "delivered") {
+    return { isDelayed: false, isApproaching: false, daysLeft: 0, text: "Teslim Edildi" };
+  }
+  if (order.status === "cancelled") {
+    return { isDelayed: false, isApproaching: false, daysLeft: 0, text: "İptal Edildi" };
+  }
+  if (order.status === "disputed") {
+    return { isDelayed: false, isApproaching: false, daysLeft: 0, text: "Anlaşmazlık Bildirildi" };
+  }
+
+  const now = Date.now();
+  const diffMs = order.expectedDeliveryDate - now;
+  const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffMs < 0) {
+    return { isDelayed: true, isApproaching: false, daysLeft, text: "Teslimat gecikti" };
+  }
+  if (daysLeft <= 2) {
+    return {
+      isDelayed: false,
+      isApproaching: true,
+      daysLeft,
+      text: daysLeft === 0 ? "Bugün teslimat bekleniyor" : `${daysLeft} gün kaldı`,
+    };
+  }
+  return { isDelayed: false, isApproaching: false, daysLeft, text: `${daysLeft} gün kaldı` };
+}
+
+/**
+ * Create Order from Accepted Agreement with complete snapshot integrity
+ */
+export async function createOrderFromAgreement(
+  agreementId: string,
+  requestingUserId: string,
+  deliveryConfig?: {
+    deliveryMethod?: TeklifimDeliveryMethod;
+    deliveryAddress?: Partial<TeklifimDeliveryAddress>;
+    notes?: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const agrDoc = await db.collection("teklifim_agreements").doc(agreementId).get();
+  if (!agrDoc.exists) throw new Error("Anlaşma bulunamadı.");
+
+  const agr = agrDoc.data() as TeklifimAgreement;
+
+  // Authorization: Only agreement parties or admin can spawn order
+  if (requestingUserId !== agr.businessId && requestingUserId !== agr.supplierId) {
+    throw new Error("Bu anlaşmadan sipariş oluşturma yetkiniz bulunmamaktadır.");
+  }
+
+  // Prevent duplicates: Check if order already exists for this agreement
+  const orderId = `ord_${agreementId}`;
+  const existingOrderDoc = await db.collection("teklifim_orders").doc(orderId).get();
+  if (existingOrderDoc.exists) {
+    return existingOrderDoc.data() as TeklifimOrder;
+  }
+
+  const existingByAgr = await db
+    .collection("teklifim_orders")
+    .where("agreementId", "==", agreementId)
+    .limit(1)
+    .get();
+  if (!existingByAgr.empty) {
+    return existingByAgr.docs[0].data() as TeklifimOrder;
+  }
+
+  const now = Date.now();
+  const orderNumber = await generateUniqueOrderNumber();
+  const expectedDeliveryDate = now + (Number(agr.deliveryDays) || 5) * 24 * 60 * 60 * 1000;
+
+  // Snapshot items (never changes after creation)
+  const items: TeklifimOrderItem[] = [
+    {
+      productName: agr.productName || agr.requestTitle || "Tedarik Kalemi",
+      category: agr.category || "Diğer",
+      quantity: Number(agr.quantity) || 1,
+      unit: agr.unit || "Adet",
+      unitPrice: Number(agr.unitPrice) || 0,
+      totalPrice: Number(agr.acceptedPrice) || 0,
+    },
+  ];
+
+  // Delivery Address snapshot
+  const deliveryAddress: TeklifimDeliveryAddress = {
+    contactName: deliveryConfig?.deliveryAddress?.contactName || agr.businessName || "Yetkili",
+    phone: deliveryConfig?.deliveryAddress?.phone || agr.businessPhone || "",
+    addressLine: deliveryConfig?.deliveryAddress?.addressLine || `${agr.city} Merkez Depo / İşletme Adresi`,
+    city: deliveryConfig?.deliveryAddress?.city || agr.city || "İstanbul",
+    district: deliveryConfig?.deliveryAddress?.district || agr.district || "",
+  };
+
+  const newOrder: TeklifimOrder = {
+    id: orderId,
+    orderNumber,
+    agreementId,
+    agreementNumber: agr.agreementNumber,
+    requestId: agr.requestId,
+    requestTitle: agr.requestTitle,
+    offerId: agr.offerId,
+    businessId: agr.businessId,
+    businessName: agr.businessName,
+    businessPhone: agr.businessPhone,
+    businessEmail: agr.businessEmail,
+    supplierId: agr.supplierId,
+    supplierName: agr.supplierName,
+    supplierPhone: agr.supplierPhone,
+    supplierEmail: agr.supplierEmail,
+    items,
+    quantity: Number(agr.quantity) || 1,
+    unit: agr.unit || "Adet",
+    unitPrice: Number(agr.unitPrice) || 0,
+    totalPrice: Number(agr.acceptedPrice) || 0,
+    currency: agr.currency || "TL",
+    deliveryDays: Number(agr.deliveryDays) || 5,
+    expectedDeliveryDate,
+    deliveryMethod: deliveryConfig?.deliveryMethod || "cargo",
+    deliveryAddress,
+    notes: deliveryConfig?.notes || agr.termsNotes || "",
+    status: "preparing",
+    statusHistory: [
+      {
+        status: "preparing",
+        changedBy: requestingUserId,
+        timestamp: now,
+        note: "Sipariş kabul edilmiş anlaşmadan oluşturuldu ve hazırlık aşamasına alındı.",
+      },
+    ],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  // Save order to Firestore
+  await db.collection("teklifim_orders").doc(orderId).set(newOrder);
+
+  // Update agreement with orderId
+  await db.collection("teklifim_agreements").doc(agreementId).update({
+    orderId,
+    updatedAt: now,
+  });
+
+  // Notifications
+  try {
+    await Promise.all([
+      sendTeklifimNotification({
+        userId: agr.businessId,
+        title: "Siparişiniz Oluşturuldu",
+        message: `${newOrder.orderNumber} numaralı siparişiniz oluşturuldu ve hazırlık aşamasına alındı.`,
+        link: `/teklifim-gelsin/orders/${newOrder.id}`,
+      }),
+      sendTeklifimNotification({
+        userId: agr.supplierId,
+        title: "Yeni Sipariş Alındı!",
+        message: `${newOrder.orderNumber} numaralı yeni siparişiniz oluşturuldu. Hazırlamaya başlayabilirsiniz.`,
+        link: `/teklifim-gelsin/orders/${newOrder.id}`,
+      }),
+    ]);
+  } catch (err) {
+    console.warn("Order notification error:", err);
+  }
+
+  // Conversation system message
+  try {
+    const convId = `conv_${agr.offerId}`;
+    const convDoc = await db.collection("teklifim_conversations").doc(convId).get();
+    if (convDoc.exists) {
+      await sendTeklifimMessage(convId, requestingUserId, {
+        content: `Resmi Sipariş Oluşturuldu! Sipariş No: ${newOrder.orderNumber}. Durum: Hazırlanıyor.`,
+        type: "system",
+      });
+    }
+  } catch {}
+
+  return newOrder;
+}
+
+/**
+ * Get Order Details with multi-tenant privacy enforcement
+ */
+export async function getTeklifimOrderDetails(
+  orderId: string,
+  userId: string
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const doc = await db.collection("teklifim_orders").doc(orderId).get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId && order.supplierId !== userId) {
+    throw new Error("Bu siparişi görüntüleme yetkiniz yok.");
+  }
+
+  return order;
+}
+
+/**
+ * Get All Orders for a User with role and status filtering
+ */
+export async function getUserTeklifimOrders(
+  userId: string,
+  statusFilter?: string
+): Promise<TeklifimOrder[]> {
+  const db = getDb();
+  const [bizSnap, supSnap] = await Promise.all([
+    db.collection("teklifim_orders").where("businessId", "==", userId).get(),
+    db.collection("teklifim_orders").where("supplierId", "==", userId).get(),
+  ]);
+
+  const map = new Map<string, TeklifimOrder>();
+  bizSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimOrder));
+  supSnap.docs.forEach((d) => map.set(d.id, d.data() as TeklifimOrder));
+
+  let orders = Array.from(map.values()).sort((a, b) => b.createdAt - a.createdAt);
+
+  if (statusFilter && statusFilter !== "all") {
+    if (statusFilter === "active") {
+      orders = orders.filter(
+        (o) =>
+          o.status === "preparing" ||
+          o.status === "ready_for_dispatch" ||
+          o.status === "shipped" ||
+          o.status === "delivered"
+      );
+    } else if (statusFilter === "completed") {
+      orders = orders.filter((o) => o.status === "completed");
+    } else if (statusFilter === "cancelled") {
+      orders = orders.filter((o) => o.status === "cancelled");
+    } else if (statusFilter === "disputed") {
+      orders = orders.filter((o) => o.status === "disputed");
+    } else {
+      orders = orders.filter((o) => o.status === statusFilter);
+    }
+  }
+
+  return orders;
+}
+
+/**
+ * Get All Orders for Admin Oversight
+ */
+export async function getAllTeklifimOrdersForAdmin(statusFilter?: string): Promise<TeklifimOrder[]> {
+  const db = getDb();
+  let snap;
+  if (statusFilter && statusFilter !== "all") {
+    snap = await db
+      .collection("teklifim_orders")
+      .where("status", "==", statusFilter)
+      .limit(100)
+      .get();
+  } else {
+    snap = await db.collection("teklifim_orders").limit(100).get();
+  }
+
+  const orders: TeklifimOrder[] = [];
+  snap.forEach((d) => orders.push(d.data() as TeklifimOrder));
+  return orders.sort((a, b) => b.createdAt - a.createdAt);
+}
+
+/**
+ * Update Order Status with strict state machine transition validation
+ */
+export async function updateTeklifimOrderStatus(
+  orderId: string,
+  userId: string,
+  newStatus: TeklifimOrderStatus,
+  note?: string
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId && order.supplierId !== userId) {
+    throw new Error("Bu siparişi güncelleme yetkiniz yok.");
+  }
+
+  const isBusiness = order.businessId === userId;
+  const isSupplier = order.supplierId === userId;
+
+  // Strict State Machine Verification
+  if (order.status === "completed") {
+    throw new Error("Tamamlanmış bir siparişin durumu değiştirilemez.");
+  }
+  if (order.status === "cancelled") {
+    throw new Error("İptal edilmiş bir sipariş yeniden aktif hale getirilemez.");
+  }
+
+  // Restrictions on who can trigger what transition
+  if (newStatus === "preparing" && !isSupplier) {
+    throw new Error("Yalnızca tedarikçi hazırlık durumunu güncelleyebilir.");
+  }
+  if (newStatus === "ready_for_dispatch" && !isSupplier) {
+    throw new Error("Yalnızca tedarikçi sevke hazır durumuna geçirebilir.");
+  }
+  if (newStatus === "shipped" && !isSupplier) {
+    throw new Error("Yalnızca tedarikçi kargo/sevk durumunu işaretleyebilir.");
+  }
+  if (newStatus === "completed" && !isBusiness) {
+    throw new Error("Yalnızca alıcı işletme siparişi tamamlayıp onaylayabilir.");
+  }
+
+  const now = Date.now();
+  const historyItem = {
+    status: newStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: note || `Sipariş durumu "${newStatus}" olarak güncellendi.`,
+  };
+
+  const updatedHistory = [...(order.statusHistory || []), historyItem];
+  const updatePayload: any = {
+    status: newStatus,
+    statusHistory: updatedHistory,
+    updatedAt: now,
+  };
+
+  if (newStatus === "completed") {
+    updatePayload.completedAt = now;
+  }
+
+  await docRef.update(updatePayload);
+
+  // Notify other party
+  const recipientId = isBusiness ? order.supplierId : order.businessId;
+  const senderName = isBusiness ? order.businessName : order.supplierName;
+
+  try {
+    await sendTeklifimNotification({
+      userId: recipientId,
+      title: "Sipariş Durumu Güncellendi",
+      message: `${senderName}, ${order.orderNumber} numaralı siparişi "${newStatus}" olarak güncelledi.`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * Add Carrier & Tracking Information (Tedarikçi Kargo Girişi)
+ */
+export async function addTeklifimOrderTracking(
+  orderId: string,
+  userId: string,
+  trackingData: {
+    carrier: string;
+    trackingNumber: string;
+    trackingUrl?: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.supplierId !== userId) {
+    throw new Error("Yalnızca tedarikçi kargo takip bilgisi girebilir.");
+  }
+
+  if (order.status === "completed" || order.status === "cancelled") {
+    throw new Error("Bu siparişe kargo bilgisi eklenemez.");
+  }
+
+  if (!trackingData.carrier || !trackingData.carrier.trim()) {
+    throw new Error("Lütfen kargo / lojistik firması belirtin.");
+  }
+  if (!trackingData.trackingNumber || !trackingData.trackingNumber.trim()) {
+    throw new Error("Lütfen geçerli bir kargo takip numarası belirtin.");
+  }
+
+  const now = Date.now();
+  const trackingInfo: TeklifimOrderTracking = {
+    carrier: trackingData.carrier.trim(),
+    trackingNumber: trackingData.trackingNumber.trim(),
+    trackingUrl: trackingData.trackingUrl?.trim(),
+    shippedAt: now,
+  };
+
+  const historyItem = {
+    status: "shipped" as TeklifimOrderStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: `Kargoya verildi. Kargo: ${trackingInfo.carrier}, Takip No: ${trackingInfo.trackingNumber}`,
+  };
+
+  await docRef.update({
+    trackingInfo,
+    status: "shipped",
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  });
+
+  // Notify business
+  try {
+    await sendTeklifimNotification({
+      userId: order.businessId,
+      title: "Siparişiniz Kargoya Verildi!",
+      message: `${order.orderNumber} numaralı siparişiniz ${trackingInfo.carrier} ile kargoya verildi. Takip No: ${trackingInfo.trackingNumber}`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * Confirm Delivery with Proof of Delivery (İşletme Teslim Alma)
+ */
+export async function confirmTeklifimOrderDelivery(
+  orderId: string,
+  userId: string,
+  proofData: {
+    receivedBy: string;
+    proofNote?: string;
+    proofPhotoUrl?: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId) {
+    throw new Error("Yalnızca alıcı işletme siparişi teslim aldığını bildirebilir.");
+  }
+
+  if (order.status === "completed" || order.status === "cancelled") {
+    throw new Error("Bu sipariş için teslim alma işlemi yapılamaz.");
+  }
+
+  if (!proofData.receivedBy || !proofData.receivedBy.trim()) {
+    throw new Error("Lütfen teslim alan kişi adını belirtin.");
+  }
+
+  const now = Date.now();
+  const deliveryProof: TeklifimDeliveryProof = {
+    deliveredAt: now,
+    receivedBy: proofData.receivedBy.trim(),
+    proofNote: proofData.proofNote?.trim(),
+    proofPhotoUrl: proofData.proofPhotoUrl?.trim(),
+  };
+
+  const historyItem = {
+    status: "delivered" as TeklifimOrderStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: `Teslim alındı. Teslim Alan: ${deliveryProof.receivedBy}${deliveryProof.proofNote ? ` Not: ${deliveryProof.proofNote}` : ""}`,
+  };
+
+  await docRef.update({
+    deliveryProof,
+    status: "delivered",
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  });
+
+  // Notify supplier
+  try {
+    await sendTeklifimNotification({
+      userId: order.supplierId,
+      title: "Sipariş Teslim Alındı",
+      message: `${order.businessName}, ${order.orderNumber} numaralı siparişi teslim aldığını bildirdi.`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * Complete Order (İşletme Siparişi Tamamlar & Onaylar)
+ */
+export async function completeTeklifimOrder(
+  orderId: string,
+  userId: string
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId) {
+    throw new Error("Yalnızca alıcı işletme siparişi tamamlayıp onaylayabilir.");
+  }
+
+  if (order.status === "completed") {
+    return order;
+  }
+  if (order.status === "cancelled") {
+    throw new Error("İptal edilmiş sipariş tamamlanamaz.");
+  }
+
+  const now = Date.now();
+  const historyItem = {
+    status: "completed" as TeklifimOrderStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: "Sipariş işletme tarafından eksiksiz onaylandı ve tamamlandı.",
+  };
+
+  await docRef.update({
+    status: "completed",
+    completedAt: now,
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  });
+
+  // Update request to completed as well
+  try {
+    await db
+      .collection("teklifim_requests")
+      .doc(order.requestId)
+      .update({ status: "completed", updatedAt: now });
+  } catch {}
+
+  // Increment completedDeals on supplier profile
+  try {
+    const sProfRef = db.collection("teklifim_profiles").doc(order.supplierId);
+    const sDoc = await sProfRef.get();
+    if (sDoc.exists) {
+      const deals = sDoc.data()?.completedDeals || 0;
+      await sProfRef.update({ completedDeals: deals + 1, updatedAt: now });
+    }
+  } catch {}
+
+  // Notify supplier
+  try {
+    await sendTeklifimNotification({
+      userId: order.supplierId,
+      title: "Tebrikler, Sipariş Başarıyla Tamamlandı!",
+      message: `${order.orderNumber} numaralı sipariş başarıyla tamamlandı. İşlem geçmişinize eklendi.`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * Cancel Order with strict timing checks (İptal)
+ */
+export async function cancelTeklifimOrder(
+  orderId: string,
+  userId: string,
+  cancelData: {
+    reason: string;
+    note?: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId && order.supplierId !== userId) {
+    throw new Error("Bu siparişi iptal etme yetkiniz yok.");
+  }
+
+  if (order.status === "completed") {
+    throw new Error("Tamamlanmış sipariş iptal edilemez.");
+  }
+  if (order.status === "cancelled") {
+    throw new Error("Sipariş zaten iptal edilmiştir.");
+  }
+  if (order.status === "shipped") {
+    throw new Error("Kargoya verilmiş sipariş doğrudan iptal edilemez. Lütfen anlaşmazlık bildiriniz.");
+  }
+
+  const now = Date.now();
+  const cancellation: TeklifimOrderCancellation = {
+    cancelledAt: now,
+    cancelledBy: userId,
+    reason: cancelData.reason as any,
+    note: cancelData.note?.trim(),
+  };
+
+  const historyItem = {
+    status: "cancelled" as TeklifimOrderStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: `Sipariş iptal edildi. Gerekçe: ${cancellation.reason}${cancellation.note ? ` - ${cancellation.note}` : ""}`,
+  };
+
+  await docRef.update({
+    cancellation,
+    status: "cancelled",
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  });
+
+  const isBusiness = order.businessId === userId;
+  const recipientId = isBusiness ? order.supplierId : order.businessId;
+  const senderName = isBusiness ? order.businessName : order.supplierName;
+
+  try {
+    await sendTeklifimNotification({
+      userId: recipientId,
+      title: "Sipariş İptal Edildi",
+      message: `${senderName}, ${order.orderNumber} numaralı siparişi iptal etti. Gerekçe: ${cancellation.reason}`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * File Order Dispute (Anlaşmazlık Bildir)
+ */
+export async function disputeTeklifimOrder(
+  orderId: string,
+  userId: string,
+  disputeData: {
+    reason: string;
+    description: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.businessId !== userId && order.supplierId !== userId) {
+    throw new Error("Bu sipariş için anlaşmazlık bildirme yetkiniz yok.");
+  }
+
+  if (order.status === "cancelled") {
+    throw new Error("İptal edilmiş sipariş için anlaşmazlık açılamaz.");
+  }
+
+  if (!disputeData.reason || !disputeData.reason.trim()) {
+    throw new Error("Lütfen anlaşmazlık nedenini seçin.");
+  }
+  if (!disputeData.description || !disputeData.description.trim()) {
+    throw new Error("Lütfen anlaşmazlık açıklamasını detaylı belirtin.");
+  }
+
+  const now = Date.now();
+  const dispute: TeklifimOrderDispute = {
+    disputedAt: now,
+    disputedBy: userId,
+    reason: disputeData.reason as any,
+    description: disputeData.description.trim(),
+  };
+
+  const historyItem = {
+    status: "disputed" as TeklifimOrderStatus,
+    changedBy: userId,
+    timestamp: now,
+    note: `Anlaşmazlık bildirildi. Neden: ${dispute.reason}. Açıklama: ${dispute.description}`,
+  };
+
+  await docRef.update({
+    dispute,
+    status: "disputed",
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  });
+
+  const isBusiness = order.businessId === userId;
+  const recipientId = isBusiness ? order.supplierId : order.businessId;
+  const senderName = isBusiness ? order.businessName : order.supplierName;
+
+  try {
+    await sendTeklifimNotification({
+      userId: recipientId,
+      title: "Sipariş Hakkında Anlaşmazlık Bildirildi",
+      message: `${senderName}, ${order.orderNumber} numaralı sipariş için anlaşmazlık bildirdi: ${dispute.reason}`,
+      link: `/teklifim-gelsin/orders/${order.id}`,
+    });
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+
+/**
+ * Admin Resolve Order Dispute (Admin Anlaşmazlık Çözümleme)
+ */
+export async function resolveTeklifimOrderDispute(
+  orderId: string,
+  adminUserId: string,
+  resolutionData: {
+    status: TeklifimOrderStatus;
+    resolutionNotes: string;
+  }
+): Promise<TeklifimOrder> {
+  const db = getDb();
+  const docRef = db.collection("teklifim_orders").doc(orderId);
+  const doc = await docRef.get();
+  if (!doc.exists) throw new Error("Sipariş bulunamadı.");
+
+  const order = doc.data() as TeklifimOrder;
+  if (order.status !== "disputed") {
+    throw new Error("Yalnızca anlaşmazlık aşamasındaki siparişler çözümlenebilir.");
+  }
+
+  const now = Date.now();
+  const updatedDispute: TeklifimOrderDispute = {
+    ...(order.dispute || {
+      disputedAt: now,
+      disputedBy: adminUserId,
+      reason: "other",
+      description: "Admin incelemesi",
+    }),
+    resolvedAt: now,
+    resolvedBy: adminUserId,
+    resolutionNotes: resolutionData.resolutionNotes.trim(),
+  };
+
+  const historyItem = {
+    status: resolutionData.status,
+    changedBy: adminUserId,
+    timestamp: now,
+    note: `Yönetici kararı: ${resolutionData.resolutionNotes}`,
+  };
+
+  const updatePayload: any = {
+    dispute: updatedDispute,
+    status: resolutionData.status,
+    statusHistory: [...(order.statusHistory || []), historyItem],
+    updatedAt: now,
+  };
+
+  if (resolutionData.status === "completed") {
+    updatePayload.completedAt = now;
+  }
+
+  await docRef.update(updatePayload);
+
+  // Notify both parties
+  try {
+    await Promise.all([
+      sendTeklifimNotification({
+        userId: order.businessId,
+        title: "Anlaşmazlık Yönetici Tarafından Karara Bağlandı",
+        message: `${order.orderNumber} numaralı siparişteki anlaşmazlık "${resolutionData.status}" olarak çözümlendi.`,
+        link: `/teklifim-gelsin/orders/${order.id}`,
+      }),
+      sendTeklifimNotification({
+        userId: order.supplierId,
+        title: "Anlaşmazlık Yönetici Tarafından Karara Bağlandı",
+        message: `${order.orderNumber} numaralı siparişteki anlaşmazlık "${resolutionData.status}" olarak çözümlendi.`,
+        link: `/teklifim-gelsin/orders/${order.id}`,
+      }),
+    ]);
+  } catch {}
+
+  const updatedDoc = await docRef.get();
+  return updatedDoc.data() as TeklifimOrder;
+}
+

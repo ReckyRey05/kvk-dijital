@@ -25,6 +25,7 @@ import {
   TrendingUp,
   Inbox,
   ShieldCheck,
+  ShoppingBag,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -61,6 +62,7 @@ export default function TeklifimDashboardPage() {
   // Quick Quote Modal State
   const [selectedReqForQuote, setSelectedReqForQuote] = useState<TeklifimRequest | null>(null);
   const [submittingQuote, setSubmittingQuote] = useState(false);
+  const [activeOrdersCount, setActiveOrdersCount] = useState<number>(0);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (currentUser) => {
@@ -139,6 +141,20 @@ export default function TeklifimDashboardPage() {
           }
         } catch {}
       }
+
+      // Fetch active orders count for both business and supplier
+      try {
+        const ordRes = await fetch("/api/teklifim-gelsin/orders", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (ordRes.ok) {
+          const ordData = await ordRes.json();
+          const actCount = (ordData.orders || []).filter((o: any) =>
+            ["preparing", "ready_for_dispatch", "shipped"].includes(o.status)
+          ).length;
+          setActiveOrdersCount(actCount);
+        }
+      } catch {}
     } catch (err: any) {
       setError(err.message || "Veriler yüklenemedi.");
     } finally {
@@ -261,7 +277,7 @@ export default function TeklifimDashboardPage() {
               </div>
 
               {/* ACTION-ORIENTED DECISION CARDS */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* CARD 1: INCOMING OFFERS */}
                 <div className="p-6 rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3">
                   <div className="flex items-center justify-between">
@@ -326,6 +342,30 @@ export default function TeklifimDashboardPage() {
                     Tedarikçi seçimi tamamlanmış ve doğrudan iletişime geçilmiş siparişler.
                   </p>
                 </div>
+
+                {/* CARD 4: ACTIVE ORDERS */}
+                <Link
+                  href="/teklifim-gelsin/orders"
+                  className="p-6 rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-3 hover:border-emerald-500 transition group block"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-emerald-600 transition">
+                      Aktif Siparişler
+                    </span>
+                    <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                      <ShoppingBag className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-slate-900 dark:text-white">
+                      {activeOrdersCount}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium">Süreçte</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Hazırlık, sevkiyat ve kargo aşamasındaki güncel tedarik siparişleriniz.
+                  </p>
+                </Link>
               </div>
 
               {/* REQUESTS LIST */}
@@ -482,6 +522,13 @@ export default function TeklifimDashboardPage() {
                     >
                       Verdiğim Teklifler ({myOffers.length})
                     </button>
+                    <Link
+                      href="/teklifim-gelsin/orders"
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm inline-flex items-center gap-1.5"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>Siparişler ({activeOrdersCount})</span>
+                    </Link>
                   </div>
                 </div>
 
