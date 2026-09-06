@@ -4,6 +4,9 @@ import {
   TeklifimOffer,
   TeklifimRequest,
   TeklifimProfile,
+  TEKLIFIM_CATEGORIES,
+  CATEGORY_DETAILS,
+  TURKEY_CITIES,
 } from "../../src/types/teklifimGelsin";
 
 console.log("▶ [TEKLIFIM GELSIN TEST] Starting Core Suite...");
@@ -158,5 +161,85 @@ assert.strictEqual(lifecycleRequest.selectedSupplierId, "sup_A");
 lifecycleRequest.status = "completed";
 assert.strictEqual(lifecycleRequest.status, "completed");
 console.log("    ✓ Request lifecycle state machine passed.");
+
+// =========================================================================
+// 4. Category Details & Meta Integrity Test
+// =========================================================================
+console.log("  - Testing Category Metadata Integrity...");
+assert.strictEqual(TEKLIFIM_CATEGORIES.length, 10, "Must have exactly 10 standard categories");
+for (const cat of TEKLIFIM_CATEGORIES) {
+  const details = CATEGORY_DETAILS[cat];
+  assert.ok(details, `Category '${cat}' must have rich details metadata`);
+  assert.ok(details.description.length > 5, `Description for '${cat}' must be informative`);
+  assert.ok(details.popularItems.length > 0, `Popular items for '${cat}' must not be empty`);
+}
+console.log("    ✓ Category metadata integrity verified.");
+
+// =========================================================================
+// 5. Supplier Feed Filtering Logic Test
+// =========================================================================
+console.log("  - Testing Supplier Feed Filtering & Search...");
+
+const openFeed: TeklifimRequest[] = [
+  {
+    ...lifecycleRequest,
+    id: "req_1",
+    title: "5000 Adet Pizza Kutusu",
+    category: "Ambalaj & Paketleme",
+    city: "İstanbul",
+  },
+  {
+    ...lifecycleRequest,
+    id: "req_2",
+    title: "20 Koli Toptan Çekirdek Kahve",
+    category: "Gıda & İçecek",
+    city: "İzmir",
+  },
+  {
+    ...lifecycleRequest,
+    id: "req_3",
+    title: "100 Adet Personel Önlüğü",
+    category: "Tekstil & İş Kıyafeti",
+    city: "Bursa",
+  },
+];
+
+function filterFeed(
+  items: TeklifimRequest[],
+  cat: string,
+  city: string,
+  search: string
+): TeklifimRequest[] {
+  return items.filter((req) => {
+    if (cat !== "Tümü" && req.category !== cat) return false;
+    if (city !== "Tümü" && req.city !== city) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      const match =
+        req.title.toLowerCase().includes(q) ||
+        req.category.toLowerCase().includes(q) ||
+        req.city.toLowerCase().includes(q);
+      if (!match) return false;
+    }
+    return true;
+  });
+}
+
+// Category filter
+const packagingOnly = filterFeed(openFeed, "Ambalaj & Paketleme", "Tümü", "");
+assert.strictEqual(packagingOnly.length, 1);
+assert.strictEqual(packagingOnly[0].id, "req_1");
+
+// City filter
+const izmirOnly = filterFeed(openFeed, "Tümü", "İzmir", "");
+assert.strictEqual(izmirOnly.length, 1);
+assert.strictEqual(izmirOnly[0].id, "req_2");
+
+// Search filter
+const coffeeSearch = filterFeed(openFeed, "Tümü", "Tümü", "kahve");
+assert.strictEqual(coffeeSearch.length, 1);
+assert.strictEqual(coffeeSearch[0].id, "req_2");
+
+console.log("    ✓ Supplier feed filtering passed.");
 
 console.log("✅ [TEKLIFIM GELSIN TEST] ALL SUITES PASSED SUCCESSFULLY!");

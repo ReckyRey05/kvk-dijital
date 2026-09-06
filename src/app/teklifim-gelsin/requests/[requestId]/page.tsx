@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -14,16 +14,17 @@ import {
   FileText,
   DollarSign,
   Phone,
-  Mail,
   MessageSquare,
   ShieldCheck,
   Award,
-  Sparkles,
   Zap,
   Send,
   X,
   ExternalLink,
   Check,
+  HelpCircle,
+  AlertCircle,
+  Share2,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -32,6 +33,10 @@ import {
   TeklifimOffer,
   TeklifimProfile,
 } from "@/types/teklifimGelsin";
+import { TeklifimThemeProvider } from "@/context/TeklifimThemeContext";
+import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
+import OfferComparisonGrid from "@/components/teklifimGelsin/OfferComparisonGrid";
+import SupplierQuoteModal from "@/components/teklifimGelsin/SupplierQuoteModal";
 
 export default function TeklifimRequestDetailPage({
   params,
@@ -50,32 +55,31 @@ export default function TeklifimRequestDetailPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Supplier Offer Form State
-  const [unitPrice, setUnitPrice] = useState("");
-  const [totalPrice, setTotalPrice] = useState("");
-  const [deliveryDays, setDeliveryDays] = useState("5");
-  const [minOrder, setMinOrder] = useState("");
-  const [offerDesc, setOfferDesc] = useState("");
-  const [submittingOffer, setSubmittingOffer] = useState(false);
-  const [offerSuccess, setOfferSuccess] = useState(false);
+  // Supplier Quote Modal
+  const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [submittingQuote, setSubmittingQuote] = useState(false);
 
-  // Business Modals
-  const [selectedOfferForDetail, setSelectedOfferForDetail] = useState<TeklifimOffer | null>(null);
+  // Business Action Modals
   const [contactModalOffer, setContactModalOffer] = useState<TeklifimOffer | null>(null);
   const [selectingOfferId, setSelectingOfferId] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsub = onAuthStateChanged(auth, async (currentUser) => {
       if (!currentUser) {
         router.push("/teklifim-gelsin/auth");
       } else {
         setUser(currentUser);
         const cached = localStorage.getItem(`teklifim_profile_${currentUser.uid}`);
-        if (cached) setProfile(JSON.parse(cached));
+        if (cached) {
+          try {
+            setProfile(JSON.parse(cached));
+          } catch {}
+        }
         await loadData(currentUser);
       }
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, [router, requestId]);
 
   const loadData = async (currentUser: any) => {
@@ -84,668 +88,424 @@ export default function TeklifimRequestDetailPage({
       setError("");
       const token = await currentUser.getIdToken();
 
-      // 1. Fetch Request Details
-      let currentRequest: TeklifimRequest | null = null;
-      try {
-        const rRes = await fetch(`/api/teklifim-gelsin/requests/${requestId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (rRes.ok) {
-          const rData = await rRes.json();
-          currentRequest = rData.request;
-        }
-      } catch {}
-
-      // Fallback: Client Firestore
-      if (!currentRequest) {
-        try {
-          const { db } = await import("@/lib/firebase/firestore");
-          const { doc, getDoc } = await import("firebase/firestore");
-          const snap = await getDoc(doc(db, "teklifim_requests", requestId));
-          if (snap.exists()) {
-            currentRequest = { id: snap.id, ...(snap.data() as any) };
-          }
-        } catch {}
+      // 1. Fetch Request
+      const rRes = await fetch(`/api/teklifim-gelsin/requests/${requestId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!rRes.ok) {
+        throw new Error("Talep bulunamadı veya erişim yetkiniz yok.");
       }
-
-      if (!currentRequest) {
-        throw new Error("Talep bulunamadı.");
-      }
-
+      const rData = await rRes.json();
+      const currentRequest: TeklifimRequest = rData.request;
       setRequest(currentRequest);
+
       const isOwner = currentRequest.businessId === currentUser.uid;
       setIsBusinessOwner(isOwner);
 
       // 2. Fetch Offers
-      let currentOffers: TeklifimOffer[] = [];
-      try {
-        const oRes = await fetch(`/api/teklifim-gelsin/requests/${requestId}/offers`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (oRes.ok) {
-          const oData = await oRes.json();
-          currentOffers = oData.offers || [];
-        }
-      } catch {}
-
-      // Fallback: Client Firestore
-      if (currentOffers.length === 0) {
-        try {
-          const { db } = await import("@/lib/firebase/firestore");
-          const { collection, query, where, getDocs } = await import("firebase/firestore");
-
-          if (isOwner) {
-            const snap = await getDocs(
-              query(collection(db, "teklifim_offers"), where("requestId", "==", requestId))
-            );
-            snap.forEach((d) => currentOffers.push(d.data() as TeklifimOffer));
-            // Client-side badge calculation
-            if (currentOffers.length > 0) {
-              const minP = Math.min(...currentOffers.map((o) => o.totalPrice || Infinity));
-              const minD = Math.min(...currentOffers.map((o) => o.deliveryDays || Infinity));
-              currentOffers = currentOffers.map((o) => ({
-                ...o,
-                isCheapest: o.totalPrice === minP,
-                isFastest: o.deliveryDays === minD,
-              }));
-            }
-          } else {
-            // Supplier only sees own offer
-            const snap = await getDocs(
-              query(
-                collection(db, "teklifim_offers"),
-                where("requestId", "==", requestId),
-                where("supplierId", "==", currentUser.uid)
-              )
-            );
-            snap.forEach((d) => currentOffers.push(d.data() as TeklifimOffer));
-          }
-        } catch {}
-      }
-
-      setOffers(currentOffers);
-
-      // If supplier already submitted an offer, populate form
-      if (!isOwner && currentOffers.length > 0) {
-        const myOff = currentOffers[0];
-        setUnitPrice(String(myOff.unitPrice || ""));
-        setTotalPrice(String(myOff.totalPrice || ""));
-        setDeliveryDays(String(myOff.deliveryDays || "5"));
-        setMinOrder(myOff.minOrderQuantity || "");
-        setOfferDesc(myOff.description || "");
+      const oRes = await fetch(`/api/teklifim-gelsin/requests/${requestId}/offers`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (oRes.ok) {
+        const oData = await oRes.json();
+        setOffers(oData.offers || []);
       }
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Veriler alınırken hata oluştu.");
+      setError(err.message || "Bilgiler alınamadı.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Supplier Submit Offer
-  const handleSupplierOfferSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSelectOffer = async (offerId: string) => {
     if (!user || !request) return;
-    setError("");
-    setSubmittingOffer(true);
-
-    const unitPriceNum = Number(unitPrice) || 0;
-    const totalPriceNum = Number(totalPrice) || unitPriceNum * request.quantity;
+    setSelectingOfferId(offerId);
 
     try {
       const token = await user.getIdToken();
-      const payload = {
-        requestId,
-        unitPrice: unitPriceNum,
-        totalPrice: totalPriceNum,
-        deliveryDays: Number(deliveryDays) || 5,
-        minOrderQuantity: minOrder,
-        description: offerDesc,
-        supplierName: profile?.companyName || "Tedarikçi Firma",
-        supplierCity: profile?.city || "İstanbul",
-        supplierPhone: profile?.phone || "",
-        supplierEmail: user.email || "",
-      };
+      const res = await fetch(`/api/teklifim-gelsin/offers/${offerId}/select`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ requestId: request.id }),
+      });
 
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || "Teklif seçilemedi.");
+      }
+
+      await loadData(user);
+    } catch (err: any) {
+      alert(err.message || "İşlem başarısız.");
+    } finally {
+      setSelectingOfferId(null);
+    }
+  };
+
+  const handleSupplierQuoteSubmit = async (quoteData: any) => {
+    if (!user || !request) return;
+    setSubmittingQuote(true);
+
+    try {
+      const token = await user.getIdToken();
       const res = await fetch(`/api/teklifim-gelsin/requests/${requestId}/offers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(quoteData),
       });
 
       if (!res.ok) {
-        const errJson = await res.json();
-        throw new Error(errJson.error || "Teklif iletilemedi.");
+        const d = await res.json();
+        throw new Error(d.error || "Teklif iletilemedi.");
       }
 
-      setOfferSuccess(true);
+      setShowQuoteModal(false);
       await loadData(user);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Teklif iletilirken bir hata oluştu.");
+      alert(err.message || "Hata oluştu.");
     } finally {
-      setSubmittingOffer(false);
+      setSubmittingQuote(false);
     }
   };
 
-  // Business Select Winning Offer
-  const handleSelectOffer = async (offer: TeklifimOffer) => {
-    if (!user || !request) return;
-    setSelectingOfferId(offer.id);
-
+  const handleShareLink = async () => {
+    if (typeof window === "undefined") return;
     try {
-      const token = await user.getIdToken();
-      const res = await fetch(`/api/teklifim-gelsin/offers/${offer.id}/select`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ requestId }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Seçim kaydedilemedi.");
-      }
-
-      // Update state
-      setRequest({
-        ...request,
-        selectedOfferId: offer.id,
-        selectedSupplierId: offer.supplierId,
-        status: "supplier_selected",
-      });
-
-      setOffers((prev) =>
-        prev.map((o) => (o.id === offer.id ? { ...o, status: "selected" } : o))
-      );
-
-      // Automatically open contact modal for the selected supplier
-      setContactModalOffer(offer);
-    } catch (err: any) {
-      console.error(err);
-      setError("Tedarikçi seçilirken bir hata oluştu.");
-    } finally {
-      setSelectingOfferId(null);
+      await navigator.clipboard.writeText(window.location.href);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch {
+      alert(window.location.href);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#070B14] flex items-center justify-center text-white">
-        <div className="w-8 h-8 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
+  // Timeline Steps Computation
+  const timelineSteps = [
+    { label: "Talep Yayınlandı", done: true },
+    {
+      label: "Toptancılara İletildi",
+      done: true,
+    },
+    {
+      label: "Teklifler Toplanıyor",
+      done: (request?.offerCount || 0) > 0 || request?.status !== "published",
+    },
+    {
+      label: "Karşılaştırılıyor",
+      done: (request?.offerCount || 0) > 0,
+    },
+    {
+      label: "Tedarikçi Seçildi",
+      done: request?.status === "supplier_selected" || request?.status === "completed",
+    },
+  ];
 
-  if (!request) {
-    return (
-      <div className="min-h-screen bg-[#070B14] flex flex-col items-center justify-center text-white p-6 space-y-4">
-        <h2 className="text-xl font-bold">Talep Bulunamadı</h2>
-        <Link
-          href="/teklifim-gelsin/dashboard"
-          className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold"
-        >
-          Panele Dön
-        </Link>
-      </div>
-    );
-  }
+  const mySubmittedOffer = !isBusinessOwner
+    ? offers.find((o) => o.supplierId === user?.uid)
+    : null;
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 selection:bg-emerald-500 selection:text-white font-sans antialiased pb-24">
-      {/* Top Header */}
-      <header className="border-b border-white/10 px-6 py-4 bg-[#070B14]/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link
-            href="/teklifim-gelsin/dashboard"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Panele Dön</span>
-          </Link>
+    <TeklifimThemeProvider>
+      <div className="min-h-screen bg-[#FBFBFD] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-500 selection:text-white transition-colors duration-200">
+        <TeklifimHeader />
 
-          <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-            {isBusinessOwner ? "Gelen Teklifler & Karşılaştırma" : "Tedarik Teklifi Ver"}
-          </span>
-        </div>
-      </header>
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+          {/* BACK & ACTIONS */}
+          <div className="flex items-center justify-between">
+            <Link
+              href="/teklifim-gelsin/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Panele Dön</span>
+            </Link>
 
-      {/* Main Container */}
-      <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        {/* Request Summary Banner */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-[#0E1626] border border-white/10 space-y-4 shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1.5">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                  {request.category}
-                </span>
-                <span className="text-slate-500">•</span>
-                <span
-                  className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
-                    request.status === "supplier_selected"
-                      ? "bg-teal-500/10 text-teal-400 border-teal-500/30"
-                      : request.offerCount > 0
-                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                      : "bg-amber-500/10 text-amber-400 border-amber-500/30"
-                  }`}
-                >
-                  {request.status === "supplier_selected"
-                    ? "Tedarikçi Seçildi"
-                    : request.offerCount > 0
-                    ? `${request.offerCount} Teklif Geldi`
-                    : "Teklif Bekleniyor"}
-                </span>
-              </div>
+            <button
+              onClick={handleShareLink}
+              className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E131F] text-slate-600 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>{copiedLink ? "Kopyalandı" : "Bağlantıyı Kopyala"}</span>
+            </button>
+          </div>
 
-              <h1 className="text-2xl sm:text-3xl font-black text-white">{request.title}</h1>
-              <p className="text-xs text-slate-400">
-                Talep Eden: <strong className="text-slate-200">{request.businessName}</strong> ({request.city})
+          {loading ? (
+            <div className="py-24 text-center space-y-3">
+              <div className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
+              <p className="text-xs uppercase tracking-wider font-bold text-slate-400">
+                Talep ve Teklifler Yükleniyor...
               </p>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 text-center min-w-[100px]">
-                <span className="text-[10px] text-slate-400 block font-medium">İstenen Miktar</span>
-                <strong className="text-base font-black text-white">{request.quantity} {request.unit}</strong>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/5 text-center min-w-[100px]">
-                <span className="text-[10px] text-slate-400 block font-medium">Teslim Süresi</span>
-                <strong className="text-base font-black text-white">{request.deliveryDays} Gün</strong>
-              </div>
+          ) : error || !request ? (
+            <div className="p-12 rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200 dark:border-slate-800 text-center space-y-4">
+              <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {error || "Talep Bulunamadı"}
+              </h3>
+              <Link
+                href="/teklifim-gelsin/dashboard"
+                className="inline-block px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold"
+              >
+                Kontrol Paneline Dön
+              </Link>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* ================= HEADER & TIMELINE ================= */}
+              <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200/90 dark:border-slate-800 shadow-xl space-y-6">
+                {/* STATUS & META */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800/80 pb-5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
+                      {request.category}
+                    </span>
+                    <span className="text-xs text-slate-400">
+                      Yayın Tarihi:{" "}
+                      {new Date(request.createdAt).toLocaleDateString("tr-TR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
 
-          {request.description && (
-            <div className="pt-3 border-t border-white/10 text-xs text-slate-300 leading-relaxed bg-white/[0.01] p-4 rounded-2xl">
-              <strong className="text-white block mb-1">Açıklama & Detaylar:</strong>
-              {request.description}
-            </div>
-          )}
-        </div>
+                  {request.status === "supplier_selected" ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-xs font-bold">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Tedarikçi Seçildi & Anlaşma Sağlandı</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                      <span>Teklifler Toplanıyor ({request.offerCount} Teklif)</span>
+                    </span>
+                  )}
+                </div>
 
-        {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
-            {error}
-          </div>
-        )}
+                {/* TITLE & DETAILS */}
+                <div className="space-y-3">
+                  <h1 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight">
+                    {request.title}
+                  </h1>
 
-        {/* ========================================================================= */}
-        {/* VIEW 1: BUSINESS OWNER — OFFERS COMPARISON VIEW                           */}
-        {/* ========================================================================= */}
-        {isBusinessOwner ? (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-white">Toptancı Teklifleri Karşılaştırma</h2>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Fiyat, teslimat süresi ve güven puanlarını inceleyerek en uygun tedarikçiyi belirleyin.
-                </p>
-              </div>
-              <span className="text-xs font-mono font-bold text-emerald-400">
-                {offers.length} Teklif
-              </span>
-            </div>
-
-            {offers.length === 0 ? (
-              <div className="p-12 rounded-3xl bg-white/[0.02] border border-white/10 text-center space-y-3">
-                <Clock className="w-10 h-10 text-amber-400 mx-auto animate-pulse" />
-                <h3 className="text-base font-bold text-white">Henüz teklif gelmedi</h3>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                  Talebiniz toptancı ağına iletildi. İlgili tedarikçiler fiyat teklifi verdikçe burada anında listelenecektir.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {offers.map((offer) => {
-                  const isSelected = offer.status === "selected" || request.selectedOfferId === offer.id;
-
-                  return (
-                    <div
-                      key={offer.id}
-                      className={`p-6 rounded-3xl border transition-all space-y-4 ${
-                        isSelected
-                          ? "bg-gradient-to-r from-emerald-950/40 to-[#0E1626] border-emerald-500 shadow-xl shadow-emerald-500/10"
-                          : "bg-[#0E1626] border-white/10 hover:border-white/20"
-                      }`}
-                    >
-                      {/* Card Top: Supplier Name + Badges */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white font-bold">
-                            <Truck className="w-5 h-5 text-emerald-400" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <Link
-                                href={`/teklifim-gelsin/suppliers/${offer.supplierId}`}
-                                className="text-base font-bold text-white hover:text-emerald-400 transition-colors"
-                              >
-                                {offer.supplierName}
-                              </Link>
-                              <span className="text-[10px] text-slate-400 font-mono">({offer.supplierCity})</span>
-                            </div>
-                            <span className="text-[11px] text-slate-400">
-                              Teklif Tarihi: {new Date(offer.createdAt).toLocaleDateString("tr-TR")}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Comparison Badges */}
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          {isSelected && (
-                            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1">
-                              <Check className="w-3.5 h-3.5" />
-                              <span>Seçilen Tedarikçi</span>
-                            </span>
-                          )}
-
-                          {offer.isCheapest && (
-                            <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                              <DollarSign className="w-3 h-3" />
-                              <span>En Ucuz</span>
-                            </span>
-                          )}
-
-                          {offer.isFastest && (
-                            <span className="px-2.5 py-1 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                              <Zap className="w-3 h-3" />
-                              <span>En Hızlı</span>
-                            </span>
-                          )}
-
-                          {offer.isBestValue && !offer.isCheapest && !offer.isFastest && (
-                            <span className="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                              <Sparkles className="w-3 h-3" />
-                              <span>En Uygun</span>
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Card Middle: Price, Delivery, Min Order */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-xs">
-                        <div>
-                          <span className="text-[10px] text-slate-400 block font-medium">Birim Fiyat</span>
-                          <strong className="text-sm font-bold text-white">
-                            {offer.unitPrice ? `${offer.unitPrice.toLocaleString("tr-TR")} TL` : "—"}
-                          </strong>
-                        </div>
-
-                        <div>
-                          <span className="text-[10px] text-slate-400 block font-medium">Toplam Tutar</span>
-                          <strong className="text-base font-black text-emerald-400">
-                            {offer.totalPrice?.toLocaleString("tr-TR")} TL
-                          </strong>
-                        </div>
-
-                        <div>
-                          <span className="text-[10px] text-slate-400 block font-medium">Teslim Süresi</span>
-                          <strong className="text-sm font-bold text-white">{offer.deliveryDays} Gün</strong>
-                        </div>
-
-                        <div>
-                          <span className="text-[10px] text-slate-400 block font-medium">Min Sipariş</span>
-                          <strong className="text-sm font-bold text-slate-300">
-                            {offer.minOrderQuantity || `${request.quantity} ${request.unit}`}
-                          </strong>
-                        </div>
-                      </div>
-
-                      {offer.description && (
-                        <p className="text-xs text-slate-300 bg-white/[0.01] p-3 rounded-xl border border-white/5">
-                          <strong className="text-slate-400">Tedarikçi Notu:</strong> {offer.description}
-                        </p>
-                      )}
-
-                      {/* Card Bottom: Action Buttons */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                        <Link
-                          href={`/teklifim-gelsin/suppliers/${offer.supplierId}`}
-                          className="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-medium"
-                        >
-                          <span>Firma Profilini İncele</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </Link>
-
-                        <div className="flex items-center gap-2.5">
-                          <button
-                            type="button"
-                            onClick={() => setContactModalOffer(offer)}
-                            className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                          >
-                            <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Tedarikçiyle İletişime Geç</span>
-                          </button>
-
-                          {!isSelected && (
-                            <button
-                              type="button"
-                              onClick={() => handleSelectOffer(offer)}
-                              disabled={selectingOfferId === offer.id}
-                              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-50"
-                            >
-                              {selectingOfferId === offer.id ? (
-                                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                              ) : (
-                                <>
-                                  <Award className="w-3.5 h-3.5" />
-                                  <span>Tedarikçiyi Seç</span>
-                                </>
-                              )}
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                  {/* SPECS BAR */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                        Talep Miktarı
+                      </span>
+                      <strong className="font-mono text-base text-slate-900 dark:text-white">
+                        {request.quantity} {request.unit}
+                      </strong>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        ) : (
-          /* ========================================================================= */
-          /* VIEW 2: SUPPLIER QUOTATION VIEW                                          */
-          /* ========================================================================= */
-          <div className="max-w-2xl mx-auto bg-[#0E1626] rounded-3xl border border-white/10 p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div className="border-b border-white/10 pb-4">
-              <span className="text-[11px] font-mono text-teal-400 font-bold uppercase tracking-wider block">
-                Fiyat Teklifi Sunumu
-              </span>
-              <h2 className="text-xl font-bold text-white mt-1">Bu Talebe Teklif Verin</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                İşletme şartlarınızı inceleyecek. Ticari gizliliğiniz korunur, teklifiniz diğer toptancılar tarafından görülemez.
-              </p>
-            </div>
 
-            {offerSuccess && (
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Teklifiniz başarıyla kaydedildi ve işletmeye iletildi. İstediğiniz zaman güncelleyebilirsiniz.</span>
-              </div>
-            )}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                        Teslimat Lokasyonu
+                      </span>
+                      <strong className="text-sm text-slate-900 dark:text-white truncate block">
+                        {request.city} {request.district ? `(${request.district})` : ""}
+                      </strong>
+                    </div>
 
-            <form onSubmit={handleSupplierOfferSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
-                    Birim Fiyat (TL)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={unitPrice}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setUnitPrice(val);
-                      if (val && request) {
-                        setTotalPrice((Number(val) * request.quantity).toFixed(2));
-                      }
-                    }}
-                    placeholder="0.00"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-teal-500"
-                  />
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                        İstenen Teslimat
+                      </span>
+                      <strong className="text-sm text-slate-900 dark:text-white">
+                        {request.deliveryDays} Gün İçinde
+                      </strong>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                      <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                        Talep Eden İşletme
+                      </span>
+                      <strong className="text-sm text-slate-900 dark:text-white truncate block">
+                        {request.businessName}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {request.description && (
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800/80 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <strong className="block text-slate-900 dark:text-white text-xs font-bold mb-1">
+                        Özel Şartlar ve Açıklama:
+                      </strong>
+                      {request.description}
+                    </div>
+                  )}
+
+                  {request.sampleRequired && (
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-800 dark:text-amber-300 text-xs font-semibold">
+                      <PackageCheck className="w-3.5 h-3.5" />
+                      <span>Bu talep için toplu sipariş öncesi fiziksel numune talep edilmektedir.</span>
+                    </div>
+                  )}
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
-                    Toplam Fiyat (TL) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={totalPrice}
-                    onChange={(e) => setTotalPrice(e.target.value)}
-                    placeholder="0.00"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-teal-500"
-                  />
+                {/* VISUAL TIMELINE COMPONENT */}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                  <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Süreç Zaman Akışı
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {timelineSteps.map((st, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-3 rounded-2xl border text-center transition-all ${
+                          st.done
+                            ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500/50 text-emerald-900 dark:text-emerald-200 font-bold"
+                            : "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60 font-medium"
+                        }`}
+                      >
+                        <div className="flex items-center justify-center mb-1">
+                          {st.done ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          ) : (
+                            <span className="w-3.5 h-3.5 rounded-full border border-slate-300 dark:border-slate-700 inline-block" />
+                          )}
+                        </div>
+                        <span className="text-[11px] block leading-tight">{st.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                {/* SUPPLIER ACTION BANNER (If supplier viewing) */}
+                {!isBusinessOwner && (
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900">
+                    <div>
+                      <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                        {mySubmittedOffer
+                          ? "Bu Talebe Daha Önce Teklif Verdiniz"
+                          : "Bu Talebe Henüz Teklif Vermediniz"}
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        {mySubmittedOffer
+                          ? `Verdiğiniz Tutar: ${mySubmittedOffer.totalPrice.toLocaleString("tr-TR")} ₺ (${mySubmittedOffer.deliveryDays} Gün)`
+                          : "Hemen fiyat ve teslimat sürenizi sunarak teklifinizi işletmeye iletin."}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setShowQuoteModal(true)}
+                      className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/25 transition-all cursor-pointer whitespace-nowrap"
+                    >
+                      {mySubmittedOffer ? "Teklifimi Güncelle" : "Hemen Teklif Ver"}
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
-                    Teslim Süresi (Gün) *
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    required
-                    value={deliveryDays}
-                    onChange={(e) => setDeliveryDays(e.target.value)}
-                    placeholder="5"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-teal-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-slate-300 block mb-1">
-                    Minimum Sipariş Şartı
-                  </label>
-                  <input
-                    type="text"
-                    value={minOrder}
-                    onChange={(e) => setMinOrder(e.target.value)}
-                    placeholder="Örn: 500 Adet veya 1 Koli"
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-teal-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">
-                  Açıklama & Teslimat Koşulları
-                </label>
-                <textarea
-                  rows={4}
-                  value={offerDesc}
-                  onChange={(e) => setOfferDesc(e.target.value)}
-                  placeholder="Kargo/nakliye durumu, kalite sertifikaları, faturalandırma şartları..."
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-teal-500 resize-none"
+              {/* ================= OFFERS SECTION ================= */}
+              <div className="space-y-4">
+                <OfferComparisonGrid
+                  offers={offers}
+                  selectedOfferId={request.selectedOfferId}
+                  isBusinessOwner={isBusinessOwner}
+                  onSelectOffer={handleSelectOffer}
+                  onOpenContact={(offer) => setContactModalOffer(offer)}
+                  selectingId={selectingOfferId}
                 />
               </div>
+            </>
+          )}
+        </main>
 
-              <div className="pt-2">
+        {/* SUPPLIER QUOTE MODAL */}
+        {showQuoteModal && request && (
+          <SupplierQuoteModal
+            request={request}
+            existingOffer={mySubmittedOffer}
+            onClose={() => setShowQuoteModal(false)}
+            onSubmit={handleSupplierQuoteSubmit}
+            submitting={submittingQuote}
+          />
+        )}
+
+        {/* BUSINESS CONTACT MODAL */}
+        {contactModalOffer && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm font-sans animate-fade-in-up">
+            <div className="w-full max-w-md rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200 dark:border-slate-800 shadow-2xl p-6 space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
+                    Doğrudan İletişim
+                  </span>
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
+                    {contactModalOffer.supplierName}
+                  </h3>
+                </div>
                 <button
-                  type="submit"
-                  disabled={submittingOffer}
-                  className="w-full py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  onClick={() => setContactModalOffer(null)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                 >
-                  {submittingOffer ? (
-                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      <span>{offers.length > 0 ? "Teklifi Güncelle" : "Teklifi Gönder"}</span>
-                    </>
-                  )}
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-            </form>
+
+              <div className="space-y-3">
+                <a
+                  href={`tel:${contactModalOffer.supplierPhone}`}
+                  className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-emerald-500 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Kurumsal Telefon</span>
+                      <strong className="text-sm font-mono text-slate-900 dark:text-white">
+                        {contactModalOffer.supplierPhone || "Belirtilmedi"}
+                      </strong>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    Ara →
+                  </span>
+                </a>
+
+                <a
+                  href={`https://wa.me/${(contactModalOffer.supplierPhone || "").replace(/\D/g, "")}?text=${encodeURIComponent(
+                    `Merhaba ${contactModalOffer.supplierName}, Teklifim Gelsin üzerinden "${request?.title}" talebimize verdiğiniz teklif ile ilgili iletişime geçiyorum.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 flex items-center justify-between hover:bg-emerald-100/60 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-emerald-700 dark:text-emerald-300 block font-semibold">
+                        Doğrudan WhatsApp
+                      </span>
+                      <strong className="text-sm font-bold text-emerald-900 dark:text-emerald-100">
+                        Sohbet Başlat
+                      </strong>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    Yaz →
+                  </span>
+                </a>
+              </div>
+
+              <div className="pt-2 text-center text-[11px] text-slate-400">
+                Teklifim Gelsin komisyonsuzdur. Sipariş şartlarını doğrudan görüşebilirsiniz.
+              </div>
+            </div>
           </div>
         )}
-      </main>
-
-      {/* Supplier Contact Modal (Business Action) */}
-      {contactModalOffer && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-md bg-[#0E1626] rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl border border-white/10">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase">Tedarikçi İletişim</span>
-                <h3 className="text-base font-bold text-white">{contactModalOffer.supplierName}</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setContactModalOffer(null)}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <Phone className="w-4 h-4 text-emerald-400" />
-                  <span>Telefon: <strong className="text-white">{contactModalOffer.supplierPhone || "Belirtilmedi"}</strong></span>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <Mail className="w-4 h-4 text-emerald-400" />
-                  <span>E-posta: <strong className="text-white">{contactModalOffer.supplierEmail || "Belirtilmedi"}</strong></span>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <MapPin className="w-4 h-4 text-emerald-400" />
-                  <span>Şehir: <strong className="text-white">{contactModalOffer.supplierCity}</strong></span>
-                </div>
-              </div>
-
-              {contactModalOffer.supplierPhone && (
-                <div className="grid grid-cols-2 gap-2 pt-2">
-                  <a
-                    href={`tel:${contactModalOffer.supplierPhone}`}
-                    className="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>Hemen Ara</span>
-                  </a>
-
-                  <a
-                    href={`https://wa.me/90${contactModalOffer.supplierPhone.replace(/[^0-9]/g, "").slice(-10)}?text=${encodeURIComponent(
-                      `Merhaba ${contactModalOffer.supplierName}, Teklifim Gelsin üzerinden "${request.title}" talebimize verdiğiniz teklif ile ilgili iletişime geçmek istiyorum.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="py-3 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>WhatsApp</span>
-                  </a>
-                </div>
-              )}
-            </div>
-
-            <div className="pt-2 border-t border-white/10 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setContactModalOffer(null)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                Kapat
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </TeklifimThemeProvider>
   );
 }
