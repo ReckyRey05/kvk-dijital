@@ -15,7 +15,9 @@ export default function ClientHeader() {
     pathname?.startsWith("/projeler/amasya-altin-safran") ||
     pathname?.startsWith("/projeler/damla-akarsu") ||
     pathname?.startsWith("/restoran") ||
-    pathname?.startsWith("/qr")
+    pathname?.startsWith("/qr") ||
+    pathname?.startsWith("/teklink") ||
+    pathname?.startsWith("/f/")
   ) {
     return null;
   }
