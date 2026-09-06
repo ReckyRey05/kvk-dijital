@@ -50,19 +50,58 @@ export default function TekLinkDashboard() {
     try {
       setLoading(true);
       const token = await currentUser.getIdToken();
-      const res = await fetch("/api/teklink/forms?stats=true", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      let loaded = false;
 
-      if (!res.ok) {
-        throw new Error("Veriler yüklenemedi");
+      // Tier 1: Try Server API
+      try {
+        const res = await fetch("/api/teklink/forms?stats=true", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const text = await res.text();
+        let data: any = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+
+        if (res.ok && data) {
+          setForms(data.forms || []);
+          setRecentSubmissions(data.recentSubmissions || []);
+          loaded = true;
+        }
+      } catch (apiErr) {
+        console.warn("Server dashboard load notice:", apiErr);
       }
 
-      const data = await res.json();
-      setForms(data.forms || []);
-      setRecentSubmissions(data.recentSubmissions || []);
+      // Tier 2: Client Firestore / Local Storage Fallback
+      if (!loaded) {
+        try {
+          const { db } = await import("@/lib/firebase/firestore");
+          const { collection, query, where, getDocs } = await import("firebase/firestore");
+          const q = query(collection(db, "teklink_forms"), where("tenantId", "==", currentUser.uid));
+          const snap = await getDocs(q);
+          const cForms: TekLinkForm[] = [];
+          snap.forEach((d) => cForms.push({ id: d.id, ...(d.data() as any) }));
+          if (cForms.length > 0) {
+            setForms(cForms.sort((a, b) => b.createdAt - a.createdAt));
+            loaded = true;
+          }
+        } catch (dbErr) {
+          console.warn("Client Firestore read notice:", dbErr);
+        }
+
+        if (!loaded) {
+          try {
+            const localKey = `teklink_forms_${currentUser.uid}`;
+            const localForms = JSON.parse(localStorage.getItem(localKey) || "[]");
+            setForms(localForms);
+          } catch {}
+        }
+      }
     } catch (err: any) {
       console.error(err);
       setError("Panel verileri alınırken bir hata oluştu.");

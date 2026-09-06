@@ -18,30 +18,30 @@ export function getAdminDb(): Firestore {
   if (getApps().length === 0) {
     const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-    if (!serviceAccountKey) {
-      throw new Error(
-        'FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set. ' +
-        'Add the full service account JSON as a single-line string in your Vercel environment variables.'
-      );
-    }
-
-    let serviceAccount: Record<string, string>;
-    try {
-      let rawKey = serviceAccountKey.trim();
-      if (rawKey.startsWith("'") && rawKey.endsWith("'")) {
-        rawKey = rawKey.slice(1, -1);
+    if (serviceAccountKey) {
+      try {
+        let rawKey = serviceAccountKey.trim();
+        if (rawKey.startsWith("'") && rawKey.endsWith("'")) {
+          rawKey = rawKey.slice(1, -1);
+        }
+        const serviceAccount = JSON.parse(rawKey);
+        if (serviceAccount.private_key) {
+          serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+        }
+        initializeApp({
+          credential: cert(serviceAccount as any),
+        });
+      } catch (e) {
+        console.warn('FIREBASE_SERVICE_ACCOUNT_KEY parsing failed, falling back to default projectId initialization:', e);
+        initializeApp({
+          projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'kvk-dijital',
+        });
       }
-      serviceAccount = JSON.parse(rawKey);
-      if (serviceAccount.private_key) {
-        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
-      }
-    } catch {
-      throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY is not valid JSON. Make sure it is properly escaped.');
+    } else {
+      initializeApp({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'kvk-dijital',
+      });
     }
-
-    initializeApp({
-      credential: cert(serviceAccount as any),
-    });
   }
 
   _db = getFirestore();

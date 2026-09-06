@@ -32,16 +32,54 @@ export default function PublicTekLinkFormPage() {
     const loadForm = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/teklink/public/${slug}`);
-        if (!res.ok) {
+        let loadedForm: any = null;
+
+        // Tier 1: Try Server API
+        try {
+          const res = await fetch(`/api/teklink/public/${slug}`);
+          const text = await res.text();
+          const data = text ? JSON.parse(text) : null;
+          if (res.ok && data?.form) {
+            loadedForm = data.form;
+          }
+        } catch (apiErr) {
+          console.warn("Public form server API notice:", apiErr);
+        }
+
+        // Tier 2: Client Firestore fallback
+        if (!loadedForm) {
+          try {
+            const { db } = await import("@/lib/firebase/firestore");
+            const { collection, query, where, getDocs } = await import("firebase/firestore");
+            const q = query(collection(db, "teklink_forms"), where("slug", "==", slug.toLowerCase().trim()));
+            const snap = await getDocs(q);
+            if (!snap.empty) {
+              const d = snap.docs[0].data();
+              if (d.isActive) {
+                loadedForm = {
+                  slug: d.slug,
+                  title: d.title,
+                  description: d.description || "",
+                  businessName: d.businessName || "İşletme",
+                  logoUrl: d.logoUrl || "",
+                  fields: d.fields || [],
+                };
+              }
+            }
+          } catch (dbErr) {
+            console.warn("Client Firestore public form lookup notice:", dbErr);
+          }
+        }
+
+        if (!loadedForm) {
           throw new Error("Form bulunamadı veya bağlantı süresi dolmuş.");
         }
-        const data = await res.json();
-        setForm(data.form);
+
+        setForm(loadedForm);
 
         // Initialize default answers
         const initialAnswers: Record<string, any> = {};
-        data.form.fields.forEach((field: TekLinkField) => {
+        loadedForm.fields.forEach((field: TekLinkField) => {
           if (field.type === "checkbox") {
             initialAnswers[field.id] = false;
           } else {
@@ -111,18 +149,80 @@ export default function PublicTekLinkFormPage() {
     setSubmitting(true);
 
     try {
-      const res = await fetch(`/api/teklink/submit/${slug}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          answers,
-          files: fileAttachments,
-        }),
-      });
+      let sent = false;
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Gönderim başarısız oldu.");
+      // Tier 1: Try Server API
+      try {
+        const res = await fetch(`/api/teklink/submit/${slug}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            answers,
+            files: fileAttachments,
+          }),
+        });
+
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        if (res.ok && data?.success) {
+          sent = true;
+        }
+      } catch (apiErr) {
+        console.warn("Public form submit API notice:", apiErr);
+      }
+
+      // Tier 2: Client Firestore direct submission fallback
+      if (!sent) {
+        try {
+          const { db } = await import("@/lib/firebase/firestore");
+          const { collection, addDoc, query, where, getDocs, doc, updateDoc, increment } = await import("firebase/firestore");
+
+          let senderSummary = "Müşteri Yanıtı";
+          const emailField = form.fields.find((f) => f.type === "email");
+          const phoneField = form.fields.find((f) => f.type === "phone");
+          const nameField = form.fields.find((f) => f.label.toLowerCase().includes("ad") || f.label.toLowerCase().includes("isim"));
+
+          if (nameField && answers[nameField.id]) {
+            senderSummary = String(answers[nameField.id]);
+            if (phoneField && answers[phoneField.id]) {
+              senderSummary += ` (${answers[phoneField.id]})`;
+            }
+          } else if (phoneField && answers[phoneField.id]) {
+            senderSummary = String(answers[phoneField.id]);
+          } else if (emailField && answers[emailField.id]) {
+            senderSummary = String(answers[emailField.id]);
+          }
+
+          // Lookup formDoc to get formId and tenantId
+          let formId = "";
+          let tenantId = "";
+          const formQ = query(collection(db, "teklink_forms"), where("slug", "==", slug.toLowerCase().trim()));
+          const formSnap = await getDocs(formQ);
+          if (!formSnap.empty) {
+            formId = formSnap.docs[0].id;
+            tenantId = formSnap.docs[0].data().tenantId || "";
+            // Increment count
+            updateDoc(doc(db, "teklink_forms", formId), { responseCount: increment(1) }).catch(() => {});
+          }
+
+          await addDoc(collection(db, "teklink_submissions"), {
+            formId,
+            tenantId,
+            formTitle: form.title,
+            answers,
+            files: fileAttachments || [],
+            senderSummary,
+            createdAt: Date.now(),
+          });
+
+          sent = true;
+        } catch (dbErr) {
+          console.warn("Client Firestore direct submit notice:", dbErr);
+        }
+      }
+
+      if (!sent) {
+        throw new Error("Form iletilemedi. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.");
       }
 
       setSubmitted(true);
