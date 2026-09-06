@@ -42,12 +42,15 @@ export default function NewTekLinkFormPage() {
   const [createdSlug, setCreatedSlug] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
 
+  const [authLoading, setAuthLoading] = useState(true);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push("/teklink");
       } else {
         setUser(currentUser);
+        setAuthLoading(false);
       }
     });
     return () => unsubscribe();
@@ -134,6 +137,7 @@ export default function NewTekLinkFormPage() {
 
     if (!title.trim()) {
       setError("Lütfen formunuza bir başlık verin.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
@@ -142,10 +146,16 @@ export default function NewTekLinkFormPage() {
       return;
     }
 
+    const currentUser = user || auth.currentUser;
+    if (!currentUser) {
+      setError("Oturumunuz bulunamadı. Lütfen önce giriş yapın.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const token = await user.getIdToken();
+      const token = await currentUser.getIdToken(true);
       const res = await fetch("/api/teklink/forms", {
         method: "POST",
         headers: {
@@ -155,6 +165,7 @@ export default function NewTekLinkFormPage() {
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim(),
+          businessName: currentUser.displayName || currentUser.email?.split("@")[0] || "İşletme",
           fields,
         }),
       });
@@ -165,14 +176,24 @@ export default function NewTekLinkFormPage() {
       }
 
       setCreatedSlug(data.form.slug);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: any) {
-      setError(err.message || "Bir hata oluştu.");
+      console.error("Form creation error:", err);
+      setError(err.message || "Form oluşturulurken bir hata oluştu.");
     } finally {
       setLoading(false);
     }
   };
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://kvkdijitalcozumler.com";
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#090D16] flex items-center justify-center text-white">
+        <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#090D16] text-white font-sans selection:bg-blue-600 pb-20">
@@ -421,8 +442,15 @@ export default function NewTekLinkFormPage() {
               </div>
             </div>
 
+            {/* Error right above the button so scrolled users immediately see feedback */}
+            {error && (
+              <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                {error}
+              </div>
+            )}
+
             {/* Save & Generate TekLink CTA */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
