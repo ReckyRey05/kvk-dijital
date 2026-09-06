@@ -19,7 +19,8 @@ import {
   AlertCircle,
   ToggleLeft,
   ToggleRight,
-  Share2
+  Share2,
+  Trash2
 } from "lucide-react";
 import { TekLinkForm, TekLinkSubmission } from "@/types/teklink";
 
@@ -31,6 +32,8 @@ export default function TekLinkDashboard() {
   const [recentSubmissions, setRecentSubmissions] = useState<TekLinkSubmission[]>([]);
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [formToDelete, setFormToDelete] = useState<TekLinkForm | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://kvkdijitalcozumler.com";
 
@@ -143,6 +146,56 @@ export default function TekLinkDashboard() {
   const handleSignOut = async () => {
     await signOut(auth);
     router.push("/teklink");
+  };
+
+  const confirmDeleteForm = async () => {
+    if (!formToDelete || !user) return;
+    setDeleting(true);
+
+    try {
+      const token = await user.getIdToken();
+
+      // 1. Try Server API delete
+      try {
+        await fetch(`/api/teklink/forms/${formToDelete.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (apiErr) {
+        console.warn("Server API delete notice:", apiErr);
+      }
+
+      // 2. Client Firestore delete
+      try {
+        const { db } = await import("@/lib/firebase/firestore");
+        const { doc, deleteDoc, collection, query, where, getDocs } = await import("firebase/firestore");
+
+        await deleteDoc(doc(db, "teklink_forms", formToDelete.id));
+
+        // Delete associated submissions
+        const subQ = query(collection(db, "teklink_submissions"), where("formId", "==", formToDelete.id));
+        const subSnap = await getDocs(subQ);
+        subSnap.forEach((d) => deleteDoc(d.ref));
+      } catch (dbErr) {
+        console.warn("Client Firestore delete notice:", dbErr);
+      }
+
+      // 3. LocalStorage clean
+      try {
+        const localKey = `teklink_forms_${user.uid}`;
+        const existing = JSON.parse(localStorage.getItem(localKey) || "[]");
+        localStorage.setItem(localKey, JSON.stringify(existing.filter((f: any) => f.id !== formToDelete.id)));
+      } catch {}
+
+      // Update state
+      setForms((prev) => prev.filter((f) => f.id !== formToDelete.id));
+      setFormToDelete(null);
+    } catch (err: any) {
+      console.error("Delete error:", err);
+      setError("Form silinirken bir hata oluştu.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const totalResponses = forms.reduce((acc, f) => acc + (f.responseCount || 0), 0);
@@ -331,6 +384,15 @@ export default function TekLinkDashboard() {
                         <span>Cevaplar ({form.responseCount || 0})</span>
                         <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                       </Link>
+
+                      {/* Delete Form Button */}
+                      <button
+                        onClick={() => setFormToDelete(form)}
+                        className="p-2.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-colors cursor-pointer"
+                        title="Formu Sil"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 );
@@ -378,6 +440,51 @@ export default function TekLinkDashboard() {
           </div>
         )}
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {formToDelete && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white/10">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-white">Formu Silmek İstiyor musunuz?</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                <strong className="text-white">"{formToDelete.title}"</strong> formu ve bu forma ait tüm müşteri cevapları kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setFormToDelete(null)}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                İptal
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmDeleteForm}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? (
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Evet, Formu Sil</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

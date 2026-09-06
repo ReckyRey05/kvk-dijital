@@ -19,7 +19,8 @@ import {
   Inbox,
   X,
   Eye,
-  FileCheck
+  FileCheck,
+  Trash2
 } from "lucide-react";
 import { TekLinkForm, TekLinkSubmission } from "@/types/teklink";
 
@@ -35,6 +36,8 @@ export default function FormResponsesPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<TekLinkSubmission | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://kvkdijitalcozumler.com";
 
@@ -167,6 +170,53 @@ export default function FormResponsesPage() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const confirmDeleteForm = async () => {
+    if (!form || !user) return;
+    setDeleting(true);
+
+    try {
+      const token = await user.getIdToken();
+
+      // 1. Try Server API delete
+      try {
+        await fetch(`/api/teklink/forms/${form.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (apiErr) {
+        console.warn("Server API delete notice in responses:", apiErr);
+      }
+
+      // 2. Client Firestore delete
+      try {
+        const { db } = await import("@/lib/firebase/firestore");
+        const { doc, deleteDoc, collection, query, where, getDocs } = await import("firebase/firestore");
+
+        await deleteDoc(doc(db, "teklink_forms", form.id));
+
+        // Delete associated submissions
+        const subQ = query(collection(db, "teklink_submissions"), where("formId", "==", form.id));
+        const subSnap = await getDocs(subQ);
+        subSnap.forEach((d) => deleteDoc(d.ref));
+      } catch (dbErr) {
+        console.warn("Client Firestore delete notice in responses:", dbErr);
+      }
+
+      // 3. LocalStorage clean
+      try {
+        const localKey = `teklink_forms_${user.uid}`;
+        const existing = JSON.parse(localStorage.getItem(localKey) || "[]");
+        localStorage.setItem(localKey, JSON.stringify(existing.filter((f: any) => f.id !== form.id)));
+      } catch {}
+
+      router.push("/teklink/dashboard");
+    } catch (err: any) {
+      console.error("Delete error:", err);
+      setError("Form silinirken bir hata oluştu.");
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#090D16] flex items-center justify-center text-white">
@@ -189,15 +239,26 @@ export default function FormResponsesPage() {
           </Link>
 
           {form && (
-            <button
-              onClick={copyLink}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                isCopied ? "bg-emerald-600 text-white" : "bg-blue-600 text-white hover:bg-blue-500"
-              }`}
-            >
-              {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{isCopied ? "Kopyalandı" : "Linki Kopyala"}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={copyLink}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isCopied ? "bg-emerald-600 text-white" : "bg-blue-600 text-white hover:bg-blue-500"
+                }`}
+              >
+                {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{isCopied ? "Kopyalandı" : "Linki Kopyala"}</span>
+              </button>
+
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Formu Sil"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Formu Sil</span>
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -378,6 +439,51 @@ export default function FormResponsesPage() {
                 className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-colors cursor-pointer"
               >
                 Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Form Confirmation Modal */}
+      {showDeleteModal && form && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white/10">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-bold text-white">Formu Silmek İstiyor musunuz?</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                <strong className="text-white">"{form.title}"</strong> formu ve bu forma ait tüm müşteri cevapları kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                İptal
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmDeleteForm}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? (
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Evet, Formu Sil</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
