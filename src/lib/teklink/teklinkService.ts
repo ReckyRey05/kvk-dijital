@@ -157,7 +157,7 @@ export async function updateTenantForm(
 }
 
 /**
- * Delete a form ensuring tenant ownership
+ * Delete a form ensuring tenant ownership and cascade delete its submissions
  */
 export async function deleteTenantForm(tenantId: string, formId: string): Promise<boolean> {
   const db = getDb();
@@ -168,6 +168,86 @@ export async function deleteTenantForm(tenantId: string, formId: string): Promis
   if (doc.data()?.tenantId !== tenantId) return false;
 
   await formRef.delete();
+
+  // Cascade delete submissions for this form
+  try {
+    const subsSnap = await db
+      .collection("teklink_submissions")
+      .where("formId", "==", formId)
+      .get();
+    if (!subsSnap.empty) {
+      const batch = db.batch();
+      subsSnap.forEach((sDoc) => batch.delete(sDoc.ref));
+      await batch.commit();
+    }
+  } catch (subErr) {
+    console.warn("Notice cascade deleting submissions:", subErr);
+  }
+
+  return true;
+}
+
+/**
+ * Delete ALL forms and their submissions for a specific tenant
+ */
+export async function deleteAllTenantForms(tenantId: string): Promise<boolean> {
+  const db = getDb();
+
+  // 1. Delete all forms
+  const formsSnap = await db
+    .collection("teklink_forms")
+    .where("tenantId", "==", tenantId)
+    .get();
+
+  if (!formsSnap.empty) {
+    const batch = db.batch();
+    formsSnap.forEach((fDoc) => batch.delete(fDoc.ref));
+    await batch.commit();
+  }
+
+  // 2. Delete all submissions
+  const subsSnap = await db
+    .collection("teklink_submissions")
+    .where("tenantId", "==", tenantId)
+    .get();
+
+  if (!subsSnap.empty) {
+    const batch = db.batch();
+    subsSnap.forEach((sDoc) => batch.delete(sDoc.ref));
+    await batch.commit();
+  }
+
+  return true;
+}
+
+/**
+ * Delete a single submission ensuring tenant ownership
+ */
+export async function deleteTenantSubmission(tenantId: string, submissionId: string): Promise<boolean> {
+  const db = getDb();
+  const subRef = db.collection("teklink_submissions").doc(submissionId);
+  const doc = await subRef.get();
+
+  if (!doc.exists) return false;
+  const subData = doc.data();
+  if (subData?.tenantId !== tenantId) return false;
+
+  await subRef.delete();
+
+  // Decrement response count on form if form exists
+  if (subData?.formId) {
+    try {
+      const formRef = db.collection("teklink_forms").doc(subData.formId);
+      const formDoc = await formRef.get();
+      if (formDoc.exists) {
+        const curCount = formDoc.data()?.responseCount || 1;
+        await formRef.update({
+          responseCount: Math.max(0, curCount - 1),
+        });
+      }
+    } catch {}
+  }
+
   return true;
 }
 

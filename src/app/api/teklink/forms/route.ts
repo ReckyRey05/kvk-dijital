@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyTekLinkTenant } from "@/lib/teklink/teklinkAuth";
-import { getTenantForms, createTekLinkForm, getTenantDashboardStats, getOrCreateTenant } from "@/lib/teklink/teklinkService";
+import { getTenantForms, createTekLinkForm, getTenantDashboardStats, getOrCreateTenant, deleteAllTenantForms } from "@/lib/teklink/teklinkService";
 
 export async function GET(req: Request) {
   try {
@@ -56,5 +56,20 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("TekLink POST form error:", err);
     return NextResponse.json({ error: "Form oluşturulurken bir hata oluştu." }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const user = await verifyTekLinkTenant(req);
+    if (!user) {
+      return NextResponse.json({ error: "Yetkisiz erişim. Lütfen giriş yapın." }, { status: 401 });
+    }
+
+    await deleteAllTenantForms(user.uid);
+    return NextResponse.json({ success: true, message: "Tüm formlar başarıyla silindi." });
+  } catch (err: any) {
+    console.error("TekLink DELETE all forms error:", err);
+    return NextResponse.json({ error: "Formlar silinirken bir hata oluştu." }, { status: 500 });
   }
 }

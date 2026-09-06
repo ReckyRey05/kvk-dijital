@@ -33,6 +33,7 @@ export default function TekLinkDashboard() {
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [formToDelete, setFormToDelete] = useState<TekLinkForm | null>(null);
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://kvkdijitalcozumler.com";
@@ -198,6 +199,58 @@ export default function TekLinkDashboard() {
     }
   };
 
+  const confirmDeleteAllForms = async () => {
+    if (!user) return;
+    setDeleting(true);
+
+    try {
+      const token = await user.getIdToken();
+
+      // 1. Try Server API delete all
+      try {
+        await fetch("/api/teklink/forms", {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (apiErr) {
+        console.warn("Server API delete all forms notice:", apiErr);
+      }
+
+      // 2. Client Firestore delete all for this tenant
+      try {
+        const { db } = await import("@/lib/firebase/firestore");
+        const { collection, query, where, getDocs, deleteDoc } = await import("firebase/firestore");
+
+        // Delete all forms
+        const formsQ = query(collection(db, "teklink_forms"), where("tenantId", "==", user.uid));
+        const formsSnap = await getDocs(formsQ);
+        formsSnap.forEach((d) => deleteDoc(d.ref));
+
+        // Delete all submissions
+        const subsQ = query(collection(db, "teklink_submissions"), where("tenantId", "==", user.uid));
+        const subsSnap = await getDocs(subsQ);
+        subsSnap.forEach((d) => deleteDoc(d.ref));
+      } catch (dbErr) {
+        console.warn("Client Firestore delete all notice:", dbErr);
+      }
+
+      // 3. Clean localStorage
+      try {
+        localStorage.removeItem(`teklink_forms_${user.uid}`);
+      } catch {}
+
+      // Update state
+      setForms([]);
+      setRecentSubmissions([]);
+      setShowDeleteAllModal(false);
+    } catch (err: any) {
+      console.error("Delete all error:", err);
+      setError("Bütün formlar silinirken bir hata oluştu.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const totalResponses = forms.reduce((acc, f) => acc + (f.responseCount || 0), 0);
   const activeLinksCount = forms.filter((f) => f.isActive).length;
 
@@ -272,22 +325,34 @@ export default function TekLinkDashboard() {
 
         {/* Forms Section */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-white">Formlarınız ve TekLinkleriniz</h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Müşterilerinize göndermek için ilgili formun linkini kopyalayın.
+                Müşterilerinize göndermek için ilgili formun linkini kopyalayın veya formu yönetin.
               </p>
             </div>
 
             {forms.length > 0 && (
-              <Link
-                href="/teklink/forms/new"
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Form Ekle</span>
-              </Link>
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteAllModal(true)}
+                  className="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/20 hover:border-rose-500/40 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Tüm formları ve gelen cevapları topluca sil"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Bütün Formları Sil</span>
+                </button>
+
+                <Link
+                  href="/teklink/forms/new"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300 px-3.5 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Yeni Form Ekle</span>
+                </Link>
+              </div>
             )}
           </div>
 
@@ -385,13 +450,14 @@ export default function TekLinkDashboard() {
                         <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                       </Link>
 
-                      {/* Delete Form Button */}
+                      {/* Delete Specific Form Button */}
                       <button
                         onClick={() => setFormToDelete(form)}
-                        className="p-2.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-white/10 hover:border-rose-500/30 transition-colors cursor-pointer"
-                        title="Formu Sil"
+                        className="px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/20 hover:border-rose-500/40 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+                        title="Bu Formu Sil"
                       >
                         <Trash2 className="w-4 h-4" />
+                        <span className="hidden sm:inline">Formu Sil</span>
                       </button>
                     </div>
                   </div>
@@ -441,18 +507,21 @@ export default function TekLinkDashboard() {
         )}
       </main>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Specific Form Confirmation Modal */}
       {formToDelete && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white/10">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto border border-rose-500/20">
               <Trash2 className="w-6 h-6" />
             </div>
 
             <div className="text-center space-y-2">
-              <h3 className="text-lg font-bold text-white">Formu Silmek İstiyor musunuz?</h3>
+              <span className="text-[11px] font-mono font-bold text-rose-400 uppercase tracking-wider block">
+                Spesifik Form Silme
+              </span>
+              <h3 className="text-lg font-bold text-white">Bu Formu Silmek İstiyor musunuz?</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                <strong className="text-white">"{formToDelete.title}"</strong> formu ve bu forma ait tüm müşteri cevapları kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+                <strong className="text-white">"{formToDelete.title}"</strong> formunu ve bu forma ait tüm müşteri cevaplarını silmek üzeresiniz. Sadece bu spesifik form silinecektir. Bu işlem geri alınamaz.
               </p>
             </div>
 
@@ -463,7 +532,7 @@ export default function TekLinkDashboard() {
                 disabled={deleting}
                 className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
               >
-                İptal
+                Vazgeç
               </button>
 
               <button
@@ -478,6 +547,54 @@ export default function TekLinkDashboard() {
                   <>
                     <Trash2 className="w-4 h-4" />
                     <span>Evet, Formu Sil</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete ALL Forms Confirmation Modal */}
+      {showDeleteAllModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-rose-500/30">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto border border-rose-500/20">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <span className="text-[11px] font-mono font-bold text-rose-400 uppercase tracking-wider block">
+                Toplu Form Temizleme
+              </span>
+              <h3 className="text-lg font-bold text-white">Bütün Formları Silmek İstiyor musunuz?</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Hesabınızdaki <strong className="text-white">toplam {forms.length} adet formun tamamı</strong> ve bu formlara ait tüm müşteri yanıtları kalıcı olarak silinecektir. Bu işlem geri alınamaz!
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteAllModal(false)}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Vazgeç
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmDeleteAllForms}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? (
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Evet, Bütün Formları Sil</span>
                   </>
                 )}
               </button>

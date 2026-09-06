@@ -37,6 +37,7 @@ export default function FormResponsesPage() {
   const [isCopied, setIsCopied] = useState(false);
   const [error, setError] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [submissionToDelete, setSubmissionToDelete] = useState<TekLinkSubmission | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const siteUrl = typeof window !== "undefined" ? window.location.origin : "https://kvkdijitalcozumler.com";
@@ -217,6 +218,57 @@ export default function FormResponsesPage() {
     }
   };
 
+  const confirmDeleteSubmission = async () => {
+    if (!submissionToDelete || !user) return;
+    setDeleting(true);
+
+    try {
+      const token = await user.getIdToken();
+
+      // 1. Server API delete
+      try {
+        await fetch(`/api/teklink/forms/${form?.id || formId}/responses?subId=${submissionToDelete.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch (apiErr) {
+        console.warn("Server API delete submission notice:", apiErr);
+      }
+
+      // 2. Client Firestore delete
+      try {
+        const { db } = await import("@/lib/firebase/firestore");
+        const { doc, deleteDoc, updateDoc } = await import("firebase/firestore");
+
+        await deleteDoc(doc(db, "teklink_submissions", submissionToDelete.id));
+
+        if (form) {
+          const formRef = doc(db, "teklink_forms", form.id);
+          await updateDoc(formRef, {
+            responseCount: Math.max(0, (form.responseCount || 1) - 1),
+          }).catch(() => {});
+        }
+      } catch (dbErr) {
+        console.warn("Client Firestore delete submission notice:", dbErr);
+      }
+
+      // Update state
+      setSubmissions((prev) => prev.filter((s) => s.id !== submissionToDelete.id));
+      if (form) {
+        setForm({ ...form, responseCount: Math.max(0, (form.responseCount || 1) - 1) });
+      }
+      if (selectedSubmission?.id === submissionToDelete.id) {
+        setSelectedSubmission(null);
+      }
+      setSubmissionToDelete(null);
+    } catch (err: any) {
+      console.error("Delete submission error:", err);
+      setError("Cevap silinirken bir hata oluştu.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#090D16] flex items-center justify-center text-white">
@@ -349,6 +401,14 @@ export default function FormResponsesPage() {
                     <Eye className="w-4 h-4" />
                     <span>Cevapları İncele</span>
                   </button>
+
+                  <button
+                    onClick={() => setSubmissionToDelete(sub)}
+                    className="p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/20 hover:border-rose-500/40 transition-colors cursor-pointer"
+                    title="Bu Yanıtı Sil"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -433,7 +493,16 @@ export default function FormResponsesPage() {
               </div>
             )}
 
-            <div className="pt-3 border-t border-white/10 flex justify-end">
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setSubmissionToDelete(selectedSubmission)}
+                className="px-4 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <Trash2 className="w-4 h-4" />
+                <span>Bu Yanıtı Sil</span>
+              </button>
+
               <button
                 onClick={() => setSelectedSubmission(null)}
                 className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-colors cursor-pointer"
@@ -445,16 +514,19 @@ export default function FormResponsesPage() {
         </div>
       )}
 
-      {/* Delete Form Confirmation Modal */}
+      {/* Delete Specific Form Confirmation Modal */}
       {showDeleteModal && form && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white/10">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto border border-rose-500/20">
               <Trash2 className="w-6 h-6" />
             </div>
 
             <div className="text-center space-y-2">
-              <h3 className="text-lg font-bold text-white">Formu Silmek İstiyor musunuz?</h3>
+              <span className="text-[11px] font-mono font-bold text-rose-400 uppercase tracking-wider block">
+                Spesifik Form Silme
+              </span>
+              <h3 className="text-lg font-bold text-white">Bu Formu Silmek İstiyor musunuz?</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
                 <strong className="text-white">"{form.title}"</strong> formu ve bu forma ait tüm müşteri cevapları kalıcı olarak silinecektir. Bu işlem geri alınamaz.
               </p>
@@ -467,7 +539,7 @@ export default function FormResponsesPage() {
                 disabled={deleting}
                 className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
               >
-                İptal
+                Vazgeç
               </button>
 
               <button
@@ -482,6 +554,54 @@ export default function FormResponsesPage() {
                   <>
                     <Trash2 className="w-4 h-4" />
                     <span>Evet, Formu Sil</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Specific Submission Confirmation Modal */}
+      {submissionToDelete && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-md bg-[#111827] rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white/10">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto border border-rose-500/20">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="text-center space-y-2">
+              <span className="text-[11px] font-mono font-bold text-rose-400 uppercase tracking-wider block">
+                Müşteri Yanıtı Silme
+              </span>
+              <h3 className="text-lg font-bold text-white">Bu Yanıtı Silmek İstiyor musunuz?</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                <strong className="text-white">"{submissionToDelete.senderSummary}"</strong> tarafından gönderilen bu müşteri yanıtını silmek üzeresiniz. Bu işlem geri alınamaz.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setSubmissionToDelete(null)}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                Vazgeç
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmDeleteSubmission}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg shadow-rose-600/30 cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? (
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Evet, Yanıtı Sil</span>
                   </>
                 )}
               </button>
