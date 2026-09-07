@@ -20,7 +20,11 @@ export default function ClientHeader() {
     pathname?.startsWith("/f/") ||
     pathname?.startsWith("/teklifim-gelsin") ||
     pathname?.startsWith("/etiketle") ||
-    pathname?.startsWith("/e/")
+    pathname?.startsWith("/e/") ||
+    pathname?.startsWith("/itemsepeti") ||
+    pathname?.startsWith("/kategori") ||
+    pathname?.startsWith("/ilan") ||
+    pathname?.startsWith("/nasil-calisir")
   ) {
     return null;
   }
