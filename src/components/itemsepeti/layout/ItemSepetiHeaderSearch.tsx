@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Search, X, Command, Gamepad2, Tag, ChevronRight } from "lucide-react";
+import { Search, X, Command, Gamepad2, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ItemSepetiPrice } from "../marketplace/MarketplacePrimitives";
+import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 
 interface HeaderSearchProps {
   placeholder?: string;
@@ -16,6 +17,9 @@ export default function ItemSepetiHeaderSearch({
   className = "",
 }: HeaderSearchProps) {
   const router = useRouter();
+  const { theme } = useItemSepetiTheme();
+  const isDark = theme === "dark";
+
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<{
@@ -24,7 +28,6 @@ export default function ItemSepetiHeaderSearch({
     listings: any[];
   }>({ games: [], categories: [], listings: [] });
   const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -103,29 +106,33 @@ export default function ItemSepetiHeaderSearch({
     <div ref={containerRef} className={`relative flex items-center w-full max-w-xl transition-all ${className}`}>
       <form onSubmit={handleSearch} className="w-full" role="search">
         <div
-          className="relative flex items-center w-full h-10 sm:h-11 rounded-[8px] border transition-all"
+          className="relative flex items-center w-full h-11 rounded-[10px] border transition-all"
           style={{
-            backgroundColor: "rgba(0, 0, 0, 0.15)",
-            borderColor: isFocused ? "#E8A33D" : "rgba(148, 152, 166, 0.2)",
-            boxShadow: isFocused ? "0 0 0 2px rgba(232, 163, 61, 0.25)" : "none",
+            backgroundColor: isDark ? "rgba(0, 0, 0, 0.3)" : "#FFFFFF",
+            borderColor: isFocused ? "#D99532" : isDark ? "#282C3A" : "#DCDDE1",
+            boxShadow: isFocused ? "0 0 0 3px rgba(217, 149, 50, 0.18)" : "none",
           }}
         >
-          <Search className="w-4 h-4 text-[#9498A6] ml-3 shrink-0 pointer-events-none" aria-hidden="true" />
+          <Search
+            className={`w-4 h-4 ml-3.5 shrink-0 pointer-events-none ${
+              isFocused ? "text-[#D99532]" : isDark ? "text-[#9498A6]" : "text-[#626772]"
+            }`}
+            aria-hidden="true"
+          />
 
           <input
             ref={inputRef}
             type="search"
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSelectedIndex(-1);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             placeholder={placeholder}
             aria-label="Ürün, oyun veya ilan ara"
             aria-autocomplete="list"
             aria-expanded={showDropdown}
-            className="w-full h-full bg-transparent px-3 text-xs sm:text-sm text-inherit placeholder:text-[#9498A6] focus:outline-none"
+            className={`w-full h-full bg-transparent px-3 text-sm focus:outline-none ${
+              isDark ? "text-[#EDEEF2] placeholder:text-[#9498A6]" : "text-[#17191F] placeholder:text-[#626772]"
+            }`}
           />
 
           {query ? (
@@ -133,12 +140,20 @@ export default function ItemSepetiHeaderSearch({
               type="button"
               onClick={handleClear}
               aria-label="Aramayı temizle"
-              className="p-1 mr-2 text-[#9498A6] hover:text-inherit rounded-[6px] focus:outline-none focus:ring-1 focus:ring-[#E8A33D]"
+              className={`p-1 mr-2 rounded-[6px] hover:text-inherit focus:outline-none focus:ring-1 focus:ring-[#D99532] ${
+                isDark ? "text-[#9498A6]" : "text-[#626772]"
+              }`}
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           ) : (
-            <div className="hidden sm:flex items-center gap-0.5 mr-3 px-1.5 py-0.5 rounded-[4px] border border-white/10 text-[10px] text-[#9498A6] font-mono select-none">
+            <div
+              className={`hidden sm:flex items-center gap-0.5 mr-3 px-1.5 py-0.5 rounded-[4px] border text-[10px] font-mono select-none ${
+                isDark
+                  ? "border-white/10 text-[#9498A6] bg-black/20"
+                  : "border-[#DCDDE1] text-[#626772] bg-[#F0F1F3]"
+              }`}
+            >
               <Command className="w-2.5 h-2.5" />
               <span>K</span>
             </div>
@@ -149,18 +164,18 @@ export default function ItemSepetiHeaderSearch({
       {/* AUTOCOMPLETE RESULTS POPUP */}
       {showDropdown && (
         <div
-          className="absolute top-full left-0 right-0 mt-1.5 z-50 rounded-[12px] border shadow-2xl overflow-hidden backdrop-blur-md transition-all text-xs"
+          className="absolute top-full left-0 right-0 mt-1.5 z-50 rounded-[12px] border shadow-xl overflow-hidden backdrop-blur-md transition-all text-xs"
           style={{
-            backgroundColor: "rgba(22, 25, 33, 0.98)",
-            borderColor: "#282C3A",
+            backgroundColor: isDark ? "rgba(22, 25, 33, 0.98)" : "#FFFFFF",
+            borderColor: isDark ? "#282C3A" : "#DCDDE1",
           }}
         >
           {loading && (
-            <div className="p-3 text-center text-[#9498A6]">Aranıyor...</div>
+            <div className={`p-3 text-center ${isDark ? "text-[#9498A6]" : "text-[#626772]"}`}>Aranıyor...</div>
           )}
 
           {!loading && totalSuggestions === 0 && (
-            <div className="p-4 text-center text-[#9498A6]">
+            <div className={`p-4 text-center ${isDark ? "text-[#9498A6]" : "text-[#626772]"}`}>
               <p>Sonuç bulunamadı.</p>
               <button
                 type="button"
@@ -168,7 +183,7 @@ export default function ItemSepetiHeaderSearch({
                   setIsFocused(false);
                   router.push(`/arama?q=${encodeURIComponent(query.trim())}`);
                 }}
-                className="mt-2 text-[#E8A33D] hover:underline font-medium"
+                className="mt-2 text-[#D99532] hover:underline font-semibold"
               >
                 &ldquo;{query}&rdquo; için tüm sonuçları gör
               </button>
@@ -176,11 +191,13 @@ export default function ItemSepetiHeaderSearch({
           )}
 
           {!loading && totalSuggestions > 0 && (
-            <div className="max-h-[380px] overflow-y-auto divide-y divide-white/5 py-1">
+            <div className={`max-h-[380px] overflow-y-auto divide-y py-1 ${isDark ? "divide-white/5" : "divide-gray-100"}`}>
               {/* GAMES */}
               {suggestions.games.length > 0 && (
                 <div className="py-1">
-                  <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#9498A6]">
+                  <div className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
+                    isDark ? "text-[#9498A6]" : "text-[#626772]"
+                  }`}>
                     Oyunlar
                   </div>
                   {suggestions.games.map((game) => (
@@ -188,10 +205,12 @@ export default function ItemSepetiHeaderSearch({
                       key={game.id}
                       href={`/kategori/${game.slug}`}
                       onClick={() => setIsFocused(false)}
-                      className="flex items-center justify-between px-3 py-2 hover:bg-white/5 transition-colors text-inherit"
+                      className={`flex items-center justify-between px-3 py-2 transition-colors ${
+                        isDark ? "hover:bg-white/5 text-[#EDEEF2]" : "hover:bg-[#F0F1F3] text-[#17191F]"
+                      }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Gamepad2 className="w-3.5 h-3.5 text-[#E8A33D]" />
+                        <Gamepad2 className="w-3.5 h-3.5 text-[#D99532]" />
                         <span className="font-semibold">{game.name}</span>
                       </div>
                       <ChevronRight className="w-3 h-3 text-[#9498A6]" />
@@ -203,7 +222,9 @@ export default function ItemSepetiHeaderSearch({
               {/* LISTINGS */}
               {suggestions.listings.length > 0 && (
                 <div className="py-1">
-                  <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#9498A6]">
+                  <div className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
+                    isDark ? "text-[#9498A6]" : "text-[#626772]"
+                  }`}>
                     İlanlar
                   </div>
                   {suggestions.listings.map((l) => (
@@ -211,11 +232,13 @@ export default function ItemSepetiHeaderSearch({
                       key={l.id}
                       href={`/ilan/${l.id}`}
                       onClick={() => setIsFocused(false)}
-                      className="flex items-center justify-between px-3 py-2 hover:bg-white/5 transition-colors"
+                      className={`flex items-center justify-between px-3 py-2 transition-colors ${
+                        isDark ? "hover:bg-white/5 text-[#EDEEF2]" : "hover:bg-[#F0F1F3] text-[#17191F]"
+                      }`}
                     >
                       <div className="flex-1 truncate pr-2">
-                        <span className="text-inherit font-medium truncate block">{l.title}</span>
-                        <span className="text-[10px] text-[#9498A6]">
+                        <span className="font-medium truncate block">{l.title}</span>
+                        <span className={`text-[10px] ${isDark ? "text-[#9498A6]" : "text-[#626772]"}`}>
                           {l.gameName} &bull; {l.categoryName}
                         </span>
                       </div>
@@ -225,15 +248,15 @@ export default function ItemSepetiHeaderSearch({
                 </div>
               )}
 
-              {/* BOTTOM FOOTER: SEE ALL */}
-              <div className="p-2 text-center bg-black/20">
+              {/* BOTTOM FOOTER */}
+              <div className={`p-2 text-center ${isDark ? "bg-black/20" : "bg-[#F7F7F5]"}`}>
                 <button
                   type="button"
                   onClick={() => {
                     setIsFocused(false);
                     router.push(`/arama?q=${encodeURIComponent(query.trim())}`);
                   }}
-                  className="w-full py-1.5 rounded-[6px] text-xs font-semibold text-[#E8A33D] hover:bg-[#E8A33D]/10 transition-colors"
+                  className="w-full py-1.5 rounded-[6px] text-xs font-semibold text-[#D99532] hover:bg-[#D99532]/10 transition-colors"
                 >
                   &ldquo;{query}&rdquo; için tüm sonuçları gör
                 </button>

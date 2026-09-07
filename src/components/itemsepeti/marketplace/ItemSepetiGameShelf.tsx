@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { ItemSepetiProductType } from "@/types/marketplace";
+import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 
 export interface GameShelfItem {
   id: string;
@@ -8,7 +11,7 @@ export interface GameShelfItem {
   name: string;
   shortTag: string;
   productTypes: ItemSepetiProductType[];
-  accentColor?: string;
+  badgeText?: string;
 }
 
 export const POPULAR_GAMES_SHELF: GameShelfItem[] = [
@@ -18,20 +21,23 @@ export const POPULAR_GAMES_SHELF: GameShelfItem[] = [
     name: "CS2",
     shortTag: "Skin & Kasa",
     productTypes: ["ITEM"],
+    badgeText: "Popüler",
   },
   {
     id: "game_metin2",
     slug: "metin2",
     name: "Metin2",
-    shortTag: "Yang & Won & İtem",
+    shortTag: "Yang & Won",
     productTypes: ["CURRENCY", "ITEM"],
+    badgeText: "Hızlı Pazar",
   },
   {
     id: "game_valorant",
     slug: "valorant",
     name: "Valorant",
-    shortTag: "VP & Kod",
+    shortTag: "VP E-Pin",
     productTypes: ["DIGITAL_CODE"],
+    badgeText: "Otomatik",
   },
   {
     id: "game_pubg",
@@ -46,6 +52,7 @@ export const POPULAR_GAMES_SHELF: GameShelfItem[] = [
     name: "Steam",
     shortTag: "Cüzdan Kodu",
     productTypes: ["DIGITAL_CODE"],
+    badgeText: "Anında",
   },
 ];
 
@@ -54,9 +61,12 @@ export default function ItemSepetiGameShelf({
 }: {
   activeSlug?: string;
 }) {
+  const { theme } = useItemSepetiTheme();
+  const isDark = theme === "dark";
+
   return (
     <nav
-      aria-label="Oyun Rafı"
+      aria-label="Oyun Keşif Şeridi"
       className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 select-none"
     >
       {POPULAR_GAMES_SHELF.map((game) => {
@@ -65,29 +75,55 @@ export default function ItemSepetiGameShelf({
           <Link
             key={game.slug}
             href={`/kategori/${game.slug}`}
-            className={`group inline-flex items-center gap-2 px-3.5 py-2 rounded-[10px] text-xs transition-all whitespace-nowrap ${
+            className={`group inline-flex items-center gap-2.5 px-3.5 py-2 rounded-[10px] text-xs transition-all whitespace-nowrap border ${
               isActive
-                ? "bg-[#E8A33D] text-[#12141A] font-bold shadow-sm"
-                : "text-[#9498A6] hover:text-[#EDEEF2] hover:bg-white/[0.04]"
+                ? "bg-[#D99532] text-white border-[#D99532] font-bold shadow-sm"
+                : isDark
+                ? "bg-[#161921] border-[#282C3A] text-[#EDEEF2] hover:border-[#D99532]/50"
+                : "bg-white border-[#DCDDE1] text-[#17191F] hover:border-[#D99532]/50 hover:bg-[#F0F1F3]"
             }`}
           >
+            {/* GAME MONOGRAM */}
             <span
               className={`w-6 h-6 rounded-[6px] text-[10px] font-black flex items-center justify-center tracking-tighter ${
                 isActive
-                  ? "bg-[#12141A]/20 text-[#12141A]"
-                  : "bg-black/40 text-[#E8A33D] group-hover:bg-[#E8A33D]/20"
+                  ? "bg-black/20 text-white"
+                  : isDark
+                  ? "bg-black/40 text-[#E8A33D]"
+                  : "bg-[#F0F1F3] text-[#D99532]"
               }`}
             >
               {game.name.substring(0, 2).toUpperCase()}
             </span>
+
+            {/* NAME */}
             <span className="font-semibold text-inherit">{game.name}</span>
+
+            {/* SHORT TAG */}
             <span
               className={`text-[10px] font-normal hidden sm:inline ${
-                isActive ? "text-[#12141A]/70" : "text-[#9498A6]/60"
+                isActive
+                  ? "text-white/80"
+                  : isDark
+                  ? "text-[#9498A6]"
+                  : "text-[#626772]"
               }`}
             >
               {game.shortTag}
             </span>
+
+            {/* OPTIONAL BADGE */}
+            {game.badgeText && !isActive && (
+              <span
+                className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-[4px] hidden md:inline ${
+                  isDark
+                    ? "bg-white/5 text-[#9498A6]"
+                    : "bg-[#F0F1F3] text-[#626772]"
+                }`}
+              >
+                {game.badgeText}
+              </span>
+            )}
           </Link>
         );
       })}

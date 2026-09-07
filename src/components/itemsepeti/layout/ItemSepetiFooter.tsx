@@ -1,27 +1,37 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import ItemSepetiLogo from "../ui/ItemSepetiLogo";
+import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 
 export default function ItemSepetiFooter() {
+  const { theme } = useItemSepetiTheme();
+  const isDark = theme === "dark";
+
   return (
     <footer
       aria-label="Site Alt Bilgisi"
       className="w-full border-t mt-20 transition-colors select-none text-xs"
       style={{
-        backgroundColor: "rgba(18, 20, 26, 0.4)",
-        borderColor: "#282C3A",
+        backgroundColor: isDark ? "rgba(18, 20, 26, 0.4)" : "#FFFFFF",
+        borderColor: isDark ? "#282C3A" : "#DCDDE1",
+        color: isDark ? "#9498A6" : "#626772",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b border-[#282C3A]/60">
+        <div
+          className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pb-8 border-b"
+          style={{ borderColor: isDark ? "rgba(40, 44, 58, 0.6)" : "#DCDDE1" }}
+        >
           <div className="space-y-2 max-w-sm">
             <ItemSepetiLogo size="sm" />
-            <p className="text-[#9498A6] leading-relaxed">
+            <p className="leading-relaxed" style={{ color: isDark ? "#9498A6" : "#626772" }}>
               Türkiye&apos;nin oyunculara özel, emanet (escrow) korumalı oyun içi eşya, dijital kod ve hesap pazaryeri.
             </p>
           </div>
 
-          <nav aria-label="Hızlı Bağlantılar" className="flex flex-wrap gap-6 text-[#9498A6]">
+          <nav aria-label="Hızlı Bağlantılar" className="flex flex-wrap gap-6" style={{ color: isDark ? "#9498A6" : "#626772" }}>
             <Link href="/nasil-calisir" className="hover:text-inherit transition-colors">
               Nasıl Çalışır?
             </Link>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Filter, X, ArrowUpDown, Check } from "lucide-react";
 import { ItemSepetiProductType } from "@/types/marketplace";
+import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 
 interface CategoryFilterBarProps {
   basePath: string;
@@ -32,6 +33,8 @@ export default function ItemSepetiFilterBar({
 }: CategoryFilterBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { theme } = useItemSepetiTheme();
+  const isDark = theme === "dark";
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   // Local filter states
@@ -92,10 +95,11 @@ export default function ItemSepetiFilterBar({
     <>
       {/* DESKTOP & MOBILE TOP BAR */}
       <div
-        className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-[12px] border text-xs text-[#9498A6]"
+        className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-[10px] border text-xs"
         style={{
-          backgroundColor: "rgba(27, 30, 39, 0.4)",
-          borderColor: "#282C3A",
+          backgroundColor: isDark ? "rgba(27, 30, 39, 0.4)" : "#FFFFFF",
+          borderColor: isDark ? "#282C3A" : "#DCDDE1",
+          color: isDark ? "#9498A6" : "#626772",
         }}
       >
         {/* LEFT: FILTER BUTTON (MOBILE) + ACTIVE SUMMARY */}
@@ -119,7 +123,13 @@ export default function ItemSepetiFilterBar({
                   setSelectedCategory(e.target.value);
                   applyFilters({ category: e.target.value || undefined });
                 }}
-                className="bg-black/20 border border-white/10 rounded-[8px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#E8A33D]"
+                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+                style={{
+                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                  borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                  borderWidth: "1px",
+                  color: isDark ? "#EDEEF2" : "#17191F",
+                }}
               >
                 <option value="">Tüm Kategoriler</option>
                 {categories.map((c) => (
@@ -138,7 +148,13 @@ export default function ItemSepetiFilterBar({
                   setSelectedServer(e.target.value);
                   applyFilters({ server: e.target.value || undefined });
                 }}
-                className="bg-black/20 border border-white/10 rounded-[8px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#E8A33D]"
+                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+                style={{
+                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                  borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                  borderWidth: "1px",
+                  color: isDark ? "#EDEEF2" : "#17191F",
+                }}
               >
                 <option value="">Tüm Sunucular</option>
                 {gameServers.map((s) => (
@@ -158,16 +174,18 @@ export default function ItemSepetiFilterBar({
                   setInStockOnly(e.target.checked);
                   applyFilters({ inStock: e.target.checked ? "true" : undefined });
                 }}
-                className="rounded border-white/20 text-[#E8A33D] focus:ring-0"
+                className="rounded text-[#D99532] focus:ring-0"
+                style={{ borderColor: isDark ? "rgba(255,255,255,0.2)" : "#DCDDE1" }}
               />
-              <span>Yalnızca Stoktakiler</span>
+              <span style={{ color: isDark ? "#9498A6" : "#626772" }}>Yalnızca Stoktakiler</span>
             </label>
 
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="text-xs text-[#E8A33D] hover:underline ml-2"
+                className="text-xs font-medium hover:underline ml-2"
+                style={{ color: "#D99532" }}
               >
                 Temizle
               </button>
@@ -177,7 +195,7 @@ export default function ItemSepetiFilterBar({
 
         {/* RIGHT: SORT SELECTOR */}
         <div className="flex items-center gap-2 ml-auto">
-          <ArrowUpDown className="w-3.5 h-3.5 text-[#E8A33D]" />
+          <ArrowUpDown className="w-3.5 h-3.5" style={{ color: "#D99532" }} />
           <select
             value={selectedSort}
             onChange={(e) => {
@@ -185,7 +203,13 @@ export default function ItemSepetiFilterBar({
               applyFilters({ sort: e.target.value });
             }}
             aria-label="İlanları Sırala"
-            className="bg-black/20 border border-white/10 rounded-[8px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#E8A33D]"
+            className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+            style={{
+              backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+              borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+              borderWidth: "1px",
+              color: isDark ? "#EDEEF2" : "#17191F",
+            }}
           >
             <option value="NEWEST">En Yeniler</option>
             <option value="PRICE_ASC">Fiyat: Düşükten Yükseğe</option>
@@ -199,18 +223,20 @@ export default function ItemSepetiFilterBar({
       {mobileDrawerOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex flex-col justify-end bg-black/60 backdrop-blur-sm">
           <div
-            className="w-full max-h-[85vh] rounded-t-[20px] p-5 space-y-4 border-t overflow-y-auto"
+            className="w-full max-h-[85vh] rounded-t-[16px] p-5 space-y-4 border-t overflow-y-auto"
             style={{
-              backgroundColor: "#161921",
-              borderColor: "#282C3A",
+              backgroundColor: isDark ? "#161921" : "#FFFFFF",
+              borderColor: isDark ? "#282C3A" : "#DCDDE1",
+              color: isDark ? "#EDEEF2" : "#17191F",
             }}
           >
-            <div className="flex items-center justify-between pb-3 border-b border-white/5">
-              <span className="font-bold text-sm text-inherit">Filtreler</span>
+            <div className="flex items-center justify-between pb-3 border-b" style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "#DCDDE1" }}>
+              <span className="font-bold text-sm">Filtreler</span>
               <button
                 type="button"
                 onClick={() => setMobileDrawerOpen(false)}
-                className="p-1 text-[#9498A6] hover:text-inherit"
+                className="p-1"
+                style={{ color: isDark ? "#9498A6" : "#626772" }}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -219,11 +245,17 @@ export default function ItemSepetiFilterBar({
             {/* Category */}
             {categories.length > 0 && (
               <div className="space-y-1">
-                <label className="text-xs text-[#9498A6]">Kategori</label>
+                <label className="text-xs" style={{ color: isDark ? "#9498A6" : "#626772" }}>Kategori</label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-[8px] p-2 text-xs text-inherit"
+                  className="w-full rounded-[8px] p-2 text-xs"
+                  style={{
+                    backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                    borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                    borderWidth: "1px",
+                    color: isDark ? "#EDEEF2" : "#17191F",
+                  }}
                 >
                   <option value="">Tüm Kategoriler</option>
                   {categories.map((c) => (
@@ -238,11 +270,17 @@ export default function ItemSepetiFilterBar({
             {/* Server */}
             {gameServers.length > 0 && (
               <div className="space-y-1">
-                <label className="text-xs text-[#9498A6]">Sunucu (Server)</label>
+                <label className="text-xs" style={{ color: isDark ? "#9498A6" : "#626772" }}>Sunucu (Server)</label>
                 <select
                   value={selectedServer}
                   onChange={(e) => setSelectedServer(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-[8px] p-2 text-xs text-inherit"
+                  className="w-full rounded-[8px] p-2 text-xs"
+                  style={{
+                    backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                    borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                    borderWidth: "1px",
+                    color: isDark ? "#EDEEF2" : "#17191F",
+                  }}
                 >
                   <option value="">Tüm Sunucular</option>
                   {gameServers.map((s) => (
@@ -256,14 +294,20 @@ export default function ItemSepetiFilterBar({
 
             {/* Price range */}
             <div className="space-y-1">
-              <label className="text-xs text-[#9498A6]">Fiyat Aralığı (TL)</label>
+              <label className="text-xs" style={{ color: isDark ? "#9498A6" : "#626772" }}>Fiyat Aralığı (TL)</label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   placeholder="Min"
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-[8px] p-2 text-xs text-inherit"
+                  className="w-full rounded-[8px] p-2 text-xs"
+                  style={{
+                    backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                    borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                    borderWidth: "1px",
+                    color: isDark ? "#EDEEF2" : "#17191F",
+                  }}
                 />
                 <span>-</span>
                 <input
@@ -271,18 +315,24 @@ export default function ItemSepetiFilterBar({
                   placeholder="Max"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-full bg-black/20 border border-white/10 rounded-[8px] p-2 text-xs text-inherit"
+                  className="w-full rounded-[8px] p-2 text-xs"
+                  style={{
+                    backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
+                    borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                    borderWidth: "1px",
+                    color: isDark ? "#EDEEF2" : "#17191F",
+                  }}
                 />
               </div>
             </div>
 
             {/* Stock only */}
-            <label className="flex items-center gap-2 cursor-pointer text-xs text-inherit pt-2">
+            <label className="flex items-center gap-2 cursor-pointer text-xs pt-2">
               <input
                 type="checkbox"
                 checked={inStockOnly}
                 onChange={(e) => setInStockOnly(e.target.checked)}
-                className="rounded text-[#E8A33D]"
+                className="rounded text-[#D99532]"
               />
               <span>Yalnızca Stoktakiler</span>
             </label>
@@ -292,14 +342,18 @@ export default function ItemSepetiFilterBar({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="flex-1 py-2.5 rounded-[10px] border border-white/10 text-xs font-semibold text-[#9498A6]"
+                className="flex-1 py-2.5 rounded-[8px] border text-xs font-semibold"
+                style={{
+                  borderColor: isDark ? "#282C3A" : "#DCDDE1",
+                  color: isDark ? "#9498A6" : "#626772",
+                }}
               >
                 Temizle
               </button>
               <button
                 type="button"
                 onClick={() => applyFilters()}
-                className="flex-1 py-2.5 rounded-[10px] bg-[#E8A33D] text-[#12141A] text-xs font-bold"
+                className="flex-1 py-2.5 rounded-[8px] bg-[#D99532] text-white text-xs font-bold shadow-sm"
               >
                 Uygula
               </button>

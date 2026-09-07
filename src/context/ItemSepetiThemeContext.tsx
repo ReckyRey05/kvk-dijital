@@ -10,13 +10,13 @@ interface ItemSepetiThemeContextType {
 }
 
 const ItemSepetiThemeContext = createContext<ItemSepetiThemeContextType>({
-  theme: "dark",
+  theme: "light",
   toggleTheme: () => {},
   setTheme: () => {},
 });
 
 export function ItemSepetiThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ItemSepetiThemeMode>("dark");
+  const [theme, setThemeState] = useState<ItemSepetiThemeMode>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,12 +25,11 @@ export function ItemSepetiThemeProvider({ children }: { children: React.ReactNod
       if (saved === "light" || saved === "dark") {
         setThemeState(saved);
       } else {
-        // System preference fallback with dark as canonical default
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setThemeState(prefersDark ? "dark" : "dark"); // Default dark mode
+        // Canonical default is LIGHT mode as per FAZ 3.5 Revision
+        setThemeState("light");
       }
     } catch {
-      setThemeState("dark");
+      setThemeState("light");
     }
     setMounted(true);
   }, []);
@@ -51,13 +50,13 @@ export function ItemSepetiThemeProvider({ children }: { children: React.ReactNod
   return (
     <ItemSepetiThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       <div
-        data-itemsepeti-theme={mounted ? theme : "dark"}
-        className={`min-h-screen w-full font-sans transition-colors duration-200 ${
+        data-itemsepeti-theme={mounted ? theme : "light"}
+        className={`min-h-screen w-full font-sans transition-colors duration-150 ${
           theme === "dark" ? "itemsepeti-dark" : "itemsepeti-light"
         }`}
         style={{
-          backgroundColor: theme === "dark" ? "#12141A" : "#F4F5F8",
-          color: theme === "dark" ? "#EDEEF2" : "#141721",
+          backgroundColor: theme === "dark" ? "#12141A" : "#F7F7F5",
+          color: theme === "dark" ? "#EDEEF2" : "#17191F",
         }}
       >
         {children}

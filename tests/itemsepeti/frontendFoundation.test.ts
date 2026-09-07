@@ -29,7 +29,7 @@ async function runDesignSystemTests() {
   assert.strictEqual(itemsepetiTokens.colors.dark.background, "#12141A");
   assert.strictEqual(itemsepetiTokens.colors.dark.surface, "#1B1E27");
   assert.strictEqual(itemsepetiTokens.colors.dark.accent, "#E8A33D");
-  assert.strictEqual(itemsepetiTokens.colors.light.background, "#F4F5F8");
+  assert.strictEqual(itemsepetiTokens.colors.light.background, "#F7F7F5");
 
   // Purposeful, differentiated radiuses: 8px controls, 10px buttons, 14px cards
   assert.strictEqual(itemsepetiTokens.radius.control, "8px");
@@ -44,13 +44,13 @@ async function runDesignSystemTests() {
   console.log("2. Test: Theme mode switching and fallback logic...");
   function resolveInitialTheme(storedValue: string | null, systemPrefersDark: boolean): "dark" | "light" {
     if (storedValue === "dark" || storedValue === "light") return storedValue;
-    return systemPrefersDark ? "dark" : "dark"; // Default is dark
+    return "light"; // FAZ 3.5 Revision: Default is light
   }
-  assert.strictEqual(resolveInitialTheme(null, true), "dark");
-  assert.strictEqual(resolveInitialTheme(null, false), "dark"); // Default dark
+  assert.strictEqual(resolveInitialTheme(null, true), "light");
+  assert.strictEqual(resolveInitialTheme(null, false), "light"); // Default light
   assert.strictEqual(resolveInitialTheme("light", true), "light");
   assert.strictEqual(resolveInitialTheme("dark", false), "dark");
-  console.log("PASSED: Dark theme default and persistence confirmed.");
+  console.log("PASSED: Light theme default and persistence confirmed.");
 
   // ---------------------------------------------------------------------------
   // TEST 3: Button Variants & Arrow Ban Enforcement

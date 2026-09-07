@@ -5,8 +5,9 @@
  */
 
 export const itemsepetiTokens = {
+  defaultTheme: "light",
   colors: {
-    // Dark Theme (Default)
+    // Dark Theme (Optional toggle)
     dark: {
       background: "#12141A",
       surface: "#1B1E27",
@@ -27,20 +28,20 @@ export const itemsepetiTokens = {
       danger: "#F87171",
       dangerMuted: "rgba(248, 113, 113, 0.12)",
     },
-    // Light Theme (Clean, muted, non-blinding)
+    // Light Theme (Warm, tactile, player-market primary)
     light: {
-      background: "#F4F5F8",
+      background: "#F7F7F5",
       surface: "#FFFFFF",
       surfaceElevated: "#FFFFFF",
-      surfaceHover: "#F0F2F6",
-      border: "#E2E5EC",
-      borderSubtle: "#EAECEF",
-      text: "#141721",
-      textMuted: "#5F6575",
-      textSubtle: "#8C92A4",
-      accent: "#D48B22",
-      accentHover: "#B87515",
-      accentMuted: "rgba(212, 139, 34, 0.10)",
+      surfaceHover: "#F0F1F3",
+      border: "#DCDDE1",
+      borderSubtle: "#E6E7EA",
+      text: "#17191F",
+      textMuted: "#626772",
+      textSubtle: "#8C919D",
+      accent: "#D99532",
+      accentHover: "#C48325",
+      accentMuted: "rgba(217, 149, 50, 0.12)",
       success: "#059669",
       successMuted: "rgba(5, 150, 105, 0.10)",
       warning: "#D97706",
@@ -68,3 +69,24 @@ export const itemsepetiTokens = {
 } as const;
 
 export type ItemSepetiThemeMode = "dark" | "light";
+
+export const itemsepetiColorSchemes = {
+  light: {
+    bg: "#F7F7F5",
+    surface: "#FFFFFF",
+    surfaceHover: "#F0F1F3",
+    border: "#DCDDE1",
+    text: "#17191F",
+    textMuted: "#626772",
+    accent: "#D99532",
+  },
+  dark: {
+    bg: "#12141A",
+    surface: "#161921",
+    surfaceHover: "#1F232E",
+    border: "#282C3A",
+    text: "#EDEEF2",
+    textMuted: "#9498A6",
+    accent: "#D99532",
+  },
+} as const;
