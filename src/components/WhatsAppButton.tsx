@@ -23,6 +23,8 @@ export default function WhatsAppButton() {
     pathname?.startsWith("/kategori") ||
     pathname?.startsWith("/ilan") ||
     pathname?.startsWith("/ilan-ver") ||
+    pathname?.startsWith("/arama") ||
+    pathname?.startsWith("/satici") ||
     pathname?.startsWith("/nasil-calisir")
   ) {
     return null;

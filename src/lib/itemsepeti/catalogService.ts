@@ -12,11 +12,15 @@ import {
   ItemSepetiListing,
   ItemSepetiListingStatus,
   ItemSepetiAuditLog,
+  ItemSepetiPurchaseIntent,
 } from "@/types/marketplace";
 import {
   SEED_GAMES,
   SEED_CATEGORIES,
   SEED_PRODUCTS,
+  SEED_LISTINGS,
+  SEED_SELLERS,
+  SeedSeller,
 } from "./catalogSeedData";
 import {
   validateListingInput,
@@ -245,7 +249,6 @@ export async function getPublicListings(params: ListingFilterParams): Promise<It
     if (!snap.empty) {
       let results = snap.docs.map((d) => d.data() as ItemSepetiListing);
 
-      // In-memory sorting and search filter for flexible matching
       if (params.searchQuery) {
         const q = normalizeTitle(params.searchQuery);
         results = results.filter((l) => l.normalizedTitle.includes(q));
@@ -263,6 +266,198 @@ export async function getPublicListings(params: ListingFilterParams): Promise<It
     }
   } catch {}
 
-  // Fallback demo dataset if Firestore is offline
-  return [];
+  // Fallback to high-quality deterministic seed listings
+  let results: ItemSepetiListing[] = (SEED_LISTINGS as ItemSepetiListing[]).filter((l) => l.status === "active");
+
+  if (params.gameId) {
+    results = results.filter((l) => l.gameId === params.gameId);
+  }
+  if (params.gameSlug) {
+    const slugStr = params.gameSlug.toLowerCase();
+    const matchedGame = SEED_GAMES.find((g) => g.slug === slugStr);
+    if (matchedGame) {
+      results = results.filter((l) => l.gameId === matchedGame.id);
+    }
+  }
+  if (params.categoryId) {
+    results = results.filter((l) => l.categoryId === params.categoryId);
+  }
+  if (params.productType) {
+    results = results.filter((l) => l.productType === params.productType);
+  }
+  if (params.serverId) {
+    results = results.filter((l) => l.serverId === params.serverId);
+  }
+  if (params.searchQuery) {
+    const rawTokens = normalizeTitle(params.searchQuery).split(" ").filter(Boolean);
+    results = results.filter((l) => {
+      const searchTarget = `${normalizeTitle(l.normalizedTitle)} ${normalizeTitle(l.gameName)} ${normalizeTitle(l.categoryName)}`;
+      return rawTokens.every((token) => searchTarget.includes(token));
+    });
+  }
+  if (params.minPrice !== undefined) {
+    results = results.filter((l) => l.unitPrice >= params.minPrice!);
+  }
+  if (params.maxPrice !== undefined) {
+    results = results.filter((l) => l.unitPrice <= params.maxPrice!);
+  }
+  if (params.inStockOnly) {
+    results = results.filter((l) => l.stockQuantity > 0);
+  }
+
+  if (params.sortBy === "PRICE_ASC") {
+    results.sort((a, b) => a.unitPrice - b.unitPrice);
+  } else if (params.sortBy === "PRICE_DESC") {
+    results.sort((a, b) => b.unitPrice - a.unitPrice);
+  } else {
+    results.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  if (params.limit) {
+    results = results.slice(0, params.limit);
+  }
+
+  return results;
+}
+
+// =============================================================================
+// 5. LISTING DETAIL & SINGLE QUERY
+// =============================================================================
+
+export async function getListingById(idOrSlug: string): Promise<ItemSepetiListing | null> {
+  const norm = (idOrSlug || "").trim().toLowerCase();
+  try {
+    const db = getAdminDb();
+    // Try by document ID first
+    const doc = await db.collection("itemsepeti_listings").doc(idOrSlug).get();
+    if (doc.exists) {
+      const data = doc.data() as ItemSepetiListing;
+      if (data.status === "active") return data;
+    }
+  } catch {}
+
+  // Fallback to seed listings
+  const found = (SEED_LISTINGS as ItemSepetiListing[]).find(
+    (l) => l.id.toLowerCase() === norm && l.status === "active"
+  );
+  return found || null;
+}
+
+// =============================================================================
+// 6. SELLER PROFILE & SELLER LISTINGS
+// =============================================================================
+
+export async function getSellerBySlug(slug: string): Promise<SeedSeller | null> {
+  const norm = (slug || "").trim().toLowerCase();
+  const seller = SEED_SELLERS.find(
+    (s) => s.storeSlug.toLowerCase() === norm || s.id.toLowerCase() === norm
+  );
+  return seller || null;
+}
+
+export async function getSellerListings(sellerId: string): Promise<ItemSepetiListing[]> {
+  try {
+    const db = getAdminDb();
+    const snap = await db
+      .collection("itemsepeti_listings")
+      .where("sellerId", "==", sellerId)
+      .where("status", "==", "active")
+      .get();
+    if (!snap.empty) {
+      return snap.docs.map((d) => d.data() as ItemSepetiListing);
+    }
+  } catch {}
+
+  return (SEED_LISTINGS as ItemSepetiListing[]).filter(
+    (l) => l.sellerId === sellerId && l.status === "active"
+  );
+}
+
+// =============================================================================
+// 7. PURCHASE INTENT (Pre-checkout validation abstraction)
+// =============================================================================
+
+export async function createPurchaseIntent(input: {
+  buyerId: string;
+  listingId: string;
+  quantity: number;
+}): Promise<{
+  success: boolean;
+  intent?: ItemSepetiPurchaseIntent;
+  error?: string;
+}> {
+  if (!input.buyerId || !input.buyerId.trim()) {
+    return { success: false, error: "Satın alma niyeti oluşturmak için giriş yapmalısınız." };
+  }
+
+  if (!input.quantity || input.quantity < 1 || !Number.isInteger(input.quantity)) {
+    return { success: false, error: "Geçerli bir adet giriniz (en az 1)." };
+  }
+
+  const listing = await getListingById(input.listingId);
+  if (!listing) {
+    return { success: false, error: "İlan bulunamadı veya artık aktif değil." };
+  }
+
+  if (listing.status !== "active") {
+    return { success: false, error: "Bu ilan şu anda satışta değil." };
+  }
+
+  if (listing.stockQuantity < input.quantity) {
+    return {
+      success: false,
+      error: `Yetersiz stok. Mevcut stok: ${listing.stockQuantity}, talep edilen: ${input.quantity}.`,
+    };
+  }
+
+  if (listing.minQuantity && input.quantity < listing.minQuantity) {
+    return {
+      success: false,
+      error: `Bu ilan için minimum alım adedi: ${listing.minQuantity}.`,
+    };
+  }
+
+  // Calculate pricing & platform fee
+  const category = await getCategoryById(listing.categoryId);
+  const feeRate = category?.platformFeeRate || 0.05;
+  const totalAmount = Number((listing.unitPrice * input.quantity).toFixed(2));
+  const platformCommissionAmount = Number((totalAmount * feeRate).toFixed(2));
+  const sellerPayoutAmount = Number((totalAmount - platformCommissionAmount).toFixed(2));
+
+  const intentId = `intent_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const now = Date.now();
+
+  const intent: ItemSepetiPurchaseIntent = {
+    intentId,
+    buyerId: input.buyerId,
+    listingId: listing.id,
+    sellerId: listing.sellerId,
+    quantity: input.quantity,
+    unitPrice: listing.unitPrice,
+    totalAmount,
+    platformCommissionRate: feeRate,
+    platformCommissionAmount,
+    sellerPayoutAmount,
+    listingSnapshot: {
+      title: listing.title,
+      gameId: listing.gameId,
+      gameName: listing.gameName,
+      categoryId: listing.categoryId,
+      categoryName: listing.categoryName,
+      serverId: listing.serverId,
+      serverName: listing.serverName,
+      productType: listing.productType,
+      deliveryMethod: listing.deliveryMethod,
+      deliverySlaHours: listing.deliverySlaHours,
+    },
+    expiresAt: now + 15 * 60 * 1000, // Valid for 15 minutes
+    createdAt: now,
+  };
+
+  try {
+    const db = getAdminDb();
+    await db.collection("itemsepeti_purchase_intents").doc(intentId).set(intent);
+  } catch {}
+
+  return { success: true, intent };
 }

@@ -61,7 +61,7 @@ export function generateListingFingerprint(params: {
 
 export function normalizeTitle(title: string): string {
   return title
-    .toLowerCase()
+    .toLocaleLowerCase("tr")
     .replace(/[^\p{L}\p{N}\s]/gu, " ") // replace special punctuation with space
     .replace(/\s+/g, " ")
     .trim();

@@ -251,6 +251,37 @@ export interface ItemSepetiOrderItemSnapshot {
   };
 }
 
+// =============================================================================
+// 4.1. PURCHASE INTENT (Pre-Checkout Validation Abstraction)
+// =============================================================================
+
+export interface ItemSepetiPurchaseIntent {
+  intentId: string;
+  buyerId: string;
+  listingId: string;
+  sellerId: string;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  platformCommissionRate: number;
+  platformCommissionAmount: number;
+  sellerPayoutAmount: number;
+  listingSnapshot: {
+    title: string;
+    gameId: string;
+    gameName: string;
+    categoryId: string;
+    categoryName: string;
+    serverId?: string;
+    serverName?: string;
+    productType: ItemSepetiProductType;
+    deliveryMethod: ItemSepetiDeliveryMethod;
+    deliverySlaHours: number;
+  };
+  expiresAt: number; // Intent valid for 15 minutes
+  createdAt: number;
+}
+
 export interface ItemSepetiOrder {
   id: string; // ord_{timestamp}_{random}
   orderNumber: string; // SIP-2026-XXXXXX

@@ -5,67 +5,52 @@ import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
 import ItemSepetiFilterBar from "@/components/itemsepeti/marketplace/ItemSepetiFilterBar";
-import { getPublicListings, getGameBySlug, getCategoriesByGame } from "@/lib/itemsepeti/catalogService";
-import { SearchX } from "lucide-react";
+import { getPublicListings } from "@/lib/itemsepeti/catalogService";
+import { SearchX, Search } from "lucide-react";
 
 export async function generateMetadata({
-  params,
   searchParams,
 }: {
-  params: Promise<{ gameSlug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
-  const { gameSlug } = await params;
-  const game = await getGameBySlug(gameSlug);
-  const gameName = game ? game.name : gameSlug.toUpperCase();
+  const sParams = await searchParams;
+  const q = typeof sParams.q === "string" ? sParams.q : "";
   return {
-    title: `${gameName} İlanları, Fiyatları & Satın Al | İtemSepeti`,
-    description: `${gameName} için en ucuz item, yang, skin ve hesap ilanlarını karşılaştırın, güvenli escrow güvencesiyle anında satın alın.`,
-    alternates: {
-      canonical: `/kategori/${gameSlug}`,
-    },
-    openGraph: {
-      title: `${gameName} İlanları | İtemSepeti`,
-      description: `${gameName} ilanlarını güvenli escrow korumasıyla hemen inceleyin ve satın alın.`,
+    title: q ? `"${q}" için Arama Sonuçları | İtemSepeti` : "Pazar Yeri Arama | İtemSepeti",
+    description: `İtemSepeti pazar yerinde "${q}" için en uygun fiyatlı ve güvenli oyun içi ürünleri keşfedin.`,
+    robots: {
+      index: false, // Search query pages should not dilute SEO index
+      follow: true,
     },
   };
 }
 
-export default async function CategoryPage({
-  params,
+export default async function SearchResultPage({
   searchParams,
 }: {
-  params: Promise<{ gameSlug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { gameSlug } = await params;
   const sParams = await searchParams;
+  const q = typeof sParams.q === "string" ? sParams.q.trim() : "";
 
-  const game = await getGameBySlug(gameSlug);
-  const gameName = game ? game.name : gameSlug.toUpperCase();
-  const categories = game ? await getCategoriesByGame(game.id) : [];
-
-  // Parse filters from URL query parameters
+  // Parse filters from URL
   const minPrice = sParams.min ? Number(sParams.min) : undefined;
   const maxPrice = sParams.max ? Number(sParams.max) : undefined;
   const serverId = typeof sParams.server === "string" ? sParams.server : undefined;
-  const categoryId = typeof sParams.category === "string" ? sParams.category : undefined;
   const inStockOnly = sParams.inStock === "true";
   const sortBy = (typeof sParams.sort === "string" ? sParams.sort : "NEWEST") as any;
 
-  // Query live listings with all active filters
-  const liveListings = await getPublicListings({
-    gameSlug,
-    categoryId,
+  const listings = await getPublicListings({
+    searchQuery: q,
     serverId,
     minPrice,
     maxPrice,
     inStockOnly,
     sortBy,
-    limit: 40,
+    limit: 50,
   });
 
-  const listingsToDisplay: ListingCardData[] = liveListings.map((l) => ({
+  const listingsToDisplay: ListingCardData[] = listings.map((l) => ({
     id: l.id,
     slug: l.id,
     title: l.title,
@@ -95,33 +80,30 @@ export default async function CategoryPage({
               Ana Sayfa
             </Link>
             <span>/</span>
-            <span className="text-inherit font-medium">{gameName}</span>
+            <span className="text-inherit font-medium">Arama Sonuçları</span>
           </nav>
 
-          {/* PAGE HEADER */}
+          {/* PAGE TITLE & SEARCH QUERY DISPLAY */}
           <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-inherit">
-              {gameName} İlanları
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-inherit flex items-center gap-3">
+              <Search className="w-6 h-6 text-[#E8A33D]" />
+              <span>{q ? `"${q}" için Arama Sonuçları` : "Tüm İlanlar"}</span>
             </h1>
             <p className="text-xs sm:text-sm text-[#9498A6]">
-              {listingsToDisplay.length} aktif ilan listeleniyor. Güvenli escrow güvencesiyle hemen satın alın.
+              {listingsToDisplay.length} ilan bulundu.
             </p>
           </div>
 
-          {/* ACTIVE FILTER AND SORT BAR */}
+          {/* FILTER BAR */}
           <ItemSepetiFilterBar
-            basePath={`/kategori/${gameSlug}`}
-            gameServers={game?.servers}
-            categories={categories}
-            currentCategory={categoryId}
-            currentServer={serverId}
+            basePath="/arama"
             currentMinPrice={sParams.min ? String(sParams.min) : ""}
             currentMaxPrice={sParams.max ? String(sParams.max) : ""}
             currentSort={sortBy}
             currentInStockOnly={inStockOnly}
           />
 
-          {/* LISTINGS GRID OR EMPTY STATE */}
+          {/* LISTING GRID */}
           {listingsToDisplay.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {listingsToDisplay.map((listing) => (
@@ -140,16 +122,16 @@ export default async function CategoryPage({
                 <SearchX className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-inherit">Aradığın kriterlere uygun ilan bulunamadı.</h3>
+                <h3 className="text-base font-bold text-inherit">Aradığın ürünü bulamadık.</h3>
                 <p className="text-xs text-[#9498A6]">
-                  Seçtiğin filtreleri temizleyebilir veya diğer kategorilere göz atabilirsin.
+                  Farklı bir oyun veya ürün adı arayabilir veya popüler kategorilere göz atabilirsin.
                 </p>
               </div>
               <Link
-                href={`/kategori/${gameSlug}`}
+                href="/itemsepeti"
                 className="inline-flex items-center justify-center px-4 py-2 rounded-[10px] text-xs font-semibold bg-[#E8A33D] text-[#12141A] transition-transform active:scale-95"
               >
-                Filtreleri Sıfırla
+                Aramayı Değiştir
               </Link>
             </div>
           )}
