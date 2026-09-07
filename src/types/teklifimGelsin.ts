@@ -55,18 +55,80 @@ export interface TeklifimProfile {
   updatedAt?: number;
 }
 
+export type TeklifimStockStatus =
+  | "in_stock"
+  | "low_stock"
+  | "out_of_stock"
+  | "made_to_order"
+  | "unspecified";
+
+export type TeklifimProductStatus =
+  | "draft"
+  | "published"
+  | "passive"
+  | "archived"
+  | "suspended";
+
+export type TeklifimPriceVisibility =
+  | "public"
+  | "hidden"
+  | "request_quote";
+
 export interface TeklifimProduct {
   id: string;
   supplierId: string;
+  supplierName?: string;
+  supplierCity?: string;
+  supplierLogoUrl?: string;
+  supplierVerified?: boolean;
   name: string;
+  title?: string;
   category: string;
+  subCategory?: string;
+  sku?: string;
   description?: string;
   imageUrl?: string;
+  images?: string[];
   minOrder?: string;
+  minimumOrder?: number;
   unit?: string;
   estimatedPrice?: number;
+  price?: number;
+  currency?: string;
+  priceVisibility?: TeklifimPriceVisibility;
+  stockStatus?: TeklifimStockStatus;
+  stockQuantity?: number;
+  trackStock?: boolean;
+  leadTimeDays?: number;
+  deliveryRegions?: string[];
+  status?: TeklifimProductStatus;
+  isActive?: boolean;
+  viewsCount?: number;
+  requestsCount?: number;
   createdAt: number;
   updatedAt?: number;
+}
+
+export interface TeklifimProductFavorite {
+  id: string;
+  userId: string;
+  productId: string;
+  productName: string;
+  productCategory: string;
+  productImageUrl?: string;
+  productPrice?: number;
+  productCurrency?: string;
+  supplierId: string;
+  supplierName: string;
+  createdAt: number;
+}
+
+export interface TeklifimProductImportReport {
+  totalRows: number;
+  successfulCount: number;
+  failedCount: number;
+  errors: { row: number; field: string; message: string }[];
+  importedProductIds: string[];
 }
 
 export interface TeklifimFavorite {
@@ -166,6 +228,7 @@ export interface TeklifimRequest {
   businessEmail?: string;
   title: string;
   category: string;
+  subCategory?: string;
   productName?: string;
   quantity: number;
   unit: string; // Adet, Koli, Kg, Ton, Metre, Litre, Paket, Palet
@@ -515,6 +578,19 @@ export const TEKLIFIM_CATEGORIES = [
   "Endüstriyel Mutfak",
   "Diğer",
 ] as const;
+
+export const SUBCATEGORY_MAPPING: Record<string, string[]> = {
+  "Ambalaj & Paketleme": ["Karton Bardak", "Koli & Kutu", "Kraft Poşet", "Streç & Bant", "Köpük & Koruma", "Diğer"],
+  "Gıda & İçecek": ["Kahve & Çay", "Kuru Gıda & Bakliyat", "Sıvı Yağ & Soslar", "Konserve & Salça", "Atıştırmalık & Şekerleme", "Diğer"],
+  "Temizlik & Hijyen": ["Havlu & Tuvalet Kağıdı", "Endüstriyel Deterjan", "Çöp Torbası & Eldiven", "Dezenfektan & Sabun", "Sarf & Aparatlar", "Diğer"],
+  "Tekstil & İş Kıyafeti": ["Önlük & Üniforma", "Tişört & Polar", "İş Pantolonu & Tulum", "İş Ayakkabısı", "Promosyon Tekstil", "Diğer"],
+  "Matbaa & Baskı": ["Amerikan Servis", "Kasa & POS Rulosu", "Katalog & Broşür", "Etiket & Çıkartma", "Kutu Baskı", "Diğer"],
+  "İnşaat & Hırdavat": ["El Aletleri", "Vida & Bağlantı", "Silikon & Yapıştırıcı", "Boya & Kimyasallar", "İş Güvenliği", "Diğer"],
+  "Ofis & Kırtasiye": ["Fotokopi Kağıdı", "Dosyalama & Klasör", "Masaüstü Gereçler", "Yazı & Çizim", "Arşiv & Saklama", "Diğer"],
+  "Elektronik & Donanım": ["Barkod & POS Cihazları", "Adisyon Yazıcıları", "Kablolama & Network", "Güvenlik & Kamera", "Sarf Donanım", "Diğer"],
+  "Endüstriyel Mutfak": ["GN Küvet & Tepsi", "Pişirme & Tencereler", "Bıçak & Kesim", "Porselen & Züccaciye", "Hazırlık Ekipmanları", "Diğer"],
+  "Diğer": ["Özel Üretim", "Genel Tedarik", "Proje Bazlı", "Diğer"],
+};
 
 export const CATEGORY_DETAILS: Record<string, CategoryMeta> = {
   "Ambalaj & Paketleme": {

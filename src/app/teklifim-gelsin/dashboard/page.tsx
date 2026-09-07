@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   PackageCheck,
+  Package,
   Building2,
   Truck,
   Plus,
@@ -529,6 +530,13 @@ export default function TeklifimDashboardPage() {
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>Siparişler ({activeOrdersCount})</span>
+                    </Link>
+                    <Link
+                      href="/teklifim-gelsin/products"
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 dark:bg-slate-700 hover:bg-emerald-600 text-white transition-all shadow-sm inline-flex items-center gap-1.5"
+                    >
+                      <Package className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Katalog & Ürünler</span>
                     </Link>
                     <Link
                       href="/teklifim-gelsin/payments"

@@ -42,6 +42,7 @@ import TrustSignals from "@/components/teklifimGelsin/TrustSignals";
 import ProfileCompletionCard from "@/components/teklifimGelsin/ProfileCompletionCard";
 import EditProfileModal from "@/components/teklifimGelsin/EditProfileModal";
 import ReportModal from "@/components/teklifimGelsin/ReportModal";
+import ProductCard from "@/components/teklifimGelsin/ProductCard";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -616,55 +617,17 @@ export default function TeklifimSupplierProfilePage({
                     )}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                     {products.map((prod) => (
-                      <div
+                      <ProductCard
                         key={prod.id}
-                        className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/80 border border-neutral-200/70 dark:border-neutral-800 flex flex-col justify-between space-y-3"
-                      >
-                        <div className="space-y-1.5">
-                          <div className="flex items-start justify-between gap-2">
-                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">
-                              {prod.category}
-                            </span>
-                            {isOwner && (
-                              <button
-                                onClick={() => handleDeleteProduct(prod.id)}
-                                title="Ürünü Sil"
-                                className="text-neutral-400 hover:text-rose-500 p-0.5 transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                          </div>
-                          <h4 className="text-sm font-bold text-neutral-900 dark:text-white">
-                            {prod.name}
-                          </h4>
-                          {prod.description && (
-                            <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-2">
-                              {prod.description}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60 flex items-center justify-between text-xs">
-                          <div>
-                            <span className="text-[10px] text-neutral-400 block">Min. Sipariş</span>
-                            <span className="font-semibold text-neutral-700 dark:text-neutral-300">
-                              {prod.minOrder || "1"} {prod.unit || "Birim"}
-                            </span>
-                          </div>
-
-                          {prod.estimatedPrice && (
-                            <div className="text-right">
-                              <span className="text-[10px] text-neutral-400 block">Tahmini Fiyat</span>
-                              <span className="font-black text-neutral-900 dark:text-white">
-                                {prod.estimatedPrice.toLocaleString("tr-TR")} ₺
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                        product={{
+                          ...prod,
+                          supplierName: supplier?.companyName,
+                          supplierCity: supplier?.city,
+                          supplierVerified: supplier?.isVerified || supplier?.verificationStatus === "verified",
+                        }}
+                      />
                     ))}
                   </div>
                 )}

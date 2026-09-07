@@ -16,10 +16,13 @@ function NewRequestContent() {
   const searchParams = useSearchParams();
   const initialPrompt = searchParams.get("prompt") || "";
   const cloneFromId = searchParams.get("cloneFrom");
+  const productId = searchParams.get("productId");
+  const supplierId = searchParams.get("supplierId");
 
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<TeklifimProfile | null>(null);
   const [cloneData, setCloneData] = useState<Partial<TeklifimRequest> | null>(null);
+  const [productPrefillName, setProductPrefillName] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -38,8 +41,34 @@ function NewRequestContent() {
           } catch {}
         }
 
+        // Check if productId is requested (Direct Quote from Product Catalog)
+        if (productId) {
+          try {
+            const pRes = await fetch(`/api/teklifim-gelsin/products/${productId}`);
+            if (pRes.ok) {
+              const pData = await pRes.json();
+              if (pData.product) {
+                const p = pData.product;
+                setProductPrefillName(p.title || p.name);
+                setCloneData({
+                  title: `${p.title || p.name} Teklifi`,
+                  category: p.category,
+                  subCategory: p.subCategory,
+                  productName: p.title || p.name,
+                  unit: p.unit || "Adet",
+                  quantity: p.minimumOrder || 1,
+                  description: `Seçilen Katalog Ürünü: ${p.title || p.name} (SKU: ${p.sku || "-"} - Birim: ${p.unit || "Adet"})\n${p.description || ""}`,
+                  selectedSupplierId: p.supplierId || supplierId,
+                  invitedSupplierIds: p.supplierId ? [p.supplierId] : (supplierId ? [supplierId] : []),
+                });
+              }
+            }
+          } catch (e) {
+            console.warn("Product prefill notice:", e);
+          }
+        }
         // Check if cloneFrom is requested
-        if (cloneFromId) {
+        else if (cloneFromId) {
           try {
             const token = await currentUser.getIdToken();
             const cloneRes = await fetch(`/api/teklifim-gelsin/requests/${cloneFromId}/clone`, {
@@ -60,7 +89,7 @@ function NewRequestContent() {
       }
     });
     return () => unsub();
-  }, [router, cloneFromId]);
+  }, [router, cloneFromId, productId, supplierId]);
 
   const handleSubmit = async (requestData: Partial<TeklifimRequest>) => {
     if (!user) return;
@@ -109,10 +138,21 @@ function NewRequestContent() {
 
       {cloneData && (
         <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-950 dark:text-emerald-200 text-xs flex items-center gap-2.5">
-          <Repeat className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>
-            Önceki talebiniz şablon olarak yüklendi. Bilgileri gözden geçirip dilediğiniz gibi güncelleyebilirsiniz.
-          </span>
+          {productPrefillName ? (
+            <>
+              <PackageCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>
+                Katalogdan <strong>{productPrefillName}</strong> ürünü seçildi. İhtiyacınız olan adet ve detayları belirterek toptancıya teklif isteyebilirsiniz.
+              </span>
+            </>
+          ) : (
+            <>
+              <Repeat className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>
+                Önceki talebiniz şablon olarak yüklendi. Bilgileri gözden geçirip dilediğiniz gibi güncelleyebilirsiniz.
+              </span>
+            </>
+          )}
         </div>
       )}
 

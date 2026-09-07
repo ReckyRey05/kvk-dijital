@@ -179,6 +179,16 @@ export default function TeklifimHeader() {
             >
               Tedarikçiler
             </Link>
+            <Link
+              href="/teklifim-gelsin/products"
+              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                pathname.startsWith("/teklifim-gelsin/products")
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              Ürünler
+            </Link>
             {user && profile?.role === "supplier" && (
               <Link
                 href="/teklifim-gelsin/offers"
@@ -457,6 +467,13 @@ export default function TeklifimHeader() {
             className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
           >
             Tedarikçiler
+          </Link>
+          <Link
+            href="/teklifim-gelsin/products"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            Ürünler
           </Link>
           {user && profile?.role === "supplier" && (
             <Link

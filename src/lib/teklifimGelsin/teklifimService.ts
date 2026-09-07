@@ -526,7 +526,8 @@ export async function markNotificationRead(notificationId: string): Promise<bool
  */
 export function computeSupplierMatchScore(
   request: TeklifimRequest,
-  supplier: TeklifimProfile
+  supplier: TeklifimProfile,
+  supplierProducts?: TeklifimProduct[]
 ): TeklifimSupplierMatch {
   let score = 0;
   const reasons: string[] = [];
@@ -577,6 +578,30 @@ export function computeSupplierMatchScore(
   if (supplier.isVerified || supplier.taxVerified) {
     score += 5;
     reasons.push("Doğrulanmış tedarikçi güven puanı");
+  }
+
+  // 6. Product catalog match bonus (+15)
+  if (supplierProducts && supplierProducts.length > 0) {
+    const catLower = request.category.toLowerCase();
+    const subCatLower = (request.subCategory || "").toLowerCase();
+
+    const productMatched = supplierProducts.some((p) => {
+      if (p.status === "archived" || p.isActive === false) return false;
+      const pTitle = (p.title || p.name || "").toLowerCase();
+      const pCat = (p.category || "").toLowerCase();
+      const pSubCat = (p.subCategory || "").toLowerCase();
+      const pDesc = (p.description || "").toLowerCase();
+      return (
+        (catLower && pCat === catLower) ||
+        (subCatLower && pSubCat === subCatLower) ||
+        words.some((w) => pTitle.includes(w) || pDesc.includes(w))
+      );
+    });
+
+    if (productMatched) {
+      score += 15;
+      reasons.push("Katalogda eşleşen ürün mevcut (+15)");
+    }
   }
 
   return {
@@ -3032,4 +3057,7 @@ export async function resolveTeklifimOrderDispute(
   const updatedDoc = await docRef.get();
   return updatedDoc.data() as TeklifimOrder;
 }
+
+// Re-export FAZ 7 Product Catalog and Inventory Services
+export * from "./productService";
 

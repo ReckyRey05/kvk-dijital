@@ -3,6 +3,7 @@ import {
   TeklifimRequest,
   TeklifimProfile,
   TeklifimSupplierMatch,
+  TeklifimProduct,
 } from "@/types/teklifimGelsin";
 
 /**
@@ -57,7 +58,8 @@ export function checkRequestDeadlineExpired(request: TeklifimRequest): boolean {
  */
 export function computeSupplierMatchScore(
   request: TeklifimRequest,
-  supplier: TeklifimProfile
+  supplier: TeklifimProfile,
+  supplierProducts?: TeklifimProduct[]
 ): TeklifimSupplierMatch {
   let score = 0;
   const reasons: string[] = [];
@@ -101,6 +103,32 @@ export function computeSupplierMatchScore(
   if (supplier.completedDeals && supplier.completedDeals > 10) {
     score += 5;
     reasons.push("Aktif ve deneyimli tedarikçi");
+  }
+
+  // 6. Product catalog match bonus (+15)
+  if (supplierProducts && supplierProducts.length > 0) {
+    const reqTitleLower = request.title.toLowerCase();
+    const catLower = request.category.toLowerCase();
+    const subCatLower = (request.subCategory || "").toLowerCase();
+    const words = reqTitleLower.split(" ").filter((w) => w.length > 3);
+
+    const productMatched = supplierProducts.some((p) => {
+      if (p.status === "archived" || p.isActive === false) return false;
+      const pTitle = (p.title || p.name || "").toLowerCase();
+      const pCat = (p.category || "").toLowerCase();
+      const pSubCat = (p.subCategory || "").toLowerCase();
+      const pDesc = (p.description || "").toLowerCase();
+      return (
+        (catLower && pCat === catLower) ||
+        (subCatLower && pSubCat === subCatLower) ||
+        words.some((w) => pTitle.includes(w) || pDesc.includes(w))
+      );
+    });
+
+    if (productMatched) {
+      score += 15;
+      reasons.push("Katalogda eşleşen ürün mevcut (+15)");
+    }
   }
 
   return {

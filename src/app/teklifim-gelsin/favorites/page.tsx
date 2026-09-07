@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   Heart,
   Building2,
+  Package,
   Search,
   ArrowRight,
   ShieldCheck,
@@ -16,15 +17,24 @@ import {
 } from "lucide-react";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import SupplierCard from "@/components/teklifimGelsin/SupplierCard";
+import ProductCard from "@/components/teklifimGelsin/ProductCard";
 import DirectRequestModal from "@/components/teklifimGelsin/DirectRequestModal";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { TeklifimProfile, TeklifimFavorite, TeklifimRequest } from "@/types/teklifimGelsin";
+import {
+  TeklifimProfile,
+  TeklifimFavorite,
+  TeklifimProductFavorite,
+  TeklifimProduct,
+  TeklifimRequest,
+} from "@/types/teklifimGelsin";
 
 export default function FavoritesPage() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [favorites, setFavorites] = useState<TeklifimFavorite[]>([]);
+  const [activeTab, setActiveTab] = useState<"suppliers" | "products">("suppliers");
+  const [supplierFavorites, setSupplierFavorites] = useState<TeklifimFavorite[]>([]);
+  const [productFavorites, setProductFavorites] = useState<TeklifimProductFavorite[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Direct request quote modal state
@@ -38,12 +48,23 @@ export default function FavoritesPage() {
       if (user) {
         try {
           const token = await user.getIdToken();
-          const res = await fetch("/api/teklifim-gelsin/favorites", {
+
+          // Fetch supplier favorites
+          const sRes = await fetch("/api/teklifim-gelsin/favorites", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          if (res.ok) {
-            const data = await res.json();
-            setFavorites(data.favorites || []);
+          if (sRes.ok) {
+            const sData = await sRes.json();
+            setSupplierFavorites(sData.favorites || []);
+          }
+
+          // Fetch product favorites
+          const pRes = await fetch("/api/teklifim-gelsin/products/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            setProductFavorites(pData.favorites || []);
           }
         } catch (err) {
           console.error("Favorites load error:", err);
@@ -58,7 +79,7 @@ export default function FavoritesPage() {
     return () => unsub();
   }, []);
 
-  const handleToggleFavorite = async (supplier: TeklifimProfile) => {
+  const handleToggleSupplierFavorite = async (supplier: TeklifimProfile) => {
     if (!currentUser) return;
     try {
       const token = await currentUser.getIdToken();
@@ -71,11 +92,26 @@ export default function FavoritesPage() {
         body: JSON.stringify({ supplier }),
       });
       if (res.ok) {
-        // Remove from local list
-        setFavorites((prev) => prev.filter((f) => f.supplierId !== supplier.uid));
+        setSupplierFavorites((prev) => prev.filter((f) => f.supplierId !== supplier.uid));
       }
     } catch (err) {
-      console.error("Remove favorite failed:", err);
+      console.error("Remove supplier favorite failed:", err);
+    }
+  };
+
+  const handleToggleProductFavorite = async (product: TeklifimProduct) => {
+    if (!currentUser) return;
+    try {
+      const token = await currentUser.getIdToken();
+      const res = await fetch(`/api/teklifim-gelsin/products/${product.id}/favorite`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setProductFavorites((prev) => prev.filter((f) => f.productId !== product.id));
+      }
+    } catch (err) {
+      console.error("Remove product favorite failed:", err);
     }
   };
 
@@ -134,14 +170,40 @@ export default function FavoritesPage() {
         <div className="space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 text-xs font-bold">
             <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-            <span>Kayıtlı Tedarikçilerim</span>
+            <span>Kayıtlı Favorilerim</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            Favori Toptancılar ve Üreticiler
+            Favori Tedarikçiler & Ürünler
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl">
-            Sık çalıştığınız veya gelecekteki siparişleriniz için kaydettiğiniz güvenilir tedarikçilerin listesi.
+            Sık çalıştığınız firmaları ve tekrar sipariş vermek üzere kaydettiğiniz toptan ürünleri buradan yönetebilirsiniz.
           </p>
+        </div>
+
+        {/* TABS SWITCHER */}
+        <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800">
+          <button
+            onClick={() => setActiveTab("suppliers")}
+            className={`pb-3 px-2 text-sm font-bold flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === "suppliers"
+                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <Building2 className="w-4 h-4" />
+            <span>Tedarikçiler ({supplierFavorites.length})</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("products")}
+            className={`pb-3 px-2 text-sm font-bold flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === "products"
+                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <Package className="w-4 h-4" />
+            <span>Ürünler ({productFavorites.length})</span>
+          </button>
         </div>
 
         {/* CONTENT */}
@@ -157,10 +219,10 @@ export default function FavoritesPage() {
             </div>
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Favori Tedarikçilerinizi Görmek İçin Giriş Yapın
+                Favorilerinizi Görmek İçin Giriş Yapın
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                Kayıtlı firmaları saklamak ve hızlıca teklif istemek için işletme hesabınızla giriş yapmalısınız.
+                Kayıtlı firmaları ve ürünleri saklamak için işletme hesabınızla giriş yapmalısınız.
               </p>
             </div>
             <Link
@@ -171,55 +233,109 @@ export default function FavoritesPage() {
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-        ) : favorites.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200 dark:border-slate-800 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
-              <Building2 className="w-7 h-7" />
+        ) : activeTab === "suppliers" ? (
+          /* SUPPLIERS TAB */
+          supplierFavorites.length === 0 ? (
+            <div className="p-12 text-center rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200 dark:border-slate-800 space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
+                <Building2 className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Henüz Favori Tedarikçiniz Yok
+                </h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Tedarikçi keşif dizinini inceleyerek beğendiğiniz firmaları kalp ikonuna tıklayıp listenize ekleyebilirsiniz.
+                </p>
+              </div>
+              <Link
+                href="/teklifim-gelsin/suppliers"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all"
+              >
+                <span>Tedarikçileri Keşfet</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Henüz Favori Tedarikçiniz Yok
-              </h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                Tedarikçi keşif dizinini inceleyerek beğendiğiniz firmaları kalp ikonuna tıklayıp listenize ekleyebilirsiniz.
-              </p>
-            </div>
-            <Link
-              href="/teklifim-gelsin/suppliers"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all"
-            >
-              <span>Tedarikçileri Keşfet</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {favorites.map((fav) => {
-              const adaptedSupplier: TeklifimProfile = {
-                uid: fav.supplierId,
-                role: "supplier",
-                companyName: fav.supplierName,
-                contactName: "Yetkili",
-                city: fav.supplierCity,
-                categories: fav.supplierCategories,
-                minOrder: fav.supplierMinOrder,
-                responseRate: fav.supplierResponseRate,
-                isVerified: (fav as any).isVerified ?? false,
-                createdAt: fav.createdAt,
-                updatedAt: fav.createdAt,
-              };
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {supplierFavorites.map((fav) => {
+                const adaptedSupplier: TeklifimProfile = {
+                  uid: fav.supplierId,
+                  role: "supplier",
+                  companyName: fav.supplierName,
+                  contactName: "Yetkili",
+                  city: fav.supplierCity,
+                  categories: fav.supplierCategories,
+                  minOrder: fav.supplierMinOrder,
+                  responseRate: fav.supplierResponseRate,
+                  isVerified: (fav as any).isVerified ?? false,
+                  createdAt: fav.createdAt,
+                  updatedAt: fav.createdAt,
+                };
 
-              return (
-                <SupplierCard
-                  key={fav.id || fav.supplierId}
-                  supplier={adaptedSupplier}
-                  isFavorited={true}
-                  onToggleFavorite={handleToggleFavorite}
-                  onRequestQuote={handleRequestQuote}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <SupplierCard
+                    key={fav.id || fav.supplierId}
+                    supplier={adaptedSupplier}
+                    isFavorited={true}
+                    onToggleFavorite={handleToggleSupplierFavorite}
+                    onRequestQuote={handleRequestQuote}
+                  />
+                );
+              })}
+            </div>
+          )
+        ) : (
+          /* PRODUCTS TAB */
+          productFavorites.length === 0 ? (
+            <div className="p-12 text-center rounded-3xl bg-white dark:bg-[#0E131F] border border-slate-200 dark:border-slate-800 space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
+                <Package className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                  Henüz Favori Ürününüz Yok
+                </h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Ürün kataloğundaki ürünlerin üzerindeki kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.
+                </p>
+              </div>
+              <Link
+                href="/teklifim-gelsin/products"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all"
+              >
+                <span>Ürün Kataloğunu İncele</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {productFavorites.map((fav) => {
+                const adaptedProduct: TeklifimProduct = {
+                  id: fav.productId,
+                  supplierId: fav.supplierId,
+                  supplierName: fav.supplierName,
+                  name: fav.productName,
+                  title: fav.productName,
+                  category: fav.productCategory,
+                  imageUrl: fav.productImageUrl,
+                  price: fav.productPrice,
+                  estimatedPrice: fav.productPrice,
+                  currency: fav.productCurrency || "TRY",
+                  createdAt: fav.createdAt,
+                };
+
+                return (
+                  <ProductCard
+                    key={fav.id || fav.productId}
+                    product={adaptedProduct}
+                    isFavorited={true}
+                    onToggleFavorite={handleToggleProductFavorite}
+                  />
+                );
+              })}
+            </div>
+          )
         )}
       </main>
 
