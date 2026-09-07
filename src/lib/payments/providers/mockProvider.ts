@@ -3,6 +3,7 @@ import {
   MarketplacePaymentProvider,
   RefundProvider,
   PayoutProvider,
+  SubscriptionPaymentProvider,
   CreatePaymentSessionParams,
   PaymentSessionResult,
   VerifyPaymentParams,
@@ -13,10 +14,13 @@ import {
   PayoutResult,
   WebhookPayload,
   WebhookVerificationResult,
+  CreateSubscriptionSessionParams,
+  SubscriptionSessionResult,
+  SubscriptionWebhookVerificationResult,
 } from "../types";
 
 export class MockMarketplacePaymentProvider
-  implements MarketplacePaymentProvider, RefundProvider, PayoutProvider
+  implements MarketplacePaymentProvider, RefundProvider, PayoutProvider, SubscriptionPaymentProvider
 {
   public name = "mock_provider";
 
@@ -132,6 +136,57 @@ export class MockMarketplacePaymentProvider
       providerPayoutId,
       amount: params.amount,
       status: "completed",
+    };
+  }
+
+  async createSubscriptionSession(params: CreateSubscriptionSessionParams): Promise<SubscriptionSessionResult> {
+    const providerSubscriptionId = `mock_sub_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
+    const checkoutPageUrl = `/teklifim-gelsin/billing/checkout/${params.planId}?session=${providerSubscriptionId}&idempotency=${params.idempotencyKey}`;
+
+    return {
+      provider: this.name,
+      providerSubscriptionId,
+      checkoutPageUrl,
+      status: "pending",
+    };
+  }
+
+  async cancelSubscription(providerSubscriptionId: string): Promise<{ success: boolean; cancelledAt: number }> {
+    return {
+      success: true,
+      cancelledAt: Date.now(),
+    };
+  }
+
+  async verifySubscriptionWebhook(
+    payload: WebhookPayload,
+    secretKey: string
+  ): Promise<SubscriptionWebhookVerificationResult> {
+    const signature =
+      payload.headers["x-teklifim-signature"] ||
+      payload.headers["x-provider-signature"] ||
+      payload.headers["x-iyzico-signature"];
+
+    if (signature) {
+      const computed = MockMarketplacePaymentProvider.signPayload(payload.rawBody, secretKey);
+      if (signature !== computed) {
+        return {
+          isValid: false,
+          eventType: "unknown",
+          eventId: "",
+          providerSubscriptionId: "",
+          errorMessage: "Gecersiz imza.",
+        };
+      }
+    }
+
+    return {
+      isValid: true,
+      eventType: payload.parsedBody?.eventType || "subscription.created",
+      eventId: payload.parsedBody?.eventId || `evt_${Date.now()}`,
+      providerSubscriptionId: payload.parsedBody?.providerSubscriptionId || "",
+      amount: payload.parsedBody?.amount,
+      currency: payload.parsedBody?.currency || "TRY",
     };
   }
 

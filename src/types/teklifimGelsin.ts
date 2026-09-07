@@ -1683,3 +1683,180 @@ export interface TeklifimAdminCategory {
   createdAt: number;
   updatedAt: number;
 }
+
+// ==========================================
+// FAZ 13: ABONELİK, PAKETLER, LİMİTLER & GELİR MODELİ
+// ==========================================
+
+export type TeklifimSubscriptionTier =
+  | "free"
+  | "business"
+  | "pro_business"
+  | "supplier"
+  | "pro_supplier";
+
+export type TeklifimBillingInterval = "monthly" | "yearly";
+
+export type TeklifimSubscriptionStatus =
+  | "trialing"
+  | "active"
+  | "past_due"
+  | "paused"
+  | "cancelled"
+  | "expired"
+  | "incomplete";
+
+export interface TeklifimPlanLimits {
+  requestsPerMonth: number;
+  teamMembers: number;
+  savedProcurementLists: number;
+  activeProducts: number;
+  quotesPerMonth: number;
+  apiRateLimitPerMin: number;
+  customPriceLists: number;
+}
+
+export interface TeklifimPlanFeatures {
+  advancedReports: boolean;
+  apiAccess: boolean;
+  webhooks: boolean;
+  bulkImport: boolean;
+  procurementApproval: boolean;
+  verifiedBadgePriority: boolean;
+  dedicatedSupport: boolean;
+  customBranding: boolean;
+}
+
+export interface TeklifimSubscriptionPlan {
+  id: string; // e.g. plan_business_v1
+  tier: TeklifimSubscriptionTier;
+  name: string;
+  description: string;
+  targetRole: "business" | "supplier" | "all";
+  version: number;
+  monthlyPrice: number; // TL
+  yearlyPrice: number; // TL
+  yearlyDiscountPercent: number; // e.g. 15 (%)
+  limits: TeklifimPlanLimits;
+  features: TeklifimPlanFeatures;
+  isActive: boolean;
+  trialDays: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimSubscription {
+  id: string; // sub_{timestamp}_{hex}
+  userId: string;
+  userEmail: string;
+  userRole: "business" | "supplier";
+  planId: string;
+  planTier: TeklifimSubscriptionTier;
+  planVersion: number;
+  status: TeklifimSubscriptionStatus;
+  interval: TeklifimBillingInterval;
+  currentPeriodStart: number;
+  currentPeriodEnd: number;
+  cancelAtPeriodEnd: boolean;
+  cancelledAt?: number;
+  cancelReason?: string;
+  trialStart?: number;
+  trialEnd?: number;
+  hasUsedTrial: boolean;
+  providerSubscriptionId?: string;
+  providerCustomerId?: string;
+  paymentMethod?: {
+    brand: string;
+    lastFour: string;
+    expMonth?: number;
+    expYear?: number;
+  };
+  gracePeriodEnd?: number;
+  pendingDowngradePlanId?: string;
+  pendingDowngradeEffectiveAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimUsageMetrics {
+  requestsUsed: number;
+  quotesUsed: number;
+  productsActive: number;
+  teamMembersActive: number;
+  procurementListsUsed: number;
+  apiCallsUsed: number;
+}
+
+export interface TeklifimUsage {
+  id: string; // usage_{userId}_{period}
+  userId: string;
+  period: string; // YYYY-MM
+  periodStart: number;
+  periodEnd: number;
+  metrics: TeklifimUsageMetrics;
+  updatedAt: number;
+}
+
+export interface TeklifimCoupon {
+  id: string; // cpn_{code}
+  code: string;
+  discountType: "percent" | "fixed";
+  discountValue: number;
+  validFrom: number;
+  validUntil: number;
+  maxUses: number;
+  currentUses: number;
+  maxUsesPerUser: number;
+  usedBy: Record<string, number>; // userId -> usageCount
+  applicablePlans?: TeklifimSubscriptionTier[];
+  isActive: boolean;
+  createdAt: number;
+}
+
+export interface TeklifimBillingRecord {
+  id: string; // bil_{timestamp}_{hex}
+  invoiceNumber: string; // SUB-2026-XXXXXX
+  subscriptionId: string;
+  userId: string;
+  userEmail: string;
+  companyName: string;
+  planId: string;
+  planTier: TeklifimSubscriptionTier;
+  interval: TeklifimBillingInterval;
+  amount: number;
+  taxAmount: number;
+  totalAmount: number;
+  currency: string;
+  couponCode?: string;
+  discountAmount?: number;
+  status: "paid" | "failed" | "refunded";
+  providerPaymentId?: string;
+  providerInvoiceUrl?: string;
+  paymentMethodBrand?: string;
+  paymentMethodLastFour?: string;
+  paidAt?: number;
+  createdAt: number;
+}
+
+export type TeklifimSubscriptionEventType =
+  | "subscription.created"
+  | "subscription.renewed"
+  | "subscription.upgraded"
+  | "subscription.downgraded"
+  | "subscription.cancelled"
+  | "subscription.payment_failed"
+  | "subscription.past_due"
+  | "subscription.trial_started"
+  | "subscription.trial_ending";
+
+export interface TeklifimSubscriptionEvent {
+  id: string; // subevt_{timestamp}_{hex}
+  subscriptionId: string;
+  userId: string;
+  eventType: TeklifimSubscriptionEventType;
+  providerEventId?: string;
+  idempotencyKey?: string;
+  payload: any;
+  createdAt: number;
+}
+

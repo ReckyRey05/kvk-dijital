@@ -133,3 +133,50 @@ export interface RefundProvider {
 export interface PayoutProvider {
   processPayout(params: ProcessPayoutParams): Promise<PayoutResult>;
 }
+
+// ==========================================
+// FAZ 13: SUBSCRIPTION PAYMENT PROVIDER
+// ==========================================
+
+export interface CreateSubscriptionSessionParams {
+  subscriptionId: string;
+  userId: string;
+  userEmail: string;
+  planId: string;
+  planName: string;
+  amount: number;
+  currency: string;
+  interval: "monthly" | "yearly";
+  callbackUrl: string;
+  idempotencyKey: string;
+}
+
+export interface SubscriptionSessionResult {
+  provider: string;
+  providerSubscriptionId: string;
+  checkoutPageUrl: string;
+  status: "pending" | "active";
+}
+
+export interface SubscriptionWebhookVerificationResult {
+  isValid: boolean;
+  eventType:
+    | "subscription.created"
+    | "subscription.renewed"
+    | "subscription.payment_failed"
+    | "subscription.cancelled"
+    | "unknown";
+  eventId: string;
+  providerSubscriptionId: string;
+  amount?: number;
+  currency?: string;
+  errorMessage?: string;
+}
+
+export interface SubscriptionPaymentProvider {
+  name: string;
+  createSubscriptionSession(params: CreateSubscriptionSessionParams): Promise<SubscriptionSessionResult>;
+  cancelSubscription(providerSubscriptionId: string): Promise<{ success: boolean; cancelledAt: number }>;
+  verifySubscriptionWebhook(payload: WebhookPayload, secretKey: string): Promise<SubscriptionWebhookVerificationResult>;
+}
+

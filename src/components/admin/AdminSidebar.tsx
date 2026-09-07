@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   AlertTriangle,
   CreditCard,
+  Repeat,
   Webhook,
   Headset,
   Activity,
@@ -68,6 +69,7 @@ const navGroups: NavGroup[] = [
     title: "Finans & Entegrasyon",
     items: [
       { name: "Finans & Komisyon", href: "/admin/finance", icon: CreditCard },
+      { name: "Abonelik & Gelir Modeli", href: "/admin/billing", icon: Repeat },
       { name: "Entegrasyonlar", href: "/admin/integrations", icon: Webhook },
     ],
   },

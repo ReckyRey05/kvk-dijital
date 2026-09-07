@@ -278,6 +278,38 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // 14. FAZ 13: ABONELİK, PAKETLER, LİMİTLER & GELİR MODELİ
+    match /teklifim_subscriptions/{subId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_subscription_plans/{planId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_billing_records/{recordId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_usages/{usageId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_coupons/{couponId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /teklifim_subscription_events/{eventId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false; // IMMUTABLE EVENT TRAIL
+    }
   }
 }
 
