@@ -15,6 +15,9 @@ function NewRequestContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialPrompt = searchParams.get("prompt") || "";
+  const initialTitle = searchParams.get("title") || "";
+  const initialCategory = searchParams.get("category") || "";
+  const initialCity = searchParams.get("city") || "";
   const cloneFromId = searchParams.get("cloneFrom");
   const productId = searchParams.get("productId");
   const supplierId = searchParams.get("supplierId");
@@ -84,12 +87,22 @@ function NewRequestContent() {
             console.warn("Clone request lookup notice:", e);
           }
         }
+        // Check if prefilled from zero-result search
+        else if (initialPrompt || initialTitle || initialCategory || initialCity) {
+          setCloneData({
+            title: initialTitle || (initialPrompt ? `${initialPrompt} Tedariği` : "Toptan Malzeme Tedariği"),
+            category: initialCategory || "Ambalaj & Paketleme",
+            productName: initialPrompt || undefined,
+            city: initialCity || undefined,
+            description: initialPrompt ? `Aranan ürün/hizmet: ${initialPrompt}. Toptan alım için teklif bekliyoruz.` : undefined,
+          });
+        }
 
         setLoading(false);
       }
     });
     return () => unsub();
-  }, [router, cloneFromId, productId, supplierId]);
+  }, [router, cloneFromId, productId, supplierId, initialPrompt, initialTitle, initialCategory, initialCity]);
 
   const handleSubmit = async (requestData: Partial<TeklifimRequest>) => {
     if (!user) return;

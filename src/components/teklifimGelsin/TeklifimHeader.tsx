@@ -20,12 +20,14 @@ import {
   Sparkles,
   ShoppingBag,
   CreditCard,
+  Search,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { TeklifimProfile, TeklifimNotification } from "@/types/teklifimGelsin";
 import { useTeklifimTheme } from "@/context/TeklifimThemeContext";
 import NotificationDropdown from "./NotificationDropdown";
+import ComparisonDrawer from "./ComparisonDrawer";
 
 export default function TeklifimHeader() {
   const router = useRouter();
@@ -168,6 +170,27 @@ export default function TeklifimHeader() {
               }`}
             >
               Panel
+            </Link>
+            <Link
+              href="/teklifim-gelsin/search"
+              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 ${
+                pathname.startsWith("/teklifim-gelsin/search")
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Arama</span>
+            </Link>
+            <Link
+              href="/teklifim-gelsin/categories"
+              className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                pathname.startsWith("/teklifim-gelsin/categories")
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              }`}
+            >
+              Kategoriler
             </Link>
             <Link
               href="/teklifim-gelsin/suppliers"
@@ -462,6 +485,21 @@ export default function TeklifimHeader() {
             Kontrol Paneli
           </Link>
           <Link
+            href="/teklifim-gelsin/search"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            <Search className="w-4 h-4 text-emerald-600" />
+            <span>Pazar Arama & Keşif</span>
+          </Link>
+          <Link
+            href="/teklifim-gelsin/categories"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+          >
+            Kategoriler & Sektörler
+          </Link>
+          <Link
             href="/teklifim-gelsin/suppliers"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
@@ -555,6 +593,9 @@ export default function TeklifimHeader() {
           )}
         </div>
       )}
+
+      {/* COMPARISON FLOATING DOCK */}
+      <ComparisonDrawer />
     </header>
   );
 }

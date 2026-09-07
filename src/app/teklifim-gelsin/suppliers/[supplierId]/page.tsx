@@ -27,12 +27,14 @@ import {
   Repeat,
   AlertCircle,
   Globe,
+  Scale,
 } from "lucide-react";
 import {
   TeklifimProfile,
   TeklifimProduct,
   TeklifimRequest,
   TeklifimReview,
+  TeklifimSupplierProfile,
 } from "@/types/teklifimGelsin";
 import { TeklifimThemeProvider } from "@/context/TeklifimThemeContext";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
@@ -43,6 +45,9 @@ import ProfileCompletionCard from "@/components/teklifimGelsin/ProfileCompletion
 import EditProfileModal from "@/components/teklifimGelsin/EditProfileModal";
 import ReportModal from "@/components/teklifimGelsin/ReportModal";
 import ProductCard from "@/components/teklifimGelsin/ProductCard";
+import SimilarSuppliersSection from "@/components/teklifimGelsin/SimilarSuppliersSection";
+import ComparisonDrawer, { addToComparison } from "@/components/teklifimGelsin/ComparisonDrawer";
+import { supplierToComparisonItem } from "@/lib/teklifimGelsin/searchUtils";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -357,6 +362,27 @@ export default function TeklifimSupplierProfilePage({
 
             {supplier && !isOwner && (
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    const item = supplierToComparisonItem({
+                      id: supplier.uid,
+                      companyName: supplier.companyName,
+                      categories: supplier.categories,
+                      city: supplier.city,
+                      logoUrl: supplier.logoUrl,
+                      verification: { isVerified: isVerified },
+                      rating: supplier.rating,
+                      completedDeals: supplier.completedDeals,
+                    } as TeklifimSupplierProfile);
+                    const res = addToComparison(item);
+                    if (!res.success && res.error) alert(res.error);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0E131F] text-neutral-600 dark:text-neutral-300 hover:text-blue-600 dark:hover:text-blue-400 text-xs font-bold transition-all cursor-pointer"
+                >
+                  <Scale className="w-3.5 h-3.5 text-blue-500" />
+                  <span>Karşılaştır</span>
+                </button>
+
                 <button
                   onClick={handleToggleFavorite}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
@@ -824,7 +850,15 @@ export default function TeklifimSupplierProfilePage({
               </div>
             </div>
           )}
+
+          {/* SIMILAR SUPPLIERS SECTION */}
+          <div className="pt-4">
+            <SimilarSuppliersSection supplierId={supplierId} />
+          </div>
         </main>
+
+        {/* COMPARISON FLOATING DOCK */}
+        <ComparisonDrawer />
 
         {/* MODALS */}
         {productModalOpen && (

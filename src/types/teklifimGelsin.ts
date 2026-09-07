@@ -55,6 +55,25 @@ export interface TeklifimProfile {
   updatedAt?: number;
 }
 
+export type TeklifimSupplierProfile = Omit<Partial<TeklifimProfile>, "responseRate"> & {
+  id: string;
+  companyName: string;
+  city?: string;
+  district?: string;
+  categories?: string[];
+  description?: string;
+  logoUrl?: string;
+  email?: string;
+  rating?: number;
+  reviewsCount?: number;
+  completedDeals?: number;
+  responseRate?: number;
+  verification?: {
+    isVerified?: boolean;
+  };
+  createdAt?: number;
+};
+
 export type TeklifimStockStatus =
   | "in_stock"
   | "low_stock"
@@ -799,4 +818,129 @@ export interface TeklifimSupplierPayoutSummary {
   completedPayout: number; // Tedarikçinin banka hesabına aktarılmış tutar
   transactionsCount: number;
 }
+
+// ==========================================
+// FAZ 8: KEŞİF, ARAMA & AKILLI MARKETPLACE
+// ==========================================
+
+export type TeklifimSearchType = "all" | "products" | "suppliers" | "categories";
+
+export type TeklifimSearchSort =
+  | "relevance"
+  | "price_asc"
+  | "price_desc"
+  | "moq_asc"
+  | "fastest_delivery"
+  | "rating"
+  | "deals"
+  | "newest"
+  | "fastest_response"
+  | "popular";
+
+export interface TeklifimSearchFilters {
+  query?: string;
+  type?: TeklifimSearchType;
+  category?: string;
+  subCategory?: string;
+  city?: string;
+  district?: string;
+  deliveryRegion?: string;
+  stockStatus?: TeklifimStockStatus;
+  inStockOnly?: boolean;
+  minPrice?: number;
+  maxPrice?: number;
+  minMoq?: number;
+  maxMoq?: number;
+  verifiedOnly?: boolean;
+  minRating?: number;
+  sort?: TeklifimSearchSort;
+  limit?: number;
+  offset?: number;
+}
+
+export interface TeklifimCategoryMatch {
+  name: string;
+  slug: string;
+  description: string;
+  popularItems: string[];
+  subCategories: string[];
+  matchingSubCategories?: string[];
+  productsCount?: number;
+  suppliersCount?: number;
+}
+
+export interface TeklifimUnifiedSearchResult {
+  query: string;
+  filters: TeklifimSearchFilters;
+  products: TeklifimProduct[];
+  suppliers: TeklifimSupplierProfile[];
+  categories: TeklifimCategoryMatch[];
+  totalProducts: number;
+  totalSuppliers: number;
+  totalCategories: number;
+  suggestedTerm?: string;
+}
+
+export interface TeklifimAutocompleteSuggestion {
+  type: "product" | "supplier" | "category" | "subCategory" | "sku";
+  title: string;
+  subtitle?: string;
+  category?: string;
+  id?: string;
+  url: string;
+  badge?: string;
+}
+
+export interface TeklifimSavedSearch {
+  id: string;
+  userId: string;
+  userRole?: string;
+  title: string;
+  query: string;
+  filters: TeklifimSearchFilters;
+  notifyOnNew?: boolean;
+  createdAt: number;
+}
+
+export interface TeklifimSearchHistoryItem {
+  id: string;
+  userId: string;
+  query: string;
+  filters?: TeklifimSearchFilters;
+  resultsCount: number;
+  timestamp: number;
+}
+
+export interface TeklifimComparisonItem {
+  id: string;
+  type: "product" | "supplier";
+  title: string;
+  imageUrl?: string;
+  category: string;
+  subCategory?: string;
+  supplierName?: string;
+  supplierId?: string;
+  price?: number;
+  priceVisibility?: TeklifimPriceVisibility;
+  minimumOrder?: number;
+  unit?: string;
+  stockStatus?: TeklifimStockStatus;
+  leadTimeDays?: number;
+  deliveryRegions?: string[];
+  rating?: number;
+  reviewsCount?: number;
+  isVerified?: boolean;
+  city?: string;
+  completedDeals?: number;
+  responseRate?: number;
+  url: string;
+}
+
+export interface TeklifimPersonalizedRecommendations {
+  recommendedProducts: TeklifimProduct[];
+  recommendedSuppliers: TeklifimSupplierProfile[];
+  recommendedCategories: TeklifimCategoryMatch[];
+  reason: string;
+}
+
 

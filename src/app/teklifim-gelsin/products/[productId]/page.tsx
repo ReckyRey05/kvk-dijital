@@ -19,10 +19,14 @@ import {
   CheckCircle2,
   Truck,
   ExternalLink,
+  Scale,
 } from "lucide-react";
 import TeklifimHeader from "@/components/teklifimGelsin/TeklifimHeader";
 import ProductFormModal from "@/components/teklifimGelsin/ProductFormModal";
 import TrustSignals from "@/components/teklifimGelsin/TrustSignals";
+import SimilarProductsSection from "@/components/teklifimGelsin/SimilarProductsSection";
+import ComparisonDrawer, { addToComparison } from "@/components/teklifimGelsin/ComparisonDrawer";
+import { productToComparisonItem } from "@/lib/teklifimGelsin/searchUtils";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { TeklifimProduct, TeklifimStockStatus } from "@/types/teklifimGelsin";
@@ -394,8 +398,8 @@ function ProductDetailPageContent() {
               )}
             </div>
 
-            {/* CTA BUTTON */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            {/* CTA BUTTONS */}
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
               <Link
                 href={`/teklifim-gelsin/requests/new?productId=${product.id}&supplierId=${product.supplierId}`}
                 className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2"
@@ -403,6 +407,20 @@ function ProductDetailPageContent() {
                 <Send className="w-4 h-4" />
                 <span>Bu Ürün İçin Doğrudan Teklif İste</span>
               </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const item = productToComparisonItem(product);
+                  const res = addToComparison(item);
+                  if (!res.success && res.error) alert(res.error);
+                }}
+                className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-2"
+              >
+                <Scale className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Karşılaştırma Listesine Ekle / Çıkar</span>
+              </button>
+
               <p className="text-[11px] text-center text-slate-400">
                 Talebiniz doğrudan toptancıya iletilir; özel miktar ve vade şartlarını mesajlaşarak görüşebilirsiniz.
               </p>
@@ -448,7 +466,15 @@ function ProductDetailPageContent() {
             <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         </div>
+
+        {/* SIMILAR PRODUCTS SECTION */}
+        <div className="pt-4">
+          <SimilarProductsSection productId={product.id} />
+        </div>
       </main>
+
+      {/* COMPARISON FLOATING DOCK */}
+      <ComparisonDrawer />
 
       {/* EDIT MODAL */}
       {showEditModal && (
