@@ -121,6 +121,24 @@ export interface ItemSepetiBuyerProfile {
 // 3. LISTING & INVENTORY MODEL
 // =============================================================================
 
+export interface ItemSepetiProduct {
+  id: string; // e.g. prod_cs2_ak47_asiimov
+  gameId: string;
+  gameName: string;
+  productType: ItemSepetiProductType;
+  categoryId: string;
+  categoryName: string;
+  name: string;
+  slug: string;
+  normalizedName: string;
+  description: string;
+  imageUrl?: string;
+  attributes?: Record<string, string | number | boolean>;
+  isActive: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export type ItemSepetiListingStatus =
   | "draft"
   | "pending_review"
@@ -133,6 +151,7 @@ export type ItemSepetiListingStatus =
 export interface ItemSepetiListing {
   id: string;
   sellerId: string;
+  productId?: string; // Optional reference to standard catalog product
   gameId: string;
   gameName: string;
   categoryId: string;
@@ -145,12 +164,15 @@ export interface ItemSepetiListing {
   description: string;
   unitPrice: number; // KDV / Transaction inclusive TL
   stockQuantity: number;
+  minQuantity?: number;
   deliveryMethod: ItemSepetiDeliveryMethod;
   deliverySlaHours: number; // e.g. 1 hour, 24 hours
   images: string[];
   status: ItemSepetiListingStatus;
   rejectionReason?: string;
   duplicateFingerprint: string; // SHA256(sellerId + gameId + categoryId + serverId + normalizedTitle)
+  attributes?: Record<string, string | number | boolean>;
+  publishedAt?: number;
   createdAt: number;
   updatedAt: number;
 }

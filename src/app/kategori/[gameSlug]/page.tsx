@@ -5,6 +5,7 @@ import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
 import { Filter, ArrowUpDown } from "lucide-react";
+import { getPublicListings, getGameBySlug } from "@/lib/itemsepeti/catalogService";
 
 export async function generateMetadata({
   params,
@@ -88,7 +89,29 @@ export default async function CategoryPage({
   params: Promise<{ gameSlug: string }>;
 }) {
   const { gameSlug } = await params;
-  const gameName = gameSlug === "cs2" ? "Counter-Strike 2 (CS2)" : gameSlug === "metin2" ? "Metin2" : gameSlug.toUpperCase();
+  const game = await getGameBySlug(gameSlug);
+  const gameName = game ? game.name : gameSlug.toUpperCase();
+
+  // Fetch real listings from database or fallback to demo sample
+  const liveListings = await getPublicListings({ gameSlug, limit: 20 });
+  const listingsToDisplay: ListingCardData[] = liveListings.length > 0
+    ? liveListings.map((l) => ({
+        id: l.id,
+        slug: l.id,
+        title: l.title,
+        gameName: l.gameName,
+        categoryName: l.categoryName,
+        serverName: l.serverName,
+        price: l.unitPrice,
+        stock: l.stockQuantity,
+        sellerName: "Satıcı",
+        sellerRating: 4.9,
+        sellerRatingCount: 50,
+        isSellerVerified: true,
+        deliveryMethod: l.deliveryMethod,
+        deliverySlaHours: l.deliverySlaHours,
+      }))
+    : SAMPLE_GAME_LISTINGS;
 
   return (
     <ItemSepetiThemeProvider>
@@ -111,7 +134,7 @@ export default async function CategoryPage({
               {gameName} İlanları
             </h1>
             <p className="text-xs sm:text-sm text-[#9498A6]">
-              Oyuncular tarafından listelenen 1.240 aktif ilan arasından filtreleyin ve güvenle satın alın.
+              {listingsToDisplay.length} aktif ilan listeleniyor. Güvenli escrow güvencesiyle hemen satın alın.
             </p>
           </div>
 
@@ -138,12 +161,27 @@ export default async function CategoryPage({
             </div>
           </div>
 
-          {/* LISTING GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {SAMPLE_GAME_LISTINGS.map((listing) => (
-              <ItemSepetiListingCard key={listing.id} listing={listing} />
-            ))}
-          </div>
+          {/* LISTING GRID & EMPTY STATE */}
+          {listingsToDisplay.length === 0 ? (
+            <div className="text-center py-16 p-6 rounded-[14px] border border-[#282C3A] space-y-3">
+              <h3 className="text-lg font-bold text-inherit">Bu kategoride henüz aktif ilan bulunmuyor.</h3>
+              <p className="text-xs text-[#9498A6]">İlk ilanı siz vererek satış yapmaya başlayabilirsiniz.</p>
+              <div className="pt-2">
+                <Link
+                  href="/ilan-ver"
+                  className="inline-flex items-center justify-center h-9 px-4 rounded-[10px] text-xs font-semibold text-[#12141A] bg-[#E8A33D]"
+                >
+                  İlan Ver
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {listingsToDisplay.map((listing) => (
+                <ItemSepetiListingCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+          )}
         </main>
 
         <ItemSepetiFooter />

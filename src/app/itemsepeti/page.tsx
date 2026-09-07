@@ -5,6 +5,7 @@ import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
 import { ShieldCheck, Zap, Headphones } from "lucide-react";
+import { getPublicListings, getGames } from "@/lib/itemsepeti/catalogService";
 
 export const metadata: Metadata = {
   title: "İtemSepeti — Oyun İtem Pazarı",
@@ -83,7 +84,31 @@ const SAMPLE_LISTINGS: ListingCardData[] = [
   },
 ];
 
-export default function ItemSepetiHomePage() {
+export default async function ItemSepetiHomePage() {
+  const liveGames = await getGames();
+  const liveListings = await getPublicListings({ limit: 8 });
+
+  const listingsToDisplay: ListingCardData[] = liveListings.length > 0
+    ? liveListings.map((l) => ({
+        id: l.id,
+        slug: l.id,
+        title: l.title,
+        gameName: l.gameName,
+        categoryName: l.categoryName,
+        serverName: l.serverName,
+        price: l.unitPrice,
+        stock: l.stockQuantity,
+        sellerName: "Satıcı",
+        sellerRating: 4.9,
+        sellerRatingCount: 50,
+        isSellerVerified: true,
+        deliveryMethod: l.deliveryMethod,
+        deliverySlaHours: l.deliverySlaHours,
+      }))
+    : SAMPLE_LISTINGS;
+
+  const gamesToDisplay = liveGames.length > 0 ? liveGames : FEATURED_GAMES;
+
   return (
     <ItemSepetiThemeProvider>
       <div className="flex flex-col min-h-screen">
@@ -134,7 +159,7 @@ export default function ItemSepetiHomePage() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              {FEATURED_GAMES.map((game) => (
+              {gamesToDisplay.map((game: any) => (
                 <Link
                   key={game.slug}
                   href={`/kategori/${game.slug}`}
@@ -149,11 +174,11 @@ export default function ItemSepetiHomePage() {
                       {game.name}
                     </span>
                     <span className="text-[11px] text-[#9498A6] block truncate">
-                      {game.category}
+                      {game.category || game.supportedProductTypes?.join(", ") || "Oyun Pazar"}
                     </span>
                   </div>
                   <span className="text-[10px] text-[#E8A33D] font-medium pt-2 block">
-                    {game.count}
+                    {game.count || "Aktif İlanlar"}
                   </span>
                 </Link>
               ))}
@@ -175,7 +200,7 @@ export default function ItemSepetiHomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {SAMPLE_LISTINGS.map((listing) => (
+              {listingsToDisplay.map((listing) => (
                 <ItemSepetiListingCard key={listing.id} listing={listing} />
               ))}
             </div>

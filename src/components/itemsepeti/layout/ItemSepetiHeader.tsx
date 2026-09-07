@@ -40,6 +40,18 @@ export default function ItemSepetiHeader() {
             Nasıl Çalışır?
           </Link>
 
+          {/* İlan Ver CTA */}
+          <Link
+            href="/ilan-ver"
+            className="hidden sm:inline-flex items-center justify-center text-xs font-semibold text-inherit px-3 py-1.5 rounded-[8px] border transition-colors hover:border-[#E8A33D]/60"
+            style={{
+              borderColor: theme === "dark" ? "#282C3A" : "#E2E5EC",
+              backgroundColor: theme === "dark" ? "#1B1E27" : "#F0F2F6",
+            }}
+          >
+            İlan Ver
+          </Link>
+
           {/* Theme switcher */}
           <button
             onClick={toggleTheme}

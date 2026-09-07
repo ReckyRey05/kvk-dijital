@@ -24,6 +24,7 @@ export default function ClientHeader() {
     pathname?.startsWith("/itemsepeti") ||
     pathname?.startsWith("/kategori") ||
     pathname?.startsWith("/ilan") ||
+    pathname?.startsWith("/ilan-ver") ||
     pathname?.startsWith("/nasil-calisir")
   ) {
     return null;
