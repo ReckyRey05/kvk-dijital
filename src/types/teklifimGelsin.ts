@@ -266,6 +266,16 @@ export interface TeklifimRequest {
   invitedSupplierIds?: string[];
   createdAt: number;
   updatedAt: number;
+
+  // FAZ 9: Procurement & Bulk Purchasing Fields
+  isBulkProcurement?: boolean;
+  items?: TeklifimProcurementItem[];
+  estimatedBudget?: number;
+  approvalStatus?: "draft" | "pending_approval" | "approved" | "rejected" | "not_required";
+  approvalThreshold?: number;
+  approvalHistory?: TeklifimApprovalRecord[];
+  createdByRole?: TeklifimOrgRole;
+  fromListId?: string;
 }
 
 export interface TeklifimOffer {
@@ -942,5 +952,176 @@ export interface TeklifimPersonalizedRecommendations {
   recommendedCategories: TeklifimCategoryMatch[];
   reason: string;
 }
+
+// ==========================================
+// FAZ 9: ISLETME SATIN ALMA & KURUMSAL ALIM SISTEMI
+// ==========================================
+
+export type TeklifimOrgRole = "owner" | "admin" | "buyer" | "approver" | "viewer";
+
+export interface TeklifimTeamMember {
+  id: string; // mem_{businessId}_{userId}
+  businessId: string;
+  businessName: string;
+  userId: string;
+  email: string;
+  name: string;
+  role: TeklifimOrgRole;
+  invitedBy?: string;
+  joinedAt: number;
+  status: "active" | "inactive" | "suspended";
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimTeamInvitation {
+  id: string; // inv_{token}
+  businessId: string;
+  businessName: string;
+  email: string;
+  role: TeklifimOrgRole;
+  token: string;
+  status: "pending" | "accepted" | "expired" | "cancelled";
+  invitedBy: string;
+  invitedByName: string;
+  expiresAt: number;
+  createdAt: number;
+  acceptedAt?: number;
+}
+
+export interface TeklifimProcurementItem {
+  id: string;
+  productId?: string;
+  productName: string;
+  category: string;
+  subCategory?: string;
+  quantity: number;
+  unit: string;
+  estimatedUnitPrice?: number;
+  estimatedTotalPrice?: number;
+  targetUnitPrice?: number;
+  notes?: string;
+}
+
+export interface TeklifimProcurementList {
+  id: string;
+  businessId: string;
+  name: string;
+  description?: string;
+  category?: string;
+  items: TeklifimProcurementItem[];
+  totalEstimatedCost: number;
+  itemCount: number;
+  reminderFrequency?: "none" | "weekly" | "monthly" | "quarterly";
+  nextReminderDate?: number;
+  lastRequestedAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimApprovalRecord {
+  id: string;
+  procurementRequestId: string;
+  actorId: string;
+  actorName: string;
+  actorRole: TeklifimOrgRole;
+  action: "submitted" | "approved" | "rejected";
+  note?: string;
+  timestamp: number;
+}
+
+export interface TeklifimProcurementPolicy {
+  id: string; // pol_{businessId}
+  businessId: string;
+  approvalThreshold: number; // default 35000 TL
+  requireApprovalForBulk: boolean;
+  allowedBuyerMaxAmount?: number;
+  updatedAt: number;
+  updatedBy: string;
+}
+
+export interface TeklifimAuditLog {
+  id: string;
+  businessId: string;
+  actorId: string;
+  actorName: string;
+  actorRole: TeklifimOrgRole;
+  action:
+    | "request_created"
+    | "request_submitted_approval"
+    | "request_approved"
+    | "request_rejected"
+    | "offer_selected"
+    | "order_created"
+    | "payment_completed"
+    | "invoice_uploaded"
+    | "team_invited"
+    | "team_role_changed"
+    | "team_member_removed"
+    | "list_created"
+    | "list_updated"
+    | "policy_updated";
+  entityType:
+    | "procurement_request"
+    | "offer"
+    | "order"
+    | "procurement_list"
+    | "team_member"
+    | "policy";
+  entityId: string;
+  entityTitle: string;
+  metadata?: Record<string, any>;
+  timestamp: number;
+}
+
+export interface TeklifimSpendSummary {
+  thisMonthSpend: number;
+  prevMonthSpend: number;
+  percentageChange: number | null; // null if insufficient data
+  topCategory: { category: string; spend: number; orderCount: number } | null;
+  topSupplier: { supplierId: string; supplierName: string; spend: number; orderCount: number } | null;
+  monthlyTrends: { monthYear: string; totalSpend: number; orderCount: number }[];
+  totalSpendAllTime: number;
+  totalOrdersCount: number;
+}
+
+export interface TeklifimFrequentlyPurchasedItem {
+  productName: string;
+  category: string;
+  totalOrdersCount: number;
+  lastPurchasedAt: number;
+  lastPrice: number;
+  lastQuantity: number;
+  lastUnit: string;
+  lastSupplierId: string;
+  lastSupplierName: string;
+  productId?: string;
+  currentCatalogPrice?: number;
+  currentStockStatus?: TeklifimStockStatus;
+  currentMinOrder?: number;
+  currentLeadTimeDays?: number;
+  priceDeltaPercentage?: number | null;
+  priceDeltaAmount?: number | null;
+}
+
+export interface TeklifimBulkOfferComparison {
+  offerId: string;
+  supplierId: string;
+  supplierName: string;
+  supplierCity: string;
+  supplierVerified: boolean;
+  supplierRating?: number;
+  totalPrice: number;
+  currency: string;
+  deliveryDays: number;
+  minOrderQuantity?: string;
+  coveredItemsCount: number;
+  totalItemsCount: number;
+  missingItems: string[];
+  isPreviousSupplier: boolean;
+  exceedsBudget: boolean;
+  budgetDelta: number;
+}
+
 
 

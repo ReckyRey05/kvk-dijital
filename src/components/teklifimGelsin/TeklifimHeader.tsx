@@ -226,6 +226,30 @@ export default function TeklifimHeader() {
             )}
             {user && profile?.role !== "supplier" && (
               <Link
+                href="/teklifim-gelsin/procurement"
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                  pathname.startsWith("/teklifim-gelsin/procurement")
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                Satın Alma
+              </Link>
+            )}
+            {user && profile?.role !== "supplier" && (
+              <Link
+                href="/teklifim-gelsin/team"
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                  pathname.startsWith("/teklifim-gelsin/team")
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                Ekip
+              </Link>
+            )}
+            {user && profile?.role !== "supplier" && (
+              <Link
                 href="/teklifim-gelsin/favorites"
                 className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
                   pathname.startsWith("/teklifim-gelsin/favorites")
@@ -520,6 +544,24 @@ export default function TeklifimHeader() {
               className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
             >
               Tekliflerim
+            </Link>
+          )}
+          {user && profile?.role !== "supplier" && (
+            <Link
+              href="/teklifim-gelsin/procurement"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Satın Alma Merkezi
+            </Link>
+          )}
+          {user && profile?.role !== "supplier" && (
+            <Link
+              href="/teklifim-gelsin/team"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Ekip Yönetimi
             </Link>
           )}
           {user && profile?.role !== "supplier" && (
