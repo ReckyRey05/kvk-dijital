@@ -25,6 +25,7 @@ export type TeklifimOfferStatus =
 
 export interface TeklifimProfile {
   uid: string;
+  id?: string;
   role: TeklifimUserRole;
   companyName: string;
   contactName?: string;
@@ -37,6 +38,7 @@ export interface TeklifimProfile {
   deliveryRegions?: string[];
   minOrder?: string;
   isVerified: boolean;
+  verified?: boolean;
   verificationStatus?: TeklifimVerificationStatus;
   logoUrl?: string;
   website?: string;
@@ -51,6 +53,8 @@ export interface TeklifimProfile {
   reviewCount?: number;
   taxVerified?: boolean;
   verifiedAt?: number;
+  availability?: TeklifimSupplierAvailability;
+  favoriteCustomerIds?: string[];
   createdAt: number;
   updatedAt?: number;
 }
@@ -123,7 +127,11 @@ export interface TeklifimProduct {
   status?: TeklifimProductStatus;
   isActive?: boolean;
   viewsCount?: number;
+  viewCount?: number;
   requestsCount?: number;
+  requestCount?: number;
+  stockCount?: number;
+  lowStockThreshold?: number;
   createdAt: number;
   updatedAt?: number;
 }
@@ -311,6 +319,13 @@ export interface TeklifimOffer {
   isCheapest?: boolean;
   isFastest?: boolean;
   isBestValue?: boolean;
+
+  // Operational & Telemetry
+  respondedAt?: number;
+  category?: string;
+  validUntil?: string | number;
+  validDays?: number;
+  offerNumber?: string;
 }
 
 export interface TeklifimConversation {
@@ -461,6 +476,7 @@ export interface TeklifimDeliveryAddress {
 }
 
 export interface TeklifimOrderItem {
+  productId?: string;
   productName: string;
   category: string;
   quantity: number;
@@ -577,6 +593,19 @@ export interface TeklifimOrder {
   createdAt: number;
   updatedAt: number;
   completedAt?: number;
+
+  // Operational & Reporting Aliases
+  totalAmount?: number;
+  category?: string;
+  buyerBusinessId?: string;
+  buyerBusinessName?: string;
+  buyerId?: string;
+  buyerName?: string;
+  buyerPhone?: string;
+  buyerEmail?: string;
+  deliveryCity?: string;
+  deliveryDueDate?: string | number;
+  deliveredAt?: string | number;
 }
 
 export interface TeklifimNotification {
@@ -1122,6 +1151,170 @@ export interface TeklifimBulkOfferComparison {
   exceedsBudget: boolean;
   budgetDelta: number;
 }
+
+// ==========================================
+// FAZ 10: TOPTANCI ISLETME MERKEZI & SATIS BUYUME SISTEMI
+// ==========================================
+
+export interface TeklifimOpportunityItem {
+  requestId: string;
+  title: string;
+  category: string;
+  subCategory?: string;
+  productName?: string;
+  quantity: number;
+  unit: string;
+  city: string;
+  deliveryDays: number;
+  estimatedBudget?: number;
+  deadline?: string;
+  createdAt: number;
+  matchSignals: string[];
+  matchScore: number; // 0 - 100
+  matchingCatalogProductId?: string;
+  matchingCatalogPrice?: number;
+}
+
+export interface TeklifimSupplierKpis {
+  thisMonthSales: number;
+  prevMonthSales: number;
+  salesChangePercentage: number | null;
+  thisMonthOffersCount: number;
+  acceptanceRate: number | null; // percentage e.g. 35.4
+  completedOrdersCount: number;
+  averageResponseMinutes: number | null;
+  pendingOffersCount: number;
+  activeOrdersCount: number;
+  negotiatingOffersCount: number;
+}
+
+export interface TeklifimCategoryConversion {
+  category: string;
+  offersCount?: number;
+  acceptedCount?: number;
+  totalOffers?: number;
+  acceptedOffers?: number;
+  conversionRate: number;
+  salesVolume?: number;
+}
+
+export interface TeklifimMonthlyConversion {
+  monthYear?: string;
+  month?: string;
+  offersCount?: number;
+  acceptedCount?: number;
+  totalOffers?: number;
+  acceptedOffers?: number;
+  conversionRate: number;
+  salesVolume?: number;
+}
+
+export interface TeklifimOfferConversion {
+  totalOffers: number;
+  acceptedOffers: number;
+  rejectedOffers: number;
+  pendingOffers: number;
+  conversionRate: number | null;
+  categoryConversions: TeklifimCategoryConversion[];
+  monthlyConversions: TeklifimMonthlyConversion[];
+  averageDealSize: number | null;
+}
+
+export interface TeklifimQuoteTemplate {
+  id: string; // tmpl_{randomHex}
+  supplierId: string;
+  title: string;
+  category: string;
+  subCategory?: string;
+  productId?: string;
+  productName?: string;
+  unitPrice: number;
+  deliveryDays: number;
+  minOrderQuantity?: number | string;
+  description?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimPriceList {
+  id: string; // plist_{randomHex}
+  supplierId: string;
+  name: string; // e.g. "Standart", "Buyuk Alici", "Ozel Musteri"
+  description?: string;
+  discountPercentage?: number; // e.g. 5, 10
+  productOverrides?: Record<string, number>; // productId -> special price
+  targetCustomerIds?: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type TeklifimCustomerSegment = "new" | "active" | "regular" | "dormant";
+
+export interface TeklifimSupplierCustomer {
+  businessId: string;
+  businessName: string;
+  city: string;
+  contactName?: string;
+  phone?: string;
+  email?: string;
+  completedOrdersCount: number;
+  totalSalesVolume: number;
+  lastOrderDate?: number | string;
+  lastOrderId?: string;
+  categories: string[];
+  isFavorite: boolean;
+  segment: TeklifimCustomerSegment;
+  reorderSuggestions?: {
+    productName: string;
+    lastQuantity: number;
+    lastUnit: string;
+    lastPrice: number;
+    currentCatalogPrice?: number;
+    productId?: string;
+  }[];
+}
+
+export interface TeklifimProductPerformance {
+  productId: string;
+  productName: string;
+  category: string;
+  price?: number;
+  stockStatus?: TeklifimStockStatus;
+  viewsCount: number;
+  requestsCount: number;
+  salesCount: number;
+  totalRevenue: number;
+  conversionRate: number | null;
+}
+
+export interface TeklifimSupplierAvailability {
+  isOnline: boolean;
+  isAcceptingOrders: boolean;
+  vacationMode?: boolean;
+  vacationStartDate?: string | number;
+  vacationEndDate?: string | number;
+  vacationNote?: string;
+  updatedAt?: number;
+}
+
+export interface TeklifimDeliveryPerformance {
+  onTimeDeliveryRate: number | null;
+  delayedOrdersCount: number;
+  averageDeliveryDays: number | null;
+  totalDeliveredCount: number;
+}
+
+export interface TeklifimCommercialCalendarEvent {
+  id: string;
+  type: "delivery_due" | "offer_expiry" | "order_dispatch";
+  title: string;
+  date: number;
+  entityId: string;
+  entityNumber?: string;
+  amount?: number;
+  status: string;
+}
+
 
 
 

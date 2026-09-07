@@ -191,5 +191,13 @@ service cloud.firestore {
       allow update, delete: if false; // IMMUTABLE AUDIT TRAIL
     }
 
+    // 11. FAZ 10: TOPTANCI İŞLETME MERKEZİ & SATIŞ BÜYÜME SİSTEMİ
+    match /teklifim_quote_templates/{templateId} {
+      allow read, write: if request.auth != null && (resource.data.supplierId == request.auth.uid || request.resource.data.supplierId == request.auth.uid || isAdmin());
+    }
+
+    match /teklifim_price_lists/{listId} {
+      allow read, write: if request.auth != null && (resource.data.supplierId == request.auth.uid || request.resource.data.supplierId == request.auth.uid || isAdmin());
+    }
   }
 }
