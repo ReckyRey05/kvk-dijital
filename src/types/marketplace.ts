@@ -212,6 +212,86 @@ export interface ItemSepetiCart {
   updatedAt: number;
 }
 
+export interface ItemSepetiEnrichedCartItem {
+  listingId: string;
+  quantity: number;
+  addedAt: number;
+  listing: {
+    id: string;
+    title: string;
+    gameId: string;
+    gameName: string;
+    categoryId: string;
+    categoryName: string;
+    serverId?: string;
+    serverName?: string;
+    productType: ItemSepetiProductType;
+    unitPrice: number;
+    stockQuantity: number;
+    minQuantity?: number;
+    deliveryMethod: ItemSepetiDeliveryMethod;
+    deliverySlaHours: number;
+    status: ItemSepetiListingStatus;
+    sellerId: string;
+    sellerStoreName: string;
+    sellerRating: number;
+    sellerRatingCount: number;
+    isSellerActive: boolean;
+  };
+  itemSubtotal: number;
+  isAvailable: boolean;
+  warning?: string;
+}
+
+export interface ItemSepetiEnrichedCart {
+  buyerId: string;
+  items: ItemSepetiEnrichedCartItem[];
+  sellers: {
+    sellerId: string;
+    sellerStoreName: string;
+    items: ItemSepetiEnrichedCartItem[];
+    sellerSubtotal: number;
+  }[];
+  totalItemCount: number;
+  totalAmount: number;
+  hasUnavailableItems: boolean;
+  updatedAt: number;
+}
+
+export type ItemSepetiReservationStatus = "ACTIVE" | "CONVERTED" | "EXPIRED" | "RELEASED";
+
+export interface ItemSepetiReservation {
+  id: string; // res_{timestamp}_{random}
+  listingId: string;
+  sellerId: string;
+  buyerId: string;
+  quantity: number;
+  status: ItemSepetiReservationStatus;
+  orderId?: string;
+  expiresAt: number; // 15 minutes lease
+  createdAt: number;
+  releasedAt?: number;
+}
+
+export type ItemSepetiCheckoutSessionStatus =
+  | "CREATED"
+  | "VALIDATING"
+  | "READY_FOR_PAYMENT"
+  | "EXPIRED"
+  | "CANCELLED";
+
+export interface ItemSepetiCheckoutSession {
+  checkoutId: string; // chk_{timestamp}_{random}
+  buyerId: string;
+  buyerEmail?: string;
+  orderIds: string[];
+  status: ItemSepetiCheckoutSessionStatus;
+  totalAmount: number;
+  currency: string;
+  expiresAt: number;
+  createdAt: number;
+}
+
 // =============================================================================
 // 5. ORDER & STATE MACHINE
 // =============================================================================

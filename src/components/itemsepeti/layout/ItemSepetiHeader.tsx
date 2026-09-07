@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Sun, Moon, ShoppingCart, User, Menu, X, PlusCircle } from "lucide-react";
 import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
+import { useItemSepetiCart } from "@/context/ItemSepetiCartContext";
 import ItemSepetiLogo from "../ui/ItemSepetiLogo";
 import ItemSepetiHeaderSearch from "./ItemSepetiHeaderSearch";
 
 export default function ItemSepetiHeader() {
   const { theme, toggleTheme } = useItemSepetiTheme();
   const isDark = theme === "dark";
+  const { itemCount } = useItemSepetiCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -71,8 +73,9 @@ export default function ItemSepetiHeader() {
           </button>
 
           {/* Cart Icon */}
-          <button
-            aria-label="Sepetim (0 ürün)"
+          <Link
+            href="/sepet"
+            aria-label={`Sepetim (${itemCount} ürün)`}
             className={`relative p-2 rounded-[8px] border transition-colors cursor-pointer ${
               isDark
                 ? "border-[#282C3A] bg-[#161921] text-[#9498A6] hover:text-[#EDEEF2]"
@@ -84,9 +87,9 @@ export default function ItemSepetiHeader() {
               className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center text-white"
               style={{ backgroundColor: "#D99532" }}
             >
-              0
+              {itemCount}
             </span>
-          </button>
+          </Link>
 
           {/* Auth Button */}
           <Link
