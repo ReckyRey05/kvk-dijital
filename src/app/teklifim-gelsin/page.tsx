@@ -25,9 +25,9 @@ import MarketplaceFlowDiagram from "@/components/teklifimGelsin/MarketplaceFlowD
 import CategorySelector from "@/components/teklifimGelsin/CategorySelector";
 
 export const metadata: Metadata = {
-  title: "Teklifim Gelsin — B2B Alışverişin Teklif Merkezi",
+  title: "Toptancım Cebimde — B2B Alışverişin Teklif Merkezi",
   description:
-    "Aradığını yaz, teklifin gelsin. İşletmeler ihtiyaçlarını yayınlar, uygun toptancılar doğrudan teklif verir. En doğru seçeneği tek ekranda bulun.",
+    "Aradığını yaz, toptancından teklifin gelsin. İşletmeler ihtiyaçlarını yayınlar, uygun toptancılar doğrudan teklif verir. Toptancım Cebimde ile en doğru seçeneği tek ekranda bulun.",
 };
 
 export default function TeklifimGelsinLandingPage() {
