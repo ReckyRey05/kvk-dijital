@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { verifyTeklifimUser } from "@/lib/teklifimGelsin/teklifimAuth";
+import { checkRateLimit, createRateLimitResponse } from "@/lib/security/rateLimit";
+import { RATE_LIMITS } from "@/config/rateLimit";
+import { sanitizeFilename, validateMagicBytes } from "@/lib/teklifimGelsin/security/inputValidation";
+import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
@@ -21,6 +25,12 @@ export async function POST(req: Request) {
     const user = await verifyTeklifimUser(req);
     if (!user) {
       return NextResponse.json({ error: "Yetkisiz erişim. Lütfen giriş yapın." }, { status: 401 });
+    }
+
+    // Rate Limiting (10 uploads / min)
+    const rateCheck = checkRateLimit(`teklifim_upload:${user.uid}`, RATE_LIMITS.teklifim.upload);
+    if (!rateCheck.allowed) {
+      return createRateLimitResponse(rateCheck);
     }
 
     const formData = await req.formData();
@@ -50,6 +60,19 @@ export async function POST(req: Request) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
+    // Deep Magic Byte Content Sniffing Protection
+    const isMagicBytesValid = validateMagicBytes(buffer, fileType);
+    if (!isMagicBytesValid) {
+      return NextResponse.json(
+        { error: "Dosya içeriği bildirilen dosya formatı ile uyuşmuyor." },
+        { status: 400 }
+      );
+    }
+
+    // Filename Sanitization against Path Traversal and Shell Injection
+    const safeName = sanitizeFilename(file.name);
+
     const base64Data = buffer.toString("base64");
     const dataUrl = `data:${fileType};base64,${base64Data}`;
 
@@ -57,16 +80,12 @@ export async function POST(req: Request) {
       success: true,
       attachment: {
         url: dataUrl,
-        name: file.name,
+        name: safeName,
         size: file.size,
         type: fileType,
       },
     });
   } catch (err: any) {
-    console.error("Attachment upload error:", err);
-    return NextResponse.json(
-      { error: err.message || "Dosya yüklenirken bir hata oluştu." },
-      { status: 500 }
-    );
+    return createSecureServerErrorResponse("AttachmentUpload", err, "Dosya yüklenirken bir hata oluştu.");
   }
 }

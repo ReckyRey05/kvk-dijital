@@ -66,4 +66,46 @@ export const RATE_LIMITS = {
       },
     },
   },
+  teklifim: {
+    messaging: {
+      max: 20,
+      windowMs: 60 * 1000, // 20 msg / min (strict anti-spam)
+    },
+    admin: {
+      max: 60,
+      windowMs: 60 * 1000, // 60 admin requests / min
+    },
+    requests: {
+      max: 15,
+      windowMs: 60 * 1000, // 15 RFQ creations / min
+    },
+    offers: {
+      max: 30,
+      windowMs: 60 * 1000, // 30 offers / min
+    },
+    search: {
+      max: 60,
+      windowMs: 60 * 1000, // 60 searches / min
+    },
+    autocomplete: {
+      max: 120,
+      windowMs: 60 * 1000, // 120 queries / min
+    },
+    upload: {
+      max: 10,
+      windowMs: 60 * 1000, // 10 uploads / min
+    },
+    auth: {
+      max: 10,
+      windowMs: 15 * 60 * 1000, // 10 attempts / 15 min
+    },
+    api: {
+      max: 60,
+      windowMs: 60 * 1000, // 60 API calls / min
+    },
+    teamInvite: {
+      max: 10,
+      windowMs: 60 * 1000, // 10 invites / min
+    },
+  },
 } as const;

@@ -69,23 +69,31 @@ export async function verifyTeklifimUser(req: Request): Promise<TeklifimAuthUser
       }
     }
 
-    // 3. Fallback: Decode unexpired JWT payload safely
-    const parts = idToken.split(".");
-    if (parts.length === 3) {
-      try {
-        const payloadJson = Buffer.from(parts[1], "base64").toString("utf8");
-        const payload = JSON.parse(payloadJson);
-        const nowSec = Math.floor(Date.now() / 1000);
+    // 3. Fallback: Decode unexpired JWT payload ONLY in development / testing environments.
+    // In production, strictly enforce cryptographic verification (fail-closed).
+    const isProduction = process.env.NODE_ENV === "production";
+    if (!isProduction) {
+      const parts = idToken.split(".");
+      if (parts.length === 3) {
+        try {
+          const payloadJson = Buffer.from(parts[1], "base64").toString("utf8");
+          const payload = JSON.parse(payloadJson);
+          const nowSec = Math.floor(Date.now() / 1000);
 
-        if (payload.exp && payload.exp > nowSec && (payload.user_id || payload.sub)) {
-          return {
-            uid: payload.user_id || payload.sub,
-            email: payload.email || "",
-            role: payload.role || (payload.admin ? "admin" : undefined),
-          };
+          if (payload.exp && payload.exp > nowSec && (payload.user_id || payload.sub)) {
+            // NEVER trust an unverified token claiming admin role
+            const untrustedRole = payload.role || (payload.admin ? "admin" : undefined);
+            const safeRole = untrustedRole === "admin" ? undefined : untrustedRole;
+
+            return {
+              uid: payload.user_id || payload.sub,
+              email: payload.email || "",
+              role: safeRole,
+            };
+          }
+        } catch (jwtErr) {
+          // Failed decoding
         }
-      } catch (jwtErr) {
-        // Failed decoding
       }
     }
 

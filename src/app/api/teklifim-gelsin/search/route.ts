@@ -10,18 +10,31 @@ import {
   TeklifimSearchSort,
   TeklifimStockStatus,
 } from "@/types/teklifimGelsin";
+import { checkRateLimit, createRateLimitResponse, getClientIp } from "@/lib/security/rateLimit";
+import { RATE_LIMITS } from "@/config/rateLimit";
+import { sanitizeSafeString } from "@/lib/teklifimGelsin/security/inputValidation";
+import { createSecureServerErrorResponse } from "@/lib/security/errorResponse";
 
 export async function GET(req: Request) {
   try {
+    // Rate Limiting (60 searches / min per IP)
+    const clientIp = getClientIp(req);
+    const rateCheck = checkRateLimit(`teklifim_search:${clientIp}`, RATE_LIMITS.teklifim.search);
+    if (!rateCheck.allowed) {
+      return createRateLimitResponse(rateCheck);
+    }
+
     const { searchParams } = new URL(req.url);
 
-    const query = searchParams.get("q") || searchParams.get("query") || undefined;
+    const rawQuery = searchParams.get("q") || searchParams.get("query") || undefined;
+    const query = rawQuery ? sanitizeSafeString(rawQuery, 128) : undefined;
+
     const type = (searchParams.get("type") as TeklifimSearchType) || "all";
-    const category = searchParams.get("category") || undefined;
-    const subCategory = searchParams.get("subCategory") || undefined;
-    const city = searchParams.get("city") || undefined;
-    const district = searchParams.get("district") || undefined;
-    const deliveryRegion = searchParams.get("deliveryRegion") || undefined;
+    const category = searchParams.get("category") ? sanitizeSafeString(searchParams.get("category"), 80) : undefined;
+    const subCategory = searchParams.get("subCategory") ? sanitizeSafeString(searchParams.get("subCategory"), 80) : undefined;
+    const city = searchParams.get("city") ? sanitizeSafeString(searchParams.get("city"), 50) : undefined;
+    const district = searchParams.get("district") ? sanitizeSafeString(searchParams.get("district"), 50) : undefined;
+    const deliveryRegion = searchParams.get("deliveryRegion") ? sanitizeSafeString(searchParams.get("deliveryRegion"), 50) : undefined;
     const stockStatus = (searchParams.get("stockStatus") as TeklifimStockStatus) || undefined;
     const inStockOnly = searchParams.get("inStockOnly") === "true";
     const verifiedOnly = searchParams.get("verifiedOnly") === "true";
@@ -33,6 +46,12 @@ export async function GET(req: Request) {
     const minRatingStr = searchParams.get("minRating");
     const limitStr = searchParams.get("limit");
     const offsetStr = searchParams.get("offset");
+
+    // Clamp limit to max 100 to prevent unbounded memory allocation
+    const parsedLimit = limitStr ? parseInt(limitStr, 10) : 30;
+    const safeLimit = Math.min(Math.max(1, isNaN(parsedLimit) ? 30 : parsedLimit), 100);
+    const parsedOffset = offsetStr ? parseInt(offsetStr, 10) : 0;
+    const safeOffset = Math.max(0, isNaN(parsedOffset) ? 0 : parsedOffset);
 
     const filters: TeklifimSearchFilters = {
       query,
@@ -51,8 +70,8 @@ export async function GET(req: Request) {
       maxMoq: maxMoqStr ? parseInt(maxMoqStr, 10) : undefined,
       minRating: minRatingStr ? parseFloat(minRatingStr) : undefined,
       sort: (searchParams.get("sort") as TeklifimSearchSort) || "relevance",
-      limit: limitStr ? parseInt(limitStr, 10) : 30,
-      offset: offsetStr ? parseInt(offsetStr, 10) : 0,
+      limit: safeLimit,
+      offset: safeOffset,
     };
 
     const result = await performUnifiedSearch(filters);
@@ -72,15 +91,19 @@ export async function GET(req: Request) {
       // Non-critical, ignore auth errors on public search
     }
 
-    return NextResponse.json({
-      success: true,
-      ...result,
-    });
-  } catch (err: any) {
-    console.error("GET /api/teklifim-gelsin/search error:", err);
     return NextResponse.json(
-      { error: "Arama işlemi gerçekleştirilemedi." },
-      { status: 500 }
+      {
+        success: true,
+        ...result,
+      },
+      {
+        headers: {
+          // Public search cache for 60s
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+        },
+      }
     );
+  } catch (err: any) {
+    return createSecureServerErrorResponse("UnifiedSearch", err, "Arama işlemi gerçekleştirilemedi.");
   }
 }
