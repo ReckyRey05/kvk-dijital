@@ -21,6 +21,7 @@ import {
   ShoppingBag,
   CreditCard,
   Search,
+  Key,
 } from "lucide-react";
 import { auth } from "@/lib/firebase/auth";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -457,6 +458,15 @@ export default function TeklifimHeader() {
                     >
                       <CreditCard className="w-3.5 h-3.5 text-slate-500" />
                       <span>{profile?.role === "supplier" ? "Finans & Hakedişlerim" : "Ödemelerim"}</span>
+                    </Link>
+
+                    <Link
+                      href="/teklifim-gelsin/settings/integrations"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    >
+                      <Key className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Entegrasyonlar & API</span>
                     </Link>
 
                     <div className="h-px bg-slate-100 dark:bg-slate-800/80 my-1" />

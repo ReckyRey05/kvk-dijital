@@ -1315,6 +1315,165 @@ export interface TeklifimCommercialCalendarEvent {
   status: string;
 }
 
+// ==========================================
+// FAZ 11: ENTEGRASYONLAR, API & OTOMASYON PLATFORMU
+// ==========================================
 
+export type TeklifimIntegrationChannel = "push" | "email" | "sms" | "whatsapp";
 
+export type TeklifimIntegrationEventType =
+  | "request.created"
+  | "offer.created"
+  | "offer.countered"
+  | "offer.accepted"
+  | "order.created"
+  | "order.shipped"
+  | "order.delivered"
+  | "payment.paid"
+  | "payment.failed"
+  | "refund.created"
+  | "message.created"
+  | "supplier.verified"
+  | "stock.alert";
 
+export interface TeklifimNotificationPreference {
+  userId: string;
+  channels: {
+    push: boolean;
+    email: boolean;
+    sms: boolean;
+    whatsapp: boolean;
+  };
+  categories: {
+    offers: boolean;
+    messages: boolean;
+    orders: boolean;
+    payments: boolean;
+    delivery: boolean;
+    marketing: boolean;
+  };
+  updatedAt: number;
+}
+
+export interface TeklifimConsentRecord {
+  id: string;
+  userId: string;
+  channel: "sms" | "email" | "whatsapp";
+  type: "marketing" | "transactional";
+  granted: boolean;
+  grantedAt: number;
+  revokedAt?: number;
+  source: string;
+  version: string;
+  ipAddress?: string;
+}
+
+export interface TeklifimApiKey {
+  id: string; // key_{randomHex}
+  userId: string;
+  name: string;
+  keyPrefix: string; // e.g. tc_live_8f3a
+  keyHash: string; // SHA-256
+  scopes: string[]; // products:read, products:write, etc.
+  status: "active" | "revoked";
+  createdAt: number;
+  lastUsedAt?: number;
+}
+
+export interface TeklifimWebhookEndpoint {
+  id: string; // whk_{randomHex}
+  userId: string;
+  url: string;
+  secret: string; // HMAC secret
+  events: TeklifimIntegrationEventType[];
+  status: "active" | "disabled" | "failing";
+  failureCount: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimWebhookDelivery {
+  id: string; // del_{randomHex}
+  endpointId: string;
+  userId: string;
+  eventType: TeklifimIntegrationEventType;
+  eventId: string;
+  url: string;
+  payload: any;
+  signature: string;
+  status: "pending" | "delivered" | "failed" | "retrying";
+  statusCode?: number;
+  responseBody?: string;
+  errorMessage?: string;
+  attempts: number;
+  nextRetryAt?: number;
+  createdAt: number;
+  completedAt?: number;
+}
+
+export interface TeklifimIntegrationEvent {
+  id: string; // evt_{randomHex}
+  type: TeklifimIntegrationEventType;
+  entityId: string;
+  entityType: string;
+  actorId?: string;
+  recipientId?: string;
+  payload: any;
+  status: "pending" | "processed" | "failed";
+  channelsDispatched: string[];
+  createdAt: number;
+  processedAt?: number;
+}
+
+export type TeklifimShippingStatus =
+  | "shipped"
+  | "in_transit"
+  | "out_for_delivery"
+  | "delivered"
+  | "exception";
+
+export interface TeklifimShippingTracking {
+  trackingNumber: string;
+  carrier: string;
+  status: TeklifimShippingStatus;
+  trackingUrl?: string;
+  shipmentDate: number;
+  estimatedDelivery?: number;
+  events: {
+    date: number;
+    location?: string;
+    description: string;
+    status: TeklifimShippingStatus;
+  }[];
+}
+
+export interface TeklifimInvoiceDraft {
+  invoiceId?: string;
+  orderId: string;
+  type: "e-fatura" | "e-arsiv";
+  taxNumberOrTckn: string;
+  title: string;
+  items: {
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    vatRate: number;
+    total: number;
+  }[];
+  totalVat: number;
+  grandTotal: number;
+  currency: string;
+  status: "draft" | "queued" | "issued" | "failed";
+  gibInvoiceNumber?: string;
+}
+
+export interface TeklifimCalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: number;
+  endDate: number;
+  location?: string;
+  url?: string;
+  type: "delivery" | "quote_expiry" | "meeting" | "payment";
+}
