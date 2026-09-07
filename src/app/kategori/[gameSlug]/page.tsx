@@ -3,30 +3,24 @@ import Link from "next/link";
 import { ItemSepetiThemeProvider } from "@/context/ItemSepetiThemeContext";
 import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
+import ItemSepetiGameShelf from "@/components/itemsepeti/marketplace/ItemSepetiGameShelf";
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
 import ItemSepetiFilterBar from "@/components/itemsepeti/marketplace/ItemSepetiFilterBar";
 import { getPublicListings, getGameBySlug, getCategoriesByGame } from "@/lib/itemsepeti/catalogService";
-import { SearchX } from "lucide-react";
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ gameSlug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
   const { gameSlug } = await params;
   const game = await getGameBySlug(gameSlug);
   const gameName = game ? game.name : gameSlug.toUpperCase();
   return {
     title: `${gameName} İlanları, Fiyatları & Satın Al | İtemSepeti`,
-    description: `${gameName} için en ucuz item, yang, skin ve hesap ilanlarını karşılaştırın, güvenli escrow güvencesiyle anında satın alın.`,
+    description: `${gameName} pazarında en uygun fiyatlı ilanları güvenle inceleyin ve satın alın.`,
     alternates: {
       canonical: `/kategori/${gameSlug}`,
-    },
-    openGraph: {
-      title: `${gameName} İlanları | İtemSepeti`,
-      description: `${gameName} ilanlarını güvenli escrow korumasıyla hemen inceleyin ve satın alın.`,
     },
   };
 }
@@ -45,7 +39,6 @@ export default async function CategoryPage({
   const gameName = game ? game.name : gameSlug.toUpperCase();
   const categories = game ? await getCategoriesByGame(game.id) : [];
 
-  // Parse filters from URL query parameters
   const minPrice = sParams.min ? Number(sParams.min) : undefined;
   const maxPrice = sParams.max ? Number(sParams.max) : undefined;
   const serverId = typeof sParams.server === "string" ? sParams.server : undefined;
@@ -53,7 +46,6 @@ export default async function CategoryPage({
   const inStockOnly = sParams.inStock === "true";
   const sortBy = (typeof sParams.sort === "string" ? sParams.sort : "NEWEST") as any;
 
-  // Query live listings with all active filters
   const liveListings = await getPublicListings({
     gameSlug,
     categoryId,
@@ -89,26 +81,22 @@ export default async function CategoryPage({
         <ItemSepetiHeader />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-          {/* BREADCRUMB */}
-          <nav aria-label="Ekmek Kırıntısı" className="flex items-center gap-2 text-xs text-[#9498A6]">
-            <Link href="/itemsepeti" className="hover:text-inherit transition-colors">
-              Ana Sayfa
-            </Link>
-            <span>/</span>
-            <span className="text-inherit font-medium">{gameName}</span>
-          </nav>
+          {/* QUICK GAME SWITCHER SHELF */}
+          <ItemSepetiGameShelf activeSlug={gameSlug} />
 
-          {/* PAGE HEADER */}
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-inherit">
-              {gameName} İlanları
-            </h1>
-            <p className="text-xs sm:text-sm text-[#9498A6]">
-              {listingsToDisplay.length} aktif ilan listeleniyor. Güvenli escrow güvencesiyle hemen satın alın.
-            </p>
+          {/* PAGE TITLE & META */}
+          <div className="flex items-baseline justify-between pt-2 border-t border-white/[0.04]">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-inherit">
+                {gameName}
+              </h1>
+              <p className="text-xs text-[#9498A6]">
+                {listingsToDisplay.length} aktif ilan
+              </p>
+            </div>
           </div>
 
-          {/* ACTIVE FILTER AND SORT BAR */}
+          {/* FILTER AND SORT BAR */}
           <ItemSepetiFilterBar
             basePath={`/kategori/${gameSlug}`}
             gameServers={game?.servers}
@@ -121,35 +109,21 @@ export default async function CategoryPage({
             currentInStockOnly={inStockOnly}
           />
 
-          {/* LISTINGS GRID OR EMPTY STATE */}
+          {/* LISTINGS GRID */}
           {listingsToDisplay.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {listingsToDisplay.map((listing) => (
                 <ItemSepetiListingCard key={listing.id} listing={listing} />
               ))}
             </div>
           ) : (
-            <div
-              className="p-12 text-center rounded-[14px] border space-y-4 select-none"
-              style={{
-                backgroundColor: "rgba(27, 30, 39, 0.3)",
-                borderColor: "#282C3A",
-              }}
-            >
-              <div className="w-12 h-12 rounded-full bg-white/5 mx-auto flex items-center justify-center text-[#9498A6]">
-                <SearchX className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-inherit">Aradığın kriterlere uygun ilan bulunamadı.</h3>
-                <p className="text-xs text-[#9498A6]">
-                  Seçtiğin filtreleri temizleyebilir veya diğer kategorilere göz atabilirsin.
-                </p>
-              </div>
+            <div className="p-12 text-center text-xs text-[#9498A6] space-y-2">
+              <p>Bu kategoride kriterlere uygun ilan bulunamadı.</p>
               <Link
                 href={`/kategori/${gameSlug}`}
-                className="inline-flex items-center justify-center px-4 py-2 rounded-[10px] text-xs font-semibold bg-[#E8A33D] text-[#12141A] transition-transform active:scale-95"
+                className="inline-block text-[#E8A33D] font-semibold hover:underline"
               >
-                Filtreleri Sıfırla
+                Filtreleri Temizle
               </Link>
             </div>
           )}

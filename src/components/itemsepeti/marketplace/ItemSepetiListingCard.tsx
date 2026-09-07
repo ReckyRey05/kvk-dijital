@@ -5,10 +5,7 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import {
   ItemSepetiPrice,
-  ItemSepetiRating,
-  ItemSepetiStockBadge,
   ItemSepetiDeliveryBadge,
-  ItemSepetiSellerBadge,
 } from "./MarketplacePrimitives";
 import { ItemSepetiDeliveryMethod } from "@/types/marketplace";
 
@@ -53,7 +50,7 @@ export default function ItemSepetiListingCard({
     }
 
     const nextState = !favorited;
-    setFavorited(nextState); // Optimistic UI update
+    setFavorited(nextState);
     setFavLoading(true);
 
     try {
@@ -70,7 +67,6 @@ export default function ItemSepetiListingCard({
       }
       onToggleFavorite?.(listing.id, nextState);
     } catch {
-      // Rollback on failure
       setFavorited(!nextState);
     } finally {
       setFavLoading(false);
@@ -79,16 +75,15 @@ export default function ItemSepetiListingCard({
 
   return (
     <article
-      className="group relative flex flex-col justify-between p-4 rounded-[14px] border transition-all duration-200 hover:-translate-y-0.5 select-none"
+      className="group relative flex flex-col justify-between p-4 rounded-[12px] transition-colors select-none"
       style={{
-        backgroundColor: "rgba(27, 30, 39, 0.6)",
-        borderColor: "#282C3A",
+        backgroundColor: "#161921",
       }}
     >
-      <div className="space-y-3">
-        {/* GAME & CATEGORY CONTEXT + FAVORITE BUTTON */}
+      <div className="space-y-2">
+        {/* GAME & DELIVERY TAG */}
         <div className="flex items-center justify-between gap-2 text-[11px] text-[#9498A6]">
-          <span className="font-semibold px-2 py-0.5 rounded-[6px] bg-black/20 border border-white/5 truncate max-w-[70%]">
+          <span className="font-medium truncate max-w-[70%]">
             {listing.gameName} {listing.serverName ? `• ${listing.serverName}` : ""}
           </span>
           <div className="flex items-center gap-1.5 shrink-0">
@@ -98,10 +93,10 @@ export default function ItemSepetiListingCard({
               onClick={handleFavoriteClick}
               disabled={favLoading}
               aria-label={favorited ? "Favorilerden kaldır" : "Favorilere ekle"}
-              className="p-1 rounded-[6px] hover:bg-white/10 transition-colors text-[#9498A6] hover:text-red-400 focus:outline-none focus:ring-1 focus:ring-[#E8A33D]"
+              className="p-1 rounded text-[#9498A6] hover:text-red-400 transition-colors focus:outline-none focus:ring-1 focus:ring-[#E8A33D]"
             >
               <Heart
-                className={`w-3.5 h-3.5 transition-colors ${
+                className={`w-3.5 h-3.5 ${
                   favorited ? "fill-red-500 text-red-500" : ""
                 }`}
               />
@@ -116,39 +111,29 @@ export default function ItemSepetiListingCard({
           </Link>
         </h3>
 
-        {/* SELLER IDENTITY & RATING */}
-        <div className="flex items-center justify-between text-xs pt-1 border-t border-white/5">
-          <div className="flex items-center gap-1.5 truncate max-w-[60%]">
-            {listing.sellerId ? (
-              <Link
-                href={`/satici/${listing.sellerId}`}
-                className="text-[#9498A6] hover:text-inherit truncate transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {listing.sellerName}
-              </Link>
-            ) : (
-              <span className="text-[#9498A6] truncate">{listing.sellerName}</span>
-            )}
-            <ItemSepetiSellerBadge isVerified={listing.isSellerVerified} />
-          </div>
-          <ItemSepetiRating score={listing.sellerRating} count={listing.sellerRatingCount} />
+        {/* SELLER IDENTITY */}
+        <div className="text-xs text-[#9498A6] truncate">
+          {listing.sellerId ? (
+            <Link
+              href={`/satici/${listing.sellerId}`}
+              className="hover:text-inherit transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {listing.sellerName} &bull; {listing.sellerRating.toFixed(1)} ★
+            </Link>
+          ) : (
+            <span>{listing.sellerName}</span>
+          )}
         </div>
       </div>
 
-      {/* FOOTER: STOCK, PRICE & ACTION */}
-      <div className="mt-4 pt-3 flex items-center justify-between border-t border-white/5">
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-[#9498A6] font-medium">Birim Fiyat</span>
-            {listing.stock > 0 && <ItemSepetiStockBadge stock={listing.stock} />}
-          </div>
-          <ItemSepetiPrice amount={listing.price} size="md" />
-        </div>
+      {/* FOOTER: CLEAN PRICE & ACTION */}
+      <div className="mt-4 pt-3 flex items-center justify-between border-t border-white/[0.04]">
+        <ItemSepetiPrice amount={listing.price} size="md" />
 
         <Link
           href={`/ilan/${listing.slug}`}
-          className="inline-flex items-center justify-center h-8 px-3.5 rounded-[10px] text-xs font-semibold text-[#12141A] transition-transform active:scale-95 cursor-pointer"
+          className="inline-flex items-center justify-center h-8 px-3.5 rounded-[8px] text-xs font-bold text-[#12141A] transition-transform active:scale-95 cursor-pointer"
           style={{ backgroundColor: "#E8A33D" }}
         >
           Satın Al
