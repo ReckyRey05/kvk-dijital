@@ -1477,3 +1477,209 @@ export interface TeklifimCalendarEvent {
   url?: string;
   type: "delivery" | "quote_expiry" | "meeting" | "payment";
 }
+
+// ==========================================
+// FAZ 12: ADMIN & PLATFORM OPERASYON MERKEZI
+// ==========================================
+
+export type TeklifimAdminRole =
+  | "super_admin"
+  | "operations_admin"
+  | "finance_admin"
+  | "moderation_admin"
+  | "support_admin";
+
+export type TeklifimAdminPermission =
+  | "users.read"
+  | "users.suspend"
+  | "users.edit"
+  | "suppliers.manage"
+  | "suppliers.verify"
+  | "businesses.manage"
+  | "products.moderate"
+  | "categories.manage"
+  | "requests.manage"
+  | "offers.manage"
+  | "orders.manage"
+  | "disputes.manage"
+  | "reports.manage"
+  | "moderation_notes.manage"
+  | "payments.view"
+  | "payments.manage"
+  | "refunds.manage"
+  | "finance.view"
+  | "integrations.manage"
+  | "audit.view"
+  | "system.view"
+  | "feature_flags.manage"
+  | "settings.manage"
+  | "announcements.manage"
+  | "support.manage"
+  | "*";
+
+export interface TeklifimUserSuspension {
+  userId: string;
+  reason: string;
+  suspendedBy: string;
+  suspendedAt: number;
+  durationDays?: number;
+  expiresAt?: number;
+  isActive: boolean;
+  notes?: string;
+}
+
+export type TeklifimDisputeStatus =
+  | "open"
+  | "investigating"
+  | "waiting_for_business"
+  | "waiting_for_supplier"
+  | "resolved"
+  | "rejected";
+
+export type TeklifimDisputeOutcome =
+  | "buyer_favor"
+  | "supplier_favor"
+  | "partial_resolution"
+  | "cancelled"
+  | "other";
+
+export interface TeklifimDispute {
+  id: string;
+  orderId: string;
+  orderNumber: string;
+  businessId: string;
+  businessName: string;
+  supplierId: string;
+  supplierName: string;
+  reason: string;
+  description: string;
+  evidenceUrls?: string[];
+  status: TeklifimDisputeStatus;
+  resolution?: {
+    outcome: TeklifimDisputeOutcome;
+    notes: string;
+    resolvedBy: string;
+    resolvedAt: number;
+    refundAmount?: number;
+  };
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type TeklifimSupportTicketStatus =
+  | "open"
+  | "in_progress"
+  | "waiting"
+  | "resolved"
+  | "closed";
+
+export type TeklifimSupportTicketPriority = "low" | "medium" | "high" | "urgent";
+
+export interface TeklifimSupportTicketMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
+  message: string;
+  timestamp: number;
+}
+
+export interface TeklifimSupportTicket {
+  id: string;
+  ticketNumber: string;
+  userId: string;
+  userEmail: string;
+  userName: string;
+  userRole: string;
+  subject: string;
+  category: string;
+  description: string;
+  status: TeklifimSupportTicketStatus;
+  priority: TeklifimSupportTicketPriority;
+  assignedTo?: string;
+  internalNotes?: string[];
+  messages: TeklifimSupportTicketMessage[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TeklifimModerationNote {
+  id: string;
+  targetType: "user" | "supplier" | "business" | "product" | "request" | "order" | "dispute";
+  targetId: string;
+  authorId: string;
+  authorName: string;
+  authorRole: string;
+  note: string;
+  createdAt: number;
+}
+
+export interface TeklifimFeatureFlag {
+  key: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  updatedAt: number;
+  updatedBy: string;
+}
+
+export interface TeklifimPlatformSettings {
+  marketplace: {
+    defaultCommissionRate: number;
+    minRequestDurationDays: number;
+    maxNegotiationRevisions: number;
+  };
+  security: {
+    rateLimitPerMin: number;
+    maxUploadSizeMb: number;
+  };
+  payments: {
+    sandboxMode: boolean;
+    activeProvider: string;
+  };
+  moderation: {
+    autoReportThreshold: number;
+  };
+  notifications: {
+    emailEnabled: boolean;
+    smsEnabled: boolean;
+    whatsappEnabled: boolean;
+    pushEnabled: boolean;
+  };
+}
+
+export interface TeklifimAnnouncement {
+  id: string;
+  title: string;
+  content: string;
+  targetRole: "all" | "business" | "supplier";
+  channel: "in_app" | "push";
+  status: "draft" | "published";
+  createdAt: number;
+  createdBy: string;
+}
+
+export interface TeklifimAdminAuditLog {
+  id: string;
+  adminId: string;
+  adminEmail: string;
+  adminRole: TeklifimAdminRole;
+  action: string;
+  targetType: string;
+  targetId: string;
+  details: Record<string, any>;
+  ipAddress?: string;
+  timestamp: number;
+}
+
+export interface TeklifimAdminCategory {
+  id: string;
+  name: string;
+  slug: string;
+  icon?: string;
+  subCategories: string[];
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: number;
+  updatedAt: number;
+}

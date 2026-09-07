@@ -1,120 +1,453 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
-import { db } from "@/lib/firebase/firestore";
-import { FolderKanban, Layers, MessageSquare, Clock } from "lucide-react";
 import Link from "next/link";
+import { auth } from "@/lib/firebase/auth";
+import {
+  TrendingUp,
+  CreditCard,
+  Users,
+  Truck,
+  Building2,
+  FileText,
+  AlertCircle,
+  ShieldCheck,
+  Scale,
+  Search,
+  ArrowUpRight,
+  Package,
+  Activity,
+  RefreshCw,
+  Bell,
+} from "lucide-react";
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    projects: 0,
-    services: 0,
-    messages: 0,
-    newMessages: 0
-  });
-  
-  const [recentMessages, setRecentMessages] = useState<any[]>([]);
+interface DashboardData {
+  today: {
+    newBusinessesCount: number;
+    newSuppliersCount: number;
+    pendingVerificationsCount: number;
+    openDisputesCount: number;
+    openReportsCount: number;
+    failedPaymentsCount: number;
+    newOrdersCount: number;
+  };
+  platform: {
+    totalGmv: number;
+    platformNetCommission: number;
+    activeBusinessesCount: number;
+    activeSuppliersCount: number;
+    openRequestsCount: number;
+    completedOrdersCount: number;
+    currency: string;
+  };
+}
+
+export default function AdminDashboardPage() {
+  const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any | null>(null);
+  const [searching, setSearching] = useState(false);
 
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const [projectsSnap, servicesSnap, messagesSnap] = await Promise.all([
-          getDocs(collection(db, "projects")),
-          getDocs(collection(db, "services")),
-          getDocs(collection(db, "contactMessages"))
-        ]);
-
-        const messages = messagesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
-        
-        setStats({
-          projects: projectsSnap.size,
-          services: servicesSnap.size,
-          messages: messages.length,
-          newMessages: messages.filter(m => m.status === "new").length
-        });
-
-        // Get 5 most recent messages
-        const recentMessagesQuery = query(collection(db, "contactMessages"), orderBy("createdAt", "desc"), limit(5));
-        const recentSnap = await getDocs(recentMessagesQuery);
-        setRecentMessages(recentSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      } finally {
-        setLoading(false);
+  async function loadDashboard() {
+    setLoading(true);
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+      const res = await fetch("/api/teklifim-gelsin/admin/dashboard", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setData(json);
       }
+    } catch (err) {
+      console.error("Dashboard yukleme hatasi:", err);
+    } finally {
+      setLoading(false);
     }
-
-    fetchStats();
-  }, []);
-
-  if (loading) {
-    return <div className="animate-pulse">İstatistikler yükleniyor...</div>;
   }
 
-  const statCards = [
-    { name: "Toplam Proje", value: stats.projects, icon: FolderKanban, color: "text-blue-400" },
-    { name: "Toplam Hizmet", value: stats.services, icon: Layers, color: "text-purple-400" },
-    { name: "Yeni Mesajlar", value: stats.newMessages, icon: MessageSquare, color: "text-accent" },
-  ];
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  async function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    if (!searchQuery.trim()) {
+      setSearchResults(null);
+      return;
+    }
+    setSearching(true);
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+      const res = await fetch(`/api/teklifim-gelsin/admin/search?q=${encodeURIComponent(searchQuery)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setSearchResults(json.results);
+      }
+    } catch (err) {
+      console.error("Arama hatasi:", err);
+    } finally {
+      setSearching(false);
+    }
+  }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-semibold mb-2">Dashboard</h1>
-        <p className="text-foreground/60">Sitenizin genel durumu ve özet bilgileri.</p>
+    <div className="space-y-8 pb-12">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Platform Operasyon Merkezi
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Toptancım Cebimde B2B Pazaryeri canlı operasyon, finans ve operasyonel denetim masası.
+          </p>
+        </div>
+        <button
+          onClick={loadDashboard}
+          disabled={loading}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors border border-slate-700 self-start sm:self-auto"
+        >
+          <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+          <span>Verileri Yenile</span>
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {statCards.map((stat, i) => (
-          <div key={i} className="glass-panel p-6 rounded-2xl flex items-center gap-6">
-            <div className={`p-4 rounded-xl bg-white/5 ${stat.color}`}>
-              <stat.icon size={32} />
+      {/* Global Omnibar Search */}
+      <div className="glass-panel p-4 rounded-xl border border-slate-800 bg-slate-900/60 shadow-lg">
+        <form onSubmit={handleSearch} className="flex items-center gap-3">
+          <Search size={18} className="text-slate-400 flex-shrink-0" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Kullanıcı adı, firma, SIP-xxx, ODE-xxx, ürün veya talep ara..."
+            className="flex-1 bg-transparent text-white placeholder:text-slate-500 text-sm focus:outline-none"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery("");
+                setSearchResults(null);
+              }}
+              className="text-xs text-slate-400 hover:text-slate-200"
+            >
+              Temizle
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={searching}
+            className="px-4 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-semibold tracking-wide transition-colors"
+          >
+            {searching ? "Aranıyor..." : "Ara"}
+          </button>
+        </form>
+
+        {/* Search Results Dropdown */}
+        {searchResults && (
+          <div className="mt-4 pt-4 border-t border-slate-800 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Orders */}
+            <div className="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                Siparişler ({searchResults.orders?.length || 0})
+              </div>
+              {searchResults.orders?.length === 0 ? (
+                <div className="text-xs text-slate-600">Eşleşen sipariş bulunamadı.</div>
+              ) : (
+                searchResults.orders.map((o: any) => (
+                  <Link
+                    key={o.id}
+                    href={`/admin/orders?id=${o.id}`}
+                    className="block p-2 rounded hover:bg-slate-800/60 text-xs text-slate-300 transition-colors"
+                  >
+                    <div className="font-mono text-primary">{o.orderNumber || o.id}</div>
+                    <div className="text-slate-400">{o.businessName} &rarr; {o.supplierName}</div>
+                  </Link>
+                ))
+              )}
             </div>
-            <div>
-              <div className="text-4xl font-semibold">{stat.value}</div>
-              <div className="text-foreground/60 text-sm mt-1">{stat.name}</div>
+
+            {/* Users / Profiles */}
+            <div className="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                Kullanıcılar ({searchResults.users?.length || 0})
+              </div>
+              {searchResults.users?.length === 0 ? (
+                <div className="text-xs text-slate-600">Eşleşen kullanıcı bulunamadı.</div>
+              ) : (
+                searchResults.users.map((u: any) => (
+                  <Link
+                    key={u.uid}
+                    href={`/admin/users?id=${u.uid}`}
+                    className="block p-2 rounded hover:bg-slate-800/60 text-xs text-slate-300 transition-colors"
+                  >
+                    <div className="font-semibold text-slate-200">{u.companyName || u.contactName}</div>
+                    <div className="text-slate-400">{u.email} ({u.role})</div>
+                  </Link>
+                ))
+              )}
+            </div>
+
+            {/* Products */}
+            <div className="bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                Ürünler ({searchResults.products?.length || 0})
+              </div>
+              {searchResults.products?.length === 0 ? (
+                <div className="text-xs text-slate-600">Eşleşen ürün bulunamadı.</div>
+              ) : (
+                searchResults.products.map((p: any) => (
+                  <Link
+                    key={p.id}
+                    href={`/admin/products?id=${p.id}`}
+                    className="block p-2 rounded hover:bg-slate-800/60 text-xs text-slate-300 transition-colors"
+                  >
+                    <div className="font-semibold text-slate-200">{p.title || p.name}</div>
+                    <div className="text-slate-400">{p.category || "Genel"} - {p.price || 0} TL</div>
+                  </Link>
+                ))
+              )}
             </div>
           </div>
-        ))}
+        )}
       </div>
 
-      <div className="glass-panel rounded-2xl overflow-hidden mt-8">
-        <div className="p-6 border-b border-white/10 flex justify-between items-center">
-          <h2 className="text-xl font-medium flex items-center gap-2">
-            <Clock size={20} className="text-accent" />
-            Son Mesajlar
-          </h2>
-          <Link href="/admin/messages" className="text-sm text-accent hover:underline">
-            Tümünü Gör
+      {/* TODAY SECTION (ACTIONABLE ALERTS) */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Activity size={18} className="text-primary" />
+          <h2 className="text-lg font-semibold text-white tracking-tight">Bugün (Son 24 Saat)</h2>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+          <Link
+            href="/admin/businesses"
+            className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between"
+          >
+            <div className="text-xs text-slate-400 font-medium">Yeni İşletmeler</div>
+            <div className="text-2xl font-bold text-white mt-2">
+              {data?.today.newBusinessesCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/suppliers"
+            className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between"
+          >
+            <div className="text-xs text-slate-400 font-medium">Yeni Tedarikçiler</div>
+            <div className="text-2xl font-bold text-white mt-2">
+              {data?.today.newSuppliersCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/verifications"
+            className={`p-4 rounded-xl border transition-colors flex flex-col justify-between ${
+              (data?.today.pendingVerificationsCount ?? 0) > 0
+                ? "bg-amber-950/20 border-amber-800/50 hover:border-amber-700"
+                : "bg-slate-900/80 border-slate-800 hover:border-slate-700"
+            }`}
+          >
+            <div className="text-xs text-amber-400 font-medium">Onay Bekleyen</div>
+            <div className="text-2xl font-bold text-amber-300 mt-2">
+              {data?.today.pendingVerificationsCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/disputes"
+            className={`p-4 rounded-xl border transition-colors flex flex-col justify-between ${
+              (data?.today.openDisputesCount ?? 0) > 0
+                ? "bg-red-950/20 border-red-800/50 hover:border-red-700"
+                : "bg-slate-900/80 border-slate-800 hover:border-slate-700"
+            }`}
+          >
+            <div className="text-xs text-red-400 font-medium">Açık Uyuşmazlık</div>
+            <div className="text-2xl font-bold text-red-300 mt-2">
+              {data?.today.openDisputesCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/reports"
+            className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between"
+          >
+            <div className="text-xs text-slate-400 font-medium">Şikayetler</div>
+            <div className="text-2xl font-bold text-white mt-2">
+              {data?.today.openReportsCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/finance"
+            className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between"
+          >
+            <div className="text-xs text-rose-400 font-medium">Hatalı Ödemeler</div>
+            <div className="text-2xl font-bold text-rose-300 mt-2">
+              {data?.today.failedPaymentsCount ?? 0}
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/orders"
+            className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors flex flex-col justify-between"
+          >
+            <div className="text-xs text-emerald-400 font-medium">Bugün Sipariş</div>
+            <div className="text-2xl font-bold text-emerald-300 mt-2">
+              {data?.today.newOrdersCount ?? 0}
+            </div>
           </Link>
         </div>
-        <div className="divide-y divide-white/5">
-          {recentMessages.length === 0 ? (
-            <div className="p-8 text-center text-foreground/50">Henüz mesaj bulunmuyor.</div>
-          ) : (
-            recentMessages.map((msg) => (
-              <div key={msg.id} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white/5 transition-colors">
-                <div>
-                  <div className="font-medium">{msg.name}</div>
-                  <div className="text-sm text-foreground/60">{msg.email}</div>
-                  <div className="text-sm mt-2 line-clamp-1 text-foreground/80">{msg.message}</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  {msg.status === "new" && (
-                    <span className="px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-medium">Yeni</span>
-                  )}
-                  {msg.status === "contacted" && (
-                    <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium">İletişime Geçildi</span>
-                  )}
-                  {msg.status === "completed" && (
-                    <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs font-medium">Tamamlandı</span>
-                  )}
-                </div>
+      </div>
+
+      {/* PLATFORM METRICS & FINANCIAL KPIS */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <TrendingUp size={18} className="text-emerald-400" />
+          <h2 className="text-lg font-semibold text-white tracking-tight">Platform Finans & Hacim</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* GMV */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 to-slate-900/40 border border-slate-800 shadow-xl">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Toplam Brüt Hacim (GMV)
+              </span>
+              <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400">
+                <CreditCard size={20} />
               </div>
-            ))
-          )}
+            </div>
+            <div className="text-3xl font-extrabold text-white mt-4 tracking-tight">
+              {Number(data?.platform.totalGmv || 0).toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+              })}{" "}
+              <span className="text-sm font-normal text-slate-400">TL</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">
+              Başarılı tamamlanan tüm siparişlerin brüt işlem tutarı.
+            </p>
+          </div>
+
+          {/* Platform Net Commission */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 to-slate-900/40 border border-slate-800 shadow-xl">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Net Komisyon Geliri
+              </span>
+              <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
+                <TrendingUp size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-extrabold text-white mt-4 tracking-tight">
+              {Number(data?.platform.platformNetCommission || 0).toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+              })}{" "}
+              <span className="text-sm font-normal text-slate-400">TL</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2">
+              Platform işletim bedeli ve tahsil edilen pazar yeri komisyonları.
+            </p>
+          </div>
+
+          {/* Activity / Orders */}
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900/90 to-slate-900/40 border border-slate-800 shadow-xl">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Tamamlanan İşlemler
+              </span>
+              <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400">
+                <Package size={20} />
+              </div>
+            </div>
+            <div className="text-3xl font-extrabold text-white mt-4 tracking-tight">
+              {data?.platform.completedOrdersCount ?? 0}
+            </div>
+            <div className="text-xs text-slate-400 mt-2 flex items-center gap-4">
+              <span>{data?.platform.activeBusinessesCount ?? 0} İşletme</span>
+              <span>•</span>
+              <span>{data?.platform.activeSuppliersCount ?? 0} Tedarikçi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* QUICK OPERATIONAL LINKS */}
+      <div>
+        <h2 className="text-lg font-semibold text-white tracking-tight mb-3">Hızlı Operasyon Masaları</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link
+            href="/admin/users"
+            className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-primary/50 transition-colors group flex items-start justify-between"
+          >
+            <div>
+              <Users className="text-primary mb-3" size={24} />
+              <div className="font-semibold text-white group-hover:text-primary transition-colors">
+                Kullanıcı & Firma Yönetimi
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Askıya alma, unban, kısıtlama ve profil denetimi.
+              </div>
+            </div>
+            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-primary transition-colors" />
+          </Link>
+
+          <Link
+            href="/admin/products"
+            className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-primary/50 transition-colors group flex items-start justify-between"
+          >
+            <div>
+              <Package className="text-purple-400 mb-3" size={24} />
+              <div className="font-semibold text-white group-hover:text-purple-400 transition-colors">
+                Ürün Moderasyonu
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Katalog onaylama, kategori eşleme ve ürün durdurma.
+              </div>
+            </div>
+            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-purple-400 transition-colors" />
+          </Link>
+
+          <Link
+            href="/admin/disputes"
+            className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-primary/50 transition-colors group flex items-start justify-between"
+          >
+            <div>
+              <Scale className="text-amber-400 mb-3" size={24} />
+              <div className="font-semibold text-white group-hover:text-amber-400 transition-colors">
+                Uyuşmazlık Çözümü
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Alıcı / Tedarikçi ihtilafları ve tahkim kararları.
+              </div>
+            </div>
+            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-amber-400 transition-colors" />
+          </Link>
+
+          <Link
+            href="/admin/announcements"
+            className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-primary/50 transition-colors group flex items-start justify-between"
+          >
+            <div>
+              <Bell className="text-rose-400 mb-3" size={24} />
+              <div className="font-semibold text-white group-hover:text-rose-400 transition-colors">
+                Duyuru & Bildirim Masası
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Platform geneli veya role özel canlı duyuru yayınlama.
+              </div>
+            </div>
+            <ArrowUpRight size={16} className="text-slate-500 group-hover:text-rose-400 transition-colors" />
+          </Link>
         </div>
       </div>
     </div>
