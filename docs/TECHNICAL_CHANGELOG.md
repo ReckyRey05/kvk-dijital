@@ -222,6 +222,20 @@
      - `tests/itemsepeti/platformModules.test.ts` dosyasına AES-256-GCM şifreleme/çözme doğrulaması ve teslimat kanıt yükleme testleri eklenerek test kapsamı **22/22**'ye çıkarıldı (%100 başarı).
      - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
 
+
+### [2026-09-08] Kayıt 11: Production Build Optimizasyonu & Mağaza API Ayrıştırması (Vercel Build Fix)
+- **Tespit Edilen Hata & Kök Neden**:
+  - Vercel üretim build ortamında, `src/app/magaza/[storeSlug]/page.tsx` istemci bileşeni (`"use client"`) doğrudan sunucu katmanındaki `catalogService.ts` ve `reviewService.ts` (ve dolayısıyla Node.js `firebase-admin`, `grpc`, `tls`, `net`) paketlerini import ettiğinde Turbopack bundle hatası veriyordu.
+- **Mimari Çözüm & İyileştirme**:
+  1. **Ayrık Mağaza API Rotası (`/api/itemsepeti/store/[storeSlug]/route.ts`)**:
+     - Sunucu bağımlılıkları ve Firestore sorguları istemci sayfasından tamamen soyutlandı; bağımsız bir REST API rotasına taşındı.
+     - Bu rota mağaza verilerini, satıcı ilanlarını, alıcı değerlendirmelerini ve itibar metriklerini sunucu tarafında işleyip JSON olarak döndürür.
+  2. **İstemci Tarafı Asenkron Fetch Entegrasyonu**:
+     - `/magaza/[storeSlug]/page.tsx` istemci sayfası doğrudan Node modülleri import etmek yerine `/api/itemsepeti/store/${storeSlug}` endpoint'ini tüketir hale getirildi.
+  3. **Vercel / Production Build Doğrulaması**:
+     - `npx next build` komutu çalıştırıldı.
+     - **Sonuç**: 196 sayfa ve API rotasının tamamı **0 hata ile compile edildi** (`✓ Generating static pages 196/196`). Vercel deployment hatası kalıcı olarak giderildi.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

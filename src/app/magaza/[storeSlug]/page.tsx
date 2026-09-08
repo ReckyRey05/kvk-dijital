@@ -18,8 +18,7 @@ import {
   ShoppingCart,
   Zap,
 } from "lucide-react";
-import { getSellerBySlug, getSellerListings } from "@/lib/itemsepeti/catalogService";
-import { getSellerReviews, calculateSellerReputation } from "@/lib/itemsepeti/reviewService";
+
 import { ItemSepetiListing } from "@/types/marketplace";
 import { SeedSeller } from "@/lib/itemsepeti/catalogSeedData";
 import { useItemSepetiCart } from "@/context/ItemSepetiCartContext";
@@ -30,6 +29,12 @@ export default function SellerStoreFrontPage() {
 
   const [seller, setSeller] = useState<SeedSeller | null>(null);
   const [listings, setListings] = useState<ItemSepetiListing[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [rep, setRep] = useState<{ averageRating: number; reviewCount: number; positivePercentage: number }>({
+    averageRating: 4.9,
+    reviewCount: 85,
+    positivePercentage: 98,
+  });
   const [activeTab, setActiveTab] = useState<"listings" | "reviews">("listings");
   const [loading, setLoading] = useState(true);
   const { addItem } = useItemSepetiCart();
@@ -38,13 +43,17 @@ export default function SellerStoreFrontPage() {
   useEffect(() => {
     async function loadStore() {
       setLoading(true);
-      const sellerData = await getSellerBySlug(storeSlug);
-      if (sellerData) {
-        setSeller(sellerData);
-        const sellerItems = await getSellerListings(sellerData.storeName);
-        setListings(sellerItems);
-      } else {
-        // Fallback default seller
+      try {
+        const res = await fetch(`/api/itemsepeti/store/${storeSlug}`);
+        const data = await res.json();
+        if (data.success) {
+          setSeller(data.seller);
+          setListings(data.listings || []);
+          setReviews(data.reviews || []);
+          if (data.reputation) setRep(data.reputation);
+        }
+      } catch (err) {
+        // Fallback demo seller
         setSeller({
           id: "seller_" + storeSlug,
           storeName: storeSlug,
@@ -57,16 +66,12 @@ export default function SellerStoreFrontPage() {
           memberSinceYears: 2,
           bio: "Güvenilir oyuncu pazarı satıcısı. Anında teslimat ve 7/24 canlı destek.",
         });
-        const items = await getSellerListings(storeSlug);
-        setListings(items);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadStore();
   }, [storeSlug]);
-
-  const reviews = seller ? getSellerReviews(seller.storeName) : [];
-  const rep = seller ? calculateSellerReputation(seller.storeName) : { averageRating: 4.9, reviewCount: 85, positivePercentage: 98 };
 
   const handleAddToCart = async (listing: ItemSepetiListing) => {
     const res = await addItem(listing.id, 1);
