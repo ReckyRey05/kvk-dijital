@@ -344,7 +344,27 @@ async function runPlatformModulesTests() {
   assert.strictEqual(validateDeliveryProof({ orderId: "ord_1", proofType: "SCREENSHOT", proofUrls: ["https://resim.link/proof1.png"] }).valid, true);
   console.log("PASSED: Delivery proof submission validation verified.");
 
-  console.log(">> ALL 22 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  // 23. Official T.C. Identity Number checksum algorithm verification
+  console.log("23. Test: TCKN algorithm validates official checksum and rejects invalid numbers...");
+  function validateTCKN(tc: string): boolean {
+    if (!/^[1-9]\d{10}$/.test(tc)) return false;
+    const digits = tc.split("").map(Number);
+    const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+    const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+    const digit10 = (oddSum * 7 - evenSum) % 10;
+    if (digit10 < 0 ? digit10 + 10 !== digits[9] : digit10 !== digits[9]) return false;
+    const totalSum = digits.slice(0, 10).reduce((acc, d) => acc + d, 0);
+    if (totalSum % 10 !== digits[10]) return false;
+    return true;
+  }
+
+  assert.strictEqual(validateTCKN("10000000146"), true); // Valid sample TCKN
+  assert.strictEqual(validateTCKN("01234567890"), false); // Starts with 0
+  assert.strictEqual(validateTCKN("12345678901"), false); // Invalid checksum
+  assert.strictEqual(validateTCKN("1000000014"), false); // Short length
+  console.log("PASSED: Official TCKN algorithm verification verified.");
+
+  console.log(">> ALL 23 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 

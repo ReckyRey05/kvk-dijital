@@ -11,6 +11,8 @@ export interface AuthUserProfile {
   isPhoneVerified: boolean;
   role: ItemSepetiUserRole;
   sellerApprovalStatus?: "pending" | "approved" | "rejected";
+  kycStatus?: "none" | "pending" | "verified" | "rejected";
+  tcKimlikNo?: string;
   balance: number;
   steamTradeUrl?: string;
   gameNicknames?: Record<string, string>;
@@ -43,6 +45,8 @@ const DEFAULT_DEMO_USER: AuthUserProfile = {
   isPhoneVerified: true,
   role: "seller",
   sellerApprovalStatus: "approved",
+  kycStatus: "verified",
+  tcKimlikNo: "10000000146",
   balance: 1450.50,
   steamTradeUrl: "https://steamcommunity.com/tradeoffer/new/?partner=12345678&token=abcdefgh",
   gameNicknames: {

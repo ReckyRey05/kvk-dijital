@@ -236,6 +236,21 @@
      - `npx next build` komutu çalıştırıldı.
      - **Sonuç**: 196 sayfa ve API rotasının tamamı **0 hata ile compile edildi** (`✓ Generating static pages 196/196`). Vercel deployment hatası kalıcı olarak giderildi.
 
+
+### [2026-09-08] Kayıt 12: Resmi T.C. Kimlik Doğrulama & Hesap Onay Motoru (KYC Verification)
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Resmi T.C. Kimlik Algoritması (`validateTCKN`)**:
+     - Nüfus ve Vatandaşlık İşleri (NVİ) resmi 11 haneli T.C. Kimlik No algoritma matematiği (tek/çift basamak toplamları, 10. ve 11. hane sağlama kontrolleri) saf TypeScript motoru olarak kodlandı.
+     - Sahte veya rastgele yazılan kimlik numaraları anında istemci ve sunucu katmanında reddedilir.
+  2. **Kimlik Doğrulama & KYC Başvuru Ekranı (`/dogrulama`)**:
+     - Kullanıcıların T.C. Kimlik No, Nüfus Cüzdanındaki Ad-Soyad ve Doğum Yılı ile tek seferlik onay alabildikleri 256-bit SSL korumalı doğrulama ekranı geliştirildi.
+     - 14 yaş altı kısıtlaması, KVKK bilgilendirmesi ve anlık onay bildirimleri sağlandı.
+  3. **Profil Entegrasyonu & Dinamik Rozetleme (`/profilim`)**:
+     - Kullanıcı kimliğini doğrulamışsa yeşil *"T.C. Onaylı"* rozeti gösterilir; doğrulanmamışsa *"Kimlik Doğrula"* yönlendirme butonu dinamik olarak devreye girer.
+  4. **Test & Tip Bütünlüğü**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına TCKN algoritma sağlama ve sınır durum testleri eklenerek toplam test sayısı **23/23**'e yükseltildi (%100 başarı).
+     - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

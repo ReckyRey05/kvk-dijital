@@ -75,10 +75,20 @@ export default function ProfilePage() {
                   <h1 className="text-xl sm:text-2xl font-black tracking-tight text-inherit">
                     {user.displayName}
                   </h1>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" />
-                    <span>Onaylı Üye</span>
-                  </span>
+                  {user.kycStatus === "verified" ? (
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3" />
+                      <span>T.C. Onaylı</span>
+                    </span>
+                  ) : (
+                    <Link
+                      href="/dogrulama"
+                      className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1 hover:bg-amber-500/25 transition-colors cursor-pointer"
+                    >
+                      <ShieldCheck className="w-3 h-3" />
+                      <span>Kimlik Doğrula</span>
+                    </Link>
+                  )}
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#D99532]/15 text-[#D99532]">
                     {user.role === "seller" ? "Satıcı Mağazası" : user.role === "admin" ? "Yönetici" : "Alıcı"}
                   </span>
