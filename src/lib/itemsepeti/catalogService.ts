@@ -164,7 +164,7 @@ export async function createListing(input: ListingValidationInput): Promise<{
     deliveryMethod: input.deliveryMethod,
     deliverySlaHours: input.deliverySlaHours,
     images: [],
-    status: "active", // Published immediately for verified sellers or pending review
+    status: "pending_review", // Every listing requires admin approval before becoming active
     duplicateFingerprint: fingerprint,
     publishedAt: now,
     createdAt: now,

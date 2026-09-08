@@ -10,6 +10,7 @@ export interface AuthUserProfile {
   phone?: string;
   isPhoneVerified: boolean;
   role: ItemSepetiUserRole;
+  sellerApprovalStatus?: "pending" | "approved" | "rejected";
   balance: number;
   steamTradeUrl?: string;
   gameNicknames?: Record<string, string>;
@@ -41,6 +42,7 @@ const DEFAULT_DEMO_USER: AuthUserProfile = {
   phone: "+90 555 123 45 67",
   isPhoneVerified: true,
   role: "seller",
+  sellerApprovalStatus: "approved",
   balance: 1450.50,
   steamTradeUrl: "https://steamcommunity.com/tradeoffer/new/?partner=12345678&token=abcdefgh",
   gameNicknames: {
@@ -95,6 +97,7 @@ export function ItemSepetiAuthProvider({ children }: { children: React.ReactNode
       phone: data.phone,
       isPhoneVerified: !!data.phone,
       role: data.role || "buyer",
+      sellerApprovalStatus: data.role === "seller" ? "pending" : undefined,
       balance: 0,
       createdAt: Date.now(),
     };

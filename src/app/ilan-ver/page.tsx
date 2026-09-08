@@ -151,7 +151,7 @@ export default function CreateListingPage() {
           {success && (
             <div className="p-3.5 rounded-[10px] bg-[#34D399]/10 border border-[#34D399]/25 text-[#34D399] text-xs flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>İlanınız başarıyla yayınlandı! Yönlendiriliyorsunuz...</span>
+              <span>İlanınız oluşturuldu ve Yönetici Onayına gönderildi! Moderatör onayından sonra yayına alınacaktır.</span>
             </div>
           )}
 

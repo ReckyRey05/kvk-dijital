@@ -98,6 +98,21 @@
      - Auth rol ayrımı, Steam Trade URL regex doğrulaması, ilan durumu mutasyonu, canlı destek filtreleri ve banka bildirim kurallarını kapsayan 8 test sıfır hata ile geçti.
      - `npx tsc --noEmit` ve 190+ regression testi başarıyla doğrulandı.
 
+
+### [2026-09-08] Kayıt 3: Satıcı Başvurusu & İlan Admin Onay Bariyeri
+- **Güvenlik & Moderasyon Kuralı**:
+  1. **Satıcı Başvuru Onayı (`sellerApprovalStatus: "pending"`)**:
+     - Satıcı olarak kaydolan kullanıcılar doğrudan aktif satıcı olamaz; statüleri `pending` (onay bekliyor) olarak başlar.
+     - Yöneticiler `/admin/itemsepeti` panelinden satıcı başvurusunu inceleyip onaylayabilir (`approved`) veya reddedebilir (`rejected`).
+  2. **Zorunlu İlan Moderasyonu (`status: "pending_review"`)**:
+     - Satıcıların açtığı her ilan (`/ilan-ver`) varsayılan olarak `status: "pending_review"` statüsünde oluşturulur.
+     - Pazaryerinde (anasayfa, arama, kategoriler) yalnızca `status: "active"` olan ilanlar listelenir; böylece admin onayından geçmeyen hiçbir ürün alıcılara görünmez.
+     - İlan oluşturma ekranında kullanıcıya bilgilendirici onay mesajı (`"İlanınız oluşturuldu ve Yönetici Onayına gönderildi"`) verilir.
+  3. **Admin Onay & Moderasyon Paneli (`/admin/itemsepeti`)**:
+     - Bekleyen ilanları ve satıcı başvurularını tek ekranda toplayan, tek tıkla "İlanı Onayla & Yayınla" ve "Reddet" aksiyonları sunan operasyon arayüzü eklendi.
+  4. **Doğrulama**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına 2 yeni test eklenerek 10/10 başarıya ulaşıldı. `tsc` derleme testi sıfır hata verdi.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

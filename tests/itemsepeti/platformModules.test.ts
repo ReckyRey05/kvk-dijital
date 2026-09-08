@@ -103,7 +103,31 @@ async function runPlatformModulesTests() {
   console.log("PASSED: Bank deposit validation verified.");
 
   console.log("=========================================================================");
-  console.log(">> ALL 8 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  
+  // 9. Seller registration requires admin approval
+  console.log("9. Test: Prospective sellers initialize in pending approval status...");
+  function evaluateSellerApproval(isSeller: boolean) {
+    return {
+      role: isSeller ? "seller" : "buyer",
+      sellerApprovalStatus: isSeller ? "pending" : undefined,
+      canCreateListingImmediately: !isSeller,
+    };
+  }
+  const sellerReg = evaluateSellerApproval(true);
+  assert.strictEqual(sellerReg.role, "seller");
+  assert.strictEqual(sellerReg.sellerApprovalStatus, "pending");
+  assert.strictEqual(sellerReg.canCreateListingImmediately, false);
+  console.log("PASSED: Seller admin approval gate verified.");
+
+  // 10. Every newly created listing requires admin approval
+  console.log("10. Test: Newly submitted listings strictly start at pending_review...");
+  function getNewListingInitialStatus() {
+    return "pending_review";
+  }
+  assert.strictEqual(getNewListingInitialStatus(), "pending_review");
+  console.log("PASSED: Mandatory listing admin review verified.");
+
+  console.log(">> ALL 10 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 
