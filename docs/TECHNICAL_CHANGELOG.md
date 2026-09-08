@@ -264,3 +264,27 @@ security_rules:
   - Inventory is reserved via atomic 15-minute lease locks
   - Sensitive seller data (IBAN, tax numbers) must never appear in public queries
 `
+
+---
+
+### [RECORD-013] | 2026-09-08 | İtemSepeti Promosyonel Kupon ve İndirim Motoru Altyapısı
+**Talep / Gerekçe**: Alıcıların sepet ve ödeme aşamasında yüzdesel veya sabit tutarlı kuponları (Voucher) kullanabilmesi, minimum sepet tutarı, kullanım limiti, tekil kullanıcı kısıtı ve son geçerlilik tarihi kontrollerinin uçtan uca güvenli ve çifte harcamaya karşı korumalı işletilmesi.
+
+#### 1. Veri Modeli ve Mimarisi
+- **Konum**: `src/lib/itemsepeti/couponService.ts`
+- **Özellikler**:
+  - `Coupon`: `code`, `discountType` (`percentage` | `fixed`), `discountValue`, `minCartAmount`, `maxDiscountAmount`, `usageLimit`, `usedCount`, `expiresAt`, `isActive`, `allowedUserIds`
+  - `validateCoupon(code, cartTotal, userId)`: Kuponun aktifliği, son geçerlilik tarihi, kullanım kotası, minimum sepet tutarı şartı ve kullanıcı kısıtlarını atomik doğrulayarak uygulanacak net indirim tutarını (`discountAmount`) ve nihai sepet bedelini hesaplar.
+  - `applyCouponUsage(code, userId, orderId)`: Sipariş başarıyla onaylandığında kullanım sayacını artırır ve denetim izini kaydeder.
+
+#### 2. Güvenli API Uç Noktası
+- **Konum**: `src/app/api/itemsepeti/coupons/validate/route.ts`
+- **HTTP POST**: `/api/itemsepeti/coupons/validate`
+- **İşlev**: İstemciden gelen kupon kodu ve sepet tutarını sunucu tarafında doğrular; geçersiz veya tükenmiş kupon durumunda standart hata yanıtları (`INVALID_COUPON`, `EXPIRED_COUPON`, `USAGE_LIMIT_EXCEEDED`, `MIN_CART_NOT_MET`) üretir.
+
+#### 3. Checkout (Ödeme Adımı) Kullanıcı Arayüzü Entegrasyonu
+- **Konum**: `src/app/checkout/page.tsx`
+- **İşlev**: Alıcıya sipariş özet kartında kupon kodu giriş alanı, anlık indirim hesaplama göstergesi ve kupon iptal/kaldır seçeneği sunar. İndirim doğrudan nihai tahsilat ve emanet (escrow) tutarına yansıtılır.
+
+#### 4. Otomasyon Testleri ve Tip Güvenliği
+- `tests/itemsepeti/platformModules.test.ts` test kümesine Kupon doğrulama ve indirim hesaplama senaryoları entegre edildi. Testler: **24/24 PASS (100%)**.

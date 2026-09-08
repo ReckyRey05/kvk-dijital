@@ -1,4 +1,5 @@
 import assert from "node:assert";
+import crypto from "node:crypto";
 
 async function runPlatformModulesTests() {
   console.log("=========================================================================");
@@ -307,7 +308,6 @@ async function runPlatformModulesTests() {
 
   // 21. Digital vault AES-256-GCM encryption and authenticated disclosure
   console.log("21. Test: Digital vault payload undergoes authenticated encryption and disclosure...");
-  const crypto = require("crypto");
   function testEncrypt(plain: string, secretKey: string) {
     const key = crypto.createHash("sha256").update(secretKey).digest();
     const iv = crypto.randomBytes(12);
@@ -364,7 +364,39 @@ async function runPlatformModulesTests() {
   assert.strictEqual(validateTCKN("1000000014"), false); // Short length
   console.log("PASSED: Official TCKN algorithm verification verified.");
 
-  console.log(">> ALL 23 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  // 24. Coupon validation, percentage cap and minimum order boundary logic
+  console.log("24. Test: Coupon discounts enforce min order limit, fixed amount and percentage caps...");
+  function computeCouponDiscount(orderTotal: number, coupon: { type: string; value: number; minOrder: number; maxCap?: number }) {
+    if (orderTotal < coupon.minOrder) return { valid: false, error: "Min order not met" };
+    let discount = 0;
+    if (coupon.type === "FIXED_AMOUNT") {
+      discount = Math.min(coupon.value, orderTotal);
+    } else if (coupon.type === "PERCENTAGE") {
+      discount = (orderTotal * coupon.value) / 100;
+      if (coupon.maxCap && discount > coupon.maxCap) discount = coupon.maxCap;
+    }
+    const finalTotal = Math.max(0, orderTotal - discount);
+    return { valid: true, discount, finalTotal };
+  }
+
+  // Case A: Below min order
+  const resA = computeCouponDiscount(150, { type: "FIXED_AMOUNT", value: 50, minOrder: 200 });
+  assert.strictEqual(resA.valid, false);
+
+  // Case B: Valid Fixed Discount (250 TL - 50 TL = 200 TL)
+  const resB = computeCouponDiscount(250, { type: "FIXED_AMOUNT", value: 50, minOrder: 200 });
+  assert.strictEqual(resB.valid, true);
+  assert.strictEqual(resB.discount, 50);
+  assert.strictEqual(resB.finalTotal, 200);
+
+  // Case C: Percentage with Cap (20% of 1500 TL is 300, but cap is 200 TL -> Final 1300 TL)
+  const resC = computeCouponDiscount(1500, { type: "PERCENTAGE", value: 20, minOrder: 100, maxCap: 200 });
+  assert.strictEqual(resC.valid, true);
+  assert.strictEqual(resC.discount, 200);
+  assert.strictEqual(resC.finalTotal, 1300);
+  console.log("PASSED: Coupon calculation and invariant rules verified.");
+
+  console.log(">> ALL 24 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 

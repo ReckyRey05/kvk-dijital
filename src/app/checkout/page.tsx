@@ -10,7 +10,7 @@ import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import { ItemSepetiPrice } from "@/components/itemsepeti/marketplace/MarketplacePrimitives";
 import { ItemSepetiEnrichedCart, ItemSepetiOrder } from "@/types/marketplace";
-import { ShieldCheck, AlertCircle, CheckCircle2, Lock, ArrowLeft, Clock } from "lucide-react";
+import { ShieldCheck, AlertCircle, CheckCircle2, Lock, ArrowLeft, Clock, Tag, Tag as CouponIcon } from "lucide-react";
 
 export function CheckoutView() {
   const router = useRouter();
@@ -23,6 +23,11 @@ export function CheckoutView() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createdOrders, setCreatedOrders] = useState<ItemSepetiOrder[] | null>(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
 
   // Delivery fields per listing
   const [deliveryDetails, setDeliveryDetails] = useState<
@@ -67,6 +72,41 @@ export function CheckoutView() {
         [field]: value,
       },
     }));
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim() || !cartData) return;
+    setCouponLoading(true);
+    setCouponError(null);
+    try {
+      const res = await fetch("/api/itemsepeti/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          couponCode: couponCode.trim(),
+          orderTotal: cartData.totalAmount,
+          buyerId,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCouponDiscount(data.discountAmount);
+        setAppliedCoupon(data.coupon.code);
+        setCouponCode("");
+      } else {
+        setCouponError(data.error || "Kupon uygulanamadı.");
+      }
+    } catch {
+      setCouponError("Kupon kontrol edilirken bir hata oluştu.");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponDiscount(0);
+    setAppliedCoupon(null);
+    setCouponError(null);
   };
 
   const handleCompleteOrder = async () => {
@@ -347,19 +387,76 @@ export function CheckoutView() {
                 <span className="font-semibold text-inherit">{buyerEmail}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>Toplam Tutar</span>
+                <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>Sepet Tutarı</span>
                 <span className="font-bold text-inherit">
                   {cartData.totalAmount.toLocaleString("tr-TR")} TL
                 </span>
               </div>
+              {couponDiscount > 0 && (
+                <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-bold">
+                  <span className="flex items-center gap-1">
+                    <CouponIcon className="w-3.5 h-3.5" />
+                    <span>Kupon İndirimi ({appliedCoupon})</span>
+                  </span>
+                  <span>-{couponDiscount.toLocaleString("tr-TR")} TL</span>
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>Platform Komisyonu</span>
                 <span className="font-semibold text-[#059669]">0 TL (Ücretsiz)</span>
               </div>
               <div className="pt-2 border-t flex items-baseline justify-between" style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "#DCDDE1" }}>
                 <span className="font-bold text-inherit">Net Ödenecek</span>
-                <ItemSepetiPrice amount={cartData.totalAmount} size="lg" />
+                <ItemSepetiPrice amount={Math.max(0, cartData.totalAmount - couponDiscount)} size="lg" />
               </div>
+            </div>
+
+            {/* COUPON VOUCHER INPUT BOX */}
+            <div className="pt-2 border-t border-black/5 dark:border-white/5 space-y-2">
+              <span className="text-[11px] font-bold text-[#9498A6] flex items-center gap-1">
+                <CouponIcon className="w-3.5 h-3.5 text-[#D99532]" />
+                <span>İndirim Kuponu</span>
+              </span>
+
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between p-2.5 rounded-[8px] bg-emerald-500/10 border border-emerald-500/20 text-xs">
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    🎉 {appliedCoupon} Aktif ({couponDiscount} TL İndirim)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveCoupon}
+                    className="text-[11px] text-red-500 hover:underline font-semibold cursor-pointer"
+                  >
+                    Kaldır
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    placeholder="Örn: HOSGELDIN50"
+                    className="flex-1 px-3 py-2 rounded-[8px] text-xs font-mono font-bold bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-inherit uppercase placeholder:normal-case placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-[#D99532]"
+                  />
+                  <ItemSepetiButton
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleApplyCoupon}
+                    isLoading={couponLoading}
+                  >
+                    Uygula
+                  </ItemSepetiButton>
+                </div>
+              )}
+
+              {couponError && (
+                <p className="text-[11px] text-red-500 font-medium">
+                  {couponError}
+                </p>
+              )}
             </div>
 
             {/* PAYMENT PLACEHOLDER NOTICE */}
