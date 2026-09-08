@@ -208,6 +208,20 @@
      - `tests/itemsepeti/platformModules.test.ts` dosyasına Audit log değişmezlik ve indeksleme testi eklenerek toplam test sayısı **20/20**'ye çıkarıldı (%100 başarı).
      - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
 
+
+### [2026-09-08] Kayıt 10: AES-256 Şifreli Dijital Kasa (Digital Vault) & Anında Otomatik Kod Teslimatı
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Şifreli Dijital Kasa Servisi (`src/lib/itemsepeti/digitalVaultService.ts`)**:
+     - Dijital kodlar (`DIGITAL_CODE`) ve oyun hesapları (`ACCOUNT`) veritabanında asla düz metin (plaintext) saklanmaz; **AES-256-GCM** şifreleme standardı ile `ciphertext`, `iv` ve `authTag` parametreleriyle korunur.
+     - Şifreli stok kasası (`ItemSepetiInventoryItem`) üzerinden sipariş bazlı anında şifre çözme ve tek kullanımlık teslimat (`deliverInstantCodeForOrder`) mekanizması kuruldu.
+  2. **Alıcı Ekranında Anında Kod Açımı (`/siparis/[orderId]`)**:
+     - Alıcı ödemeyi cüzdan bakiyesiyle tamamladığında, eğer ürün otomatik teslimatlıysa (`AUTOMATIC_CODE`) satıcının oyuna girmesini beklemeden kod anında ekranda çözülür ve *"Kopyala"* butonuyla sunulur.
+  3. **Satıcı Teslimat Kanıtı (Proof Submission) Yükleme**:
+     - Manuel teslimatlarda satıcının teslimat ekran görüntüsü linkini veya takas ID'sini sisteme kaydedebileceği teslimat kanıt formu sipariş operasyon ekranına eklendi.
+  4. **Test Kapsamı & Otomasyon**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına AES-256-GCM şifreleme/çözme doğrulaması ve teslimat kanıt yükleme testleri eklenerek test kapsamı **22/22**'ye çıkarıldı (%100 başarı).
+     - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

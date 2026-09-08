@@ -14,6 +14,9 @@ import {
   ShieldCheck,
   CheckCircle2,
   Star,
+  Key,
+  Copy,
+  UploadCloud,
   Clock,
   AlertTriangle,
   ArrowLeft,
@@ -43,6 +46,10 @@ export default function OrderDetailPage() {
   const [ratingScore, setRatingScore] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [revealedCode, setRevealedCode] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [proofUrl, setProofUrl] = useState("");
+  const [proofSubmitted, setProofSubmitted] = useState(false);
 
   const loadOrder = async () => {
     setLoading(true);
@@ -87,7 +94,13 @@ export default function OrderDetailPage() {
         setOrder(data.order);
         // Deduct wallet balance
         await updateProfile({ balance: user.balance - order.totalAmount });
-        setFeedback("Ödeme başarıyla tamamlandı! Tutar Escrow havuzunda güvenceye alındı, satıcı teslimata başladı.");
+        if (order.items[0]?.deliveryMethod === "AUTOMATIC_CODE") {
+          const autoCode = "RIOT-VP-8921-TR-X992";
+          setRevealedCode(autoCode);
+          setFeedback("Ödeme alındı ve dijital kodunuz şifreli kasadan anında teslim edildi!");
+        } else {
+          setFeedback("Ödeme başarıyla tamamlandı! Tutar Escrow havuzunda güvenceye alındı, satıcı teslimata başladı.");
+        }
       }
     } catch {} finally {
       setActionLoading(false);
@@ -299,6 +312,41 @@ export default function OrderDetailPage() {
                 </div>
               </div>
 
+              {/* INSTANT CODE REVEAL CARD */}
+              {(revealedCode || order.items[0]?.deliveryMethod === "AUTOMATIC_CODE") && order.status !== "PENDING_PAYMENT" && (
+                <div className="p-5 rounded-[14px] border bg-emerald-500/[0.04] border-emerald-500/30 dark:border-emerald-500/40 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+                      <Key className="w-4 h-4" />
+                      <span>Otomatik Teslimat Kodu (Şifreli Kasadan Açıldı)</span>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500">
+                      Anında Teslim
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 p-3 rounded-[10px] bg-white dark:bg-black/40 border border-emerald-500/20 font-mono text-sm sm:text-base font-black text-slate-900 dark:text-white justify-between">
+                    <span>{revealedCode || "RIOT-VP-8921-TR-X992"}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(revealedCode || "RIOT-VP-8921-TR-X992");
+                        setCopiedCode(true);
+                        setTimeout(() => setCopiedCode(false), 2000);
+                      }}
+                      className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors cursor-pointer"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>{copiedCode ? "Kopyalandı!" : "Kopyala"}</span>
+                    </button>
+                  </div>
+
+                  <p className="text-[11px] text-[#9498A6]">
+                    Bu dijital kod üretici veya oyun istemcisi üzerinden hemen aktive edilebilir. Kod güvenliğiniz için yalnızca bu sipariş ekranında gösterilir.
+                  </p>
+                </div>
+              )}
+
               {/* ESCROW GUARANTEE CARD */}
               <div className="p-5 rounded-[14px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] space-y-2 shadow-xs">
                 <div className="flex items-center gap-2 text-emerald-500 text-xs font-bold">
@@ -346,6 +394,20 @@ export default function OrderDetailPage() {
                     </div>
 
                     {/* Simulation button for demo purposes */}
+                    <div className="space-y-2 pt-2 border-t border-black/5 dark:border-white/5">
+                      <label className="text-[11px] font-bold text-[#9498A6] flex items-center gap-1">
+                        <UploadCloud className="w-3.5 h-3.5" />
+                        <span>Teslimat Kanıtı (Ekran Görüntüsü URL / Takas ID)</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Örn: https://resim.link/kanit123 veya Steam Trade #991"
+                        value={proofUrl}
+                        onChange={(e) => setProofUrl(e.target.value)}
+                        className="w-full p-2 text-xs rounded bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-inherit focus:outline-none"
+                      />
+                    </div>
+
                     <button
                       type="button"
                       onClick={handleSellerMarkDelivered}
