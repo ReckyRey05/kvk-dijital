@@ -8,6 +8,7 @@ import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
+import ItemSepetiOrderChat from "@/components/itemsepeti/chat/ItemSepetiOrderChat";
 import { ItemSepetiOrder, ItemSepetiOrderStatus } from "@/types/marketplace";
 import {
   ShieldCheck,
@@ -398,6 +399,17 @@ export default function OrderDetailPage() {
                 )}
               </div>
             </div>
+          </div>
+
+          
+          {/* SECURE ORDER CHAT & DELIVERY PROOF ROOM */}
+          <div className="pt-2">
+            <ItemSepetiOrderChat
+              orderId={order.id}
+              currentUserId={user?.uid || "guest_buyer"}
+              currentUserName={user?.displayName || "Kullanıcı"}
+              currentUserRole={user?.role === "seller" ? "seller" : user?.role === "admin" ? "admin" : "buyer"}
+            />
           </div>
 
           {/* DISPUTE MODAL */}

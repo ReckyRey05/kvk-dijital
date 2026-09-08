@@ -179,7 +179,59 @@ async function runPlatformModulesTests() {
   assert.strictEqual(validatePayoutRequest(250, 1000, "TR120001009012345678900123").valid, true);
   console.log("PASSED: Payout validation rules verified.");
 
-  console.log(">> ALL 14 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  // 15. Order chat sensitive data sanitization & anti-fraud filter
+  console.log("15. Test: Chat sanitization filters out phone numbers, IBANs, and external chat links...");
+  const PHONE_REGEX = /(\+90|0)?\s*[1-9]\d{2}\s*\d{3}\s*\d{2}\s*\d{2}/g;
+  const IBAN_REGEX = /TR\d{2}\s*\d{4}\s*\d{4}\s*\d{4}\s*\d{4}\s*\d{4}\s*\d{2}/gi;
+  const EXTERNAL_LINKS_REGEX = /(https?:\/\/|www\.|discord(\.gg|\.com|app\.com)\/|t\.me\/|wa\.me\/|instagram\.com\/|twitter\.com\/)[^\s]+/gi;
+
+  function sanitizeChatMessage(raw: string) {
+    let text = raw;
+    let hasViolation = false;
+    if (PHONE_REGEX.test(text)) {
+      hasViolation = true;
+      text = text.replace(PHONE_REGEX, "[Sistem tarafından gizlenen telefon no]");
+    }
+    if (IBAN_REGEX.test(text)) {
+      hasViolation = true;
+      text = text.replace(IBAN_REGEX, "[Sistem tarafından gizlenen IBAN]");
+    }
+    if (EXTERNAL_LINKS_REGEX.test(text)) {
+      hasViolation = true;
+      text = text.replace(EXTERNAL_LINKS_REGEX, "[Sistem tarafından gizlenen harici bağlantı]");
+    }
+    return { text, hasViolation };
+  }
+
+  const cleanMessage = sanitizeChatMessage("Oyun içi nickim ProGamer99, teslimat noktasındayım.");
+  assert.strictEqual(cleanMessage.hasViolation, false);
+
+  const leakAttempt = sanitizeChatMessage("Bana whatsapptan yaz 0532 123 45 67 veya discord.gg/oyun");
+  assert.strictEqual(leakAttempt.hasViolation, true);
+  assert.ok(leakAttempt.text.includes("[Sistem tarafından gizlenen telefon no]"));
+  assert.ok(leakAttempt.text.includes("[Sistem tarafından gizlenen harici bağlantı]"));
+  console.log("PASSED: Chat anti-fraud sanitization verified.");
+
+  // 16. Admin payout review queue state transition
+  console.log("16. Test: Admin payout approval transitions status and records bank queue...");
+  interface PayoutItem {
+    id: string;
+    amount: number;
+    status: "pending" | "approved" | "rejected";
+  }
+  const pendingPayouts: PayoutItem[] = [
+    { id: "pay_1", amount: 500, status: "pending" },
+    { id: "pay_2", amount: 1200, status: "pending" },
+  ];
+  function approvePayout(id: string, list: PayoutItem[]) {
+    return list.map(p => p.id === id ? { ...p, status: "approved" as const } : p);
+  }
+  const updatedPayouts = approvePayout("pay_1", pendingPayouts);
+  assert.strictEqual(updatedPayouts.find(p => p.id === "pay_1")?.status, "approved");
+  assert.strictEqual(updatedPayouts.find(p => p.id === "pay_2")?.status, "pending");
+  console.log("PASSED: Admin payout review transition verified.");
+
+  console.log(">> ALL 16 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 

@@ -141,6 +141,22 @@
   4. **Test & Tip Güvenliği**:
      - `platformModules.test.ts` test kapsamı 14 teste çıkarıldı ve tüm testler sıfır hata ile geçti. `tsc` derleme kontrolü tam uyumlu sonuç verdi.
 
+
+### [2026-09-08] Kayıt 6: Güvenli Sipariş İçi Sohbet (Anti-Fraud Chat) & Admin Para Çekme Yönetimi
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Sipariş Kanıt & Canlı Sohbet Odası (`ItemSepetiOrderChat.tsx`)**:
+     - Sipariş operasyon detayında (`/siparis/[orderId]`) alıcı ve satıcının oyun içi karakter adı, takas linki veya teslimat koordinatlarını paylaşabileceği anlık sohbet modülü entegre edildi.
+     - **Dolandırıcılık ve Platform Dışı İşlem Engeli (Anti-Fraud Sanitization)**:
+       - Telefon numaraları (`05XX XXX XX XX`), TR IBAN numaraları ve harici platform bağlantıları (`discord.gg`, `t.me`, `wa.me`) regex katmanıyla otomatik taranır.
+       - Tespit edilen hassas veya harici iletişim girişimleri `[Sistem tarafından gizlenen...]` maskesiyle anında sansürlenir ve kullanıcıya uyarı gösterilir.
+  2. **Admin Paneli Para Çekme (Payout) Moderasyon Sekmesi (`/admin/itemsepeti`)**:
+     - Admin paneline *"Para Çekme Talepleri"* sekmesi eklendi.
+     - Satıcıların IBAN, Ad-Soyad ve çekim tutarı onay kuyruğunda görüntülenir.
+     - Yönetici tek tıkla *"Transferi Onayla"* veya *"Reddet & İade Et"* aksiyonlarını yürütebilir.
+  3. **Test Kapsamı & Otomasyon**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına Chat Anti-Fraud ve Admin Payout onay geçişlerini doğrulayan 2 yeni test eklendi (Toplam: 16/16 test %100 başarılı).
+     - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

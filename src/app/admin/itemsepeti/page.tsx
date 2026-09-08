@@ -16,6 +16,8 @@ import {
   ArrowLeft,
   AlertTriangle,
   ExternalLink,
+  CreditCard,
+  Banknote,
 } from "lucide-react";
 
 interface PendingSeller {
@@ -38,8 +40,19 @@ interface PendingListing {
   status: "pending_review" | "active" | "rejected";
 }
 
+interface PendingPayout {
+  id: string;
+  sellerName: string;
+  sellerEmail: string;
+  amount: number;
+  iban: string;
+  accountHolder: string;
+  requestedAt: string;
+  status: "pending" | "approved" | "rejected";
+}
+
 export default function ItemSepetiAdminModerationPage() {
-  const [activeTab, setActiveTab] = useState<"sellers" | "listings">("listings");
+  const [activeTab, setActiveTab] = useState<"sellers" | "listings" | "payouts">("listings");
 
   const [sellers, setSellers] = useState<PendingSeller[]>([
     {
@@ -93,30 +106,65 @@ export default function ItemSepetiAdminModerationPage() {
     },
   ]);
 
+  const [payouts, setPayouts] = useState<PendingPayout[]>([
+    {
+      id: "pay_req_1",
+      sellerName: "DragonTrader",
+      sellerEmail: "dragontrader@itemsepeti.com",
+      amount: 1794.5,
+      iban: "TR330006100511123220000001",
+      accountHolder: "Ahmet Demir",
+      requestedAt: "15 dakika önce",
+      status: "pending",
+    },
+    {
+      id: "pay_req_2",
+      sellerName: "Metin2Efsane",
+      sellerEmail: "metin2efsane@gmail.com",
+      amount: 2150.0,
+      iban: "TR560006200000012990022301",
+      accountHolder: "Mustafa Çelik",
+      requestedAt: "45 dakika önce",
+      status: "pending",
+    },
+  ]);
+
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const handleApproveSeller = (sellerId: string) => {
     setSellers((prev) => prev.map((s) => (s.id === sellerId ? { ...s, status: "approved" } : s)));
     setFeedback("Satıcı başvurusu onaylandı. Kullanıcı artık ilan açabilir.");
-    setTimeout(() => setFeedback(null), 3000);
+    setTimeout(() => setFeedback(null), 4000);
   };
 
   const handleRejectSeller = (sellerId: string) => {
     setSellers((prev) => prev.map((s) => (s.id === sellerId ? { ...s, status: "rejected" } : s)));
     setFeedback("Satıcı başvurusu reddedildi.");
-    setTimeout(() => setFeedback(null), 3000);
+    setTimeout(() => setFeedback(null), 4000);
   };
 
   const handleApproveListing = (listingId: string) => {
     setListings((prev) => prev.map((l) => (l.id === listingId ? { ...l, status: "active" } : l)));
-    setFeedback("İlan onaylandı ve pazaryerinde yayına alındı!");
-    setTimeout(() => setFeedback(null), 3000);
+    setFeedback("İlan onaylandı ve pazaryerinde canlıya alındı!");
+    setTimeout(() => setFeedback(null), 4000);
   };
 
   const handleRejectListing = (listingId: string) => {
     setListings((prev) => prev.map((l) => (l.id === listingId ? { ...l, status: "rejected" } : l)));
     setFeedback("İlan reddedildi ve satıcıya bildirim gönderildi.");
-    setTimeout(() => setFeedback(null), 3000);
+    setTimeout(() => setFeedback(null), 4000);
+  };
+
+  const handleApprovePayout = (payoutId: string) => {
+    setPayouts((prev) => prev.map((p) => (p.id === payoutId ? { ...p, status: "approved" } : p)));
+    setFeedback("Para çekme talebi onaylandı! Banka transferi kuyruğuna alındı.");
+    setTimeout(() => setFeedback(null), 4000);
+  };
+
+  const handleRejectPayout = (payoutId: string) => {
+    setPayouts((prev) => prev.map((p) => (p.id === payoutId ? { ...p, status: "rejected" } : p)));
+    setFeedback("Para çekme talebi reddedildi. Bakiye satıcı cüzdanına iade edildi.");
+    setTimeout(() => setFeedback(null), 4000);
   };
 
   return (
@@ -136,11 +184,11 @@ export default function ItemSepetiAdminModerationPage() {
                 </h1>
               </div>
               <p className="text-xs sm:text-sm text-[#9498A6]">
-                Satıcı olma başvurularını ve pazaryerine gönderilen yeni ilanları denetleyin.
+                Satıcı başvurularını, onay bekleyen ilanları ve para çekme (payout) taleplerini yönetin.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 p-1 rounded-[10px] border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921]">
+            <div className="flex flex-wrap items-center gap-2 p-1 rounded-[10px] border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921]">
               <button
                 onClick={() => setActiveTab("listings")}
                 className={`px-3 py-1.5 rounded-[8px] text-xs font-bold transition-colors ${
@@ -161,12 +209,22 @@ export default function ItemSepetiAdminModerationPage() {
               >
                 Satıcı Başvuruları ({sellers.filter((s) => s.status === "pending").length})
               </button>
+              <button
+                onClick={() => setActiveTab("payouts")}
+                className={`px-3 py-1.5 rounded-[8px] text-xs font-bold transition-colors ${
+                  activeTab === "payouts"
+                    ? "bg-[#D99532] text-white"
+                    : "text-[#626772] dark:text-[#9498A6]"
+                }`}
+              >
+                Para Çekme Talepleri ({payouts.filter((p) => p.status === "pending").length})
+              </button>
             </div>
           </div>
 
           {feedback && (
-            <div className="p-3.5 rounded-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="p-3.5 rounded-[12px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{feedback}</span>
             </div>
           )}
@@ -174,47 +232,44 @@ export default function ItemSepetiAdminModerationPage() {
           {/* TAB 1: PENDING LISTINGS */}
           {activeTab === "listings" && (
             <div className="space-y-3">
-              {listings.map((item) => (
+              {listings.map((listing) => (
                 <div
-                  key={item.id}
+                  key={listing.id}
                   className="p-4 sm:p-5 rounded-[14px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
                 >
-                  <div className="space-y-1.5 flex-1">
+                  <div className="space-y-1 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#D99532]/10 text-[#D99532]">
-                        {item.gameName}
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[#9498A6]">
+                        {listing.gameName}
                       </span>
-                      <span className="text-xs text-[#9498A6]">Satıcı: <strong className="text-inherit">@{item.sellerName}</strong></span>
-                      <span className="text-xs text-[#9498A6]">&bull; {item.submittedAt}</span>
+                      <h3 className="text-base font-bold text-inherit">{listing.title}</h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                          item.status === "active"
+                          listing.status === "active"
                             ? "bg-emerald-500/10 text-emerald-500"
-                            : item.status === "rejected"
+                            : listing.status === "rejected"
                             ? "bg-red-500/10 text-red-500"
                             : "bg-amber-500/10 text-amber-500"
                         }`}
                       >
-                        {item.status === "active"
-                          ? "Onaylandı"
-                          : item.status === "rejected"
+                        {listing.status === "active"
+                          ? "Onaylandı & Canlıda"
+                          : listing.status === "rejected"
                           ? "Reddedildi"
-                          : "İnceleme Bekliyor"}
+                          : "Onay Bekliyor"}
                       </span>
                     </div>
 
-                    <h3 className="text-sm sm:text-base font-bold text-inherit">{item.title}</h3>
-
-                    <div className="flex items-center gap-4 text-xs text-[#9498A6]">
-                      <span>Birim Fiyat: <strong className="text-inherit">{item.price.toLocaleString("tr-TR")} TL</strong></span>
-                      <span>Stok: <strong className="text-inherit">{item.stock} Adet</strong></span>
-                    </div>
+                    <p className="text-xs text-[#9498A6]">
+                      Satıcı: <strong className="text-inherit">{listing.sellerName}</strong> &bull; Stok: {listing.stock} &bull; Fiyat:{" "}
+                      <strong className="text-inherit">{listing.price.toLocaleString("tr-TR")} TL</strong> &bull; Gönderim: {listing.submittedAt}
+                    </p>
                   </div>
 
-                  {item.status === "pending_review" && (
+                  {listing.status === "pending_review" && (
                     <div className="flex items-center gap-2 shrink-0">
                       <button
-                        onClick={() => handleRejectListing(item.id)}
+                        onClick={() => handleRejectListing(listing.id)}
                         className="px-3 py-2 rounded-[8px] border border-red-500/30 text-red-500 hover:bg-red-500/10 text-xs font-bold transition-colors cursor-pointer"
                       >
                         Reddet
@@ -222,7 +277,7 @@ export default function ItemSepetiAdminModerationPage() {
                       <ItemSepetiButton
                         variant="primary"
                         size="sm"
-                        onClick={() => handleApproveListing(item.id)}
+                        onClick={() => handleApproveListing(listing.id)}
                       >
                         <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
                         <span>İlanı Onayla & Yayınla</span>
@@ -283,6 +338,71 @@ export default function ItemSepetiAdminModerationPage() {
                       >
                         <UserCheck className="w-3.5 h-3.5 mr-1" />
                         <span>Satıcıyı Onayla</span>
+                      </ItemSepetiButton>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TAB 3: PENDING PAYOUTS */}
+          {activeTab === "payouts" && (
+            <div className="space-y-3">
+              {payouts.map((payout) => (
+                <div
+                  key={payout.id}
+                  className="p-4 sm:p-5 rounded-[14px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
+                >
+                  <div className="space-y-1 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Banknote className="w-4 h-4 text-emerald-500" />
+                      <h3 className="text-base font-bold text-inherit">
+                        {payout.amount.toLocaleString("tr-TR")} TL
+                      </h3>
+                      <span className="text-xs text-[#9498A6]">
+                        ({payout.sellerName})
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
+                          payout.status === "approved"
+                            ? "bg-emerald-500/10 text-emerald-500"
+                            : payout.status === "rejected"
+                            ? "bg-red-500/10 text-red-500"
+                            : "bg-amber-500/10 text-amber-500"
+                        }`}
+                      >
+                        {payout.status === "approved"
+                          ? "Onaylandı / Transfer Edildi"
+                          : payout.status === "rejected"
+                          ? "Reddedildi"
+                          : "Onay Bekliyor"}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-[#9498A6]">
+                      Hesap Sahibi: <strong className="text-inherit">{payout.accountHolder}</strong> &bull; IBAN: <code className="text-xs font-mono font-bold text-inherit bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded">{payout.iban}</code>
+                    </p>
+                    <p className="text-[11px] text-[#9498A6]">
+                      E-Posta: {payout.sellerEmail} &bull; Talep: {payout.requestedAt}
+                    </p>
+                  </div>
+
+                  {payout.status === "pending" && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => handleRejectPayout(payout.id)}
+                        className="px-3 py-2 rounded-[8px] border border-red-500/30 text-red-500 hover:bg-red-500/10 text-xs font-bold transition-colors cursor-pointer"
+                      >
+                        Reddet & İade Et
+                      </button>
+                      <ItemSepetiButton
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleApprovePayout(payout.id)}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                        <span>Transferi Onayla</span>
                       </ItemSepetiButton>
                     </div>
                   )}
