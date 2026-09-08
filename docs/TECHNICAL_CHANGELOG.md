@@ -127,6 +127,20 @@
   4. **Test & Tip Güvenliği**:
      - `tests/itemsepeti/platformModules.test.ts` 12/12 test ile ve `cartAndCheckout.test.ts` 62/62 test ile doğrulandı. `tsc` derleme kontrolü sıfır hata verdi.
 
+
+### [2026-09-08] Kayıt 5: Çift Girişli Muhasebe (Double-Entry Ledger) & Satıcı Para Çekme (Payout)
+- **Finansal Altyapı Güçlendirmesi**:
+  1. **Çift Girişli Defter-i Kebir (`src/lib/itemsepeti/walletService.ts`)**:
+     - Kullanıcı bakiyeleri doğrudan sayısal artış/azalış yerine `CREDIT`, `DEBIT`, `ESCROW_HOLD`, `ESCROW_RELEASE`, `REFUND`, `PAYOUT` işlem tipleriyle loglanır.
+     - Her işlemde `balanceBefore`, `amount` ve `balanceAfter` kaydedilerek bakiye tutarlılığı garanti altına alındı.
+  2. **Satıcı Para Çekme / FAST Çıkışı (`/para-cek`)**:
+     - Satıcıların kazançlarını banka hesaplarına çekebileceği sayfa kuruldu.
+     - Minimum 100 TL çekim alt sınırı, bakiye aşımı kontrolü ve TR IBAN format doğrulayıcısı işletildi.
+  3. **Site İçi Bildirim Motoru (`src/lib/itemsepeti/notificationService.ts`)**:
+     - Sipariş oluşturma, teslimat bildirimi, itiraz açılması ve ödeme onaylarında kullanıcıya anlık bildirim fırlatan servis yazıldı.
+  4. **Test & Tip Güvenliği**:
+     - `platformModules.test.ts` test kapsamı 14 teste çıkarıldı ve tüm testler sıfır hata ile geçti. `tsc` derleme kontrolü tam uyumlu sonuç verdi.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

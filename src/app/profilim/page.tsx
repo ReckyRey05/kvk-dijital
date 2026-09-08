@@ -93,11 +93,18 @@ export default function ProfilePage() {
                   {user.balance.toLocaleString("tr-TR", { minimumFractionDigits: 2 })} TL
                 </span>
               </div>
-              <Link href="/bakiye-yukle">
-                <ItemSepetiButton variant="primary" size="sm">
-                  + Bakiye Yükle
-                </ItemSepetiButton>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/bakiye-yukle">
+                  <ItemSepetiButton variant="primary" size="sm">
+                    + Bakiye Yükle
+                  </ItemSepetiButton>
+                </Link>
+                <Link href="/para-cek">
+                  <ItemSepetiButton variant="secondary" size="sm">
+                    Para Çek
+                  </ItemSepetiButton>
+                </Link>
+              </div>
             </div>
           </div>
 
