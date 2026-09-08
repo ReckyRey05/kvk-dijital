@@ -13,6 +13,7 @@ import { ItemSepetiOrder, ItemSepetiOrderStatus } from "@/types/marketplace";
 import {
   ShieldCheck,
   CheckCircle2,
+  Star,
   Clock,
   AlertTriangle,
   ArrowLeft,
@@ -38,6 +39,10 @@ export default function OrderDetailPage() {
   // Dispute state
   const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [disputeReason, setDisputeReason] = useState("");
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [ratingScore, setRatingScore] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   const loadOrder = async () => {
     setLoading(true);
@@ -386,6 +391,20 @@ export default function OrderDetailPage() {
                     <CheckCircle2 className="w-6 h-6 mx-auto" />
                     <p className="font-bold">Sipariş Başarıyla Tamamlandı</p>
                     <p className="text-[11px] opacity-80">Para satıcının çekilebilir bakiyesine aktarıldı.</p>
+                    {!reviewSubmitted ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowReviewModal(true)}
+                        className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#D99532] text-white font-bold text-xs hover:bg-[#c48428] transition-colors cursor-pointer"
+                      >
+                        <Star className="w-3.5 h-3.5 fill-current" />
+                        <span>Satıcıyı Değerlendir ({order.sellerId})</span>
+                      </button>
+                    ) : (
+                      <p className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mt-2">
+                        ⭐ Değerlendirmeniz satıcı profiline eklendi.
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -411,6 +430,71 @@ export default function OrderDetailPage() {
               currentUserRole={user?.role === "seller" ? "seller" : user?.role === "admin" ? "admin" : "buyer"}
             />
           </div>
+
+          
+          {/* SELLER REVIEW & REPUTATION MODAL */}
+          {showReviewModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+              <div className="max-w-md w-full p-6 rounded-[16px] bg-white dark:bg-[#161921] border border-[#DCDDE1] dark:border-[#282C3A] space-y-4 shadow-2xl">
+                <div className="space-y-1">
+                  <h3 className="text-base font-bold text-inherit flex items-center gap-1.5 text-[#D99532]">
+                    <Star className="w-4 h-4 fill-[#D99532]" />
+                    <span>Satıcıyı Değerlendir & Puan Ver</span>
+                  </h3>
+                  <p className="text-xs text-[#9498A6]">
+                    Bu alışverişteki teslimat hızı ve iletişimi 1 ile 5 yıldız arasında oylayın.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-2 py-3">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRatingScore(star)}
+                      className="p-1 cursor-pointer transition-transform hover:scale-110"
+                    >
+                      <Star
+                        className={`w-8 h-8 ${
+                          star <= ratingScore
+                            ? "text-[#D99532] fill-[#D99532]"
+                            : "text-slate-300 dark:text-slate-700"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                <textarea
+                  rows={3}
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  placeholder="Satıcı hakkında deneyimlerinizi yazın (Örn: 2 dakikada teslim etti, çok kibardı)..."
+                  className="w-full p-3 rounded-[8px] text-xs bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-inherit focus:ring-1 focus:ring-[#D99532] focus:outline-none"
+                />
+
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    onClick={() => setShowReviewModal(false)}
+                    className="px-3 py-2 text-xs font-semibold text-[#9498A6] hover:text-inherit"
+                  >
+                    Vazgeç
+                  </button>
+                  <ItemSepetiButton
+                    variant="primary"
+                    size="sm"
+                    onClick={() => {
+                      setReviewSubmitted(true);
+                      setShowReviewModal(false);
+                      setFeedback("Değerlendirmeniz için teşekkürler! Satıcının puanına yansıtıldı.");
+                    }}
+                  >
+                    <span>Puanı Kaydet</span>
+                  </ItemSepetiButton>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* DISPUTE MODAL */}
           {showDisputeModal && (

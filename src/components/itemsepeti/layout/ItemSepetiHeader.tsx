@@ -8,6 +8,7 @@ import { useItemSepetiCart } from "@/context/ItemSepetiCartContext";
 import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import ItemSepetiLogo from "../ui/ItemSepetiLogo";
 import ItemSepetiHeaderSearch from "./ItemSepetiHeaderSearch";
+import ItemSepetiNotificationDropdown from "./ItemSepetiNotificationDropdown";
 
 export default function ItemSepetiHeader() {
   const { theme, toggleTheme } = useItemSepetiTheme();
@@ -60,6 +61,9 @@ export default function ItemSepetiHeader() {
             <PlusCircle className="w-3.5 h-3.5 text-[#D99532]" />
             <span>İlan Ver</span>
           </Link>
+
+          {/* User Notification Center */}
+          {user && <ItemSepetiNotificationDropdown userId={user.uid} />}
 
           {/* Theme switcher */}
           <button

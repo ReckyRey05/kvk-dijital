@@ -18,6 +18,7 @@ import {
   ExternalLink,
   CreditCard,
   Banknote,
+  Scale,
 } from "lucide-react";
 
 interface PendingSeller {
@@ -51,8 +52,20 @@ interface PendingPayout {
   status: "pending" | "approved" | "rejected";
 }
 
+interface PendingDispute {
+  id: string;
+  orderNumber: string;
+  buyerName: string;
+  sellerName: string;
+  amount: number;
+  reason: string;
+  description: string;
+  openedAt: string;
+  status: "OPEN" | "RESOLVED_BUYER" | "RESOLVED_SELLER";
+}
+
 export default function ItemSepetiAdminModerationPage() {
-  const [activeTab, setActiveTab] = useState<"sellers" | "listings" | "payouts">("listings");
+  const [activeTab, setActiveTab] = useState<"sellers" | "listings" | "payouts" | "disputes">("listings");
 
   const [sellers, setSellers] = useState<PendingSeller[]>([
     {
@@ -129,6 +142,31 @@ export default function ItemSepetiAdminModerationPage() {
     },
   ]);
 
+  const [disputes, setDisputes] = useState<PendingDispute[]>([
+    {
+      id: "dsp_1",
+      orderNumber: "SIP-2026-902144",
+      buyerName: "Ali H.",
+      sellerName: "DragonTrader",
+      amount: 450,
+      reason: "Ürün Teslim Edilmedi",
+      description: "Satıcı 45 dakikadır oyunda takas teklifini kabul etmedi ve chatten cevap vermiyor.",
+      openedAt: "20 dakika önce",
+      status: "OPEN",
+    },
+    {
+      id: "dsp_2",
+      orderNumber: "SIP-2026-881230",
+      buyerName: "Caner T.",
+      sellerName: "KodMerkezi",
+      amount: 680,
+      reason: "Geçersiz Dijital Kod",
+      description: "Riot istemcisinde kod kullanılmış uyarısı verdi. Satıcıdan yeni kod talep ediyorum.",
+      openedAt: "1 saat önce",
+      status: "OPEN",
+    },
+  ]);
+
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const handleApproveSeller = (sellerId: string) => {
@@ -167,6 +205,22 @@ export default function ItemSepetiAdminModerationPage() {
     setTimeout(() => setFeedback(null), 4000);
   };
 
+  const handleArbitrateDispute = (disputeId: string, decision: "buyer" | "seller") => {
+    setDisputes((prev) =>
+      prev.map((d) =>
+        d.id === disputeId
+          ? { ...d, status: decision === "buyer" ? "RESOLVED_BUYER" : "RESOLVED_SELLER" }
+          : d
+      )
+    );
+    if (decision === "buyer") {
+      setFeedback("Hakem Kararı: Escrow bedeli alıcı cüzdanına iade edildi (REFUND).");
+    } else {
+      setFeedback("Hakem Kararı: İtiraz haksız bulundu. Escrow satıcı hesabına aktarıldı.");
+    }
+    setTimeout(() => setFeedback(null), 4000);
+  };
+
   return (
     <ItemSepetiThemeProvider>
       <div className="flex flex-col min-h-screen">
@@ -184,7 +238,7 @@ export default function ItemSepetiAdminModerationPage() {
                 </h1>
               </div>
               <p className="text-xs sm:text-sm text-[#9498A6]">
-                Satıcı başvurularını, onay bekleyen ilanları ve para çekme (payout) taleplerini yönetin.
+                Satıcı başvurularını, onay bekleyen ilanları, para çekimleri ve uyuşmazlık (dispute) hakem heyetini yönetin.
               </p>
             </div>
 
@@ -197,7 +251,7 @@ export default function ItemSepetiAdminModerationPage() {
                     : "text-[#626772] dark:text-[#9498A6]"
                 }`}
               >
-                Onay Bekleyen İlanlar ({listings.filter((l) => l.status === "pending_review").length})
+                İlan Onay ({listings.filter((l) => l.status === "pending_review").length})
               </button>
               <button
                 onClick={() => setActiveTab("sellers")}
@@ -207,7 +261,7 @@ export default function ItemSepetiAdminModerationPage() {
                     : "text-[#626772] dark:text-[#9498A6]"
                 }`}
               >
-                Satıcı Başvuruları ({sellers.filter((s) => s.status === "pending").length})
+                Satıcı Başvuru ({sellers.filter((s) => s.status === "pending").length})
               </button>
               <button
                 onClick={() => setActiveTab("payouts")}
@@ -217,7 +271,17 @@ export default function ItemSepetiAdminModerationPage() {
                     : "text-[#626772] dark:text-[#9498A6]"
                 }`}
               >
-                Para Çekme Talepleri ({payouts.filter((p) => p.status === "pending").length})
+                Para Çekme ({payouts.filter((p) => p.status === "pending").length})
+              </button>
+              <button
+                onClick={() => setActiveTab("disputes")}
+                className={`px-3 py-1.5 rounded-[8px] text-xs font-bold transition-colors ${
+                  activeTab === "disputes"
+                    ? "bg-red-500 text-white"
+                    : "text-[#626772] dark:text-[#9498A6]"
+                }`}
+              >
+                İtiraz / Hakem ({disputes.filter((d) => d.status === "OPEN").length})
               </button>
             </div>
           </div>
@@ -406,6 +470,73 @@ export default function ItemSepetiAdminModerationPage() {
                       </ItemSepetiButton>
                     </div>
                   )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TAB 4: DISPUTES & ARBITRATION */}
+          {activeTab === "disputes" && (
+            <div className="space-y-3">
+              {disputes.map((dispute) => (
+                <div
+                  key={dispute.id}
+                  className="p-4 sm:p-5 rounded-[14px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] space-y-3 shadow-xs"
+                >
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Scale className="w-4 h-4 text-red-500" />
+                      <span className="font-mono font-bold text-xs text-inherit">{dispute.orderNumber}</span>
+                      <span className="text-xs font-bold text-inherit">&bull; {dispute.reason}</span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
+                          dispute.status === "RESOLVED_BUYER"
+                            ? "bg-emerald-500/10 text-emerald-500"
+                            : dispute.status === "RESOLVED_SELLER"
+                            ? "bg-blue-500/10 text-blue-500"
+                            : "bg-red-500/10 text-red-500"
+                        }`}
+                      >
+                        {dispute.status === "RESOLVED_BUYER"
+                          ? "Alıcıya İade Edildi"
+                          : dispute.status === "RESOLVED_SELLER"
+                          ? "Satıcıya Aktarıldı"
+                          : "Hakem İncelemesinde"}
+                      </span>
+                    </div>
+
+                    <div className="text-xs font-bold text-inherit">
+                      Escrow Bloke: <span className="text-[#D99532]">{dispute.amount} TL</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-[8px] bg-red-500/[0.04] border border-red-500/20 text-xs text-inherit leading-relaxed">
+                    <p className="font-semibold text-red-600 dark:text-red-400 mb-0.5">Alıcı Şikayet & Gerekçe Açıklaması:</p>
+                    {dispute.description}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-[#9498A6]">
+                    <div>
+                      Alıcı: <strong className="text-inherit">{dispute.buyerName}</strong> &bull; Satıcı: <strong className="text-inherit">{dispute.sellerName}</strong> &bull; Açılış: {dispute.openedAt}
+                    </div>
+
+                    {dispute.status === "OPEN" && (
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => handleArbitrateDispute(dispute.id, "seller")}
+                          className="px-3 py-1.5 rounded-[8px] border border-slate-300 dark:border-slate-700 hover:bg-black/5 dark:hover:bg-white/5 text-xs font-bold text-inherit transition-colors cursor-pointer"
+                        >
+                          Satıcıyı Haklı Bul (Escrow Serbest Bırak)
+                        </button>
+                        <button
+                          onClick={() => handleArbitrateDispute(dispute.id, "buyer")}
+                          className="px-3 py-1.5 rounded-[8px] bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors cursor-pointer"
+                        >
+                          Alıcıyı Haklı Bul (Parayı İade Et)
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

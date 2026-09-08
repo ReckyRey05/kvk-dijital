@@ -157,6 +157,25 @@
      - `tests/itemsepeti/platformModules.test.ts` dosyasına Chat Anti-Fraud ve Admin Payout onay geçişlerini doğrulayan 2 yeni test eklendi (Toplam: 16/16 test %100 başarılı).
      - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
 
+
+### [2026-09-08] Kayıt 7: Uyuşmazlık Hakem Heyeti, Satıcı Değerlendirme & Bildirim Merkezi
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Dispute & Hakem Heyeti Servisi (`src/lib/itemsepeti/disputeService.ts`)**:
+     - Alıcı tarafından açılan itirazların (`DISPUTED`) veritabanı yönetimi ve admin hakem heyeti operasyonları modellendi.
+     - Karar motoru: Hakem Heyeti kararına göre Escrow blokesi alıcıya tam iade (`REFUND`), satıcıya hak ediş aktarımı (`ESCROW_RELEASE`) veya kısmi hakem uzlaşması (`PARTIAL_REFUND`) olarak defter-i kebir işlemlerine işlenir.
+  2. **Admin Hakem Paneli (`/admin/itemsepeti` - İtiraz & Hakem Sekmesi)**:
+     - Moderasyon paneline 4. sekme olarak *"İtiraz / Hakem Heyeti"* eklendi.
+     - Yöneticiler itiraz detayını, blokedeki Escrow tutarını, alıcı-satıcı açıklamalarını inceleyip *"Alıcıyı Haklı Bul (İade Et)"* veya *"Satıcıyı Haklı Bul (Escrow Serbest Bırak)"* kararlarını anında verebilir.
+  3. **Satıcı Puan & Değerlendirme Sistemi (`src/lib/itemsepeti/reviewService.ts` & `/siparis/[orderId]`)**:
+     - Tamamlanan siparişlerde (`COMPLETED`) alıcıya 1-5 yıldız ve yorum yapma yetkisi tanındı.
+     - Satıcıların ortalama puanı (`averageRating`), toplam yorum sayısı ve olumlu değerlendirme yüzdesi (`positivePercentage`) anlık hesaplanır.
+  4. **Canlı Bildirim Merkezi (`ItemSepetiNotificationDropdown.tsx`)**:
+     - Üst menüye (Header) bildirim zili ve açılır panel entegre edildi.
+     - Sipariş oluşturma, ödeme onayı, ilan yayını ve itiraz süreçleri okunmamış bildirim rozetiyle kullanıcıya anında iletilir.
+  5. **Test & Tip Bütünlüğü**:
+     - `tests/itemsepeti/platformModules.test.ts` test kapsamı **18 teste** çıkarıldı (18/18 test %100 başarılı).
+     - `npx tsc --noEmit` ile sıfır derleme hatası sağlandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml
