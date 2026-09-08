@@ -117,6 +117,62 @@ export default function ItemSepetiHeader() {
         </div>
       </div>
 
+      {/* BYNOGAME STYLE GAME CATEGORY SUB-NAV BAR (DESKTOP) */}
+      <div
+        className="hidden md:block border-t text-xs overflow-x-auto no-scrollbar"
+        style={{
+          backgroundColor: isDark ? "#161921" : "#FAFAFA",
+          borderColor: isDark ? "#282C3A" : "#ECECEC",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-6 whitespace-nowrap">
+          <Link
+            href="/kategori/cs2"
+            className="font-bold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#EDEEF2" : "#17191F" }}
+          >
+            <span className="w-2 h-2 rounded-full bg-[#D99532]"></span>
+            <span>CS2 Skin & Kasa</span>
+          </Link>
+          <Link
+            href="/kategori/metin2"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>Metin2 Yang & Won</span>
+          </Link>
+          <Link
+            href="/kategori/valorant"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>Valorant VP</span>
+          </Link>
+          <Link
+            href="/kategori/pubg"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>PUBG Mobile UC</span>
+          </Link>
+          <Link
+            href="/kategori/steam"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>Steam Cüzdan Kodu</span>
+          </Link>
+          <span className="text-gray-300 dark:text-gray-700">|</span>
+          <Link
+            href="/nasil-calisir"
+            className="font-medium hover:text-[#D99532] transition-colors ml-auto text-[11px]"
+            style={{ color: isDark ? "#9498A6" : "#7D8290" }}
+          >
+            Güvenli Alışveriş &bull; 7/24 Destek
+          </Link>
+        </div>
+      </div>
+
       {/* MOBILE INLINE SEARCH */}
       <div className="md:hidden px-4 pb-3">
         <ItemSepetiHeaderSearch placeholder="Oyun, item veya kod ara..." />

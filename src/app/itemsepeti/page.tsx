@@ -38,17 +38,22 @@ export default async function ItemSepetiHomePage() {
         <ItemSepetiHeader />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-12">
-          {/* FOCUSED HERO WITH PRIMARY SEARCH */}
-          <section className="text-center max-w-2xl mx-auto space-y-5 pt-2 sm:pt-6">
+          {/* FOCUSED HERO WITH PRIMARY SEARCH & BYNOGAME-STYLE GAMING PILLS */}
+          <section className="text-center max-w-3xl mx-auto space-y-5 pt-2 sm:pt-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#D99532]/10 text-[#D99532] border border-[#D99532]/20">
+              <span className="w-2 h-2 rounded-full bg-[#D99532] animate-pulse"></span>
+              <span>Türkiye&apos;nin Oyuncu Pazarı &bull; Güvenli Alışveriş</span>
+            </div>
+
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-inherit leading-tight">
-              Aradığın item burada.
+              Oyun İçi İtem, Yang, Skin ve E-Pin Pazarı
             </h1>
 
             {/* HERO PROMINENT SEARCH BAR */}
             <div className="w-full">
               <ItemSepetiHeaderSearch
                 placeholder="Oyun, skin, yang veya kod ara... (Ctrl+K)"
-                className="mx-auto"
+                className="mx-auto shadow-sm"
               />
             </div>
 
@@ -64,15 +69,18 @@ export default async function ItemSepetiHomePage() {
           {/* EDITORIAL MARKET GRID (RHYTHM-BREAKING ASYMMETRIC SECTION) */}
           {editorialItems.length > 0 && (
             <section className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
-                  Öne Çıkan Pazarlar
-                </h2>
+              <div className="flex items-center justify-between pb-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-sm bg-[#D99532]"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
+                    Öne Çıkan Pazarlar &bull; Günün Fırsatları
+                  </h2>
+                </div>
                 <Link
                   href="/kategori/cs2"
                   className="text-xs text-[#E8A33D] hover:underline font-semibold"
                 >
-                  Tümünü Gör
+                  Tümünü Gör &rarr;
                 </Link>
               </div>
 
@@ -83,10 +91,16 @@ export default async function ItemSepetiHomePage() {
           {/* REGULAR LISTINGS STREAM (BORDERLESS SURFACE CARDS) */}
           {remainingListings.length > 0 && (
             <section className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
-                  Son İlanlar
-                </h2>
+              <div className="flex items-center justify-between pb-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-sm bg-[#D99532]"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
+                    Son Eklenen Oyuncu İlanları
+                  </h2>
+                </div>
+                <span className="text-xs text-[#9498A6] font-medium">
+                  {remainingListings.length} Canlı İlan
+                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
