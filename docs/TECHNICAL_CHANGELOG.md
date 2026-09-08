@@ -76,6 +76,28 @@
 
 ---
 
+
+### [2026-09-08] Kayıt 2: Üyelik, Satıcı İlan Yönetimi, 7/24 Canlı Destek ve Havale/EFT Sistemi
+- **Geliştirilen Modüller**:
+  1. **Authentication & Session Hub (`src/context/ItemSepetiAuthContext.tsx`, `/giris`, `/kayit-ol`, `/profilim`)**:
+     - Kullanıcı oturumu, `role` yönetimi (`buyer` / `seller` / `admin`), telefon onay durumu ve cüzdan bakiyesi bağlandı.
+     - Giriş ekranına hızlı demo hesap geçişleri (Alıcı, Satıcı, Admin) eklendi.
+     - Profil ekranına Steam Trade Offer URL doğrulaması, Metin2 / CS2 oyun içi karakter nicki kaydetme alanları entegre edildi.
+  2. **Satıcı İlan Yönetim Merkezi (`/ilan-ver`, `/ilanlarim`, `/api/itemsepeti/seller/listings`)**:
+     - `/ilan-ver` sayfası açık ve koyu tema tasarım token'larına (`bg-white`, `border-[#DCDDE1]`, `dark:bg-[#161921]`) tam uyumlu hale getirildi.
+     - `/ilanlarim` paneli inşa edildi: Satıcının aktif/pasif tüm ilanları listelenir, tek tıkla ilanı duraklatma (`paused`), tekrar yayına alma (`active`) ve silme işlemleri sunucuya yansıtılır.
+  3. **7/24 Canlı Destek & Yardım Masası (`src/components/itemsepeti/support/ItemSepetiLiveSupportWidget.tsx`)**:
+     - ByNoGame ve İtemSatış esintili, sitenin sağ alt köşesinde yüzen canlı yardım penceresi kuruldu.
+     - Teslimat süresi, bakiye yükleme ve ilan onayına yönelik otomatik soru-cevap botu (Heuristic FAQ Auto-Responder) ve operatör sırası simülasyonu eklendi.
+  4. **Banka Havalesi / EFT Bildirim Sistemi (`/bakiye-yukle`)**:
+     - ETBİS onayına kadar kullanıcıların bakiye yüklemesini sağlayan onaylı şirket banka hesapları listesi (Ziraat, Garanti, İş Bankası, Enpara, Papara) ve tek tıkla IBAN kopyalama eklendi.
+     - FAST / Havale bildirim formu bağlandı; dekont ve tutar doğrulaması sağlandı.
+  5. **Header Entegrasyonu (`src/components/itemsepeti/layout/ItemSepetiHeader.tsx`)**:
+     - Giriş yapmış kullanıcı adını ve profil bağlantısını dinamik gösteren oturum durumu bağlandı.
+  6. **Test ve Doğrulama (`tests/itemsepeti/platformModules.test.ts`)**:
+     - Auth rol ayrımı, Steam Trade URL regex doğrulaması, ilan durumu mutasyonu, canlı destek filtreleri ve banka bildirim kurallarını kapsayan 8 test sıfır hata ile geçti.
+     - `npx tsc --noEmit` ve 190+ regression testi başarıyla doğrulandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

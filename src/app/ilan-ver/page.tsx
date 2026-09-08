@@ -157,11 +157,7 @@ export default function CreateListingPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="p-6 rounded-[14px] border space-y-6"
-            style={{
-              backgroundColor: "rgba(27, 30, 39, 0.6)",
-              borderColor: "#282C3A",
-            }}
+            className="p-6 sm:p-8 rounded-[16px] border space-y-6 bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
           >
             {/* 1. OYUN SEÇİMİ */}
             <div className="space-y-2">

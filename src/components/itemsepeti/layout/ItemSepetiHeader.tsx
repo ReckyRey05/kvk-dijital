@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Sun, Moon, ShoppingCart, User, Menu, X, PlusCircle } from "lucide-react";
 import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 import { useItemSepetiCart } from "@/context/ItemSepetiCartContext";
+import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import ItemSepetiLogo from "../ui/ItemSepetiLogo";
 import ItemSepetiHeaderSearch from "./ItemSepetiHeaderSearch";
 
@@ -12,6 +13,7 @@ export default function ItemSepetiHeader() {
   const { theme, toggleTheme } = useItemSepetiTheme();
   const isDark = theme === "dark";
   const { itemCount } = useItemSepetiCart();
+  const { user } = useItemSepetiAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -91,15 +93,26 @@ export default function ItemSepetiHeader() {
             </span>
           </Link>
 
-          {/* Auth Button */}
-          <Link
-            href="/itemsepeti"
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] text-xs font-bold text-white transition-all active:scale-[0.98]"
-            style={{ backgroundColor: "#D99532" }}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>Giriş Yap</span>
-          </Link>
+          {/* Auth Button / Profile Menu */}
+          {user ? (
+            <Link
+              href="/profilim"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-[8px] text-xs font-bold text-white transition-all active:scale-[0.98] shadow-xs"
+              style={{ backgroundColor: "#D99532" }}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span className="max-w-[80px] sm:max-w-[110px] truncate">{user.displayName}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/giris"
+              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] text-xs font-bold text-white transition-all active:scale-[0.98]"
+              style={{ backgroundColor: "#D99532" }}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Giriş Yap</span>
+            </Link>
+          )}
 
           {/* Mobile hamburger */}
           <button

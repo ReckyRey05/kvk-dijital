@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { ItemSepetiThemeProvider } from "@/context/ItemSepetiThemeContext";
+import { ItemSepetiAuthProvider } from "@/context/ItemSepetiAuthContext";
 import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiHeaderSearch from "@/components/itemsepeti/layout/ItemSepetiHeaderSearch";
@@ -8,6 +9,7 @@ import ItemSepetiGameShelf from "@/components/itemsepeti/marketplace/ItemSepetiG
 import ItemSepetiTrustStrip from "@/components/itemsepeti/marketplace/ItemSepetiTrustStrip";
 import ItemSepetiEditorialGrid from "@/components/itemsepeti/marketplace/ItemSepetiEditorialGrid";
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
+import ItemSepetiLiveSupportWidget from "@/components/itemsepeti/support/ItemSepetiLiveSupportWidget";
 import { getPublicListings } from "@/lib/itemsepeti/catalogService";
 
 export default async function ItemSepetiHomePage() {
@@ -33,9 +35,10 @@ export default async function ItemSepetiHomePage() {
   }));
 
   return (
-    <ItemSepetiThemeProvider>
-      <div className="flex flex-col min-h-screen">
-        <ItemSepetiHeader />
+    <ItemSepetiAuthProvider>
+      <ItemSepetiThemeProvider>
+        <div className="flex flex-col min-h-screen">
+          <ItemSepetiHeader />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-12">
           {/* FOCUSED HERO WITH PRIMARY SEARCH & BYNOGAME-STYLE GAMING PILLS */}
@@ -113,7 +116,9 @@ export default async function ItemSepetiHomePage() {
         </main>
 
         <ItemSepetiFooter />
+        <ItemSepetiLiveSupportWidget />
       </div>
     </ItemSepetiThemeProvider>
+  </ItemSepetiAuthProvider>
   );
 }
