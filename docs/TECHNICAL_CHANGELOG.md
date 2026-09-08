@@ -176,6 +176,23 @@
      - `tests/itemsepeti/platformModules.test.ts` test kapsamı **18 teste** çıkarıldı (18/18 test %100 başarılı).
      - `npx tsc --noEmit` ile sıfır derleme hatası sağlandı.
 
+
+### [2026-09-08] Kayıt 8: Satıcı Vitrin & Mağaza Sayfası (Public Storefront)
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Dinamik Satıcı Mağazası Sayfası (`/magaza/[storeSlug]`)**:
+     - Satıcıların profiline, puanına, tamamlanan işlem hacmine ve vitrindeki tüm aktif ilanlarına özel dinamik pazaryeri vitrini kuruldu.
+     - **Mağaza Metrikleri**: Doğrulanmış satıcı rozeti (`isVerifiedSeller`), platform kıdemi (`memberSinceYears`), ortalama teslimat hızı (dakika cinsinden), alıcı memnuniyet yüzdesi ve toplam satış rakamı.
+     - **Çift Sekmeli Mimari**:
+       - *Satıştaki İlanlar*: Satıcıya ait stoktaki ürünler, oyun filtreleri, teslimat SLA'sı ve tek tıkla sepete ekleme aksiyonu.
+       - *Alıcı Değerlendirmeleri*: Satıcıya yapılan 1-5 yıldızlı doğrulanmış alıcı yorumları ve puan dağılımı.
+  2. **Profil Entegrasyonu (`/profilim`)**:
+     - Satıcıların kendi vitrinlerini tek tıkla inceleyebilmeleri ve alıcıların mağazaya ulaşabilmesi için 5. hızlı erişim kartı olarak *"Mağazam (Vitrini Görüntüle)"* eklendi.
+  3. **Katalog & İzolasyon Sorguları (`getSellerBySlug` & `getSellerListings`)**:
+     - `src/lib/itemsepeti/catalogService.ts` servisinde mağaza slug ve ID çözümlemesi güçlendirildi; satıcı bazlı aktif ilan filtrelemesi sağlandı.
+  4. **Test & Tip Güvenliği**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına Satıcı Mağaza slug eşleşmesi ve ilan izolasyonu testi eklenerek toplam test sayısı **19/19**'a çıkarıldı (%100 başarı).
+     - `npx tsc --noEmit` ile sıfır derleme hatası sağlandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

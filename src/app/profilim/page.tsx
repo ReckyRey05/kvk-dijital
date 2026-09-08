@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   ExternalLink,
   PlusCircle,
+  Store,
 } from "lucide-react";
 
 export default function ProfilePage() {
@@ -108,7 +109,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <Link
               href="/ilanlarim"
               className="p-4 rounded-[12px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors group flex flex-col justify-between h-24"
@@ -151,6 +152,17 @@ export default function ProfilePage() {
                 <Wallet className="w-4 h-4 text-blue-500" />
               </div>
               <span className="text-[11px] text-[#9498A6]">Banka dekontu bildir &rarr;</span>
+            </Link>
+
+            <Link
+              href={`/magaza/${user.displayName.toLowerCase()}`}
+              className="p-4 rounded-[12px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors group flex flex-col justify-between h-24"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-inherit">Mağazam</span>
+                <Store className="w-4 h-4 text-purple-500" />
+              </div>
+              <span className="text-[11px] text-[#9498A6]">Vitrinimi görüntüle &rarr;</span>
             </Link>
           </div>
 

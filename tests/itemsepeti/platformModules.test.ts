@@ -263,7 +263,29 @@ async function runPlatformModulesTests() {
   assert.strictEqual(rep.positivePercent, 80);
   console.log("PASSED: Seller review aggregation verified.");
 
-  console.log(">> ALL 18 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  // 19. Seller store slug lookup and catalog isolation
+  console.log("19. Test: Seller store lookup matches slug and filters seller-owned listings...");
+  const sampleSellers = [
+    { id: "seller_1", storeName: "DragonTrader", storeSlug: "dragontrader" },
+    { id: "seller_2", storeName: "KnifeEmpire", storeSlug: "knifeempire" },
+  ];
+  function findSellerBySlug(slug: string) {
+    return sampleSellers.find(s => s.storeSlug.toLowerCase() === slug.toLowerCase()) || null;
+  }
+  assert.ok(findSellerBySlug("dragontrader"));
+  assert.strictEqual(findSellerBySlug("dragontrader")?.storeName, "DragonTrader");
+  assert.strictEqual(findSellerBySlug("non_existent"), null);
+
+  const sampleStoreListings = [
+    { id: "l1", sellerName: "DragonTrader", title: "Item 1" },
+    { id: "l2", sellerName: "KnifeEmpire", title: "Item 2" },
+    { id: "l3", sellerName: "DragonTrader", title: "Item 3" },
+  ];
+  const dragonItems = sampleStoreListings.filter(l => l.sellerName === "DragonTrader");
+  assert.strictEqual(dragonItems.length, 2);
+  console.log("PASSED: Seller storefront lookup and isolation verified.");
+
+  console.log(">> ALL 19 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 

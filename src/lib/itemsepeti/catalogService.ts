@@ -350,26 +350,28 @@ export async function getListingById(idOrSlug: string): Promise<ItemSepetiListin
 export async function getSellerBySlug(slug: string): Promise<SeedSeller | null> {
   const norm = (slug || "").trim().toLowerCase();
   const seller = SEED_SELLERS.find(
-    (s) => s.storeSlug.toLowerCase() === norm || s.id.toLowerCase() === norm
+    (s) => s.storeSlug.toLowerCase() === norm || s.id.toLowerCase() === norm || s.storeName.toLowerCase() === norm
   );
   return seller || null;
 }
 
-export async function getSellerListings(sellerId: string): Promise<ItemSepetiListing[]> {
+export async function getSellerListings(sellerIdOrName: string): Promise<ItemSepetiListing[]> {
+  const norm = (sellerIdOrName || "").trim().toLowerCase();
   try {
     const db = getAdminDb();
     const snap = await db
       .collection("itemsepeti_listings")
-      .where("sellerId", "==", sellerId)
       .where("status", "==", "active")
       .get();
     if (!snap.empty) {
-      return snap.docs.map((d) => d.data() as ItemSepetiListing);
+      return (snap.docs.map((d) => d.data() as ItemSepetiListing)).filter(
+        (l) => l.sellerId.toLowerCase() === norm
+      );
     }
   } catch {}
 
   return (SEED_LISTINGS as ItemSepetiListing[]).filter(
-    (l) => l.sellerId === sellerId && l.status === "active"
+    (l) => (l.sellerId.toLowerCase() === norm || (l as any).sellerName?.toLowerCase() === norm) && l.status === "active"
   );
 }
 
@@ -461,3 +463,5 @@ export async function createPurchaseIntent(input: {
 
   return { success: true, intent };
 }
+
+
