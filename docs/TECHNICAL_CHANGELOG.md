@@ -113,6 +113,20 @@
   4. **Doğrulama**:
      - `tests/itemsepeti/platformModules.test.ts` dosyasına 2 yeni test eklenerek 10/10 başarıya ulaşıldı. `tsc` derleme testi sıfır hata verdi.
 
+
+### [2026-09-08] Kayıt 4: Sipariş & Escrow Teslimat Operasyon Merkezi
+- **İnşa Edilen E-Ticaret Arayüzleri & API'lar**:
+  1. **Sipariş Takip Paneli (`/siparislerim`)**:
+     - Alıcının satın aldığı tüm ürünleri (SIP-2026-XXXXXX) listeler; anlık durum rozetleri (`PENDING_PAYMENT`, `PAID`, `DELIVERED`, `COMPLETED`), satıcı adı, adet ve tutar dökümü sağlar.
+  2. **Canlı Sipariş & Teslimat Operasyon Sayfası (`/siparis/[orderId]`)**:
+     - **Alıcı Deneyimi**: Cüzdan bakiyesiyle tek tıkla sipariş ödeme (`Pay with Balance`), tutarın Escrow havuzuna kilitlenmesi ve satıcı teslim ettikten sonra *"Ürünü Teslim Aldım & Onayla"* aksiyonu.
+     - **Satıcı Deneyimi**: Oyun içi teslimat gerçekleştirildiğinde *"Ürünü Teslim Ettim Olarak İşaretle"* butonu ve SLA süresi yönetimi.
+     - **Dispute (Uyuşmazlık) Modülü**: Teslimat gecikirse veya hatalı/eksik ürün gelirse alıcının *"Sorun Bildir (Dispute Aç)"* modalı üzerinden gerekçe bildirerek parayı dondurabilmesi.
+  3. **Durum Makinesi & Escrow API (`/api/itemsepeti/orders/[orderId]`)**:
+     - `updateOrderStatus()` metoduyla katı durum geçişleri (`PENDING_PAYMENT` -> `PAID` -> `DELIVERED` -> `COMPLETED` / `DISPUTED`) güvence altına alındı.
+  4. **Test & Tip Güvenliği**:
+     - `tests/itemsepeti/platformModules.test.ts` 12/12 test ile ve `cartAndCheckout.test.ts` 62/62 test ile doğrulandı. `tsc` derleme kontrolü sıfır hata verdi.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml

@@ -125,7 +125,7 @@ export default function ProfilePage() {
             </Link>
 
             <Link
-              href="/sepet"
+              href="/siparislerim"
               className="p-4 rounded-[12px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors group flex flex-col justify-between h-24"
             >
               <div className="flex items-center justify-between">

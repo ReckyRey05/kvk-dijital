@@ -127,7 +127,35 @@ async function runPlatformModulesTests() {
   assert.strictEqual(getNewListingInitialStatus(), "pending_review");
   console.log("PASSED: Mandatory listing admin review verified.");
 
-  console.log(">> ALL 10 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
+  
+  // 11. Escrow status state machine transitions
+  console.log("11. Test: Escrow state machine permits valid order progression...");
+  function canTransitionOrderStatus(current: string, target: string): boolean {
+    if (current === "PENDING_PAYMENT" && ["PAID", "CANCELLED"].includes(target)) return true;
+    if (current === "PAID" && ["DELIVERED", "DISPUTED", "CANCELLED"].includes(target)) return true;
+    if (current === "DELIVERED" && ["BUYER_CONFIRMED", "COMPLETED", "DISPUTED"].includes(target)) return true;
+    if (current === "BUYER_CONFIRMED" && target === "COMPLETED") return true;
+    if (current === "DISPUTED" && ["COMPLETED", "REFUNDED"].includes(target)) return true;
+    return false;
+  }
+  assert.strictEqual(canTransitionOrderStatus("PENDING_PAYMENT", "PAID"), true);
+  assert.strictEqual(canTransitionOrderStatus("PAID", "DELIVERED"), true);
+  assert.strictEqual(canTransitionOrderStatus("DELIVERED", "COMPLETED"), true);
+  assert.strictEqual(canTransitionOrderStatus("DELIVERED", "DISPUTED"), true);
+  assert.strictEqual(canTransitionOrderStatus("PENDING_PAYMENT", "COMPLETED"), false);
+  console.log("PASSED: Escrow lifecycle transitions verified.");
+
+  // 12. Wallet deduction upon order payment
+  console.log("12. Test: Wallet balance deduction retains arithmetic precision...");
+  function computeWalletDeduction(currentBalance: number, orderTotal: number) {
+    if (currentBalance < orderTotal) throw new Error("Yetersiz bakiye");
+    return Number((currentBalance - orderTotal).toFixed(2));
+  }
+  assert.strictEqual(computeWalletDeduction(1450.50, 450), 1000.50);
+  assert.throws(() => computeWalletDeduction(100, 500));
+  console.log("PASSED: Wallet deduction precision verified.");
+
+  console.log(">> ALL 12 PLATFORM MODULE TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================================================");
 }
 

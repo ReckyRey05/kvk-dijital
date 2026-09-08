@@ -468,3 +468,90 @@ export async function getOrderById(
   // Unauthorized tenant access attempt
   return null;
 }
+/**
+ * Update order status with strict escrow and state machine transitions
+ */
+export async function updateOrderStatus(
+  orderId: string,
+  targetStatus: ItemSepetiOrderStatus,
+  metadata: {
+    actorId?: string;
+    actorRole?: string;
+    note?: string;
+    proofUrl?: string;
+  } = {}
+): Promise<{ success: boolean; order?: ItemSepetiOrder; error?: string }> {
+  let order: ItemSepetiOrder | null = null;
+  const db = getAdminDb();
+
+  try {
+    const doc = await db.collection("itemsepeti_orders").doc(orderId).get();
+    if (doc.exists) {
+      order = doc.data() as ItemSepetiOrder;
+    }
+  } catch {}
+
+  if (!order) {
+    order = inMemoryOrders.get(orderId) || null;
+  }
+
+  if (!order) {
+    return { success: false, error: "Sipariş bulunamadı." };
+  }
+
+  // Permitted State Machine Transitions:
+  // PENDING_PAYMENT -> PAID | CANCELLED
+  // PAID -> DELIVERED | DISPUTED | CANCELLED
+  // DELIVERED -> BUYER_CONFIRMED | COMPLETED | DISPUTED
+  // BUYER_CONFIRMED -> COMPLETED
+  // DISPUTED -> COMPLETED | REFUNDED
+  const current = order.status;
+  let isAllowed = false;
+
+  if (current === "PENDING_PAYMENT" && ["PAID", "CANCELLED"].includes(targetStatus)) {
+    isAllowed = true;
+  } else if (current === "PAID" && ["DELIVERED", "DISPUTED", "CANCELLED"].includes(targetStatus)) {
+    isAllowed = true;
+  } else if (current === "DELIVERED" && ["BUYER_CONFIRMED", "COMPLETED", "DISPUTED"].includes(targetStatus)) {
+    isAllowed = true;
+  } else if (current === "BUYER_CONFIRMED" && targetStatus === "COMPLETED") {
+    isAllowed = true;
+  } else if (current === "DISPUTED" && ["COMPLETED", "REFUNDED"].includes(targetStatus)) {
+    isAllowed = true;
+  }
+
+  if (!isAllowed) {
+    return {
+      success: false,
+      error: `Geçersiz durum geçişi: ${current} durumundaki sipariş ${targetStatus} yapılamaz.`,
+    };
+  }
+
+  const now = Date.now();
+  const updatedOrder: ItemSepetiOrder = {
+    ...order,
+    status: targetStatus,
+    updatedAt: now,
+    statusHistory: [
+      ...order.statusHistory,
+      {
+        status: targetStatus,
+        changedBy: metadata.actorId || metadata.actorRole || "system",
+        timestamp: now,
+        note: metadata.note || `Durum ${targetStatus} olarak güncellendi.`,
+      },
+    ],
+  };
+
+  inMemoryOrders.set(orderId, updatedOrder);
+
+  try {
+    await db.collection("itemsepeti_orders").doc(orderId).update({
+      status: targetStatus,
+      statusHistory: updatedOrder.statusHistory,
+      updatedAt: now,
+    });
+  } catch {}
+
+  return { success: true, order: updatedOrder };
+}

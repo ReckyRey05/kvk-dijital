@@ -168,10 +168,15 @@ export function CheckoutView() {
             </div>
           </div>
 
-          <div className="pt-3">
-            <Link href="/itemsepeti">
+          <div className="pt-3 flex items-center justify-center gap-3">
+            <Link href={`/siparis/${createdOrders[0]?.id}`}>
               <ItemSepetiButton variant="primary" size="md">
-                Pazaryerine Dön
+                Siparişimi Görüntüle & Öde &rarr;
+              </ItemSepetiButton>
+            </Link>
+            <Link href="/siparislerim">
+              <ItemSepetiButton variant="secondary" size="md">
+                Tüm Siparişlerim
               </ItemSepetiButton>
             </Link>
           </div>
