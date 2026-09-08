@@ -14,6 +14,7 @@ import {
 } from "@/types/marketplace";
 import { getListingById, getSellerBySlug, getCategoryById } from "./catalogService";
 import { clearCart, getCart } from "./cartService";
+import { logAuditEvent } from "./auditService";
 
 // In-memory fallbacks
 const inMemoryReservations = new Map<string, ItemSepetiReservation>();
@@ -552,6 +553,17 @@ export async function updateOrderStatus(
       updatedAt: now,
     });
   } catch {}
+
+  // Record immutable audit log
+  await logAuditEvent({
+    actorId: metadata.actorId || "system",
+    actorRole: (metadata.actorRole as any) || "system",
+    action: "ORDER_STATUS_CHANGED",
+    resource: "order",
+    resourceId: orderId,
+    beforeSnapshot: { status: current },
+    afterSnapshot: { status: targetStatus, note: metadata.note },
+  });
 
   return { success: true, order: updatedOrder };
 }

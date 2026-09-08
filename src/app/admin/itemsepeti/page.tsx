@@ -19,6 +19,7 @@ import {
   CreditCard,
   Banknote,
   Scale,
+  Activity,
 } from "lucide-react";
 
 interface PendingSeller {
@@ -52,6 +53,17 @@ interface PendingPayout {
   status: "pending" | "approved" | "rejected";
 }
 
+interface PendingAuditLog {
+  id: string;
+  actorId: string;
+  actorRole: string;
+  action: string;
+  resource: string;
+  resourceId: string;
+  details: string;
+  timestamp: string;
+}
+
 interface PendingDispute {
   id: string;
   orderNumber: string;
@@ -65,7 +77,7 @@ interface PendingDispute {
 }
 
 export default function ItemSepetiAdminModerationPage() {
-  const [activeTab, setActiveTab] = useState<"sellers" | "listings" | "payouts" | "disputes">("listings");
+  const [activeTab, setActiveTab] = useState<"sellers" | "listings" | "payouts" | "disputes" | "audit">("listings");
 
   const [sellers, setSellers] = useState<PendingSeller[]>([
     {
@@ -164,6 +176,49 @@ export default function ItemSepetiAdminModerationPage() {
       description: "Riot istemcisinde kod kullanılmış uyarısı verdi. Satıcıdan yeni kod talep ediyorum.",
       openedAt: "1 saat önce",
       status: "OPEN",
+    },
+  ]);
+
+    const [auditLogs] = useState<PendingAuditLog[]>([
+    {
+      id: "aud_01",
+      actorId: "usr_admin_root",
+      actorRole: "admin",
+      action: "DISPUTE_ARBITRATED",
+      resource: "dispute",
+      resourceId: "dsp_SIP-2026-902144",
+      details: "Alıcı lehine karar verildi. Escrow 450 TL cüzdana iade edildi.",
+      timestamp: "5 dakika önce",
+    },
+    {
+      id: "aud_02",
+      actorId: "usr_admin_root",
+      actorRole: "admin",
+      action: "LISTING_APPROVED",
+      resource: "listing",
+      resourceId: "lst_mod_1",
+      details: "AK-47 Asiimov ilanı onaylandı ve yayına alındı.",
+      timestamp: "18 dakika önce",
+    },
+    {
+      id: "aud_03",
+      actorId: "usr_gamer_ali",
+      actorRole: "buyer",
+      action: "ORDER_STATUS_CHANGED",
+      resource: "order",
+      resourceId: "ord_101",
+      details: "Sipariş durumu PENDING_PAYMENT -> PAID olarak güncellendi.",
+      timestamp: "35 dakika önce",
+    },
+    {
+      id: "aud_04",
+      actorId: "DragonTrader",
+      actorRole: "seller",
+      action: "ORDER_STATUS_CHANGED",
+      resource: "order",
+      resourceId: "ord_101",
+      details: "Satıcı ürünü teslim ettiğini bildirdi (PAID -> DELIVERED).",
+      timestamp: "50 dakika önce",
     },
   ]);
 
@@ -282,6 +337,16 @@ export default function ItemSepetiAdminModerationPage() {
                 }`}
               >
                 İtiraz / Hakem ({disputes.filter((d) => d.status === "OPEN").length})
+              </button>
+              <button
+                onClick={() => setActiveTab("audit")}
+                className={`px-3 py-1.5 rounded-[8px] text-xs font-bold transition-colors ${
+                  activeTab === "audit"
+                    ? "bg-purple-600 text-white"
+                    : "text-[#626772] dark:text-[#9498A6]"
+                }`}
+              >
+                Denetim İzi (Audit Logs)
               </button>
             </div>
           </div>
@@ -539,6 +604,50 @@ export default function ItemSepetiAdminModerationPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* TAB 5: AUDIT LOGS */}
+          {activeTab === "audit" && (
+            <div className="space-y-3">
+              <div className="p-4 rounded-[12px] bg-purple-500/10 border border-purple-500/20 text-xs text-purple-700 dark:text-purple-300 flex items-center gap-2">
+                <Activity className="w-4 h-4 shrink-0" />
+                <span>Değiştirilemez Denetim İzi: Platformdaki tüm bakiye, hakem ve durum değişiklikleri kriptografik zaman damgasıyla saklanır.</span>
+              </div>
+
+              <div className="rounded-[14px] border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] overflow-hidden shadow-xs">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-black/5 dark:bg-white/5 border-b border-[#DCDDE1] dark:border-[#282C3A] text-[#9498A6] font-semibold">
+                    <tr>
+                      <th className="p-3">İşlem / Eylem</th>
+                      <th className="p-3">Aktör</th>
+                      <th className="p-3">Kaynak</th>
+                      <th className="p-3">Detay</th>
+                      <th className="p-3 text-right">Zaman</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#DCDDE1]/60 dark:divide-[#282C3A]/60">
+                    {auditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                        <td className="p-3">
+                          <span className="font-mono font-bold px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 text-inherit">
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <span className="font-bold text-inherit">{log.actorId}</span>{" "}
+                          <span className="text-[10px] text-[#9498A6]">({log.actorRole})</span>
+                        </td>
+                        <td className="p-3 text-[#9498A6]">
+                          {log.resource}:{log.resourceId}
+                        </td>
+                        <td className="p-3 text-inherit">{log.details}</td>
+                        <td className="p-3 text-right text-[#9498A6] whitespace-nowrap">{log.timestamp}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </main>

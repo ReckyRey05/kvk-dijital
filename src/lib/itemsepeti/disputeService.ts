@@ -7,6 +7,7 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import { ItemSepetiDispute, ItemSepetiDisputeStatus } from "@/types/marketplace";
 import { recordLedgerTransaction } from "./walletService";
 import { sendNotification } from "./notificationService";
+import { logAuditEvent } from "./auditService";
 
 export interface CreateDisputeInput {
   orderId: string;
@@ -88,6 +89,17 @@ export async function createDispute(input: CreateDisputeInput): Promise<{
     linkUrl: `/siparis/${input.orderId}`,
   });
 
+  // Record immutable audit log for dispute creation
+  await logAuditEvent({
+    actorId: input.buyerId,
+    actorRole: "buyer",
+    action: "DISPUTE_ARBITRATED",
+    resource: "dispute",
+    resourceId: dispute.id,
+    beforeSnapshot: { status: "PAID" },
+    afterSnapshot: { status: "OPEN", reason: input.reason, description: input.description },
+  });
+
   return { success: true, dispute };
 }
 
@@ -143,6 +155,17 @@ export async function arbitrateDispute(input: ArbitrateDisputeInput): Promise<{
   dispute.resolvedAt = now;
 
   inMemoryDisputes.set(input.disputeId, dispute);
+
+  // Record immutable audit log for admin arbitration
+  await logAuditEvent({
+    actorId: input.adminId,
+    actorRole: "admin",
+    action: "DISPUTE_ARBITRATED",
+    resource: "dispute",
+    resourceId: dispute.id,
+    beforeSnapshot: { status: "OPEN" },
+    afterSnapshot: { status: resolvedStatus, decision: input.decision, note: input.adminNote, refundDecided },
+  });
 
   return { success: true, dispute };
 }

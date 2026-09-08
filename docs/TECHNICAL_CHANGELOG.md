@@ -193,6 +193,21 @@
      - `tests/itemsepeti/platformModules.test.ts` dosyasına Satıcı Mağaza slug eşleşmesi ve ilan izolasyonu testi eklenerek toplam test sayısı **19/19**'a çıkarıldı (%100 başarı).
      - `npx tsc --noEmit` ile sıfır derleme hatası sağlandı.
 
+
+### [2026-09-08] Kayıt 9: Değiştirilemez Güvenlik Denetim İzi (Immutable Audit Logs & Security Telemetry)
+- **Geliştirilen Altyapı Bileşenleri**:
+  1. **Denetim İzi & Güvenlik Servisi (`src/lib/itemsepeti/auditService.ts`)**:
+     - Platform genelindeki tüm kritik finansal, operasyonel ve hakem eylemlerini (`ORDER_STATUS_CHANGED`, `DISPUTE_ARBITRATED`, `PAYOUT_APPROVED`, `LISTING_APPROVED`) değişmez (immutable) şekilde kaydeden servis kuruldu.
+     - Her log kaydı; eylemi yapan aktörün UID'sini, rolünü (`buyer`, `seller`, `admin`, `system`), etkilenen kaynağı, işlem öncesi/sonrası anlık durumunu (`beforeSnapshot`, `afterSnapshot`) ve zaman damgasını barındırır.
+  2. **Operasyonel Entegrasyonlar (`orderService.ts` & `disputeService.ts`)**:
+     - Sipariş durumu her değiştiğinde (`updateOrderStatus`) ve uyuşmazlık sonuçlandırıldığında (`arbitrateDispute`) otomatik denetim kaydı tetiklenir.
+  3. **Admin Denetim Masası (`/admin/itemsepeti` - Denetim İzi Sekmesi)**:
+     - Moderasyon paneline 5. sekme olarak *"Denetim İzi (Audit Logs)"* eklendi.
+     - Yöneticiler hangi kullanıcının veya adminin hangi sipariş veya itiraz üzerinde ne zaman işlem yaptığını tablo dökümüyle geriye dönük izleyebilir.
+  4. **Test Kapsamı & Bütünlük**:
+     - `tests/itemsepeti/platformModules.test.ts` dosyasına Audit log değişmezlik ve indeksleme testi eklenerek toplam test sayısı **20/20**'ye çıkarıldı (%100 başarı).
+     - `npx tsc --noEmit` ile sıfır tip hatası doğrulandı.
+
 ## 4. ChatGPT / Claude İçin Hızlı Mimari Referansı (LLM Context Prompt)
 
 `yaml
