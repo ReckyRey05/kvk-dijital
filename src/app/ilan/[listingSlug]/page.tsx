@@ -98,36 +98,45 @@ export default async function ListingDetailPage({
 
               {/* PRODUCT HERO IMAGE SURFACE */}
               <div
-                className="w-full h-60 sm:h-72 rounded-[16px] flex flex-col items-center justify-center p-6 text-center space-y-2 select-none"
-                style={{
-                  backgroundColor: "#161921",
-                }}
+                className="relative w-full h-64 sm:h-80 rounded-[18px] overflow-hidden border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921] flex items-center justify-center p-2 shadow-xs group"
               >
-                <div className="w-14 h-14 rounded-full bg-black/40 flex items-center justify-center text-[#E8A33D] font-black text-lg">
-                  {listing.gameName.substring(0, 2).toUpperCase()}
-                </div>
-                <span className="text-sm font-semibold text-inherit">{listing.title}</span>
-                <span className="text-xs text-[#9498A6]">
-                  {listing.categoryName} &bull; {listing.productType}
-                </span>
+                {listing.images && listing.images.length > 0 ? (
+                  <div className="w-full h-full relative flex items-center justify-center overflow-hidden rounded-[14px] bg-black/5 dark:bg-black/30">
+                    <img
+                      src={listing.images[0]}
+                      alt={listing.title}
+                      className="w-full h-full object-cover sm:object-contain transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                      <span className="text-xs text-white/90 font-medium">{listing.title}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-6 text-center space-y-2 select-none">
+                    <div className="w-16 h-16 rounded-full bg-[#D99532]/20 border border-[#D99532]/30 flex items-center justify-center text-[#E8A33D] font-black text-xl shadow-inner">
+                      {listing.gameName.substring(0, 2).toUpperCase()}
+                    </div>
+                    <span className="text-base font-bold text-inherit">{listing.title}</span>
+                    <span className="text-xs text-[#9498A6]">
+                      {listing.categoryName} &bull; {listing.productType}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* PRODUCT ATTRIBUTES */}
               {listing.attributes && Object.keys(listing.attributes).length > 0 && (
                 <div
-                  className="p-5 rounded-[14px] space-y-3"
-                  style={{
-                    backgroundColor: "#161921",
-                  }}
+                  className="p-5 rounded-[14px] space-y-3 bg-white dark:bg-[#161921] border border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
                 >
                   <h2 className="text-xs font-bold uppercase tracking-wider text-[#9498A6]">
                     Özellikler
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                     {Object.entries(listing.attributes).map(([key, value]) => (
-                      <div key={key} className="p-2 rounded-[6px] bg-black/20 space-y-0.5">
-                        <span className="text-[#9498A6] text-[10px] capitalize block">{key}</span>
-                        <span className="text-inherit font-medium">{String(value)}</span>
+                      <div key={key} className="p-2.5 rounded-[8px] bg-[#F7F7F5] dark:bg-black/20 border border-black/5 dark:border-white/5 space-y-0.5">
+                        <span className="text-[#9498A6] text-[10px] capitalize block font-medium">{key}</span>
+                        <span className="text-inherit font-semibold">{String(value)}</span>
                       </div>
                     ))}
                   </div>
@@ -136,14 +145,11 @@ export default async function ListingDetailPage({
 
               {/* LISTING DESCRIPTION */}
               <div
-                className="p-5 rounded-[14px] space-y-3"
-                style={{
-                  backgroundColor: "#161921",
-                }}
+                className="p-5 rounded-[14px] space-y-3 bg-white dark:bg-[#161921] border border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
               >
                 <h2 className="text-sm font-bold text-inherit">Açıklama</h2>
                 <div
-                  className="text-xs sm:text-sm text-[#9498A6] leading-relaxed space-y-2 max-w-[70ch]"
+                  className="text-xs sm:text-sm text-[#626772] dark:text-[#9498A6] leading-relaxed space-y-2 max-w-[70ch]"
                   dangerouslySetInnerHTML={{ __html: safeDescription }}
                 />
               </div>

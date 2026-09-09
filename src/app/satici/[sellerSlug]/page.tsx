@@ -62,6 +62,8 @@ export default async function SellerProfilePage({
     isSellerVerified: seller.isVerifiedSeller,
     deliveryMethod: l.deliveryMethod,
     deliverySlaHours: l.deliverySlaHours,
+    image: l.images && l.images.length > 0 ? l.images[0] : undefined,
+    images: l.images,
   }));
 
   return (

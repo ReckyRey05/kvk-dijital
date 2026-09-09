@@ -34,6 +34,7 @@ export default function CreateListingPage() {
   const [stockQuantity, setStockQuantity] = useState("1");
   const [deliveryMethod, setDeliveryMethod] = useState<ItemSepetiDeliveryMethod>("MANUAL_ITEM");
   const [deliverySlaHours, setDeliverySlaHours] = useState("1");
+  const [imageUrl, setImageUrl] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -94,6 +95,7 @@ export default function CreateListingPage() {
         stockQuantity: Number(stockQuantity),
         deliveryMethod,
         deliverySlaHours: Number(deliverySlaHours),
+        images: imageUrl.trim() ? [imageUrl.trim()] : [],
       };
 
       const res = await fetch("/api/itemsepeti/listings", {
@@ -245,6 +247,72 @@ export default function CreateListingPage() {
                   maxLength={3000}
                   className="w-full p-3 rounded-[8px] text-sm bg-black/20 border border-[#282C3A] text-inherit placeholder:text-[#9498A6] focus:ring-2 focus:ring-[#E8A33D] focus:outline-none"
                 />
+              </div>
+
+              {/* İlan Görseli & Şablon Seçimi */}
+              <div className="space-y-3 pt-2">
+                <ItemSepetiInput
+                  label="İlan Görseli (URL veya Şablon)"
+                  placeholder="https://... veya aşağıdaki hazır şablonlardan birine tıklayın"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  hint="İlanınız için doğrudan resim URL'si girebilir veya hazır oyun görseli seçebilirsiniz."
+                />
+
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9498A6]">
+                    Önerilen Hazır Vektör Görseller
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { label: "AK-47 Asiimov", url: "/images/itemsepeti/listings/cs2_ak47_asiimov.svg" },
+                      { label: "Karambit Doppler", url: "/images/itemsepeti/listings/cs2_karambit_doppler.svg" },
+                      { label: "Metin2 100M Yang", url: "/images/itemsepeti/listings/metin2_yang_100m.svg" },
+                      { label: "Valorant 1200 VP", url: "/images/itemsepeti/listings/valorant_1200_vp.svg" },
+                      { label: "Steam 100 TL Cüzdan", url: "/images/itemsepeti/listings/steam_100_wallet.svg" },
+                      { label: "PUBG Mobile UC", url: "/images/itemsepeti/listings/pubg_mobile_uc.svg" },
+                    ].map((preset) => (
+                      <button
+                        key={preset.url}
+                        type="button"
+                        onClick={() => setImageUrl(preset.url)}
+                        className={`text-xs px-2.5 py-1.5 rounded-md border transition-all ${
+                          imageUrl === preset.url
+                            ? "bg-[#E8A33D]/20 border-[#E8A33D] text-[#E8A33D] font-medium"
+                            : "bg-black/10 dark:bg-white/5 border-black/10 dark:border-white/10 text-[#9498A6] hover:text-inherit hover:border-[#E8A33D]/50"
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {imageUrl && (
+                  <div className="p-3 rounded-lg bg-black/5 dark:bg-black/30 border border-black/10 dark:border-white/10 flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-md overflow-hidden bg-black/20 shrink-0 border border-white/10 flex items-center justify-center">
+                      <img
+                        src={imageUrl}
+                        alt="Önizleme"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                      />
+                    </div>
+                    <div className="text-xs space-y-0.5 min-w-0 flex-1">
+                      <p className="font-semibold text-inherit">Görsel Önizleme</p>
+                      <p className="text-[11px] text-[#9498A6] truncate">{imageUrl}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl("")}
+                      className="text-xs text-[#F87171] hover:underline shrink-0"
+                    >
+                      Kaldır
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

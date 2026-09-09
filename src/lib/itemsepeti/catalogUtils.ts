@@ -110,6 +110,7 @@ export interface ListingValidationInput {
   minQuantity?: number;
   deliveryMethod: ItemSepetiDeliveryMethod;
   deliverySlaHours: number;
+  images?: string[];
 }
 
 export interface ListingValidationResult {

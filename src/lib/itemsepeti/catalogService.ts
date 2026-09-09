@@ -174,7 +174,7 @@ export async function createListing(input: ListingValidationInput): Promise<{
     minQuantity: input.minQuantity || 1,
     deliveryMethod: input.deliveryMethod,
     deliverySlaHours: input.deliverySlaHours,
-    images: [],
+    images: input.images && input.images.length > 0 ? input.images : [],
     status: "pending_review", // Every listing requires admin approval before becoming active
     duplicateFingerprint: fingerprint,
     publishedAt: now,

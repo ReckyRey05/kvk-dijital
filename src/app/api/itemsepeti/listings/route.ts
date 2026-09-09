@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
       minQuantity: body.minQuantity ? Number(body.minQuantity) : 1,
       deliveryMethod: body.deliveryMethod,
       deliverySlaHours: Number(body.deliverySlaHours || 1),
+      images: Array.isArray(body.images) ? body.images : body.imageUrl ? [body.imageUrl] : undefined,
     };
 
     const result = await createListing(payload);

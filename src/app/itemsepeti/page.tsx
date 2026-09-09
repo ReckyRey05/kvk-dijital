@@ -32,6 +32,8 @@ export default async function ItemSepetiHomePage() {
     isSellerVerified: true,
     deliveryMethod: l.deliveryMethod,
     deliverySlaHours: l.deliverySlaHours,
+    image: l.images && l.images.length > 0 ? l.images[0] : undefined,
+    images: l.images,
   }));
 
   return (

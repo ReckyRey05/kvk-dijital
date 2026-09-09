@@ -327,3 +327,45 @@ security_rules:
 - `tests/itemsepeti/buyerExperience.test.ts`: **40/40 PASS (100%)**.
 - Toplam **188 birim & entegrasyon testi** sıfır hata ile doğrulandı.
 - `npx tsc --noEmit` ve `next build` hatasız tamamlandı.
+
+---
+
+### [RECORD-015] | 2026-09-09 | İtemSepeti Tasarım İyileştirmeleri & İlan Görsel Altyapısı Entegrasyonu
+**Talep / Gerekçe**: Kullanıcı arayüzünde görsel çekiciliği, ürün anlaşılırlığını ve pazaryeri deneyimini artırmak amacıyla tüm ilanlara yüksek kaliteli vektörel görsel varlıklarının eklenmesi, ilan kartları, vitrin ızgarası, ilan detay sayfası ve ilan oluşturma formunda görsel önizleme ve şablon desteğinin hayata geçirilmesi.
+
+#### 1. Yüksek Kaliteli Vektörel Oyun Varlıklarının Üretilmesi (`public/images/itemsepeti/listings/`)
+- Platformdaki başlıca oyun kategorileri ve ürünler için modern SVG vektör illüstrasyonları tasarlandı:
+  - `cs2_ak47_asiimov.svg`: Fütüristik Asiimov serisi turuncu/beyaz/siyah kaplama ve HUD göstergeleri.
+  - `cs2_karambit_doppler.svg`: Kavisli talon bıçak formu, pembe/mor galaksi Doppler Phase 2 geçişleri ve metalik parlama.
+  - `metin2_yang_100m.svg`: İstiflenmiş altın külçeler, antik Çin sikkeleri ve altın ışıltısı partikül efektleri.
+  - `valorant_1200_vp.svg`: Radiant kırmızı VP hediye kartı kuponu, çift şevron geometrisi ve dijital barkod.
+  - `steam_100_wallet.svg`: Steam endüstriyel piston krank amblemi ve 100 TL cüzdan kodu rozeti.
+  - `pubg_mobile_uc.svg`: Askeri mühimmat sandığı ve altın kabartmalı 660 UC token jetonu.
+
+#### 2. Katalog Tohum Verilerinin Zenginleştirilmesi (`catalogSeedData.ts`)
+- Tüm tohum ilanlarına `images: ["/images/itemsepeti/listings/..."]` dizisi bağlandı.
+- PUBG Mobile kategorisi için yeni tohum ilan (`lst_pubg_660_uc_01`) eklendi.
+
+#### 3. İlan Kartı ve Vitrin Bileşenlerinin Modernizasyonu
+- `ItemSepetiListingCard.tsx`:
+  - 16:9 / h-44 oranlı görsel vitrin alanı, hover zoom efekti, buzlu cam (frosted glass) oyun etiketi, favori butonu ve hızlı teslimat rozeti yerleşimi.
+  - Görsel bulunmadığında şık monogram rozet fallback'i.
+- `ItemSepetiEditorialGrid.tsx`:
+  - 1+3 asimetrik Günün Fırsatı vitrininde ana fırsat ürünü için 60h boyutlu görsel başlık ve yan ürünler için 20x20 yuvarlak görsel önizlemeleri bağlandı.
+- `src/app/kategori/[gameSlug]/page.tsx`, `src/app/satici/[sellerSlug]/page.tsx`, `src/app/itemsepeti/page.tsx`:
+  - Kart listeleme haritalarına `image` ve `images` alanları entegre edildi.
+
+#### 4. İlan Detay Sayfası Tasarım Yenilemesi (`/ilan/[listingSlug]/page.tsx`)
+- Ürün detayında dev hero görsel alanı inşa edildi; açık ve koyu tema kenarlıklarıyla (`bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A]`) tam uyumlu hale getirildi.
+- Dinamik teknik özellikler ve satıcı bilgi kartı hiyerarşisi cilalandı.
+
+#### 5. İlan Verme Formunda Görsel ve Şablon Desteği (`/ilan-ver/page.tsx`, `listings/route.ts`)
+- Satıcılar için ilan oluştururken doğrudan görsel URL'si girebilme ve tek tıkla hazır oyun şablonu (AK-47 Asiimov, Karambit Doppler, Metin2 Yang, Valorant VP, Steam Cüzdan, PUBG UC) seçebilme özelliği eklendi.
+- Canlı resim önizleme ve görsel kaldırma kontrolleri eklendi.
+- `POST /api/itemsepeti/listings` rotası `images` dizisini kabul edip kalıcı hale getirecek şekilde güncellendi.
+
+#### 6. Doğrulama ve Derleme
+- `npx tsc --noEmit` sıfır hata ile geçti.
+- `npx next build` sıfır hata ile tamamlandı (SSG + SSR sayfaları derlendi).
+- Tüm regression testleri eksiksiz geçiş sağladı.
+

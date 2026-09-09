@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgSteam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#101822" />
+      <stop offset="50%" stop-color="#172330" />
+      <stop offset="100%" stop-color="#0b1017" />
+    </linearGradient>
+    <linearGradient id="steamBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00dee5" />
+      <stop offset="50%" stop-color="#1a9fff" />
+      <stop offset="100%" stop-color="#1055a8" />
+    </linearGradient>
+    <linearGradient id="steamCardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b2838" />
+      <stop offset="100%" stop-color="#0e1620" />
+    </linearGradient>
+    <filter id="blueGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="400" fill="url(#bgSteam)" rx="16" />
+
+  <!-- Industrial Blue Glow -->
+  <circle cx="300" cy="180" r="140" fill="#1a9fff" opacity="0.18" filter="url(#blueGlow)" />
+
+  <!-- Top Badges -->
+  <rect x="28" y="28" width="125" height="26" rx="6" fill="#1a9fff" fill-opacity="0.15" stroke="#1a9fff" stroke-width="1" stroke-opacity="0.4" />
+  <text x="90" y="45" fill="#00dee5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="1">STEAM CÜZDAN</text>
+
+  <rect x="440" y="28" width="132" height="26" rx="6" fill="#ffffff" fill-opacity="0.08" />
+  <text x="506" y="45" fill="#EDEEF2" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="600" text-anchor="middle">OTOMATİK KOD</text>
+
+  <!-- Steam Wallet Digital Gift Card Graphic -->
+  <g transform="translate(160, 85)">
+    <!-- Shadow -->
+    <rect x="10" y="10" width="260" height="170" rx="14" fill="#000000" opacity="0.6" filter="url(#blueGlow)" />
+    <!-- Card Frame -->
+    <rect x="0" y="0" width="260" height="170" rx="14" fill="url(#steamCardGrad)" stroke="url(#steamBlue)" stroke-width="1.5" stroke-opacity="0.7" />
+
+    <!-- Steam Crank / Piston Iconic Vector -->
+    <g transform="translate(30, 40)">
+      <!-- Large Crankwheel -->
+      <circle cx="35" cy="55" r="28" fill="none" stroke="url(#steamBlue)" stroke-width="7" />
+      <circle cx="35" cy="55" r="12" fill="url(#steamBlue)" />
+      <!-- Connecting Rod -->
+      <line x1="35" y1="55" x2="80" y2="25" stroke="url(#steamBlue)" stroke-width="8" stroke-linecap="round" />
+      <!-- Small Joint -->
+      <circle cx="80" cy="25" r="16" fill="none" stroke="url(#steamBlue)" stroke-width="6" />
+      <circle cx="80" cy="25" r="7" fill="url(#steamBlue)" />
+    </g>
+
+    <!-- Nominal Value Display -->
+    <text x="145" y="75" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="36" font-weight="900" letter-spacing="-1">100</text>
+    <text x="215" y="55" fill="#00dee5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="800">TL</text>
+    <text x="145" y="98" fill="#9498A6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" letter-spacing="1">WALLET CODE</text>
+
+    <!-- Digital Code Box -->
+    <rect x="25" y="128" width="210" height="24" rx="5" fill="#0c1117" stroke="#1f2d3d" stroke-width="1" />
+    <text x="130" y="144" fill="#00dee5" font-family="'Courier New', monospace" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="3">XXXX-XXXX-XXXX</text>
+  </g>
+
+  <!-- Typography watermark / metadata -->
+  <g transform="translate(36, 345)">
+    <text x="0" y="0" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" letter-spacing="-0.5">STEAM 100 TL CÜZDAN KODU</text>
+    <text x="0" y="18" fill="#00dee5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600">TÜM OYUN VE TOPLULUK PAZARINDA GEÇERLİ</text>
+  </g>
+</svg>
