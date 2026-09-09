@@ -434,3 +434,24 @@ security_rules:
 #### 4. Doğrulama
 - `npx tsc --noEmit` sıfır hata ile geçti.
 - 188+ platform testi %100 başarıyla tamamlandı.
+
+### [RECORD-019] | 2026-09-09 | Satıcı Mağaza Vitrini, Rota Header İzolasyonu ve İlan Akışı Entegrasyonu
+**Talep / Gerekçe**: Pazaryeri satıcı mağaza deneyiminin (`/magaza/[storeSlug]`), ilan oluşturma akışının ve platform genelinde header izolasyonunun geliştirilmesi.
+
+#### 1. Tam Rota Header İzolasyonu (`ClientHeader.tsx`)
+- Tüm İtemSepeti rotaları (`/sepet`, `/bakiye-yukle`, `/para-cek`, `/siparislerim`, `/siparis`, `/ilanlarim`, `/checkout`, `/magaza`) `ClientHeader.tsx` bastırma listesine eklenerek harici KvK ajans başlığının çakışması kesin olarak engellendi.
+
+#### 2. Satıcı Mağaza Vitrini Zenginleştirmesi (`/magaza/[storeSlug]/page.tsx`)
+- Mağaza ürün listeleme kartları `ItemSepetiFallbackImage` görsel desteği ile donatıldı; görseli olmayan veya yüklenemeyen ürünlerde otomatik monogram rozet gösterimi sağlandı.
+- İlan başlıkları doğrudan ilgili ilan detayına (`/ilan/[id]`) tıklanabilir hale getirildi.
+- "Pazaryerine Dön" navigasyonu `/itemsepeti` rotasına bağlandı.
+- Satıcı puanı / itibar kutucuğu ve alıcı yorum alanı açık temada temiz (`bg-gray-50`, `#DCDDE1`) zeminlerle kontrastlandırıldı.
+
+#### 3. İlan Oluşturma & Satıcı Yönetim Akışı (`/ilan-ver/page.tsx` & `catalogService.ts`)
+- `/ilan-ver` sayfasında ilan açıldığında satıcı kimliği aktif kullanıcı oturumundan (`user.uid` & `user.displayName`) dinamik olarak bağlandı.
+- İlan oluşturulduktan sonra satıcının doğrudan kendi ilanlarını yönetebileceği `/ilanlarim` sayfasına yönlendirilmesi sağlandı.
+- `getSellerListings()` fonksiyonu, satıcı id'si ve mağaza adı eşleşmelerini kapsayacak şekilde güçlendirildi.
+
+#### 4. Doğrulama
+- `npx tsc --noEmit` sıfır hata ile tamamlandı.
+- 188+ platform güvenlik ve mimari testi %100 başarıyla geçti.

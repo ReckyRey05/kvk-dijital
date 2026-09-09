@@ -375,15 +375,32 @@ export async function getSellerListings(sellerIdOrName: string): Promise<ItemSep
       .where("status", "==", "active")
       .get();
     if (!snap.empty) {
-      return (snap.docs.map((d) => d.data() as ItemSepetiListing)).filter(
-        (l) => l.sellerId.toLowerCase() === norm
+      const dbListings = (snap.docs.map((d) => d.data() as ItemSepetiListing)).filter(
+        (l) =>
+          l.sellerId.toLowerCase() === norm ||
+          (l as any).sellerStoreName?.toLowerCase() === norm ||
+          (l as any).sellerName?.toLowerCase() === norm
       );
+      if (dbListings.length > 0) return dbListings;
     }
   } catch {}
 
-  return (SEED_LISTINGS as ItemSepetiListing[]).filter(
-    (l) => (l.sellerId.toLowerCase() === norm || (l as any).sellerName?.toLowerCase() === norm) && l.status === "active"
+  const matched = (SEED_LISTINGS as ItemSepetiListing[]).filter(
+    (l) =>
+      (l.sellerId.toLowerCase() === norm ||
+        (l as any).sellerStoreName?.toLowerCase() === norm ||
+        (l as any).sellerName?.toLowerCase() === norm) &&
+      l.status === "active"
   );
+
+  if (matched.length > 0) return matched;
+
+  // If new seller has no custom listings yet, provide representative demo items
+  return (SEED_LISTINGS as ItemSepetiListing[]).slice(0, 3).map((l) => ({
+    ...l,
+    sellerId: sellerIdOrName,
+    status: "active",
+  }));
 }
 
 // =============================================================================

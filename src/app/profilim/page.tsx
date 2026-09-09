@@ -217,7 +217,7 @@ export default function ProfilePage() {
                   placeholder="https://steamcommunity.com/tradeoffer/new/?partner=...&token=..."
                   value={tradeUrl}
                   onChange={(e) => setTradeUrl(e.target.value)}
-                  className="w-full h-11 px-3.5 rounded-[8px] text-xs sm:text-sm bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-inherit focus:ring-2 focus:ring-[#D99532] focus:outline-none"
+                  className="w-full h-11 px-3.5 rounded-[8px] text-xs sm:text-sm bg-white dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-[#17191F] dark:text-[#EDEEF2] placeholder:text-[#9498A6] focus:ring-2 focus:ring-[#D99532] focus:outline-none transition-colors"
                 />
               </div>
 

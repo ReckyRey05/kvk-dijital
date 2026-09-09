@@ -22,6 +22,7 @@ import {
 import { ItemSepetiListing } from "@/types/marketplace";
 import { SeedSeller } from "@/lib/itemsepeti/catalogSeedData";
 import { useItemSepetiCart } from "@/context/ItemSepetiCartContext";
+import ItemSepetiFallbackImage from "@/components/itemsepeti/marketplace/ItemSepetiFallbackImage";
 
 export default function SellerStoreFrontPage() {
   const params = useParams();
@@ -103,7 +104,7 @@ export default function SellerStoreFrontPage() {
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
           <div className="flex items-center gap-2">
             <Link
-              href="/"
+              href="/itemsepeti"
               className="inline-flex items-center gap-1 text-xs text-[#9498A6] hover:text-inherit transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -153,7 +154,7 @@ export default function SellerStoreFrontPage() {
             </div>
 
             {/* REPUTATION METRICS TILE */}
-            <div className="p-4 rounded-2xl bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] flex items-center gap-6 self-stretch md:self-auto justify-around">
+            <div className="p-4 rounded-2xl bg-gray-50 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] flex items-center gap-6 self-stretch md:self-auto justify-around">
               <div className="text-center">
                 <span className="text-[10px] uppercase font-bold text-[#9498A6] block">Puanı</span>
                 <div className="flex items-center justify-center gap-1 text-xl font-black text-inherit mt-0.5">
@@ -163,7 +164,7 @@ export default function SellerStoreFrontPage() {
                 <span className="text-[10px] text-[#9498A6] block mt-0.5">({seller.ratingCount} oylama)</span>
               </div>
 
-              <div className="w-[1px] h-10 bg-[#DCDDE1] dark:bg-[#282C3A]" />
+              <div className="w-[1px] h-10 bg-[#DCDDE1] dark:border-[#282C3A]" />
 
               <div className="text-center">
                 <span className="text-[10px] uppercase font-bold text-[#9498A6] block">Memnuniyet</span>
@@ -213,27 +214,39 @@ export default function SellerStoreFrontPage() {
                   {listings.map((listing) => (
                     <div
                       key={listing.id}
-                      className="p-5 rounded-2xl border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-all flex flex-col justify-between space-y-4 shadow-xs group"
+                      className="rounded-2xl border bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-all flex flex-col justify-between overflow-hidden shadow-xs group"
                     >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[#9498A6]">
-                            {listing.gameName}
-                          </span>
-                          <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1">
-                            <Zap className="w-3 h-3" />
-                            <span>Hızlı Teslimat</span>
-                          </span>
+                      <Link href={`/ilan/${listing.id}`} className="block relative w-full h-36 bg-black/5 dark:bg-black/40 overflow-hidden">
+                        <ItemSepetiFallbackImage
+                          src={listing.images && listing.images.length > 0 ? listing.images[0] : null}
+                          alt={listing.title}
+                          gameName={listing.gameName}
+                          categoryName={listing.categoryName}
+                        />
+                      </Link>
+
+                      <div className="p-5 flex flex-col justify-between flex-1 space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[#9498A6]">
+                              {listing.gameName}
+                            </span>
+                            <span className="text-[10px] font-bold text-emerald-500 flex items-center gap-1">
+                              <Zap className="w-3 h-3" />
+                              <span>Hızlı Teslimat</span>
+                            </span>
+                          </div>
+
+                          <Link href={`/ilan/${listing.id}`}>
+                            <h3 className="text-sm font-bold text-inherit group-hover:text-[#D99532] transition-colors line-clamp-2 hover:underline">
+                              {listing.title}
+                            </h3>
+                          </Link>
+
+                          <p className="text-xs text-[#9498A6]">
+                            Stok: <strong className="text-inherit">{listing.stockQuantity} adet</strong> &bull; Teslimat: {listing.deliverySlaHours} saat
+                          </p>
                         </div>
-
-                        <h3 className="text-sm font-bold text-inherit group-hover:text-[#D99532] transition-colors line-clamp-2">
-                          {listing.title}
-                        </h3>
-
-                        <p className="text-xs text-[#9498A6]">
-                          Stok: <strong className="text-inherit">{listing.stockQuantity} adet</strong> &bull; Teslimat: {listing.deliverySlaHours} saat
-                        </p>
-                      </div>
 
                       <div className="pt-3 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
                         <div>
@@ -253,7 +266,8 @@ export default function SellerStoreFrontPage() {
                         </ItemSepetiButton>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                ))}
                 </div>
               )}
             </div>
@@ -300,7 +314,7 @@ export default function SellerStoreFrontPage() {
                     </div>
 
                     {rev.comment && (
-                      <p className="text-xs text-inherit leading-relaxed bg-black/5 dark:bg-black/20 p-3 rounded-xl">
+                      <p className="text-xs text-inherit leading-relaxed bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A]/50 p-3 rounded-xl">
                         {rev.comment}
                       </p>
                     )}

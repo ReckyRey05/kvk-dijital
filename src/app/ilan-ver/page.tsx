@@ -15,10 +15,12 @@ import {
   ItemSepetiCategory,
 } from "@/types/marketplace";
 import { PRODUCT_TYPE_DELIVERY_MATRIX } from "@/lib/itemsepeti/catalogUtils";
+import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import { ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default function CreateListingPage() {
   const router = useRouter();
+  const { user } = useItemSepetiAuth();
 
   // State
   const [games, setGames] = useState<ItemSepetiGame[]>([]);
@@ -84,7 +86,8 @@ export default function CreateListingPage() {
 
     try {
       const payload = {
-        sellerId: "seller_demo_user", // Will be replaced by Firebase Auth UID in prod
+        sellerId: user?.uid || "usr_gamer_ali",
+        sellerStoreName: user?.displayName || "Onaylı Satıcı",
         gameId: selectedGameId,
         categoryId: selectedCategoryId,
         serverId: selectedServerId || undefined,
@@ -111,7 +114,7 @@ export default function CreateListingPage() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push(`/kategori/${selectedGame?.slug || "cs2"}`);
+        router.push("/ilanlarim");
       }, 1500);
     } catch (err: any) {
       setError(err.message || "Bir hata oluştu.");

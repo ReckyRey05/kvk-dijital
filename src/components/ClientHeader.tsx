@@ -31,7 +31,15 @@ export default function ClientHeader() {
     pathname?.startsWith("/oyunlar") ||
     pathname?.startsWith("/giris") ||
     pathname?.startsWith("/kayit-ol") ||
-    pathname?.startsWith("/profilim")
+    pathname?.startsWith("/profilim") ||
+    pathname?.startsWith("/sepet") ||
+    pathname?.startsWith("/bakiye-yukle") ||
+    pathname?.startsWith("/para-cek") ||
+    pathname?.startsWith("/siparislerim") ||
+    pathname?.startsWith("/siparis") ||
+    pathname?.startsWith("/ilanlarim") ||
+    pathname?.startsWith("/checkout") ||
+    pathname?.startsWith("/magaza")
   ) {
     return null;
   }
