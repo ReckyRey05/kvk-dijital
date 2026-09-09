@@ -125,7 +125,7 @@ export default function KycVerificationPage() {
               <div className="p-5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs space-y-2">
                 <div className="flex items-center gap-2 font-bold text-sm">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span>Kimliğiniz Başarıyla Doğrulanmıştır</span>
+                  <span>T.C. Kimlik No Formatı ve Algoritması Doğrulandı</span>
                 </div>
                 <p className="text-[11px] opacity-90 leading-relaxed">
                   Hesabınızda doğrulanmış satıcı/alıcı rozeti aktiftir. İlan açabilir, cüzdanınızdan sınırsız para çekme (FAST/EFT) talebinde bulunabilirsiniz.
@@ -138,10 +138,10 @@ export default function KycVerificationPage() {
               <div className="p-5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs space-y-2">
                 <div className="flex items-center gap-2 font-bold text-sm">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span>Tebrikler! Kimliğiniz Doğrulandı</span>
+                  <span>Tebrikler! T.C. Kimlik Formatı Doğrulandı</span>
                 </div>
                 <p className="text-[11px] opacity-90 leading-relaxed">
-                  Bilgileriniz NVİ veri tabanı standartlarına göre başarıyla onaylandı.
+                  T.C. Kimlik numaranız NVİ resmi 11 haneli algoritma ve sağlama standartlarına göre başarıyla doğrulandı.
                 </p>
                 <Link href="/profilim" className="inline-block pt-2">
                   <ItemSepetiButton variant="primary" size="sm">

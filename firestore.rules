@@ -325,5 +325,156 @@ service cloud.firestore {
       allow update, delete: if false; // IMMUTABLE EVENT TRAIL
     }
   }
+
+    // =========================================================================
+    // 15. İTEMSEPETİ OYUNCU PAZARYERİ — LEAST-PRIVILEGE SECURITY RULES
+    // =========================================================================
+
+    // 15.1. Users & Gamer Profiles
+    match /itemsepeti_users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      // Disallow client manipulation of role, kycStatus, accountStatus, balance
+      allow update: if request.auth != null && (
+        isAdmin() || 
+        (request.auth.uid == userId && 
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+           'role', 'adminRole', 'accountStatus', 'kycStatus', 'sellerApprovalStatus', 
+           'balance', 'availableBalance', 'pendingBalance', 'tcKimlikNo'
+         ]))
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 15.2. Public Sellers & Storefronts
+    match /itemsepeti_sellers/{sellerId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 15.3. Games, Categories, Products (Public Catalog Read, Admin Write)
+    match /itemsepeti_games/{gameId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /itemsepeti_categories/{catId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /itemsepeti_products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 15.4. Listings (Public Read Active, Seller Owner Update, Server/Admin Status)
+    match /itemsepeti_listings/{listingId} {
+      // Public can only read active listings
+      allow read: if resource.data.status == 'active' || 
+                     (request.auth != null && (resource.data.sellerId == request.auth.uid || isAdmin()));
+      // Server Admin SDK handles creation or validated client create with pending_review status
+      allow create: if request.auth != null && (
+        isAdmin() || 
+        (request.resource.data.sellerId == request.auth.uid && request.resource.data.status == 'pending_review')
+      );
+      // Seller can only update content/paused status, NEVER unitPrice directly or status to active
+      allow update: if request.auth != null && (
+        isAdmin() || 
+        (resource.data.sellerId == request.auth.uid && 
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['sellerId', 'status', 'duplicateFingerprint']))
+      );
+      allow delete: if request.auth != null && (resource.data.sellerId == request.auth.uid || isAdmin());
+    }
+
+    // 15.5. Cart & Reservations (Tenant Isolation)
+    match /itemsepeti_carts/{buyerId} {
+      allow read, write: if request.auth != null && (request.auth.uid == buyerId || isAdmin());
+    }
+
+    match /itemsepeti_reservations/{resId} {
+      allow read: if request.auth != null && (resource.data.buyerId == request.auth.uid || isAdmin());
+      allow write: if isAdmin(); // Server-authoritative lease management
+    }
+
+    match /itemsepeti_purchase_intents/{intentId} {
+      allow read: if request.auth != null && (resource.data.buyerId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    match /itemsepeti_checkout_sessions/{checkoutId} {
+      allow read: if request.auth != null && (resource.data.buyerId == request.auth.uid || isAdmin());
+      allow write: if isAdmin();
+    }
+
+    // 15.6. Orders (Buyer & Seller Read, Zero Direct Client Write)
+    match /itemsepeti_orders/{orderId} {
+      allow read: if request.auth != null && (
+        resource.data.buyerId == request.auth.uid || 
+        resource.data.sellerId == request.auth.uid || 
+        isAdmin()
+      );
+      // Status changes and monetary transitions must be executed via Server API (Server-Authoritative)
+      allow write: if isAdmin();
+    }
+
+    // 15.7. Escrow, Wallets & Financial Ledger (Zero Client Write - CRITICAL)
+    match /itemsepeti_escrow/{escrowId} {
+      allow read: if request.auth != null && (
+        resource.data.buyerId == request.auth.uid || 
+        resource.data.sellerId == request.auth.uid || 
+        isAdmin()
+      );
+      allow write: if isAdmin(); // Only Server Admin SDK may lock/release/refund escrow
+    }
+
+    match /itemsepeti_wallets/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin(); // Never allow direct client mutation of balances
+    }
+
+    match /itemsepeti_ledger/{txnId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow write: if isAdmin(); // Double-entry records are strictly server generated
+    }
+
+    match /itemsepeti_payouts/{payoutId} {
+      allow read: if request.auth != null && (resource.data.sellerId == request.auth.uid || isAdmin());
+      allow write: if isAdmin(); // Bank FAST/EFT payouts managed via server API
+    }
+
+    // 15.8. Digital Vault (Zero Public/Client Read or Write - Top Secret)
+    match /itemsepeti_inventory/{inventoryId} {
+      allow read, write: if isAdmin(); // AES-256 encrypted payload revealed ONLY via server API
+    }
+
+    // 15.9. Disputes, Reviews, Notifications & Audit Logs
+    match /itemsepeti_disputes/{disputeId} {
+      allow read: if request.auth != null && (
+        resource.data.buyerId == request.auth.uid || 
+        resource.data.sellerId == request.auth.uid || 
+        isAdmin()
+      );
+      allow write: if isAdmin();
+    }
+
+    match /itemsepeti_reviews/{reviewId} {
+      allow read: if true;
+      allow write: if isAdmin(); // Verified buyers review via server endpoint post-completion
+    }
+
+    match /itemsepeti_notifications/{notifId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if request.auth != null && (
+        resource.data.userId == request.auth.uid && 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead'])
+      );
+      allow create, delete: if isAdmin();
+    }
+
+    match /itemsepeti_audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false; // Immutable audit log
+    }
 }
 

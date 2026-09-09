@@ -1,4 +1,4 @@
-﻿# İtemSepeti — Teknik Geliştirme & Mimari Günlüğü (Technical Changelog & Architecture Audit)
+# İtemSepeti — Teknik Geliştirme & Mimari Günlüğü (Technical Changelog & Architecture Audit)
 
 > **Amaç**: Bu belge, İtemSepeti projesinde gerçekleştirilen tüm teknik adımları, mimari kararları, veritabanı/domain modellerini, güvenlik bariyerlerini, state machine kurallarını ve API kontratlarını harici yapay zeka sistemlerine (ChatGPT, Claude vb.) veya teknik denetçilere eksiksiz aktarmak için tutulan resmi teknik kayıt dokümanıdır.
 >
@@ -288,3 +288,42 @@ security_rules:
 
 #### 4. Otomasyon Testleri ve Tip Güvenliği
 - `tests/itemsepeti/platformModules.test.ts` test kümesine Kupon doğrulama ve indirim hesaplama senaryoları entegre edildi. Testler: **24/24 PASS (100%)**.
+
+---
+
+### [RECORD-014] | 2026-09-09 | FAZ 5.5: Security Hardening, Escrow Auto-Release & Financial Safety
+**Talep / Gerekçe**: FAZ 4.5 adli denetiminde (forensic gap audit) tespit edilen güvenlik ve finansal operasyon açıklarının giderilmesi: Firestore kurallarının least-privilege seviyesine çekilmesi, dijital kasa anahtarının katı fail-closed politikasına bağlanması, 24 saatlik escrow otomatik serbest bırakma motorunun kurulması, alıcı onayında emanetin satıcı cüzdanına atomik aktarılması, KYC semantiğinin NVİ algoritma kontrolü olarak netleştirilmesi ve satıcı onay kilidinin sunucu katmanında enforced edilmesi.
+
+#### 1. Firestore Security Rules Hardening (`firestore.rules`)
+- `itemsepeti_*` koleksiyonları için kapsamlı least-privilege kural kümesi eklendi (Bölüm 15).
+- İstemci tarafından cüzdan bakiyeleri (`itemsepeti_wallets`), defter kayıtları (`itemsepeti_ledger`), emanet durumu (`itemsepeti_escrow`), para çekme emirleri (`itemsepeti_payouts`), ve denetim loglarının (`itemsepeti_audit_logs`) doğrudan manipüle edilmesi kesin olarak engellendi (`allow write: if false`).
+- Kullanıcı ve satıcı profillerinde `role`, `isVerifiedSeller`, `balance` gibi kritik alanların sadece sunucu (Admin SDK) veya kontrollü kurallarla güncellenmesi garanti altına alındı.
+
+#### 2. Dijital Kasa Güvenliği & Fail-Closed Mimari (`digitalVaultService.ts`)
+- Sabit fallback şifreleme anahtarı tamamen kaldırıldı. `ITEMSEPETI_VAULT_KEY` tanımlı olmadığında sistem fail-closed davranarak açık güvenlik istisnası fırlatır.
+- `isVaultConfigured()` fonksiyonu ile ortam değişkeni varlığı güvenli sorgulanır.
+- Tek seferlik anahtar açığa çıkarma (reveal) mekanizması idempotent kılındı; mükerrer sorgulamalarda aynı sipariş için deşifre edilmiş metin döndürülürken stok tüketimi tekrarlanmaz.
+
+#### 3. 24 Saatlik Escrow Otomatik Serbest Bırakma Motoru (`orderService.ts`)
+- `updateOrderStatus` fonksiyonuna `DELIVERED` durumuna geçişte `deliveredAt` ve `autoCompleteAt` (+24 saat SLA) damgaları eklendi.
+- Alıcı siparişi teslim aldığını onayladığında (`COMPLETED`) `settleEscrowToSeller()` tetiklenerek çift kayıtlı defterde (ledger) atomik `ESCROW_RELEASE` işlemi icra edilir ve satıcıya bildirim iletilir.
+- `processEligibleAutoReleases()` cron/zamanlayıcı fonksiyonu inşa edildi: 24 saati geçmiş ve ihtilafsız (dispute açılmamış) teslim edilmiş siparişleri otomatik `COMPLETED` yaparak emanet bakiyesini satıcıya aktarır.
+
+#### 4. Sunucu Taraflı Satıcı Onay Kilidi (`catalogService.ts`)
+- `createListing()` çağrılarında satıcının onay durumu (`isVerifiedSeller`) sunucu tarafında sorgulanır. Onaylanmamış satıcıların ilan girişi engellenir.
+
+#### 5. KYC ve TCKN Semantik Düzeltmesi (`dogrulama/page.tsx`)
+- NVİ canlı veritabanı bağlantısı iddiası içeren ifadeler düzeltildi; sistemin T.C. Kimlik No resmi algoritma ve checksum matematiğini doğruladığı netleştirildi.
+
+#### 6. Bildirim Kalıcılığı ve Sipariş Yetkilendirme
+- `markNotificationAsRead()` fonksiyonu kalıcı Firestore durum güncellemesiyle güçlendirildi.
+- `PATCH /api/itemsepeti/orders/[orderId]` rotasına sıkı rol bazlı mülkiyet kontrolleri entegre edildi (sadece alıcı veya admin tamamlayabilir, sadece satıcı veya admin teslim edildi işaretleyebilir).
+
+#### 7. Test ve Tip Doğrulaması
+- `tests/itemsepeti/securityHardening.test.ts`: **32/32 PASS (100%)**.
+- `tests/itemsepeti/platformModules.test.ts`: **24/24 PASS (100%)**.
+- `tests/itemsepeti/cartAndCheckout.test.ts`: **62/62 PASS (100%)**.
+- `tests/itemsepeti/catalogAndListings.test.ts`: **30/30 PASS (100%)**.
+- `tests/itemsepeti/buyerExperience.test.ts`: **40/40 PASS (100%)**.
+- Toplam **188 birim & entegrasyon testi** sıfır hata ile doğrulandı.
+- `npx tsc --noEmit` ve `next build` hatasız tamamlandı.

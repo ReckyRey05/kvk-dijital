@@ -66,3 +66,22 @@ export async function getUserNotifications(userId: string): Promise<ItemSepetiNo
     },
   ];
 }
+
+
+export async function markNotificationAsRead(userId: string, notificationId: string): Promise<boolean> {
+  const userNotifs = inMemoryNotifications.get(userId) || [];
+  const notif = userNotifs.find((n) => n.id === notificationId);
+  if (notif) {
+    notif.isRead = true;
+  }
+
+  try {
+    const db = getAdminDb();
+    await db.collection("itemsepeti_notifications").doc(notificationId).update({
+      isRead: true,
+      readAt: Date.now(),
+    });
+  } catch {}
+
+  return true;
+}

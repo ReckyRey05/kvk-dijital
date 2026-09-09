@@ -106,6 +106,17 @@ export async function createListing(input: ListingValidationInput): Promise<{
   error?: string;
   errors?: string[];
 }> {
+    // 1.0 Seller Approval Gate: Pending or rejected sellers strictly prohibited from creating listings
+  if (input.sellerId) {
+    const seller = await getSellerBySlug(input.sellerId);
+    if (seller && seller.isVerifiedSeller === false) {
+      return {
+        success: false,
+        error: "Satıcı profiliniz henüz yönetici tarafından onaylanmamıştır (pending). İlan oluşturmak için onay bekleyiniz.",
+      };
+    }
+  }
+
   // 1. Fetch game and category for relationship validation
   const game = SEED_GAMES.find((g) => g.id === input.gameId) || null;
   const category = SEED_CATEGORIES.find((c) => c.id === input.categoryId) || null;

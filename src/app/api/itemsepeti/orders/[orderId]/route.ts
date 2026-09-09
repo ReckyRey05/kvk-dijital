@@ -46,6 +46,40 @@ export async function PATCH(
       );
     }
 
+        // Server Authorization & Tenant Integrity Check
+    const existingOrder = await getOrderById(orderId, actorId || "unknown", actorRole || "buyer");
+    if (!existingOrder) {
+      return NextResponse.json(
+        { success: false, error: "Sipariş bulunamadı veya bu sipariş üzerinde işlem yetkiniz yok." },
+        { status: 403 }
+      );
+    }
+
+    // Role-specific action constraints:
+    // 1. Only buyer of order or admin can confirm completion (COMPLETED)
+    if (targetStatus === "COMPLETED" && actorRole !== "admin" && existingOrder.buyerId !== actorId) {
+      return NextResponse.json(
+        { success: false, error: "Yalnızca siparişin alıcısı veya yönetici teslimatı onaylayabilir." },
+        { status: 403 }
+      );
+    }
+
+    // 2. Only seller of order or admin can mark as DELIVERED
+    if (targetStatus === "DELIVERED" && actorRole !== "admin" && existingOrder.sellerId !== actorId) {
+      return NextResponse.json(
+        { success: false, error: "Yalnızca siparişin satıcısı veya yönetici teslimat bildiriminde bulunabilir." },
+        { status: 403 }
+      );
+    }
+
+    // 3. Only buyer of order or admin can open DISPUTED
+    if (targetStatus === "DISPUTED" && actorRole !== "admin" && existingOrder.buyerId !== actorId) {
+      return NextResponse.json(
+        { success: false, error: "Yalnızca alıcı uyuşmazlık (dispute) başlatabilir." },
+        { status: 403 }
+      );
+    }
+
     const result = await updateOrderStatus(orderId, targetStatus as ItemSepetiOrderStatus, {
       actorId,
       actorRole,
