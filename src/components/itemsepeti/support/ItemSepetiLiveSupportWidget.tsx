@@ -166,20 +166,28 @@ export default function ItemSepetiLiveSupportWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-2 border-t border-black/5 dark:border-white/5 flex gap-1.5 overflow-x-auto no-scrollbar">
+          <div className={`p-2.5 border-t flex gap-1.5 overflow-x-auto no-scrollbar ${
+            isDark ? "border-[#282C3A] bg-[#161921]/50" : "border-[#E5E7EB] bg-[#F7F7F5]"
+          }`}>
             {FAQ_SUGGESTIONS.map((faq, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => handleSendMessage(faq)}
-                className="shrink-0 text-[11px] px-2.5 py-1 rounded-full border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors whitespace-nowrap bg-black/5 dark:bg-white/5 text-inherit cursor-pointer"
+                className={`shrink-0 text-[11px] px-3 py-1.5 rounded-full border transition-all whitespace-nowrap cursor-pointer select-none ${
+                  isDark
+                    ? "bg-[#1A1D26] border-[#282C3A] hover:border-[#D99532] text-[#EDEEF2]"
+                    : "bg-white border-[#DCDDE1] hover:border-[#D99532] text-[#17191F] shadow-xs hover:bg-[#FAF9F5]"
+                }`}
               >
                 {faq}
               </button>
             ))}
           </div>
 
-          <div className="p-3 border-t border-[#DCDDE1] dark:border-[#282C3A] flex items-center gap-2">
+          <div className={`p-3 border-t flex items-center gap-2 ${
+            isDark ? "border-[#282C3A] bg-[#161921]" : "border-[#DCDDE1] bg-white"
+          }`}>
             <input
               type="text"
               placeholder="Mesajınızı yazın..."
@@ -188,12 +196,16 @@ export default function ItemSepetiLiveSupportWidget() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSendMessage();
               }}
-              className="flex-1 h-10 px-3 rounded-[8px] text-xs bg-black/5 dark:bg-black/30 border border-[#DCDDE1] dark:border-[#282C3A] text-inherit focus:ring-1 focus:ring-[#D99532] focus:outline-none"
+              className={`flex-1 h-10 px-3 rounded-[8px] text-xs focus:ring-1 focus:ring-[#D99532] focus:outline-none transition-colors ${
+                isDark
+                  ? "bg-black/30 border border-[#282C3A] text-[#EDEEF2] placeholder-[#9498A6]"
+                  : "bg-white border border-[#DCDDE1] text-[#17191F] placeholder-[#626772] shadow-xs"
+              }`}
             />
             <button
               onClick={() => handleSendMessage()}
               disabled={!inputText.trim()}
-              className="h-10 px-3.5 rounded-[8px] bg-[#D99532] hover:bg-[#c2842b] disabled:opacity-50 text-white transition-colors flex items-center justify-center cursor-pointer"
+              className="h-10 px-3.5 rounded-[8px] bg-[#D99532] hover:bg-[#c2842b] disabled:opacity-40 disabled:cursor-not-allowed text-white transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-95"
             >
               <Send className="w-4 h-4" />
             </button>
