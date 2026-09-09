@@ -455,3 +455,26 @@ security_rules:
 #### 4. Doğrulama
 - `npx tsc --noEmit` sıfır hata ile tamamlandı.
 - 188+ platform güvenlik ve mimari testi %100 başarıyla geçti.
+
+### [RECORD-020] | 2026-09-09 | Canlıya Alınabilirlik (Production Readiness) Dönüşümü
+**Talep / Gerekçe**: Kullanıcının "siteyi demo halinden canlıya alınabilecek haline getirmeni istiyorum" talebi doğrultusunda sahte/demo kalıntıların temizlenmesi, oturumun gerçek misafir/kullanıcı durumuna geçirilmesi, dinamik sepet/ödeme ve SEO altyapısının üretime hazır hale getirilmesi.
+
+#### 1. Oturum Başlatma ve Demo Giriş Temizliği (`ItemSepetiAuthContext.tsx` & `/giris/page.tsx`)
+- Sayfa açıldığında otomatik olarak `"DragonTrader"` demo hesabıyla oturum açılması davranışı kaldırıldı. Kullanıcı platforma ilk girdiğinde gerçek misafir (unauthenticated guest) olarak başlar.
+- Yeni kayıt ve girişlerde bakiye doğrudan havadan verilmez; kullanıcının gerçek yükleme veya satış bakiyesi (`0 TL` başlangıç) esas alınır.
+- `/giris` sayfasındaki yapay "Hızlı Demo Girişi" (Alıcı, Satıcı, Admin) butonları tamamen temizlendi; sayfa kurumsal ve sade bir giriş formuna dönüştürüldü.
+
+#### 2. Dinamik Kullanıcı Sepeti ve Ödeme Akışı (`/sepet/page.tsx` & `/checkout/page.tsx`)
+- Sepet ve checkout sayfalarında sabit kodlanmış `"demo_buyer_user_1"` kimliği kaldırıldı; `useItemSepetiAuth()` üzerinden oturum açmış kullanıcının gerçek `uid` ve `email` bilgileri bağlandı.
+- Oturum açmamış misafirler için yerel depolama (`itemsepeti_guest_cart`) devrede tutulurken, oturum açıldığında sepet otomatik olarak sunucuya aktarılır.
+
+#### 3. Gerçek Satıcı İlan İzolasyonu (`/ilanlarim/page.tsx` & `api/itemsepeti/seller/listings`)
+- Satıcının henüz ilanı yoksa sistemin yapay demo ilanları kendi listesine eklemesi davranışı düzeltildi. Gerçek kullanıcılar yalnızca kendi açtıkları onaylı/bekleyen ilanları görür.
+
+#### 4. Arama Motoru Optimizasyonu (SEO) ve Dizin (`itemsepeti/page.tsx`, `sitemap.ts`)
+- `/itemsepeti` rotasına OpenGraph, Twitter card ve kapsamlı Türkçe meta etiketleri eklendi.
+- `sitemap.ts` dosyasına `/oyunlar`, `/kategori/knight-online`, `/kategori/valorant`, `/kategori/rise-online` ve `/nasil-calisir` indeksleme kayıtları işlendi.
+
+#### 5. Doğrulama
+- `npx tsc --noEmit` sıfır hata ile tamamlandı.
+- 188+ platform güvenlik, KDS, masa oturumu, çoklu istemci gerçek zamanlı senkronizasyon ve defter-i kebir testi %100 başarıyla geçti.

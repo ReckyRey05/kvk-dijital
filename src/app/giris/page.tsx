@@ -9,7 +9,6 @@ import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import ItemSepetiInput from "@/components/itemsepeti/ui/ItemSepetiInput";
-import { UserCheck, ShoppingBag, ShieldAlert } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,24 +33,6 @@ export default function LoginPage() {
       router.push("/profilim");
     } catch {
       setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (role: "buyer" | "seller" | "admin") => {
-    setLoading(true);
-    try {
-      const demoEmail =
-        role === "seller"
-          ? "satici@itemsepeti.com"
-          : role === "admin"
-          ? "admin@itemsepeti.com"
-          : "alici@itemsepeti.com";
-      const demoName =
-        role === "seller" ? "DragonTrader" : role === "admin" ? "Sistem Yöneticisi" : "OyuncuAli";
-      await login(demoEmail, role, demoName);
-      router.push("/profilim");
     } finally {
       setLoading(false);
     }
@@ -134,41 +115,6 @@ export default function LoginPage() {
                 </ItemSepetiButton>
               </div>
             </form>
-
-            <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-[#DCDDE1] dark:border-[#282C3A]"></div>
-              <span className="flex-shrink mx-4 text-[11px] text-[#9498A6] font-semibold uppercase tracking-wider">
-                veya Hızlı Demo Girişi
-              </span>
-              <div className="flex-grow border-t border-[#DCDDE1] dark:border-[#282C3A]"></div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleDemoLogin("buyer")}
-                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
-              >
-                <ShoppingBag className="w-4 h-4 mb-1 text-[#D99532]" />
-                <span>Alıcı</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin("seller")}
-                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
-              >
-                <UserCheck className="w-4 h-4 mb-1 text-emerald-500" />
-                <span>Satıcı</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoLogin("admin")}
-                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
-              >
-                <ShieldAlert className="w-4 h-4 mb-1 text-blue-500" />
-                <span>Admin</span>
-              </button>
-            </div>
           </div>
 
           <p className="text-center text-xs text-[#626772] dark:text-[#9498A6]">

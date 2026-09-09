@@ -25,9 +25,14 @@ export default function MyOrdersPage() {
 
   useEffect(() => {
     async function load() {
+      if (!user) {
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
-        const buyerId = user?.uid || "usr_gamer_ali";
+        const buyerId = user.uid;
         const res = await fetch(`/api/itemsepeti/orders?buyerId=${buyerId}`);
         const data = await res.json();
         if (data.success && data.orders) {

@@ -1,7 +1,7 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ItemSepetiThemeProvider } from "@/context/ItemSepetiThemeContext";
-import { ItemSepetiAuthProvider } from "@/context/ItemSepetiAuthContext";
 import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiHeaderSearch from "@/components/itemsepeti/layout/ItemSepetiHeaderSearch";
@@ -11,6 +11,30 @@ import ItemSepetiEditorialGrid from "@/components/itemsepeti/marketplace/ItemSep
 import ItemSepetiListingCard, { ListingCardData } from "@/components/itemsepeti/marketplace/ItemSepetiListingCard";
 import ItemSepetiLiveSupportWidget from "@/components/itemsepeti/support/ItemSepetiLiveSupportWidget";
 import { getPublicListings } from "@/lib/itemsepeti/catalogService";
+
+export const metadata: Metadata = {
+  title: "İtemSepeti | Türkiye'nin En Güvenilir Oyuncu Pazarı & E-Pin Platformu",
+  description: "CS2 skin, Metin2 yang & item, Valorant VP, Knight Online GB, Steam ve dijital kodları %100 Escrow güvencesiyle 7/24 güvenle alın veya satın.",
+  keywords: [
+    "itemsepeti",
+    "oyuncu pazarı",
+    "cs2 skin al",
+    "metin2 yang al",
+    "knight online gb",
+    "valorant vp",
+    "e-pin satın al",
+    "güvenli oyuncu pazarı",
+    "escrow oyun pazarı"
+  ],
+  openGraph: {
+    title: "İtemSepeti — Türkiye'nin Oyuncu Pazarı",
+    description: "CS2, Metin2, Knight Online, Valorant ve popüler tüm oyunlarda güvenli alışveriş ve anında teslimat.",
+    url: "https://kvkdijitalcozumler.com/itemsepeti",
+    siteName: "İtemSepeti",
+    locale: "tr_TR",
+    type: "website",
+  },
+};
 
 export default async function ItemSepetiHomePage() {
   const liveListings = await getPublicListings({ limit: 12 });

@@ -66,24 +66,35 @@ export function ItemSepetiAuthProvider({ children }: { children: React.ReactNode
       if (saved) {
         setUser(JSON.parse(saved));
       } else {
-        setUser(DEFAULT_DEMO_USER);
-        localStorage.setItem("itemsepeti_session_user", JSON.stringify(DEFAULT_DEMO_USER));
+        setUser(null);
       }
     } catch {
-      setUser(DEFAULT_DEMO_USER);
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   const login = async (email: string, role: ItemSepetiUserRole = "buyer", displayName?: string): Promise<boolean> => {
+    // Check if user already has an existing saved profile with balance
+    let existingBalance = 0;
+    try {
+      const saved = localStorage.getItem("itemsepeti_session_user");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.email === email && typeof parsed.balance === "number") {
+          existingBalance = parsed.balance;
+        }
+      }
+    } catch {}
+
     const newUser: AuthUserProfile = {
       uid: `usr_${Date.now()}`,
       email,
       displayName: displayName || email.split("@")[0],
       isPhoneVerified: true,
       role,
-      balance: role === "seller" ? 2500 : 500,
+      balance: existingBalance,
       createdAt: Date.now(),
     };
     setUser(newUser);

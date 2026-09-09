@@ -10,6 +10,7 @@ import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import { ItemSepetiPrice } from "@/components/itemsepeti/marketplace/MarketplacePrimitives";
 import { ItemSepetiEnrichedCart, ItemSepetiOrder } from "@/types/marketplace";
+import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import { ShieldCheck, AlertCircle, CheckCircle2, Lock, ArrowLeft, Clock, Tag, Tag as CouponIcon } from "lucide-react";
 
 export function CheckoutView() {
@@ -17,6 +18,7 @@ export function CheckoutView() {
   const { theme } = useItemSepetiTheme();
   const isDark = theme === "dark";
   const { clearCartItems } = useItemSepetiCart();
+  const { user } = useItemSepetiAuth();
 
   const [cartData, setCartData] = useState<ItemSepetiEnrichedCart | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,8 +36,8 @@ export function CheckoutView() {
     Record<string, { characterName?: string; steamTradeUrl?: string; specialNotes?: string }>
   >({});
 
-  const buyerId = "demo_buyer_user_1";
-  const buyerEmail = "buyer@itemsepeti.com";
+  const buyerId = user?.uid || "guest_buyer";
+  const buyerEmail = user?.email || "alici@itemsepeti.com";
 
   // Load cart data for checkout validation
   useEffect(() => {
@@ -489,18 +491,25 @@ export function CheckoutView() {
   );
 }
 
+function CheckoutPageContent() {
+  const { user } = useItemSepetiAuth();
+  return (
+    <ItemSepetiCartProvider currentUserId={user?.uid}>
+      <div className="flex flex-col min-h-screen">
+        <ItemSepetiHeader />
+        <main className="flex-1">
+          <CheckoutView />
+        </main>
+        <ItemSepetiFooter />
+      </div>
+    </ItemSepetiCartProvider>
+  );
+}
+
 export default function ItemSepetiCheckoutPage() {
   return (
     <ItemSepetiThemeProvider>
-      <ItemSepetiCartProvider currentUserId="demo_buyer_user_1">
-        <div className="flex flex-col min-h-screen">
-          <ItemSepetiHeader />
-          <main className="flex-1">
-            <CheckoutView />
-          </main>
-          <ItemSepetiFooter />
-        </div>
-      </ItemSepetiCartProvider>
+      <CheckoutPageContent />
     </ItemSepetiThemeProvider>
   );
 }

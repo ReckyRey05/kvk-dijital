@@ -10,6 +10,7 @@ import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import { ItemSepetiPrice } from "@/components/itemsepeti/marketplace/MarketplacePrimitives";
 import { ItemSepetiEnrichedCart } from "@/types/marketplace";
+import { useItemSepetiAuth } from "@/context/ItemSepetiAuthContext";
 import { ShoppingBag, Trash2, ArrowLeft, ShieldCheck, AlertCircle } from "lucide-react";
 
 export function CartView() {
@@ -17,9 +18,12 @@ export function CartView() {
   const { theme } = useItemSepetiTheme();
   const isDark = theme === "dark";
   const { items, updateQuantity, removeItem, clearCartItems } = useItemSepetiCart();
+  const { user } = useItemSepetiAuth();
 
   const [cartData, setCartData] = useState<ItemSepetiEnrichedCart | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const buyerId = user?.uid || "guest_buyer";
 
   // Load enriched cart from server based on items
   useEffect(() => {
@@ -27,7 +31,7 @@ export function CartView() {
     async function loadEnriched() {
       setLoading(true);
       try {
-        const res = await fetch("/api/itemsepeti/cart?buyerId=demo_buyer_user_1");
+        const res = await fetch(`/api/itemsepeti/cart?buyerId=${encodeURIComponent(buyerId)}`);
         const data = await res.json();
         if (isMounted && data.success) {
           setCartData(data.cart);
@@ -41,7 +45,7 @@ export function CartView() {
     return () => {
       isMounted = false;
     };
-  }, [items]);
+  }, [items, buyerId]);
 
   const isEmpty = !cartData || cartData.items.length === 0;
 
@@ -281,18 +285,25 @@ export function CartView() {
   );
 }
 
+function CartPageContent() {
+  const { user } = useItemSepetiAuth();
+  return (
+    <ItemSepetiCartProvider currentUserId={user?.uid}>
+      <div className="flex flex-col min-h-screen">
+        <ItemSepetiHeader />
+        <main className="flex-1">
+          <CartView />
+        </main>
+        <ItemSepetiFooter />
+      </div>
+    </ItemSepetiCartProvider>
+  );
+}
+
 export default function ItemSepetiCartPage() {
   return (
     <ItemSepetiThemeProvider>
-      <ItemSepetiCartProvider currentUserId="demo_buyer_user_1">
-        <div className="flex flex-col min-h-screen">
-          <ItemSepetiHeader />
-          <main className="flex-1">
-            <CartView />
-          </main>
-          <ItemSepetiFooter />
-        </div>
-      </ItemSepetiCartProvider>
+      <CartPageContent />
     </ItemSepetiThemeProvider>
   );
 }
