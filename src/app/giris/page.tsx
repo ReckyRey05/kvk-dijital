@@ -10,7 +10,7 @@ import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import ItemSepetiInput from "@/components/itemsepeti/ui/ItemSepetiInput";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const { login } = useItemSepetiAuth();
 
@@ -29,8 +29,12 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      await login(email, "buyer");
-      router.push("/profilim");
+      const res = await login(email, "buyer");
+      if (res) {
+        router.push("/profilim");
+      } else {
+        setError("Giriş yapılamadı. Bilgilerinizi kontrol ediniz.");
+      }
     } catch {
       setError("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
     } finally {
@@ -39,9 +43,8 @@ export default function LoginPage() {
   };
 
   return (
-    <ItemSepetiThemeProvider>
-      <div className="flex flex-col min-h-screen">
-        <ItemSepetiHeader />
+    <div className="flex flex-col min-h-screen">
+      <ItemSepetiHeader />
 
         <main className="flex-1 max-w-md w-full mx-auto px-4 py-10 sm:py-14 space-y-6">
           <div className="text-center space-y-2">
@@ -127,6 +130,13 @@ export default function LoginPage() {
 
         <ItemSepetiFooter />
       </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <ItemSepetiThemeProvider>
+      <LoginForm />
     </ItemSepetiThemeProvider>
   );
 }

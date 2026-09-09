@@ -10,7 +10,7 @@ import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiButton from "@/components/itemsepeti/ui/ItemSepetiButton";
 import ItemSepetiInput from "@/components/itemsepeti/ui/ItemSepetiInput";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const { signup } = useItemSepetiAuth();
 
@@ -34,13 +34,17 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await signup({
+      const res = await signup({
         displayName,
         email,
         phone,
         role: isSeller ? "seller" : "buyer",
       });
-      router.push("/profilim");
+      if (res) {
+        router.push("/profilim");
+      } else {
+        setError("Kayıt oluşturulamadı. Bilgilerinizi kontrol ediniz.");
+      }
     } catch {
       setError("Kayıt işlemi tamamlanamadı.");
     } finally {
@@ -49,9 +53,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <ItemSepetiThemeProvider>
-      <div className="flex flex-col min-h-screen">
-        <ItemSepetiHeader />
+    <div className="flex flex-col min-h-screen">
+      <ItemSepetiHeader />
 
         <main className="flex-1 max-w-md w-full mx-auto px-4 py-10 sm:py-14 space-y-6">
           <div className="text-center space-y-2">
@@ -162,6 +165,13 @@ export default function RegisterPage() {
 
         <ItemSepetiFooter />
       </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <ItemSepetiThemeProvider>
+      <RegisterForm />
     </ItemSepetiThemeProvider>
   );
 }
