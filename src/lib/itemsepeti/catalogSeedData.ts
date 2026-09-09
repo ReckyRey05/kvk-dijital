@@ -11,154 +11,1582 @@ import {
 
 export const SEED_GAMES: ItemSepetiGame[] = [
   {
-    id: "game_cs2",
-    slug: "cs2",
-    name: "CS2 (Counter-Strike 2)",
-    publisher: "Valve",
-    isActive: true,
-    supportedProductTypes: ["ITEM", "ACCOUNT"],
-    createdAt: 1725700000000,
-    updatedAt: 1725700000000,
-  },
-  {
-    id: "game_metin2",
-    slug: "metin2",
-    name: "Metin2",
-    publisher: "Gameforge",
-    isActive: true,
-    supportedProductTypes: ["CURRENCY", "ITEM", "ACCOUNT"],
-    servers: [
-      { id: "srv_marmara", name: "Marmara", isActive: true },
-      { id: "srv_turkiye", name: "Türkiye", isActive: true },
-      { id: "srv_anadolu", name: "Anadolu", isActive: true },
+    "id": "game_cs2",
+    "slug": "cs2",
+    "name": "CS2 (Counter-Strike 2)",
+    "publisher": "Valve",
+    "isActive": true,
+    "supportedProductTypes": [
+      "ITEM",
+      "ACCOUNT"
     ],
-    createdAt: 1725700000000,
-    updatedAt: 1725700000000,
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
   },
   {
-    id: "game_valorant",
-    slug: "valorant",
-    name: "Valorant",
-    publisher: "Riot Games",
-    isActive: true,
-    supportedProductTypes: ["DIGITAL_CODE", "ACCOUNT"],
-    createdAt: 1725700000000,
-    updatedAt: 1725700000000,
+    "id": "game_metin2",
+    "slug": "metin2",
+    "name": "Metin2",
+    "publisher": "Gameforge",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_marmara",
+        "name": "Marmara",
+        "isActive": true
+      },
+      {
+        "id": "srv_turkiye",
+        "name": "Türkiye",
+        "isActive": true
+      },
+      {
+        "id": "srv_anadolu",
+        "name": "Anadolu",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
   },
   {
-    id: "game_pubg",
-    slug: "pubg",
-    name: "PUBG Mobile",
-    publisher: "Tencent",
-    isActive: true,
-    supportedProductTypes: ["CURRENCY", "ACCOUNT"],
-    createdAt: 1725700000000,
-    updatedAt: 1725700000000,
+    "id": "game_valorant",
+    "slug": "valorant",
+    "name": "Valorant",
+    "publisher": "Riot Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
   },
   {
-    id: "game_steam",
-    slug: "steam",
-    name: "Steam",
-    publisher: "Valve",
-    isActive: true,
-    supportedProductTypes: ["DIGITAL_CODE"],
-    createdAt: 1725700000000,
-    updatedAt: 1725700000000,
+    "id": "game_pubg",
+    "slug": "pubg",
+    "name": "PUBG Mobile",
+    "publisher": "Tencent",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
   },
+  {
+    "id": "game_steam",
+    "slug": "steam",
+    "name": "Steam",
+    "publisher": "Valve",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_metin2_pvp",
+    "slug": "metin2-pvp-serverler",
+    "name": "Metin2 PvP Serverler",
+    "publisher": "Topluluk",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_pvp_alpar",
+        "name": "Alpar2",
+        "isActive": true
+      },
+      {
+        "id": "srv_pvp_rohan",
+        "name": "Rohan2",
+        "isActive": true
+      },
+      {
+        "id": "srv_pvp_astra",
+        "name": "Astra2",
+        "isActive": true
+      },
+      {
+        "id": "srv_pvp_saltanat",
+        "name": "Saltanat MT2",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_lol",
+    "slug": "league-of-legends",
+    "name": "League of Legends",
+    "publisher": "Riot Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_knight_online",
+    "slug": "knight-online",
+    "name": "Knight Online",
+    "publisher": "NTT Game",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_destan",
+        "name": "Destan",
+        "isActive": true
+      },
+      {
+        "id": "srv_dryads",
+        "name": "Dryads",
+        "isActive": true
+      },
+      {
+        "id": "srv_pandora",
+        "name": "Pandora",
+        "isActive": true
+      },
+      {
+        "id": "srv_felis",
+        "name": "Felis",
+        "isActive": true
+      },
+      {
+        "id": "srv_agartha",
+        "name": "Agartha",
+        "isActive": true
+      },
+      {
+        "id": "srv_zero",
+        "name": "Zero",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_rise_online",
+    "slug": "rise-online",
+    "name": "Rise Online",
+    "publisher": "RO Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_aarvad",
+        "name": "Aarvad",
+        "isActive": true
+      },
+      {
+        "id": "srv_gala",
+        "name": "Gala",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_razer_gold",
+    "slug": "razer-gold",
+    "name": "Razer Gold",
+    "publisher": "Razer",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_point_blank",
+    "slug": "point-blank",
+    "name": "Point Blank",
+    "publisher": "Zepetto",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_playstation",
+    "slug": "sony-playstation-store-hediye-karti",
+    "name": "Sony PlayStation Store",
+    "publisher": "Sony Interactive",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_xbox",
+    "slug": "xbox-hediye-karti",
+    "name": "XBOX Hediye Kartı",
+    "publisher": "Microsoft",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_travian",
+    "slug": "travian-altin",
+    "name": "Travian Altın",
+    "publisher": "Travian Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_apex_legends",
+    "slug": "apex-legends-coins",
+    "name": "Apex Legends",
+    "publisher": "Electronic Arts",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_silkroad",
+    "slug": "silkroad-online-turkiye-silk",
+    "name": "Silkroad Online Türkiye",
+    "publisher": "GameGami",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_sro_truva",
+        "name": "Truva",
+        "isActive": true
+      },
+      {
+        "id": "srv_sro_efes",
+        "name": "Efes",
+        "isActive": true
+      },
+      {
+        "id": "srv_sro_bergama",
+        "name": "Bergama",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_clash_of_clans",
+    "slug": "clash-of-clans",
+    "name": "Clash of Clans",
+    "publisher": "Supercell",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_clash_royale",
+    "slug": "clash-royale-yesil-tas",
+    "name": "Clash Royale",
+    "publisher": "Supercell",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_brawl_stars",
+    "slug": "brawl-stars-elmas",
+    "name": "Brawl Stars",
+    "publisher": "Supercell",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_fc_mobile",
+    "slug": "fc-mobile-24",
+    "name": "FC Mobile 24",
+    "publisher": "EA Sports",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_blade_and_soul",
+    "slug": "blade-and-soul-ncoin",
+    "name": "Blade and Soul",
+    "publisher": "NCSoft",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_whiteout_survival",
+    "slug": "whiteout-survival",
+    "name": "Whiteout Survival",
+    "publisher": "Century Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_cod_mobile",
+    "slug": "call-of-duty-mobile",
+    "name": "Call of Duty Mobile",
+    "publisher": "Activision",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_fortnite",
+    "slug": "fortnite",
+    "name": "Fortnite",
+    "publisher": "Epic Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_wild_rift",
+    "slug": "league-of-legends-wild-rift",
+    "name": "League of Legends: Wild Rift",
+    "publisher": "Riot Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_lords_mobile",
+    "slug": "lords-mobile",
+    "name": "Lords Mobile",
+    "publisher": "IGG",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_pubg_new_state",
+    "slug": "pubg-new-state",
+    "name": "PUBG New State",
+    "publisher": "Krafton",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_roblox",
+    "slug": "roblox",
+    "name": "Roblox",
+    "publisher": "Roblox Corporation",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "DIGITAL_CODE",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_trovo",
+    "slug": "trovo",
+    "name": "Trovo",
+    "publisher": "Tencent",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_webzen",
+    "slug": "webzen",
+    "name": "Webzen",
+    "publisher": "Webzen",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_geforce_now",
+    "slug": "geforce-now-game-uyelik",
+    "name": "GeForce NOW Game+",
+    "publisher": "NVIDIA / Turkcell",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_free_fire",
+    "slug": "free-fire",
+    "name": "Free Fire",
+    "publisher": "Garena",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_rigor_z",
+    "slug": "rigor-z",
+    "name": "Rigor Z",
+    "publisher": "Rigor Z Community",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_black_desert",
+    "slug": "black-desert",
+    "name": "Black Desert",
+    "publisher": "Pearl Abyss",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_bdo_mena",
+        "name": "MENA / Türkiye",
+        "isActive": true
+      },
+      {
+        "id": "srv_bdo_eu",
+        "name": "EU",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_bigpoint",
+    "slug": "bigpoint",
+    "name": "Bigpoint",
+    "publisher": "Bigpoint",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_wolfteam",
+    "slug": "joygame-wolfteam",
+    "name": "Joygame Wolfteam",
+    "publisher": "Joygame",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_darkorbit",
+    "slug": "darkorbit",
+    "name": "DarkOrbit",
+    "publisher": "Bigpoint",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "servers": [
+      {
+        "id": "srv_do_tr1",
+        "name": "Türkiye 1",
+        "isActive": true
+      },
+      {
+        "id": "srv_do_tr2",
+        "name": "Türkiye 2",
+        "isActive": true
+      },
+      {
+        "id": "srv_do_global",
+        "name": "Global Amerika",
+        "isActive": true
+      }
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_legend_online",
+    "slug": "legend-online",
+    "name": "Legend Online",
+    "publisher": "Oasis Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_bombom",
+    "slug": "bombom",
+    "name": "BomBom",
+    "publisher": "Efun",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_discord",
+    "slug": "discord",
+    "name": "Discord",
+    "publisher": "Discord Inc.",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_zula",
+    "slug": "zula",
+    "name": "ZULA",
+    "publisher": "MadByte Games",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_nostale",
+    "slug": "nostale",
+    "name": "Nostale",
+    "publisher": "Gameforge",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_mobile_legends",
+    "slug": "mobile-legends",
+    "name": "Mobile Legends",
+    "publisher": "Moonton",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ACCOUNT"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_rise_guardian",
+    "slug": "rise-guardian-sky2",
+    "name": "Rise Guardian Sky2",
+    "publisher": "Topluluk",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY",
+      "ITEM"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_netflix",
+    "slug": "netflix-gift-card-tr",
+    "name": "Netflix",
+    "publisher": "Netflix",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_disney",
+    "slug": "disney-plus",
+    "name": "Disney Plus",
+    "publisher": "The Walt Disney Company",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_blutv",
+    "slug": "blutv-epin",
+    "name": "BluTV",
+    "publisher": "Warner Bros. Discovery",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_exxen",
+    "slug": "exxen",
+    "name": "Exxen",
+    "publisher": "Acun Medya",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_todtv",
+    "slug": "tod-tv",
+    "name": "TOD TV (beIN Connect)",
+    "publisher": "Digiturk",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_paribu_cineverse",
+    "slug": "paribu-cineverse",
+    "name": "Paribu Cineverse",
+    "publisher": "CGV Mars Cinema Group",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_google_play",
+    "slug": "google-play-hediye-kodu",
+    "name": "Google Play",
+    "publisher": "Google",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_apple_itunes",
+    "slug": "app-store-itunes-hediye-karti",
+    "name": "Apple App Store & iTunes",
+    "publisher": "Apple",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_amazon",
+    "slug": "amazon-hediye-karti",
+    "name": "Amazon TR",
+    "publisher": "Amazon",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_bigo_live",
+    "slug": "bigo-live",
+    "name": "Bigo Live",
+    "publisher": "BIGO Technology",
+    "isActive": true,
+    "supportedProductTypes": [
+      "CURRENCY"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  },
+  {
+    "id": "game_magaza_kartlari",
+    "slug": "magaza-hediye-kartlari",
+    "name": "Mağaza Hediye Kartları",
+    "publisher": "Genel",
+    "isActive": true,
+    "supportedProductTypes": [
+      "DIGITAL_CODE"
+    ],
+    "createdAt": 1725700000000,
+    "updatedAt": 1725700000000
+  }
 ];
 
 export const SEED_CATEGORIES: ItemSepetiCategory[] = [
   {
-    id: "cat_cs2_skins",
-    gameId: "game_cs2",
-    slug: "skins",
-    name: "Silah Skinleri & Bıçaklar",
-    productType: "ITEM",
-    defaultDeliveryMethod: "MANUAL_ITEM",
-    platformFeeRate: 0.05, // %5
-    minPrice: 10,
-    maxPrice: 250000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_cs2_skins",
+    "gameId": "game_cs2",
+    "slug": "skins",
+    "name": "Silah Skinleri & Bıçaklar",
+    "productType": "ITEM",
+    "defaultDeliveryMethod": "MANUAL_ITEM",
+    "platformFeeRate": 0.05,
+    "minPrice": 10,
+    "maxPrice": 250000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_cs2_cases",
-    gameId: "game_cs2",
-    slug: "kasalar",
-    name: "Kasalar & Kapsüller",
-    productType: "ITEM",
-    defaultDeliveryMethod: "MANUAL_ITEM",
-    platformFeeRate: 0.05,
-    minPrice: 5,
-    maxPrice: 50000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_cs2_cases",
+    "gameId": "game_cs2",
+    "slug": "kasalar",
+    "name": "Kasalar & Kapsüller",
+    "productType": "ITEM",
+    "defaultDeliveryMethod": "MANUAL_ITEM",
+    "platformFeeRate": 0.05,
+    "minPrice": 5,
+    "maxPrice": 50000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_metin2_yang",
-    gameId: "game_metin2",
-    slug: "yang",
-    name: "Yang & Won",
-    productType: "CURRENCY",
-    defaultDeliveryMethod: "CURRENCY_TRADE",
-    platformFeeRate: 0.06, // %6
-    minPrice: 20,
-    maxPrice: 100000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_metin2_yang",
+    "gameId": "game_metin2",
+    "slug": "yang",
+    "name": "Yang & Won",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.06,
+    "minPrice": 20,
+    "maxPrice": 100000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_metin2_items",
-    gameId: "game_metin2",
-    slug: "itemler",
-    name: "Efsunlu İtemler & Zırhlar",
-    productType: "ITEM",
-    defaultDeliveryMethod: "MANUAL_ITEM",
-    platformFeeRate: 0.06,
-    minPrice: 50,
-    maxPrice: 200000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_metin2_items",
+    "gameId": "game_metin2",
+    "slug": "itemler",
+    "name": "Efsunlu İtemler & Zırhlar",
+    "productType": "ITEM",
+    "defaultDeliveryMethod": "MANUAL_ITEM",
+    "platformFeeRate": 0.06,
+    "minPrice": 50,
+    "maxPrice": 200000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_valorant_vp",
-    gameId: "game_valorant",
-    slug: "vp",
-    name: "Valorant Points (VP) E-Pin",
-    productType: "DIGITAL_CODE",
-    defaultDeliveryMethod: "AUTOMATIC_CODE",
-    platformFeeRate: 0.03, // %3
-    minPrice: 50,
-    maxPrice: 10000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_valorant_vp",
+    "gameId": "game_valorant",
+    "slug": "vp",
+    "name": "Valorant Points (VP) E-Pin",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.03,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_pubg_uc",
-    gameId: "game_pubg",
-    slug: "uc",
-    name: "Unknown Cash (UC)",
-    productType: "CURRENCY",
-    defaultDeliveryMethod: "DIRECT_TRANSFER",
-    platformFeeRate: 0.04, // %4
-    minPrice: 30,
-    maxPrice: 15000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_pubg_uc",
+    "gameId": "game_pubg",
+    "slug": "uc",
+    "name": "Unknown Cash (UC)",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
   {
-    id: "cat_steam_wallet",
-    gameId: "game_steam",
-    slug: "cuzdan-kodu",
-    name: "Steam Cüzdan Kodları",
-    productType: "DIGITAL_CODE",
-    defaultDeliveryMethod: "AUTOMATIC_CODE",
-    platformFeeRate: 0.03,
-    minPrice: 20,
-    maxPrice: 5000,
-    isActive: true,
-    createdAt: 1725700000000,
+    "id": "cat_steam_wallet",
+    "gameId": "game_steam",
+    "slug": "cuzdan-kodu",
+    "name": "Steam Cüzdan Kodları",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.03,
+    "minPrice": 20,
+    "maxPrice": 5000,
+    "isActive": true,
+    "createdAt": 1725700000000
   },
+  {
+    "id": "cat_metin2_pvp_pvp_yang",
+    "gameId": "game_metin2_pvp",
+    "slug": "pvp-yang",
+    "name": "PvP Yang & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 10,
+    "maxPrice": 100000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_lol_rp_kodlari",
+    "gameId": "game_lol",
+    "slug": "rp-kodlari",
+    "name": "Riot Points (RP) & E-Pin",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_knight_online_gb_ve_item",
+    "gameId": "game_knight_online",
+    "slug": "gb-ve-item",
+    "name": "Gold Bar (GB) & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 200000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_rise_online_gold_ve_item",
+    "gameId": "game_rise_online",
+    "slug": "gold-ve-item",
+    "name": "Rise Gold & Eşya",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 100000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_razer_gold_tl_pin",
+    "gameId": "game_razer_gold",
+    "slug": "tl-pin",
+    "name": "Razer Gold TL Pin",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 25,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_point_blank_tg_tam_gold",
+    "gameId": "game_point_blank",
+    "slug": "tg-tam-gold",
+    "name": "Point Blank TG (Tam Gold)",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_playstation_psn_kart",
+    "gameId": "game_playstation",
+    "slug": "psn-kart",
+    "name": "PlayStation Network Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_xbox_game_pass_ve_kod",
+    "gameId": "game_xbox",
+    "slug": "game-pass-ve-kod",
+    "name": "Xbox Hediye Kartı & Pass",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_travian_altin",
+    "gameId": "game_travian",
+    "slug": "altin",
+    "name": "Travian Altın",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_apex_legends_apex_coins",
+    "gameId": "game_apex_legends",
+    "slug": "apex-coins",
+    "name": "Apex Coins & Kodlar",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_silkroad_silk_ve_item",
+    "gameId": "game_silkroad",
+    "slug": "silk-ve-item",
+    "name": "Silk & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 50000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_clash_of_clans_yesil_tas",
+    "gameId": "game_clash_of_clans",
+    "slug": "yesil-tas",
+    "name": "Yeşil Taş & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_clash_royale_elmas_ve_pass",
+    "gameId": "game_clash_royale",
+    "slug": "elmas-ve-pass",
+    "name": "Yeşil Taş & Pass",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_brawl_stars_elmas",
+    "gameId": "game_brawl_stars",
+    "slug": "elmas",
+    "name": "Brawl Stars Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_fc_mobile_fc_points",
+    "gameId": "game_fc_mobile",
+    "slug": "fc-points",
+    "name": "FC Points & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_blade_and_soul_ncoin",
+    "gameId": "game_blade_and_soul",
+    "slug": "ncoin",
+    "name": "Blade & Soul NCoin",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_whiteout_survival_frost_star",
+    "gameId": "game_whiteout_survival",
+    "slug": "frost-star",
+    "name": "Frost Star & Paket",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 25000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_cod_mobile_cp_points",
+    "gameId": "game_cod_mobile",
+    "slug": "cp-points",
+    "name": "CP (COD Points)",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_fortnite_v_bucks",
+    "gameId": "game_fortnite",
+    "slug": "v-bucks",
+    "name": "V-Bucks & Kodlar",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 40,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_wild_rift_wild_cores",
+    "gameId": "game_wild_rift",
+    "slug": "wild-cores",
+    "name": "Wild Cores & Kodlar",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 25,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_lords_mobile_elmas",
+    "gameId": "game_lords_mobile",
+    "slug": "elmas",
+    "name": "Lords Mobile Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 25,
+    "maxPrice": 25000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_pubg_new_state_nc_yukleme",
+    "gameId": "game_pubg_new_state",
+    "slug": "nc-yukleme",
+    "name": "New State NC Yükleme",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_roblox_robux",
+    "gameId": "game_roblox",
+    "slug": "robux",
+    "name": "Robux & Hediye Kartı",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 25000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_trovo_elixir",
+    "gameId": "game_trovo",
+    "slug": "elixir",
+    "name": "Trovo Elixir & Mana",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_webzen_wcoin",
+    "gameId": "game_webzen",
+    "slug": "wcoin",
+    "name": "Webzen Wcoin E-Pin",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_geforce_now_game_plus_kod",
+    "gameId": "game_geforce_now",
+    "slug": "game-plus-kod",
+    "name": "GeForce NOW Paket Kodları",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 5000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_free_fire_elmas",
+    "gameId": "game_free_fire",
+    "slug": "elmas",
+    "name": "Free Fire Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_rigor_z_gc_ve_item",
+    "gameId": "game_rigor_z",
+    "slug": "gc-ve-item",
+    "name": "Rigor GC & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_black_desert_inci_ve_gumus",
+    "gameId": "game_black_desert",
+    "slug": "inci-ve-gumus",
+    "name": "İnci, Gümüş & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 50000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_bigpoint_kupon_kodlari",
+    "gameId": "game_bigpoint",
+    "slug": "kupon-kodlari",
+    "name": "Bigpoint Kupon Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_wolfteam_joypara_jp",
+    "gameId": "game_wolfteam",
+    "slug": "joypara-jp",
+    "name": "Joypara (JP) & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_darkorbit_uridium",
+    "gameId": "game_darkorbit",
+    "slug": "uridium",
+    "name": "DarkOrbit Uridium & Gemi",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 30000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_legend_online_elmas",
+    "gameId": "game_legend_online",
+    "slug": "elmas",
+    "name": "Legend Online Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_bombom_kupon",
+    "gameId": "game_bombom",
+    "slug": "kupon",
+    "name": "BomBom Kupon & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_discord_nitro_ve_boost",
+    "gameId": "game_discord",
+    "slug": "nitro-ve-boost",
+    "name": "Discord Nitro & Boost",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 35,
+    "maxPrice": 3000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_zula_za_altin",
+    "gameId": "game_zula",
+    "slug": "za-altin",
+    "name": "Zula Altını (ZA) & Hesap",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_nostale_nosdolar",
+    "gameId": "game_nostale",
+    "slug": "nosdolar",
+    "name": "NosDolar & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 30000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_mobile_legends_elmas",
+    "gameId": "game_mobile_legends",
+    "slug": "elmas",
+    "name": "Mobile Legends Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_rise_guardian_para_ve_item",
+    "gameId": "game_rise_guardian",
+    "slug": "para-ve-item",
+    "name": "Oyun İçi Para & İtem",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "CURRENCY_TRADE",
+    "platformFeeRate": 0.04,
+    "minPrice": 20,
+    "maxPrice": 20000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_netflix_hediye_karti",
+    "gameId": "game_netflix",
+    "slug": "hediye-karti",
+    "name": "Netflix Hediye Kartı TR",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 100,
+    "maxPrice": 2000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_disney_abonelik_kodu",
+    "gameId": "game_disney",
+    "slug": "abonelik-kodu",
+    "name": "Disney+ Abonelik Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 100,
+    "maxPrice": 2500,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_blutv_kupon_kodu",
+    "gameId": "game_blutv",
+    "slug": "kupon-kodu",
+    "name": "BluTV Kupon Kodları",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 1500,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_exxen_uyelik_kodu",
+    "gameId": "game_exxen",
+    "slug": "uyelik-kodu",
+    "name": "Exxen & Spor Üyelik Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 2500,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_todtv_paket_kodu",
+    "gameId": "game_todtv",
+    "slug": "paket-kodu",
+    "name": "TOD TV Paket Kodları",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 100,
+    "maxPrice": 5000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_paribu_cineverse_bilet_kodu",
+    "gameId": "game_paribu_cineverse",
+    "slug": "bilet-kodu",
+    "name": "Sinema Bileti & Mısır Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 1500,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_google_play_bakiye_kodu",
+    "gameId": "game_google_play",
+    "slug": "bakiye-kodu",
+    "name": "Google Play Bakiye Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 25,
+    "maxPrice": 5000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_apple_itunes_bakiye_kodu",
+    "gameId": "game_apple_itunes",
+    "slug": "bakiye-kodu",
+    "name": "App Store Bakiye Kodu",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 5000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_amazon_hediye_karti",
+    "gameId": "game_amazon",
+    "slug": "hediye-karti",
+    "name": "Amazon TR Hediye Kartı",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_bigo_live_elmas_yukleme",
+    "gameId": "game_bigo_live",
+    "slug": "elmas-yukleme",
+    "name": "Bigo Live Elmas",
+    "productType": "CURRENCY",
+    "defaultDeliveryMethod": "DIRECT_TRANSFER",
+    "platformFeeRate": 0.04,
+    "minPrice": 30,
+    "maxPrice": 15000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  },
+  {
+    "id": "cat_magaza_kartlari_alisveris_cekleri",
+    "gameId": "game_magaza_kartlari",
+    "slug": "alisveris-cekleri",
+    "name": "Mağaza Çekleri & Kartlar",
+    "productType": "DIGITAL_CODE",
+    "defaultDeliveryMethod": "AUTOMATIC_CODE",
+    "platformFeeRate": 0.04,
+    "minPrice": 50,
+    "maxPrice": 10000,
+    "isActive": true,
+    "createdAt": 1725700000000
+  }
 ];
 
 export const SEED_PRODUCTS: ItemSepetiProduct[] = [

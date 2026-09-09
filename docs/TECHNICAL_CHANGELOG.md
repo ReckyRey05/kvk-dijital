@@ -364,8 +364,34 @@ security_rules:
 - Canlı resim önizleme ve görsel kaldırma kontrolleri eklendi.
 - `POST /api/itemsepeti/listings` rotası `images` dizisini kabul edip kalıcı hale getirecek şekilde güncellendi.
 
-#### 6. Doğrulama ve Derleme
 - `npx tsc --noEmit` sıfır hata ile geçti.
 - `npx next build` sıfır hata ile tamamlandı (SSG + SSR sayfaları derlendi).
 - Tüm regression testleri eksiksiz geçiş sağladı.
+
+---
+
+### [RECORD-016] | 2026-09-09 | itemci.com Tüm Oyunlar ve Kategoriler Kataloğunun Entegrasyonu
+**Talep / Gerekçe**: Kullanıcı talebi doğrultusunda https://itemci.com/categories adresinde yer alan tüm oyun, e-pin ve dijital hizmet kategorilerinin (55+ oyun & servis) İtemSepeti veritabanına, kategori hiyerarşisine, üst gezinme çubuğuna ve arama/filtreleme altyapısına eklenmesi.
+
+#### 1. Genişletilmiş Oyun Kataloğu Tohumu (`catalogSeedData.ts`)
+- 55 adet popüler oyun ve dijital servis `SEED_GAMES` listesine eklendi:
+  - **MMORPG**: Metin2, Metin2 PvP Serverler, Knight Online (Destan, Dryads, Pandora, Felis, Agartha, Zero sunucuları ile), Rise Online (Aarvad, Gala), Silkroad Online Türkiye (Truva, Efes, Bergama), Black Desert (MENA, EU), Nostale, Blade & Soul, DarkOrbit (TR1, TR2, Global), Rise Guardian Sky2.
+  - **FPS & MOBA**: CS2, Valorant, League of Legends, Point Blank, Joygame Wolfteam, ZULA, Apex Legends, Fortnite, Rigor Z.
+  - **Mobil & Jeton**: PUBG Mobile, PUBG New State, Free Fire, Mobile Legends, Brawl Stars, Clash of Clans, Clash Royale, FC Mobile 24, Call of Duty Mobile, Wild Rift, Lords Mobile, Whiteout Survival, Roblox, BomBom, Legend Online, Travian Altın, Bigo Live, Trovo.
+  - **Dijital Hediye & Abonelik**: Steam, Razer Gold, Sony PlayStation Store, XBOX Hediye Kartı, GeForce NOW Game+, Netflix TR, Disney Plus, BluTV, Exxen, TOD TV (beIN Connect), Paribu Cineverse, Google Play, Apple App Store & iTunes, Amazon TR, Discord Nitro, Webzen, Bigpoint, Mağaza Hediye Kartları.
+
+#### 2. Kategori Hiyerarşisi (`SEED_CATEGORIES`)
+- 57 adet özelleştirilmiş alt kategori eklendi; her oyun için ürün tipi (`ITEM`, `CURRENCY`, `DIGITAL_CODE`, `ACCOUNT`), teslimat yöntemi (`AUTOMATIC_CODE`, `CURRENCY_TRADE`, `DIRECT_TRANSFER`, `MANUAL_ITEM`), taban/tavan fiyat sınırları ve platform komisyon oranları tanımlandı.
+
+#### 3. Keşif Şeridi ve Header Navigasyon Güncellemesi
+- `ItemSepetiGameShelf.tsx`: Keşif şeridi Knight Online, Rise Online, League of Legends, Roblox, Razer Gold, Metin2 PvP, Brawl Stars, Wolfteam ve ZULA ile zenginleştirildi.
+- `ItemSepetiHeader.tsx`: Üst alt bar (ByNoGame barı) ve mobil menüye Knight Online, LoL, Rise Online ve 55+ oyunu listeleyen `/oyunlar` dizin bağlantısı eklendi.
+
+#### 4. Yeni Tüm Oyunlar Keşif Dizini Sayfası (`/oyunlar`)
+- MMORPG, FPS/MOBA, Mobil Oyunlar ve Dijital Hediye Kartları / Abonelikler şeklinde gruplandırılmış, filtreli ve her oyuna doğrudan geçiş sağlayan şık vitrin sayfası oluşturuldu.
+
+#### 5. Doğrulama
+- `npx tsc --noEmit` sıfır hata ile geçti.
+- 188+ regresyon testi eksiksiz başarıyla doğrulandı.
+
 

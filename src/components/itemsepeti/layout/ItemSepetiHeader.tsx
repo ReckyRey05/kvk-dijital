@@ -179,6 +179,34 @@ export default function ItemSepetiHeader() {
           >
             <span>Steam Cüzdan Kodu</span>
           </Link>
+          <Link
+            href="/kategori/knight-online"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>Knight Online GB</span>
+          </Link>
+          <Link
+            href="/kategori/league-of-legends"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>LoL RP</span>
+          </Link>
+          <Link
+            href="/kategori/rise-online"
+            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
+            style={{ color: isDark ? "#9498A6" : "#626772" }}
+          >
+            <span>Rise Online</span>
+          </Link>
+          <Link
+            href="/oyunlar"
+            className="font-bold hover:text-[#D99532] transition-colors flex items-center gap-1.5 px-2 py-0.5 rounded bg-black/5 dark:bg-white/5"
+            style={{ color: isDark ? "#EDEEF2" : "#17191F" }}
+          >
+            <span>Tüm Oyunlar & Kategoriler (55+)</span>
+          </Link>
           <span className="text-gray-300 dark:text-gray-700">|</span>
           <Link
             href="/nasil-calisir"
@@ -223,6 +251,20 @@ export default function ItemSepetiHeader() {
             className="block text-sm font-semibold py-1.5"
           >
             Valorant VP E-Pin
+          </Link>
+          <Link
+            href="/kategori/knight-online"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-semibold py-1.5"
+          >
+            Knight Online GB
+          </Link>
+          <Link
+            href="/oyunlar"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-bold text-[#D99532] py-1.5"
+          >
+            Tüm Oyunlar & Kategoriler (55+) &rarr;
           </Link>
           <Link
             href="/nasil-calisir"
