@@ -7,6 +7,7 @@ import {
   ItemSepetiPrice,
   ItemSepetiDeliveryBadge,
 } from "./MarketplacePrimitives";
+import ItemSepetiFallbackImage from "./ItemSepetiFallbackImage";
 import { ItemSepetiDeliveryMethod } from "@/types/marketplace";
 import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
 
@@ -45,9 +46,11 @@ export default function ItemSepetiListingCard({
 
   const [favorited, setFavorited] = useState(listing.isFavorited || false);
   const [favLoading, setFavLoading] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   // Compute primary image: direct image, first element of images array, or game fallback
   const listingImage = listing.image || (listing.images && listing.images.length > 0 ? listing.images[0] : null);
+  const hasValidImage = listingImage && !imgError;
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -91,24 +94,15 @@ export default function ItemSepetiListingCard({
       }`}
     >
       {/* 1. VISUAL THUMBNAIL HEADER WITH HOVER ZOOM & BADGES */}
-      <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-black/40 flex items-center justify-center">
+      <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-black/5 dark:bg-black/40 flex items-center justify-center">
         <Link href={`/ilan/${listing.slug}`} className="w-full h-full block focus:outline-none">
-          {listingImage ? (
-            <img
-              src={listingImage}
-              alt={listing.title}
-              className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-black/60 to-black/90">
-              <span className="w-12 h-12 rounded-full bg-[#D99532]/20 border border-[#D99532]/30 flex items-center justify-center text-[#E8A33D] font-black text-sm mb-1.5 shadow-inner">
-                {listing.gameName.substring(0, 2).toUpperCase()}
-              </span>
-              <span className="text-xs font-bold text-white/90 line-clamp-1">{listing.gameName}</span>
-              <span className="text-[10px] text-[#9498A6]">{listing.categoryName}</span>
-            </div>
-          )}
+          <ItemSepetiFallbackImage
+            src={listingImage}
+            alt={listing.title}
+            gameName={listing.gameName}
+            categoryName={listing.categoryName}
+            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+          />
         </Link>
 
         {/* TOP OVERLAY: GAME BADGE & FAVORITE BUTTON */}

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import ItemSepetiFallbackImage from "./ItemSepetiFallbackImage";
 import { ItemSepetiPrice } from "./MarketplacePrimitives";
 import { ItemSepetiListing } from "@/types/marketplace";
 import { useItemSepetiTheme } from "@/context/ItemSepetiThemeContext";
@@ -30,21 +31,21 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
         }`}
       >
         {/* Featured Image Surface */}
-        {featured.images && featured.images.length > 0 && (
-          <div className="relative w-full h-48 sm:h-60 overflow-hidden bg-black/40">
-            <img
-              src={featured.images[0]}
-              alt={featured.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-1 rounded-[6px] text-xs font-bold bg-[#D99532] text-white shadow-sm flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                Günün Fırsatı
-              </span>
-            </div>
+        <div className="relative w-full h-48 sm:h-60 overflow-hidden bg-black/5 dark:bg-black/40">
+          <ItemSepetiFallbackImage
+            src={featured.images && featured.images.length > 0 ? featured.images[0] : null}
+            alt={featured.title}
+            gameName={featured.gameName}
+            categoryName={featured.categoryName}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute top-3 left-3 pointer-events-none">
+            <span className="px-2.5 py-1 rounded-[6px] text-xs font-bold bg-[#D99532] text-white shadow-sm flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+              Günün Fırsatı
+            </span>
           </div>
-        )}
+        </div>
 
         <div className="p-6 sm:p-7 space-y-3.5 flex-1 flex flex-col justify-between">
           <div className="space-y-3">
@@ -116,19 +117,15 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
             }`}
           >
             {/* Small Side Image Thumbnail */}
-            {item.images && item.images.length > 0 ? (
-              <div className="w-20 h-20 rounded-[10px] overflow-hidden bg-black/40 shrink-0 border border-black/5 dark:border-white/5">
-                <img
-                  src={item.images[0]}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-              </div>
-            ) : (
-              <div className="w-20 h-20 rounded-[10px] bg-[#D99532]/15 border border-[#D99532]/25 shrink-0 flex items-center justify-center text-[#E8A33D] font-black text-base">
-                {item.gameName.substring(0, 2).toUpperCase()}
-              </div>
-            )}
+            <div className="w-20 h-20 rounded-[10px] overflow-hidden bg-black/5 dark:bg-black/40 shrink-0 border border-black/5 dark:border-white/5">
+              <ItemSepetiFallbackImage
+                src={item.images && item.images.length > 0 ? item.images[0] : null}
+                alt={item.title}
+                gameName={item.gameName}
+                categoryName={item.categoryName}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+            </div>
 
             <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
               <div className="space-y-1">

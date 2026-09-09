@@ -394,4 +394,28 @@ security_rules:
 - `npx tsc --noEmit` sıfır hata ile geçti.
 - 188+ regresyon testi eksiksiz başarıyla doğrulandı.
 
+---
+
+### [RECORD-017] | 2026-09-09 | Tema Uyumsuzlukları, Görsel Fallback ve Navigasyon Düzeltmeleri
+**Talep / Gerekçe**: Ekran görüntülerinde tespit edilen hataların (1: `/oyunlar` rotasında KvK Header'ının görünmesi, 2: Görseller yüklenemediğinde oluşan kırık ikon problemi, 3: `/nasil-calisir` ve ürün detay sayfalarında açık modda koyu zemin/kontrast çelişkisi) giderilmesi.
+
+#### 1. Header İzolasyonu (`ClientHeader.tsx`)
+- `/oyunlar` rotası KvK genel Header bastırma listesine eklendi (`pathname?.startsWith("/oyunlar")`).
+- Artık `/oyunlar` sayfasına gidildiğinde yalnızca `ItemSepetiHeader` görüntüleniyor.
+
+#### 2. Kırık Görsel Hatasını Engelleyen Akıllı Fallback Bileşeni (`ItemSepetiFallbackImage.tsx`)
+- `onError` event'i yakalayan ve resim bulunamadığında ya da yüklenemediğinde tarayıcının kırık ikonunu göstermek yerine oyun adı ve kategorisine özel stilize monogram rozet (`#D99532` amber halkası ve harf kısaltması) çizen reaktif istemci bileşeni geliştirildi.
+- `ItemSepetiListingCard.tsx`: Görsel vitrin alanı `ItemSepetiFallbackImage` ile donatıldı.
+- `ItemSepetiEditorialGrid.tsx`: Hem Günün Fırsatı hem yan 3 ilan için `ItemSepetiFallbackImage` entegre edildi.
+- `src/app/ilan/[listingSlug]/page.tsx`: Ana hero görsel yüzeyi `ItemSepetiFallbackImage` ile güncellendi.
+
+#### 3. Nasıl Çalışır & Detay Sayfası Açık Tema Uyumu (`/nasil-calisir/page.tsx`)
+- Kartlardaki sabit koyu inline stiller (`rgba(27, 30, 39, 0.5)`) kaldırılarak tam dinamik `bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] text-[#17191F] dark:text-[#EDEEF2]` yapısına geçirildi.
+- Escrow çağrı kartı ferah yeşil zemin (`bg-[#F0FDF4] dark:bg-[#064E3B]/20`) ve açık modda mükemmel kontrast sağlayan metin renkleriyle güncellendi.
+
+#### 4. Doğrulama
+- `npx tsc --noEmit` sıfır hata ile geçti.
+- 188+ tüm platform testleri %100 başarıyla tamamlandı.
+
+
 

@@ -56,21 +56,17 @@ export default function HowItWorksPage() {
               return (
                 <div
                   key={s.step}
-                  className="p-6 rounded-[14px] border space-y-4 select-none relative"
-                  style={{
-                    backgroundColor: "rgba(27, 30, 39, 0.5)",
-                    borderColor: "#282C3A",
-                  }}
+                  className="p-6 rounded-[14px] border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921] space-y-4 select-none relative shadow-xs"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-[#E8A33D] px-2 py-0.5 rounded-[6px] bg-[#E8A33D]/10 border border-[#E8A33D]/20">
+                    <span className="text-xs font-mono font-bold text-[#D99532] px-2 py-0.5 rounded-[6px] bg-[#D99532]/10 border border-[#D99532]/20">
                       Adım {s.step}
                     </span>
                     <Icon className="w-5 h-5 text-[#9498A6]" />
                   </div>
 
                   <h2 className="text-lg font-bold text-inherit">{s.title}</h2>
-                  <p className="text-xs sm:text-sm text-[#9498A6] leading-relaxed max-w-[80ch]">
+                  <p className="text-xs sm:text-sm text-[#626772] dark:text-[#9498A6] leading-relaxed max-w-[80ch]">
                     {s.desc}
                   </p>
                 </div>
@@ -80,17 +76,13 @@ export default function HowItWorksPage() {
 
           {/* ESCROW EXPLANATION CALLOUT */}
           <section
-            className="p-6 sm:p-8 rounded-[18px] border space-y-3"
-            style={{
-              backgroundColor: "rgba(27, 30, 39, 0.4)",
-              borderColor: "#282C3A",
-            }}
+            className="p-6 sm:p-8 rounded-[18px] border border-[#BBF7D0] dark:border-[#065F46] bg-[#F0FDF4] dark:bg-[#064E3B]/20 space-y-3"
           >
-            <div className="flex items-center gap-2 text-[#34D399]">
+            <div className="flex items-center gap-2 text-[#059669] dark:text-[#34D399]">
               <ShieldCheck className="w-5 h-5" />
               <h2 className="text-base font-bold">Escrow (Emanet) Güvencesi Nedir?</h2>
             </div>
-            <p className="text-xs sm:text-sm text-[#9498A6] leading-relaxed max-w-[80ch]">
+            <p className="text-xs sm:text-sm text-[#374151] dark:text-[#9498A6] leading-relaxed max-w-[80ch]">
               Ödediğiniz para doğrudan satıcının hesabına gitmez. İtemSepeti emanet kasasında bekletilir.
               Satıcı ürünü teslim edene ve siz teslim aldığınızı onaylayana kadar para satıcıya aktarılmaz.
               Herhangi bir aksaklık durumunda 7/24 destek ekibimiz devreye girerek paranızı iade eder.

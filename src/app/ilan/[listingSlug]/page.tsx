@@ -5,6 +5,7 @@ import { ItemSepetiThemeProvider } from "@/context/ItemSepetiThemeContext";
 import ItemSepetiHeader from "@/components/itemsepeti/layout/ItemSepetiHeader";
 import ItemSepetiFooter from "@/components/itemsepeti/layout/ItemSepetiFooter";
 import ItemSepetiBuyBox from "@/components/itemsepeti/marketplace/ItemSepetiBuyBox";
+import ItemSepetiFallbackImage from "@/components/itemsepeti/marketplace/ItemSepetiFallbackImage";
 import {
   ItemSepetiDeliveryBadge,
   ItemSepetiStockBadge,
@@ -100,28 +101,18 @@ export default async function ListingDetailPage({
               <div
                 className="relative w-full h-64 sm:h-80 rounded-[18px] overflow-hidden border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921] flex items-center justify-center p-2 shadow-xs group"
               >
-                {listing.images && listing.images.length > 0 ? (
-                  <div className="w-full h-full relative flex items-center justify-center overflow-hidden rounded-[14px] bg-black/5 dark:bg-black/30">
-                    <img
-                      src={listing.images[0]}
-                      alt={listing.title}
-                      className="w-full h-full object-cover sm:object-contain transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                      <span className="text-xs text-white/90 font-medium">{listing.title}</span>
-                    </div>
+                <div className="w-full h-full relative flex items-center justify-center overflow-hidden rounded-[14px] bg-black/5 dark:bg-black/30">
+                  <ItemSepetiFallbackImage
+                    src={listing.images && listing.images.length > 0 ? listing.images[0] : null}
+                    alt={listing.title}
+                    gameName={listing.gameName}
+                    categoryName={listing.categoryName}
+                    className="w-full h-full object-cover sm:object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 pointer-events-none">
+                    <span className="text-xs text-white/90 font-medium">{listing.title}</span>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-6 text-center space-y-2 select-none">
-                    <div className="w-16 h-16 rounded-full bg-[#D99532]/20 border border-[#D99532]/30 flex items-center justify-center text-[#E8A33D] font-black text-xl shadow-inner">
-                      {listing.gameName.substring(0, 2).toUpperCase()}
-                    </div>
-                    <span className="text-base font-bold text-inherit">{listing.title}</span>
-                    <span className="text-xs text-[#9498A6]">
-                      {listing.categoryName} &bull; {listing.productType}
-                    </span>
-                  </div>
-                )}
+                </div>
               </div>
 
               {/* PRODUCT ATTRIBUTES */}

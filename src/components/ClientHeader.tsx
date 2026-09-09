@@ -27,7 +27,8 @@ export default function ClientHeader() {
     pathname?.startsWith("/ilan-ver") ||
     pathname?.startsWith("/arama") ||
     pathname?.startsWith("/satici") ||
-    pathname?.startsWith("/nasil-calisir")
+    pathname?.startsWith("/nasil-calisir") ||
+    pathname?.startsWith("/oyunlar")
   ) {
     return null;
   }
