@@ -417,5 +417,20 @@ security_rules:
 - `npx tsc --noEmit` sıfır hata ile geçti.
 - 188+ tüm platform testleri %100 başarıyla tamamlandı.
 
+### [RECORD-018] | 2026-09-09 | Üye Olma / Giriş Akışı ve Açık Tema Form Kontrast Düzeltmeleri
+**Talep / Gerekçe**: Kullanıcının "üye olamıyorum" bildiriminin ve `/giris` / `/kayit-ol` sayfalarındaki açık tema girdi/buton kontrast sorunlarının çözülmesi.
 
+#### 1. Evrensel Kimlik Sağlayıcı Entegrasyonu (`ItemSepetiThemeContext.tsx`)
+- `ItemSepetiAuthProvider`, doğrudan `ItemSepetiThemeProvider` içerisine dahil edildi.
+- Böylece `/kayit-ol`, `/giris`, `/profilim` ve tüm pazaryeri sayfalarında `useItemSepetiAuth()` kancası (hook) bağlam kaybı olmadan çalışır hale getirildi. Kayıt olma (`signup`), giriş (`login`), rol seçimi ve profil yönetimi kusursuz bağlandı.
 
+#### 2. Header İzolasyonu (`ClientHeader.tsx`)
+- `/giris`, `/kayit-ol` ve `/profilim` rotaları `ClientHeader.tsx` bastırma listesine eklendi. Ana ajans başlığının bu sayfalarda görünmesi engellendi.
+
+#### 3. Form Girdi ve Buton Açık Tema Kontrastı (`ItemSepetiInput.tsx` & `/giris/page.tsx`)
+- `ItemSepetiInput.tsx`: Girdilerin açık modda koyu/saydam görünmesine yol açan `bg-black/10 border-[#282C3A]` stili, ferah ve temiz `bg-white dark:bg-black/25 border-[#DCDDE1] dark:border-[#282C3A] text-[#17191F] dark:text-[#EDEEF2]` yapısına çevrildi.
+- Hızlı Demo Girişi butonlarına `bg-gray-50 dark:bg-black/20 hover:bg-[#D99532]/5` zemin ve kontrastlı kenarlıklar eklenerek butonların netliği artırıldı.
+
+#### 4. Doğrulama
+- `npx tsc --noEmit` sıfır hata ile geçti.
+- 188+ platform testi %100 başarıyla tamamlandı.

@@ -37,9 +37,8 @@ export default async function ItemSepetiHomePage() {
   }));
 
   return (
-    <ItemSepetiAuthProvider>
-      <ItemSepetiThemeProvider>
-        <div className="flex flex-col min-h-screen">
+    <ItemSepetiThemeProvider>
+      <div className="flex flex-col min-h-screen">
           <ItemSepetiHeader />
 
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-12">
@@ -121,6 +120,5 @@ export default async function ItemSepetiHomePage() {
         <ItemSepetiLiveSupportWidget />
       </div>
     </ItemSepetiThemeProvider>
-  </ItemSepetiAuthProvider>
   );
 }

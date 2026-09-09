@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ItemSepetiThemeMode } from "@/styles/itemsepetiTokens";
+import { ItemSepetiAuthProvider } from "@/context/ItemSepetiAuthContext";
 
 interface ItemSepetiThemeContextType {
   theme: ItemSepetiThemeMode;
@@ -49,18 +50,20 @@ export function ItemSepetiThemeProvider({ children }: { children: React.ReactNod
 
   return (
     <ItemSepetiThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
-      <div
-        data-itemsepeti-theme={mounted ? theme : "light"}
-        className={`min-h-screen w-full font-sans transition-colors duration-150 ${
-          theme === "dark" ? "itemsepeti-dark" : "itemsepeti-light"
-        }`}
-        style={{
-          backgroundColor: theme === "dark" ? "#12141A" : "#F7F7F5",
-          color: theme === "dark" ? "#EDEEF2" : "#17191F",
-        }}
-      >
-        {children}
-      </div>
+      <ItemSepetiAuthProvider>
+        <div
+          data-itemsepeti-theme={mounted ? theme : "light"}
+          className={`min-h-screen w-full font-sans transition-colors duration-150 ${
+            theme === "dark" ? "itemsepeti-dark" : "itemsepeti-light"
+          }`}
+          style={{
+            backgroundColor: theme === "dark" ? "#12141A" : "#F7F7F5",
+            color: theme === "dark" ? "#EDEEF2" : "#17191F",
+          }}
+        >
+          {children}
+        </div>
+      </ItemSepetiAuthProvider>
     </ItemSepetiThemeContext.Provider>
   );
 }

@@ -147,7 +147,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => handleDemoLogin("buyer")}
-                className="flex flex-col items-center justify-center p-2 rounded-[8px] border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors text-center text-xs font-semibold cursor-pointer"
+                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4 mb-1 text-[#D99532]" />
                 <span>Alıcı</span>
@@ -155,7 +155,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => handleDemoLogin("seller")}
-                className="flex flex-col items-center justify-center p-2 rounded-[8px] border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors text-center text-xs font-semibold cursor-pointer"
+                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
               >
                 <UserCheck className="w-4 h-4 mb-1 text-emerald-500" />
                 <span>Satıcı</span>
@@ -163,7 +163,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => handleDemoLogin("admin")}
-                className="flex flex-col items-center justify-center p-2 rounded-[8px] border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] transition-colors text-center text-xs font-semibold cursor-pointer"
+                className="flex flex-col items-center justify-center p-2.5 rounded-[8px] bg-gray-50 dark:bg-black/20 border border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] hover:bg-[#D99532]/5 transition-colors text-center text-xs font-semibold cursor-pointer"
               >
                 <ShieldAlert className="w-4 h-4 mb-1 text-blue-500" />
                 <span>Admin</span>
