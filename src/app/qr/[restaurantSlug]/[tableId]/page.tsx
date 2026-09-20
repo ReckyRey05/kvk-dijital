@@ -36,6 +36,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const { restaurantSlug, tableId } = resolvedParams;
 
   const {
+    restaurant: storeRestaurant,
     orders,
     tables,
     menuItems,
@@ -107,11 +108,14 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const [currency, setCurrency] = useState<MenuCurrency>("TRY");
   const t = DICTIONARY[lang];
 
+  // Active Restaurant with dynamic settings/features
+  const activeRestaurant = storeRestaurant || DEMO_RESTAURANT;
+
   // Current table
   const currentTable =
     tables.find((t) => t.id === tableId || t.tableNumber.toLowerCase() === tableId.toLowerCase()) || {
       id: tableId,
-      restaurantId: DEMO_RESTAURANT.id,
+      restaurantId: activeRestaurant.id,
       tableNumber: `Masa ${tableId.replace(/[^0-9]/g, "") || tableId}`,
       capacity: 4,
       status: "OCCUPIED" as const,
@@ -478,22 +482,50 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
       {/* Header */}
       <MenuHeader
-        restaurant={DEMO_RESTAURANT}
+        restaurant={activeRestaurant}
         table={currentTable}
         remainingMinutes={remainingMinutes}
-        onOpenWaiterCall={() => setIsWaiterModalOpen(true)}
+        onOpenWaiterCall={
+          activeRestaurant.settings.features?.enableWaiterCall !== false
+            ? () => setIsWaiterModalOpen(true)
+            : () => {}
+        }
         activeOrderCount={activeTableOrders.length}
         onOpenOrderTracker={() => setIsTrackerOpen(true)}
         lang={lang}
         onToggleLang={() => setLang((l) => (l === "TR" ? "EN" : "TR"))}
         currency={currency}
         onSelectCurrency={setCurrency}
-        onOpenSplitBill={() => setIsSplitBillOpen(true)}
-        onOpenFeedback={() => setIsFeedbackOpen(true)}
-        onOpenSpinWheel={() => setIsSpinWheelOpen(true)}
-        onOpenJukebox={() => setIsJukeboxOpen(true)}
-        onOpenGames={() => setIsGamesOpen(true)}
-        onOpenComplaint={() => setIsComplaintOpen(true)}
+        onOpenSplitBill={
+          activeRestaurant.settings.features?.enableSplitBill !== false
+            ? () => setIsSplitBillOpen(true)
+            : undefined
+        }
+        onOpenFeedback={
+          activeRestaurant.settings.features?.enableGoogleReview !== false
+            ? () => setIsFeedbackOpen(true)
+            : undefined
+        }
+        onOpenSpinWheel={
+          activeRestaurant.settings.features?.enableSpinWheel !== false
+            ? () => setIsSpinWheelOpen(true)
+            : undefined
+        }
+        onOpenJukebox={
+          activeRestaurant.settings.features?.enableJukebox !== false
+            ? () => setIsJukeboxOpen(true)
+            : undefined
+        }
+        onOpenGames={
+          activeRestaurant.settings.features?.enableTableGames !== false
+            ? () => setIsGamesOpen(true)
+            : undefined
+        }
+        onOpenComplaint={
+          activeRestaurant.settings.features?.enableManagerAlert !== false
+            ? () => setIsComplaintOpen(true)
+            : undefined
+        }
         tableBillTotal={currentTable.activeBillTotal}
         currentParticipant={currentParticipant}
         participantCount={participants.filter((p) => p.status === "APPROVED").length || 1}

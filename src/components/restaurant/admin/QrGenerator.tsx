@@ -11,19 +11,29 @@ interface QrGeneratorProps {
 }
 
 export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
-  const [selectedTable, setSelectedTable] = useState<Table>(tables[0]);
+  const [selectedTableId, setSelectedTableId] = useState<string>(tables[0]?.id || "");
   const [qrDataUrl, setQrDataUrl] = useState<string>("/restaurant/qr-demo.png");
   const [isCopied, setIsCopied] = useState(false);
 
+  // Safely find selected table or fallback to first available
+  const activeTable = tables.find((t) => t.id === selectedTableId) || tables[0] || {
+    id: "table_default",
+    restaurantId: restaurant.id,
+    tableNumber: "Masa 1",
+    capacity: 4,
+    status: "EMPTY" as const,
+    activeBillTotal: 0,
+  };
+
   // Construct target QR destination URL
   const qrTargetUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/qr/${restaurant.slug}/${selectedTable.id}`
-    : `https://kvkdijitalcozumler.com/qr/${restaurant.slug}/${selectedTable.id}`;
+    ? `${window.location.origin}/qr/${restaurant.slug}/${activeTable.id}`
+    : `https://kvkdijitalcozumler.com/qr/${restaurant.slug}/${activeTable.id}`;
 
   useEffect(() => {
     let isMounted = true;
-    if (typeof window !== "undefined") {
-      const target = `${window.location.origin}/qr/${restaurant.slug}/${selectedTable.id}`;
+    if (typeof window !== "undefined" && activeTable.id) {
+      const target = `${window.location.origin}/qr/${restaurant.slug}/${activeTable.id}`;
       QRCode.toDataURL(target, {
         width: 400,
         margin: 2,
@@ -44,7 +54,7 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
     return () => {
       isMounted = false;
     };
-  }, [selectedTable.id, restaurant.slug]);
+  }, [activeTable.id, restaurant.slug]);
 
   const handlePrintCard = () => {
     window.print();
@@ -53,7 +63,7 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
   const handleDownloadQr = () => {
     const a = document.createElement("a");
     a.href = qrDataUrl;
-    a.download = `QR_${restaurant.slug}_${selectedTable.tableNumber.replace(/\s+/g, "_")}.png`;
+    a.download = `QR_${restaurant.slug}_${activeTable.tableNumber.replace(/\s+/g, "_")}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -74,9 +84,9 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           {tables.map((t) => (
             <div
               key={t.id}
-              onClick={() => setSelectedTable(t)}
+              onClick={() => setSelectedTableId(t.id)}
               className={`p-3.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
-                selectedTable.id === t.id
+                activeTable.id === t.id
                   ? "bg-accent/15 border-accent text-white shadow-md shadow-accent/10"
                   : "bg-white/[0.02] border-white/5 text-foreground/70 hover:bg-white/[0.05]"
               }`}
@@ -143,7 +153,7 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           <div className="p-3 bg-neutral-50 rounded-2xl border-2 border-neutral-200 shadow-inner flex items-center justify-center">
             <img
               src={qrDataUrl}
-              alt={`QR Code ${selectedTable.tableNumber}`}
+              alt={`QR Code ${activeTable.tableNumber}`}
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = "/restaurant/qr-demo.png";
               }}
@@ -154,7 +164,7 @@ export default function QrGenerator({ restaurant, tables }: QrGeneratorProps) {
           {/* Table Number & Call to Action */}
           <div className="space-y-1">
             <div className="inline-block px-4 py-1 rounded-full bg-neutral-900 text-white font-extrabold text-xs tracking-wider uppercase">
-              {selectedTable.tableNumber}
+              {activeTable.tableNumber}
             </div>
             <p className="text-[11px] font-medium text-neutral-600 pt-1">
               Kameranızla okutarak menüyü inceleyebilir ve doğrudan sipariş verebilirsiniz.

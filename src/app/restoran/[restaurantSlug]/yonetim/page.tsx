@@ -11,6 +11,7 @@ import RecipeManager from "@/components/restaurant/admin/RecipeManager";
 import ComplaintsLog from "@/components/restaurant/admin/ComplaintsLog";
 import PlatformManager from "@/components/restaurant/admin/PlatformManager";
 import StaffManager from "@/components/restaurant/admin/StaffManager";
+import TableManager from "@/components/restaurant/admin/TableManager";
 import BossAuthModal from "@/components/restaurant/admin/BossAuthModal";
 import {
   Store,
@@ -30,6 +31,18 @@ import {
   Users,
   Lock,
   LogOut,
+  LayoutGrid,
+  Gamepad2,
+  Gift,
+  Music2,
+  Calculator,
+  Bell,
+  CreditCard,
+  Star,
+  AlertTriangle,
+  ToggleLeft,
+  ToggleRight,
+  Sparkles,
 } from "lucide-react";
 
 interface YonetimPageProps {
@@ -43,6 +56,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
   const { restaurantSlug } = resolvedParams;
 
   const {
+    restaurant,
     orders,
     menuItems,
     categories,
@@ -53,6 +67,8 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
     updateItemPrice,
     setCampaignDiscount,
     cancelCampaignDiscount,
+    updateRestaurantSettings,
+    toggleFeature,
   } = useRestaurantStore();
 
   // Boss Authentication State
@@ -74,16 +90,33 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
     setIsBossAuthenticated(false);
   };
 
-  const [activeTab, setActiveTab] = useState<"MENU" | "RECIPES" | "STAFF" | "COMPLAINTS" | "PLATFORMS" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
+  const [activeTab, setActiveTab] = useState<"MENU" | "TABLES" | "RECIPES" | "STAFF" | "COMPLAINTS" | "PLATFORMS" | "QR" | "ANALYTICS" | "SETTINGS">("MENU");
 
   // Restaurant Settings State
-  const [orderMode, setOrderMode] = useState(DEMO_RESTAURANT.settings.orderMode);
-  const [paymentMode, setPaymentMode] = useState(DEMO_RESTAURANT.settings.paymentMode);
-  const [sessionTimeout, setSessionTimeout] = useState(DEMO_RESTAURANT.settings.sessionTimeoutMinutes);
-  const [posType, setPosType] = useState(DEMO_RESTAURANT.settings.posIntegrationType);
+  const [orderMode, setOrderMode] = useState(restaurant.settings.orderMode);
+  const [paymentMode, setPaymentMode] = useState(restaurant.settings.paymentMode);
+  const [sessionTimeout, setSessionTimeout] = useState(restaurant.settings.sessionTimeoutMinutes);
+  const [posType, setPosType] = useState(restaurant.settings.posIntegrationType);
+  const [googleReviewUrl, setGoogleReviewUrl] = useState(restaurant.settings.googleReviewUrl || "");
   const [savedSuccess, setSavedSuccess] = useState(false);
 
+  // Sync settings when restaurant changes
+  useEffect(() => {
+    setOrderMode(restaurant.settings.orderMode);
+    setPaymentMode(restaurant.settings.paymentMode);
+    setSessionTimeout(restaurant.settings.sessionTimeoutMinutes);
+    setPosType(restaurant.settings.posIntegrationType);
+    setGoogleReviewUrl(restaurant.settings.googleReviewUrl || "");
+  }, [restaurant]);
+
   const handleSaveSettings = () => {
+    updateRestaurantSettings({
+      orderMode,
+      paymentMode,
+      sessionTimeoutMinutes: Number(sessionTimeout) || 15,
+      posIntegrationType: posType,
+      googleReviewUrl: googleReviewUrl.trim(),
+    });
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 2000);
   };
@@ -147,6 +180,18 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         >
           <UtensilsCrossed className="w-3.5 h-3.5" />
           <span>Menü & Stok</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("TABLES")}
+          className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+            activeTab === "TABLES"
+              ? "bg-accent text-black shadow-md shadow-accent/20"
+              : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-white"
+          }`}
+        >
+          <LayoutGrid className="w-3.5 h-3.5" />
+          <span>Masa & Bölüm ({tables.length})</span>
         </button>
 
         <button
@@ -252,6 +297,14 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
           />
         )}
 
+        {activeTab === "TABLES" && (
+          <TableManager
+            restaurant={restaurant}
+            tables={tables}
+            onSelectTableForQr={() => setActiveTab("QR")}
+          />
+        )}
+
         {activeTab === "RECIPES" && (
           <RecipeManager menuItems={menuItems} categories={categories} />
         )}
@@ -269,14 +322,14 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
         )}
 
         {activeTab === "QR" && (
-          <QrGenerator restaurant={DEMO_RESTAURANT} tables={tables} />
+          <QrGenerator restaurant={restaurant} tables={tables} />
         )}
 
         {activeTab === "ANALYTICS" && (
           <AnalyticsDashboard
             orders={orders}
             tables={tables}
-            restaurantName={DEMO_RESTAURANT.name}
+            restaurantName={restaurant.name}
           />
         )}
 
@@ -342,6 +395,223 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
                 <span className="text-[11px] sm:text-xs text-foreground/60 font-medium">
                   dakika sonra işlem yapılmazsa masadaki oturum düşer (Varsayılan: 15 Dk)
                 </span>
+              </div>
+            </div>
+
+            {/* QR Menü Özellik Açma / Kapatma (Feature Toggles) */}
+            <div className="space-y-3 pt-5 border-t border-white/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-accent" />
+                    <span>QR Menü & Müşteri Özellikleri (Aç / Kapat)</span>
+                  </label>
+                  <p className="text-[11px] text-foreground/50 mt-0.5">
+                    Müşterilerin masada görebileceği modülleri anında açıp kapatabilirsiniz.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* Feature 1: Oyun & İddia */}
+                <div
+                  onClick={() => toggleFeature("enableTableGames")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableTableGames !== false
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center">
+                      <Gamepad2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Masa Oyunları & İddia</h5>
+                      <p className="text-[10px] text-foreground/60">Zar, çark ve refleks yarışması</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableTableGames !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 2: İkram Çarkı */}
+                <div
+                  onClick={() => toggleFeature("enableSpinWheel")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableSpinWheel !== false
+                      ? "bg-amber-500/10 border-amber-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center">
+                      <Gift className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">İkram Çarkıfeleği</h5>
+                      <p className="text-[10px] text-foreground/60">Sadakat kuponu ve indirim çarkı</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableSpinWheel !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 3: Dijital Jukebox */}
+                <div
+                  onClick={() => toggleFeature("enableJukebox")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableJukebox !== false
+                      ? "bg-purple-500/10 border-purple-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center">
+                      <Music2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Dijital Müzik Kutusu</h5>
+                      <p className="text-[10px] text-foreground/60">Masadan şarkı oylama/isteme</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableJukebox !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 4: Masada Hesap Bölüştürme */}
+                <div
+                  onClick={() => toggleFeature("enableSplitBill")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableSplitBill !== false
+                      ? "bg-blue-500/10 border-blue-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center">
+                      <Calculator className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Hesap Bölüştürücü</h5>
+                      <p className="text-[10px] text-foreground/60">Kişi başı eşit veya ürün bazlı pay</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableSplitBill !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 5: Garson Çağırma */}
+                <div
+                  onClick={() => toggleFeature("enableWaiterCall")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableWaiterCall !== false
+                      ? "bg-rose-500/10 border-rose-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-300 flex items-center justify-center">
+                      <Bell className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Garson Çağrı Sistemi</h5>
+                      <p className="text-[10px] text-foreground/60">Hesap, su, kül tablası talepleri</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableWaiterCall !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 6: Masada Online Ödeme */}
+                <div
+                  onClick={() => toggleFeature("enableOnlinePayment")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableOnlinePayment !== false
+                      ? "bg-teal-500/10 border-teal-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center">
+                      <CreditCard className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Masada Online Ödeme</h5>
+                      <p className="text-[10px] text-foreground/60">3D Secure ile anında ödeme</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableOnlinePayment !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 7: Google Review Booster */}
+                <div
+                  onClick={() => toggleFeature("enableGoogleReview")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableGoogleReview !== false
+                      ? "bg-yellow-500/10 border-yellow-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-yellow-500/20 text-yellow-300 flex items-center justify-center">
+                      <Star className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Google Puanlama Yönlendirme</h5>
+                      <p className="text-[10px] text-foreground/60">5 yıldızda Haritalara yönlendir</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableGoogleReview !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
+
+                {/* Feature 8: Müdüre Acil Şikayet */}
+                <div
+                  onClick={() => toggleFeature("enableManagerAlert")}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                    restaurant.settings.features?.enableManagerAlert !== false
+                      ? "bg-red-500/10 border-red-500/30 text-white"
+                      : "bg-white/[0.02] border-white/10 text-foreground/50 opacity-60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-red-500/20 text-red-300 flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-xs">Müdüre Acil Şikayet & Talep</h5>
+                      <p className="text-[10px] text-foreground/60">Yönetici paneline anlık kırmızı alarm</p>
+                    </div>
+                  </div>
+                  {restaurant.settings.features?.enableManagerAlert !== false ? (
+                    <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[10px] font-black uppercase">Açık</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-foreground/50 text-[10px] font-bold uppercase">Kapalı</span>
+                  )}
+                </div>
               </div>
             </div>
 

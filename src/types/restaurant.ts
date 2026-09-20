@@ -49,6 +49,18 @@ export interface SongRequest {
   createdAt: string;
 }
 
+export interface RestaurantFeatures {
+  enableTableGames: boolean;     // 🎮 Masa Oyunları & İddia Modu
+  enableSpinWheel: boolean;      // 🎡 İkram Çarkıfeleği
+  enableJukebox: boolean;        // 🎵 Müzik Kutusu / Şarkı İsteği
+  enableSplitBill: boolean;      // 🧮 Masada Hesap Bölüştürme
+  enableWaiterCall: boolean;     // 🔔 Garson Çağırma & Ara İstekler
+  enableOnlinePayment: boolean;  // 💳 Masada Online Ödeme (3D Secure)
+  enableGoogleReview: boolean;   // ⭐ Google Puanlama & İnceleme Yönlendirmesi
+  enableManagerAlert: boolean;   // 🚨 Müdüre Acil Şikayet & VIP Bildirimi
+  enableGroupOrdering: boolean;  // 👥 Çok Kullanıcılı Masa / Grup Siparişi
+}
+
 export interface RestaurantSettings {
   orderMode: OrderMode;
   paymentMode: PaymentMode;
@@ -66,6 +78,7 @@ export interface RestaurantSettings {
   coverImage?: string;
   address?: string;
   phone?: string;
+  features?: RestaurantFeatures;
 }
 
 export interface CustomerFeedback {

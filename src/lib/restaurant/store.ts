@@ -25,8 +25,12 @@ import {
   StaffPermissions,
   StaffMember,
   BossSecuritySettings,
+  Restaurant,
+  RestaurantFeatures,
+  RestaurantSettings,
 } from "@/types/restaurant";
 import {
+  DEMO_RESTAURANT,
   DEMO_TABLES,
   DEMO_MENU_ITEMS,
   DEMO_CATEGORIES,
@@ -97,6 +101,7 @@ let globalTableTransfers: Record<string, { toTableId: string; toTableNumber: str
 let globalStaffMembers: StaffMember[] = [...DEMO_STAFF_MEMBERS];
 let globalRolePermissions: Record<StaffRole, StaffPermissions> = { ...DEFAULT_ROLE_PERMISSIONS };
 let globalBossSecurity: BossSecuritySettings = { ...DEMO_BOSS_SECURITY };
+let globalRestaurant: Restaurant = { ...DEMO_RESTAURANT };
 
 const listeners = new Set<() => void>();
 let broadcastChannel: BroadcastChannel | null = null;
@@ -132,6 +137,7 @@ function saveToStorage() {
     localStorage.setItem("cg_staff_members", JSON.stringify(globalStaffMembers));
     localStorage.setItem("cg_role_permissions", JSON.stringify(globalRolePermissions));
     localStorage.setItem("cg_boss_security", JSON.stringify(globalBossSecurity));
+    localStorage.setItem("cg_restaurant", JSON.stringify(globalRestaurant));
   } catch (e) {
     console.error("Storage save error", e);
   }
@@ -213,6 +219,37 @@ function loadFromStorage() {
 
     const bossSecurity = localStorage.getItem("cg_boss_security");
     if (bossSecurity) globalBossSecurity = JSON.parse(bossSecurity);
+
+    const restaurant = localStorage.getItem("cg_restaurant");
+    if (restaurant) {
+      try {
+        const parsedRest = JSON.parse(restaurant);
+        globalRestaurant = {
+          ...DEMO_RESTAURANT,
+          ...parsedRest,
+          settings: {
+            ...DEMO_RESTAURANT.settings,
+            ...(parsedRest.settings || {}),
+            features: {
+              ...(DEMO_RESTAURANT.settings.features || {
+                enableTableGames: true,
+                enableSpinWheel: true,
+                enableJukebox: true,
+                enableSplitBill: true,
+                enableWaiterCall: true,
+                enableOnlinePayment: true,
+                enableGoogleReview: true,
+                enableManagerAlert: true,
+                enableGroupOrdering: true,
+              }),
+              ...(parsedRest.settings?.features || {}),
+            },
+          },
+        };
+      } catch {
+        // ignore
+      }
+    }
   } catch (e) {
     console.error("Storage load error", e);
   }
@@ -1282,6 +1319,89 @@ export function useRestaurantStore() {
 
     restoreDemoStaff: () => {
       globalStaffMembers = [...DEMO_STAFF_MEMBERS];
+      notifyAll();
+    },
+
+    // Restaurant & Feature Management
+    restaurant: globalRestaurant,
+
+    updateRestaurantSettings: (settingsUpdates: Partial<RestaurantSettings>) => {
+      globalRestaurant = {
+        ...globalRestaurant,
+        settings: {
+          ...globalRestaurant.settings,
+          ...settingsUpdates,
+          features: {
+            ...(globalRestaurant.settings.features || {
+              enableTableGames: true,
+              enableSpinWheel: true,
+              enableJukebox: true,
+              enableSplitBill: true,
+              enableWaiterCall: true,
+              enableOnlinePayment: true,
+              enableGoogleReview: true,
+              enableManagerAlert: true,
+              enableGroupOrdering: true,
+            }),
+            ...(settingsUpdates.features || {}),
+          },
+        },
+      };
+      notifyAll();
+    },
+
+    toggleFeature: (featureKey: keyof RestaurantFeatures) => {
+      const currentFeatures = globalRestaurant.settings.features || {
+        enableTableGames: true,
+        enableSpinWheel: true,
+        enableJukebox: true,
+        enableSplitBill: true,
+        enableWaiterCall: true,
+        enableOnlinePayment: true,
+        enableGoogleReview: true,
+        enableManagerAlert: true,
+        enableGroupOrdering: true,
+      };
+      const updated = {
+        ...currentFeatures,
+        [featureKey]: !currentFeatures[featureKey],
+      };
+      globalRestaurant = {
+        ...globalRestaurant,
+        settings: {
+          ...globalRestaurant.settings,
+          features: updated,
+        },
+      };
+      notifyAll();
+    },
+
+    // Table Management (Add, Edit, Delete, Section Filter)
+    addTable: (tableData: { tableNumber: string; section?: string; capacity?: number }) => {
+      const newTable: Table = {
+        id: `table_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        restaurantId: globalRestaurant.id,
+        tableNumber: tableData.tableNumber.trim(),
+        section: tableData.section?.trim() || "Genel Salon",
+        capacity: tableData.capacity || 4,
+        status: "EMPTY",
+        activeBillTotal: 0,
+      };
+      globalTables = [...globalTables, newTable];
+      notifyAll();
+      return newTable;
+    },
+
+    updateTable: (tableId: string, updates: Partial<Table>) => {
+      globalTables = globalTables.map((t) => (t.id === tableId ? { ...t, ...updates } : t));
+      notifyAll();
+    },
+
+    deleteTable: (tableId: string) => {
+      globalTables = globalTables.filter((t) => t.id !== tableId);
+      delete globalTableParticipants[tableId];
+      delete globalTableGroupSettings[tableId];
+      delete globalSharedCarts[tableId];
       notifyAll();
     },
   };
