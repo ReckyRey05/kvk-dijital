@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Restaurant, Table, MenuLanguage, MenuCurrency, TableParticipant } from "@/types/restaurant";
-import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check, AlertTriangle, X } from "lucide-react";
+import { Clock, ShieldCheck, Bell, ReceiptText, Sparkles, Gift, Music2, Calculator, Star, Users, Crown, User, Edit3, Check, AlertTriangle, X, Gamepad2 } from "lucide-react";
 import { formatPrice } from "@/lib/restaurant/currency";
 
 interface MenuHeaderProps {
@@ -20,6 +20,7 @@ interface MenuHeaderProps {
   onOpenFeedback?: () => void;
   onOpenSpinWheel?: () => void;
   onOpenJukebox?: () => void;
+  onOpenGames?: () => void;
   onOpenComplaint?: () => void;
   // Multi-User Group & Table Balance
   tableBillTotal?: number;
@@ -44,6 +45,7 @@ export default function MenuHeader({
   onOpenFeedback,
   onOpenSpinWheel,
   onOpenJukebox,
+  onOpenGames,
   onOpenComplaint,
   tableBillTotal = 0,
   currentParticipant,
@@ -208,6 +210,18 @@ export default function MenuHeader({
           </div>
 
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {/* Table Games / Challenge Hub */}
+            {onOpenGames && (
+              <button
+                onClick={onOpenGames}
+                className="px-2 sm:px-2.5 py-1 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[9px] sm:text-[10px] font-extrabold flex items-center gap-1 transition-colors cursor-pointer shrink-0 animate-pulse hover:animate-none"
+                title="Masa Oyunları & İddia Kapışması"
+              >
+                <Gamepad2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <span>Oyun & İddia</span>
+              </button>
+            )}
+
             {/* Spin-the-wheel */}
             {onOpenSpinWheel && (
               <button

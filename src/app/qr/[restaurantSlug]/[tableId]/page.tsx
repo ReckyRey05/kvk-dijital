@@ -20,6 +20,7 @@ import OnlinePaymentModal from "@/components/restaurant/qr/OnlinePaymentModal";
 import SpinWheelModal from "@/components/restaurant/qr/SpinWheelModal";
 import JukeboxModal from "@/components/restaurant/qr/JukeboxModal";
 import ComplaintModal from "@/components/restaurant/qr/ComplaintModal";
+import TableGamesModal from "@/components/restaurant/qr/TableGamesModal";
 import { Search, ShoppingBag, ArrowRight, ShieldCheck, AlertTriangle, Calculator, Star, ArrowRightLeft, Users, UserCheck, UserX, Crown, CheckCircle2, Clock } from "lucide-react";
 
 interface QrMenuPageProps {
@@ -229,6 +230,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const [isOnlinePaymentOpen, setIsOnlinePaymentOpen] = useState(false);
   const [isSpinWheelOpen, setIsSpinWheelOpen] = useState(false);
   const [isJukeboxOpen, setIsJukeboxOpen] = useState(false);
+  const [isGamesOpen, setIsGamesOpen] = useState(false);
   const [isComplaintOpen, setIsComplaintOpen] = useState(false);
 
   // 15-Minute Dynamic Session Timer
@@ -490,6 +492,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onOpenFeedback={() => setIsFeedbackOpen(true)}
         onOpenSpinWheel={() => setIsSpinWheelOpen(true)}
         onOpenJukebox={() => setIsJukeboxOpen(true)}
+        onOpenGames={() => setIsGamesOpen(true)}
         onOpenComplaint={() => setIsComplaintOpen(true)}
         tableBillTotal={currentTable.activeBillTotal}
         currentParticipant={currentParticipant}
@@ -668,6 +671,16 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         isOpen={isJukeboxOpen}
         onClose={() => setIsJukeboxOpen(false)}
         tableNumber={currentTable.tableNumber}
+      />
+
+      {/* Masa İddia & Eğlenceli Oyunlar Modal */}
+      <TableGamesModal
+        isOpen={isGamesOpen}
+        onClose={() => setIsGamesOpen(false)}
+        tableNumber={currentTable.tableNumber}
+        participants={participants.filter((p) => p.status === "APPROVED")}
+        currentParticipant={currentParticipant}
+        lang={lang}
       />
 
       {/* Müdüre Şikayet & Acil Talep İletme Modal */}
