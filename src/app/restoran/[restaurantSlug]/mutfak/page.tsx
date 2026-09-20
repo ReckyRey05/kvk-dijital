@@ -18,7 +18,7 @@ export default function MutfakKdsPage({ params }: MutfakPageProps) {
   const resolvedParams = use(params);
   const { restaurantSlug } = resolvedParams;
 
-  const { orders, updateOrderStatus } = useRestaurantStore();
+  const { restaurant, orders, updateOrderStatus } = useRestaurantStore();
   const [filterStatus, setFilterStatus] = useState<"ACTIVE" | "ALL">("ACTIVE");
 
   // Filter kitchen tickets
@@ -47,7 +47,7 @@ export default function MutfakKdsPage({ params }: MutfakPageProps) {
                 Canlı KDS
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-foreground/50">{DEMO_RESTAURANT.name} - Mutfak İstasyonu</p>
+            <p className="text-[11px] sm:text-xs text-foreground/50">{restaurant?.name || "Aura Lounge & Bistro"} - Mutfak İstasyonu</p>
           </div>
         </div>
 

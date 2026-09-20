@@ -41,6 +41,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
   const { restaurantSlug } = resolvedParams;
 
   const {
+    restaurant,
     orders,
     tables,
     waiterCalls,
@@ -72,7 +73,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
   const activeDeliveryCount = deliveryOrders.filter((o) => o.status === "PENDING" || o.status === "PREPARING").length;
   const totalLiveRevenue = tables.reduce((sum, t) => sum + (t.activeBillTotal || 0), 0);
 
-  const zReportData = generateZReport(orders, tables, DEMO_RESTAURANT.name);
+  const zReportData = generateZReport(orders, tables, restaurant?.name || "Aura Lounge & Bistro");
 
   // Sections
   const sections = ["ALL", ...Array.from(new Set(tables.map((t) => t.section).filter(Boolean)))];
@@ -158,7 +159,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-extrabold text-white truncate">{DEMO_RESTAURANT.name}</h1>
+                <h1 className="text-sm sm:text-base font-extrabold text-white truncate">{restaurant?.name || "Aura Lounge & Bistro"}</h1>
                 <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-accent/20 text-accent font-bold shrink-0">
                   Canlı POS
                 </span>
@@ -366,6 +367,7 @@ export default function KasaPosPage({ params }: KasaPageProps) {
               tableOrders={selectedTableOrders}
               allTables={tables}
               participants={tableParticipants[selectedTable.id] || []}
+              restaurantName={restaurant?.name}
               onClose={() => setSelectedTableId(null)}
               onCloseBill={closeTableBill}
               onTransferTable={transferTable}

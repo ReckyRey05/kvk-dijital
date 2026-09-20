@@ -11,6 +11,7 @@ interface BillManagerProps {
   tableOrders: Order[];
   allTables?: Table[];
   participants?: TableParticipant[];
+  restaurantName?: string;
   onClose: () => void;
   onCloseBill: (tableId: string) => void;
   onTransferTable?: (fromTableId: string, toTableId: string) => void;
@@ -23,6 +24,7 @@ export default function BillManager({
   tableOrders,
   allTables = [],
   participants = [],
+  restaurantName,
   onClose,
   onCloseBill,
   onTransferTable,
@@ -37,7 +39,7 @@ export default function BillManager({
 
   const handlePrintReceipt = () => {
     if (tableOrders.length === 0) return;
-    const receiptText = formatEscPosReceipt(tableOrders[0], DEMO_RESTAURANT.name);
+    const receiptText = formatEscPosReceipt(tableOrders[0], restaurantName || DEMO_RESTAURANT.name);
     // In real environment, sends to local print daemon or window.print()
     const printWindow = window.open("", "_blank");
     if (printWindow) {

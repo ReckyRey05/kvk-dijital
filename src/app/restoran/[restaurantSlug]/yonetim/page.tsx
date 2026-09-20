@@ -131,7 +131,7 @@ export default function RestaurantYonetimPage({ params }: YonetimPageProps) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-sm sm:text-base font-extrabold text-white">{DEMO_RESTAURANT.name}</h1>
+              <h1 className="text-sm sm:text-base font-extrabold text-white">{restaurant?.name || "Aura Lounge & Bistro"}</h1>
               <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-foreground/70 font-semibold shrink-0">
                 Yönetim
               </span>

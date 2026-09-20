@@ -297,12 +297,12 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
     const newOrder = {
       id: `ord_${Date.now().toString().slice(-6)}`,
-      restaurantId: DEMO_RESTAURANT.id,
+      restaurantId: activeRestaurant.id,
       tableId: currentTable.id,
       tableNumber: currentTable.tableNumber,
       sessionToken: `sess_${Date.now()}`,
       status:
-        DEMO_RESTAURANT.settings.orderMode === "DIRECT_KITCHEN"
+        activeRestaurant.settings.orderMode === "DIRECT_KITCHEN"
           ? ("PREPARING" as const)
           : ("PENDING_CONFIRMATION" as const),
       items: cartItems,
@@ -326,7 +326,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
   const handleSendWaiterCall = (type: WaiterCallType, message?: string) => {
     callWaiter({
       id: `call_${Date.now()}`,
-      restaurantId: DEMO_RESTAURANT.id,
+      restaurantId: activeRestaurant.id,
       tableId: currentTable.id,
       tableNumber: currentTable.tableNumber,
       type,
@@ -431,7 +431,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
             <div className="space-y-2">
               <h2 className="text-2xl font-black text-white tracking-tight">Afiyet Olsun! 👋</h2>
               <p className="text-xs text-foreground/70 leading-relaxed">
-                Hesabınız başarıyla ödendi ve masa oturumunuz tamamlandı. {DEMO_RESTAURANT.name}&apos;u tercih ettiğiniz için teşekkür ederiz.
+                Hesabınız başarıyla ödendi ve masa oturumunuz tamamlandı. {activeRestaurant.name}&apos;u tercih ettiğiniz için teşekkür ederiz.
               </p>
             </div>
 
@@ -623,7 +623,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
 
       {/* Cart Drawer */}
       <CartDrawer
-        restaurant={DEMO_RESTAURANT}
+        restaurant={activeRestaurant}
         tableNumber={currentTable.tableNumber}
         items={cartItems}
         isOpen={isCartOpen}
@@ -673,7 +673,7 @@ export default function QrMenuPage({ params }: QrMenuPageProps) {
         onClose={() => setIsFeedbackOpen(false)}
         tableNumber={currentTable.tableNumber}
         lang={lang}
-        googleReviewUrl={DEMO_RESTAURANT.settings.googleReviewUrl}
+        googleReviewUrl={activeRestaurant.settings.googleReviewUrl}
       />
 
       {/* Masada Online Ödeme (3D Secure) Modal */}
