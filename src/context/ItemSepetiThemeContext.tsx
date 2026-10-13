@@ -57,8 +57,8 @@ export function ItemSepetiThemeProvider({ children }: { children: React.ReactNod
             theme === "dark" ? "itemsepeti-dark" : "itemsepeti-light"
           }`}
           style={{
-            backgroundColor: theme === "dark" ? "#12141A" : "#F7F7F5",
-            color: theme === "dark" ? "#EDEEF2" : "#17191F",
+            backgroundColor: theme === "dark" ? "#101317" : "#F7F8FA",
+            color: theme === "dark" ? "#EDEEF2" : "#15191E",
           }}
         >
           {children}

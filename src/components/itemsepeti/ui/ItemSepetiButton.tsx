@@ -22,9 +22,9 @@ export default function ItemSepetiButton({
   style,
   ...props
 }: ButtonProps) {
-  // Purposeful design token radiuses: 10px for buttons
+  // Purposeful design token radiuses: 8px for buttons
   const baseClasses =
-    "inline-flex items-center justify-center font-medium rounded-[10px] transition-all select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
+    "inline-flex items-center justify-center font-medium rounded-[8px] transition-all select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
 
   const sizeClasses = {
     sm: "h-9 px-3 text-xs gap-1.5",
@@ -34,23 +34,23 @@ export default function ItemSepetiButton({
 
   const variantStyles: Record<ItemSepetiButtonVariant, React.CSSProperties> = {
     primary: {
-      backgroundColor: "#E8A33D",
-      color: "#12141A",
+      backgroundColor: "#0F625C",
+      color: "#FFFFFF",
       fontWeight: 600,
     },
     secondary: {
-      backgroundColor: "rgba(148, 152, 166, 0.12)",
+      backgroundColor: "rgba(105, 113, 125, 0.08)",
       color: "inherit",
-      border: "1px solid rgba(148, 152, 166, 0.25)",
+      border: "1px solid rgba(105, 113, 125, 0.2)",
     },
     ghost: {
       backgroundColor: "transparent",
       color: "inherit",
     },
     danger: {
-      backgroundColor: "rgba(248, 113, 113, 0.15)",
-      color: "#F87171",
-      border: "1px solid rgba(248, 113, 113, 0.3)",
+      backgroundColor: "rgba(239, 68, 68, 0.12)",
+      color: "#EF4444",
+      border: "1px solid rgba(239, 68, 68, 0.25)",
     },
   };
 

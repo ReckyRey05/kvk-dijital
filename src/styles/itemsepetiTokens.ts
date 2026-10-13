@@ -7,56 +7,56 @@
 export const itemsepetiTokens = {
   defaultTheme: "light",
   colors: {
-    // Dark Theme (Optional toggle)
+    // Dark Theme (Clean, subtle slate dark)
     dark: {
-      background: "#12141A",
-      surface: "#1B1E27",
-      surfaceElevated: "#232834",
-      surfaceHover: "#2C3140",
-      border: "#282C3A",
-      borderSubtle: "#1F232E",
+      background: "#101317",
+      surface: "#181C22",
+      surfaceElevated: "#20252D",
+      surfaceHover: "#262D36",
+      border: "#2A313C",
+      borderSubtle: "#1E242C",
       text: "#EDEEF2",
-      textMuted: "#9498A6",
-      textSubtle: "#676B79",
-      accent: "#E8A33D",
-      accentHover: "#D6932E",
-      accentMuted: "rgba(232, 163, 61, 0.12)",
-      success: "#34D399",
-      successMuted: "rgba(52, 211, 153, 0.12)",
-      warning: "#FBBF24",
-      warningMuted: "rgba(251, 191, 36, 0.12)",
-      danger: "#F87171",
-      dangerMuted: "rgba(248, 113, 113, 0.12)",
+      textMuted: "#8E97A4",
+      textSubtle: "#626A76",
+      accent: "#168B83",
+      accentHover: "#11736C",
+      accentMuted: "rgba(22, 139, 131, 0.14)",
+      success: "#10B981",
+      successMuted: "rgba(16, 185, 129, 0.12)",
+      warning: "#F59E0B",
+      warningMuted: "rgba(245, 158, 11, 0.12)",
+      danger: "#EF4444",
+      dangerMuted: "rgba(239, 68, 68, 0.12)",
     },
-    // Light Theme (Warm, tactile, player-market primary)
+    // Light Theme (Clean, reliable, professional marketplace primary)
     light: {
-      background: "#F7F7F5",
+      background: "#F7F8FA",
       surface: "#FFFFFF",
       surfaceElevated: "#FFFFFF",
-      surfaceHover: "#F0F1F3",
-      border: "#DCDDE1",
-      borderSubtle: "#E6E7EA",
-      text: "#17191F",
-      textMuted: "#626772",
-      textSubtle: "#8C919D",
-      accent: "#D99532",
-      accentHover: "#C48325",
-      accentMuted: "rgba(217, 149, 50, 0.12)",
-      success: "#059669",
-      successMuted: "rgba(5, 150, 105, 0.10)",
+      surfaceHover: "#F0F4F3",
+      border: "#E5E8EB",
+      borderSubtle: "#EEF0F2",
+      text: "#15191E",
+      textMuted: "#69717D",
+      textSubtle: "#8D96A3",
+      accent: "#0F625C",
+      accentHover: "#0C4F4A",
+      accentMuted: "rgba(15, 98, 92, 0.10)",
+      success: "#0D8259",
+      successMuted: "rgba(13, 130, 89, 0.10)",
       warning: "#D97706",
       warningMuted: "rgba(217, 119, 6, 0.10)",
       danger: "#DC2626",
       dangerMuted: "rgba(220, 38, 38, 0.10)",
     },
   },
-  // Purposeful, differentiated border radiuses
+  // Purposeful, disciplined 8-12px radiuses
   radius: {
-    badge: "6px",
+    badge: "5px",
     control: "8px",     // small controls, inputs, dropdown items
-    button: "10px",    // buttons
-    card: "14px",      // listing cards, surfaces
-    container: "18px", // large container shells, modal windows
+    button: "8px",     // buttons
+    card: "10px",      // listing cards, surfaces (8-12px as requested)
+    container: "12px", // large container shells, modal windows
   },
   typography: {
     fontSans: "var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
@@ -72,21 +72,21 @@ export type ItemSepetiThemeMode = "dark" | "light";
 
 export const itemsepetiColorSchemes = {
   light: {
-    bg: "#F7F7F5",
+    bg: "#F7F8FA",
     surface: "#FFFFFF",
-    surfaceHover: "#F0F1F3",
-    border: "#DCDDE1",
-    text: "#17191F",
-    textMuted: "#626772",
-    accent: "#D99532",
+    surfaceHover: "#F0F4F3",
+    border: "#E5E8EB",
+    text: "#15191E",
+    textMuted: "#69717D",
+    accent: "#0F625C",
   },
   dark: {
-    bg: "#12141A",
-    surface: "#161921",
-    surfaceHover: "#1F232E",
-    border: "#282C3A",
+    bg: "#101317",
+    surface: "#181C22",
+    surfaceHover: "#262D36",
+    border: "#2A313C",
     text: "#EDEEF2",
-    textMuted: "#9498A6",
-    accent: "#D99532",
+    textMuted: "#8E97A4",
+    accent: "#168B83",
   },
 } as const;

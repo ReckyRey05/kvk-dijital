@@ -95,11 +95,11 @@ export default function ItemSepetiFilterBar({
     <>
       {/* DESKTOP & MOBILE TOP BAR */}
       <div
-        className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-[10px] border text-xs"
+        className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-[8px] border text-xs"
         style={{
-          backgroundColor: isDark ? "rgba(27, 30, 39, 0.4)" : "#FFFFFF",
-          borderColor: isDark ? "#282C3A" : "#DCDDE1",
-          color: isDark ? "#9498A6" : "#626772",
+          backgroundColor: isDark ? "rgba(24, 28, 34, 0.6)" : "#FFFFFF",
+          borderColor: isDark ? "#2A313C" : "#E5E8EB",
+          color: isDark ? "#8E97A4" : "#69717D",
         }}
       >
         {/* LEFT: FILTER BUTTON (MOBILE) + ACTIVE SUMMARY */}
@@ -107,7 +107,7 @@ export default function ItemSepetiFilterBar({
           <button
             type="button"
             onClick={() => setMobileDrawerOpen(true)}
-            className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#E8A33D] text-[#12141A] font-semibold"
+            className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#0F625C] text-white font-semibold cursor-pointer"
           >
             <Filter className="w-3.5 h-3.5" />
             <span>Filtrele</span>
@@ -123,12 +123,12 @@ export default function ItemSepetiFilterBar({
                   setSelectedCategory(e.target.value);
                   applyFilters({ category: e.target.value || undefined });
                 }}
-                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#0F625C]"
                 style={{
-                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
-                  borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F4F3",
+                  borderColor: isDark ? "#2A313C" : "#E5E8EB",
                   borderWidth: "1px",
-                  color: isDark ? "#EDEEF2" : "#17191F",
+                  color: isDark ? "#EDEEF2" : "#15191E",
                 }}
               >
                 <option value="">Tüm Kategoriler</option>
@@ -148,12 +148,12 @@ export default function ItemSepetiFilterBar({
                   setSelectedServer(e.target.value);
                   applyFilters({ server: e.target.value || undefined });
                 }}
-                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+                className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#0F625C]"
                 style={{
-                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
-                  borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+                  backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F4F3",
+                  borderColor: isDark ? "#2A313C" : "#E5E8EB",
                   borderWidth: "1px",
-                  color: isDark ? "#EDEEF2" : "#17191F",
+                  color: isDark ? "#EDEEF2" : "#15191E",
                 }}
               >
                 <option value="">Tüm Sunucular</option>
@@ -174,18 +174,18 @@ export default function ItemSepetiFilterBar({
                   setInStockOnly(e.target.checked);
                   applyFilters({ inStock: e.target.checked ? "true" : undefined });
                 }}
-                className="rounded text-[#D99532] focus:ring-0"
-                style={{ borderColor: isDark ? "rgba(255,255,255,0.2)" : "#DCDDE1" }}
+                className="rounded text-[#0F625C] focus:ring-0"
+                style={{ borderColor: isDark ? "#2A313C" : "#E5E8EB" }}
               />
-              <span style={{ color: isDark ? "#9498A6" : "#626772" }}>Yalnızca Stoktakiler</span>
+              <span style={{ color: isDark ? "#8E97A4" : "#69717D" }}>Yalnızca Stoktakiler</span>
             </label>
 
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="text-xs font-medium hover:underline ml-2"
-                style={{ color: "#D99532" }}
+                className="text-xs font-semibold hover:underline ml-2"
+                style={{ color: "#0F625C" }}
               >
                 Temizle
               </button>
@@ -195,7 +195,7 @@ export default function ItemSepetiFilterBar({
 
         {/* RIGHT: SORT SELECTOR */}
         <div className="flex items-center gap-2 ml-auto">
-          <ArrowUpDown className="w-3.5 h-3.5" style={{ color: "#D99532" }} />
+          <ArrowUpDown className="w-3.5 h-3.5 text-[#0F625C] dark:text-[#168B83]" />
           <select
             value={selectedSort}
             onChange={(e) => {
@@ -203,12 +203,12 @@ export default function ItemSepetiFilterBar({
               applyFilters({ sort: e.target.value });
             }}
             aria-label="İlanları Sırala"
-            className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#D99532]"
+            className="rounded-[6px] px-2.5 py-1 text-inherit focus:outline-none focus:border-[#0F625C]"
             style={{
-              backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F1F3",
-              borderColor: isDark ? "rgba(255,255,255,0.1)" : "#DCDDE1",
+              backgroundColor: isDark ? "rgba(0,0,0,0.3)" : "#F0F4F3",
+              borderColor: isDark ? "#2A313C" : "#E5E8EB",
               borderWidth: "1px",
-              color: isDark ? "#EDEEF2" : "#17191F",
+              color: isDark ? "#EDEEF2" : "#15191E",
             }}
           >
             <option value="NEWEST">En Yeniler</option>

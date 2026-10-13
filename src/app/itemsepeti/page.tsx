@@ -65,50 +65,48 @@ export default async function ItemSepetiHomePage() {
       <div className="flex flex-col min-h-screen">
           <ItemSepetiHeader />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-12">
-          {/* FOCUSED HERO WITH PRIMARY SEARCH & BYNOGAME-STYLE GAMING PILLS */}
-          <section className="text-center max-w-3xl mx-auto space-y-5 pt-2 sm:pt-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#D99532]/10 text-[#D99532] border border-[#D99532]/20">
-              <span className="w-2 h-2 rounded-full bg-[#D99532] animate-pulse"></span>
-              <span>Türkiye&apos;nin Oyuncu Pazarı &bull; Güvenli Alışveriş</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-inherit leading-tight">
-              Oyun İçi İtem, Yang, Skin ve E-Pin Pazarı
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-8 sm:space-y-10">
+          {/* COMPACT WELCOME & PRIMARY SEARCH AREA */}
+          <section className="text-center max-w-2xl mx-auto space-y-4 pt-1 sm:pt-4">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-inherit leading-snug">
+              Aradığın oyun ürününü kolayca bul.
             </h1>
+            <p className="text-xs sm:text-sm text-[#69717D] dark:text-[#8E97A4]">
+              Oyun içi eşyalar, oyun paraları ve dijital kodlar tek bir pazarda.
+            </p>
 
-            {/* HERO PROMINENT SEARCH BAR */}
-            <div className="w-full">
+            {/* SINGLE PROMINENT SEARCH */}
+            <div className="w-full pt-1">
               <ItemSepetiHeaderSearch
-                placeholder="Oyun, skin, yang veya kod ara... (Ctrl+K)"
-                className="mx-auto shadow-sm"
+                placeholder="Oyun, item, e-pin veya satıcı ara... (Ctrl+K)"
+                className="mx-auto shadow-xs"
               />
             </div>
 
-            {/* INTEGRATED GAME SHELF DIRECTLY UNDER SEARCH */}
-            <div className="pt-2">
+            {/* POPULAR GAME PILLS COMPACT */}
+            <div className="pt-1">
               <ItemSepetiGameShelf />
             </div>
           </section>
 
-          {/* LIGHTWEIGHT BORDERLESS TRUST STRIP */}
+          {/* VERIFIED TRUST STRIP */}
           <ItemSepetiTrustStrip />
 
-          {/* EDITORIAL MARKET GRID (RHYTHM-BREAKING ASYMMETRIC SECTION) */}
+          {/* FEATURED MARKET LISTINGS */}
           {editorialItems.length > 0 && (
-            <section className="space-y-4">
-              <div className="flex items-center justify-between pb-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+            <section className="space-y-3.5">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E5E8EB] dark:border-[#2A313C]">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-sm bg-[#D99532]"></span>
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
-                    Öne Çıkan Pazarlar &bull; Günün Fırsatları
+                  <span className="w-2 h-2 rounded-full bg-[#0F625C] dark:bg-[#168B83]"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#15191E] dark:text-[#EDEEF2]">
+                    Öne Çıkan Ürünler
                   </h2>
                 </div>
                 <Link
-                  href="/kategori/cs2"
-                  className="text-xs text-[#E8A33D] hover:underline font-semibold"
+                  href="/oyunlar"
+                  className="text-xs text-[#0F625C] dark:text-[#168B83] hover:underline font-semibold"
                 >
-                  Tümünü Gör &rarr;
+                  Tüm Pazarlar &rarr;
                 </Link>
               </div>
 
@@ -116,18 +114,18 @@ export default async function ItemSepetiHomePage() {
             </section>
           )}
 
-          {/* REGULAR LISTINGS STREAM (BORDERLESS SURFACE CARDS) */}
-          {remainingListings.length > 0 && (
-            <section className="space-y-4">
-              <div className="flex items-center justify-between pb-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+          {/* NEWLY ADDED PLAYER LISTINGS */}
+          {remainingListings.length > 0 ? (
+            <section className="space-y-3.5">
+              <div className="flex items-center justify-between pb-2 border-b border-[#E5E8EB] dark:border-[#2A313C]">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-sm bg-[#D99532]"></span>
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#9498A6]">
-                    Son Eklenen Oyuncu İlanları
+                  <span className="w-2 h-2 rounded-full bg-[#0F625C] dark:bg-[#168B83]"></span>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#15191E] dark:text-[#EDEEF2]">
+                    Yeni Eklenen İlanlar
                   </h2>
                 </div>
-                <span className="text-xs text-[#9498A6] font-medium">
-                  {remainingListings.length} Canlı İlan
+                <span className="text-xs text-[#69717D] dark:text-[#8E97A4] font-medium">
+                  {remainingListings.length} Güncel İlan
                 </span>
               </div>
 
@@ -136,6 +134,16 @@ export default async function ItemSepetiHomePage() {
                   <ItemSepetiListingCard key={listing.id} listing={listing} />
                 ))}
               </div>
+            </section>
+          ) : (
+            <section className="p-8 text-center rounded-[10px] border border-[#E5E8EB] dark:border-[#2A313C] bg-white dark:bg-[#181C22]">
+              <p className="text-sm text-[#69717D] dark:text-[#8E97A4]">Henüz yeni ilan bulunmuyor.</p>
+              <Link
+                href="/ilan-ver"
+                className="mt-3 inline-flex items-center text-xs font-semibold text-[#0F625C] dark:text-[#168B83] hover:underline"
+              >
+                İlk ilanı sen oluştur &rarr;
+              </Link>
             </section>
           )}
         </main>

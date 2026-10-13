@@ -145,49 +145,43 @@ export default async function AllGamesAndCategoriesPage() {
       <div className="flex flex-col min-h-screen">
         <ItemSepetiHeader />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-10">
           {/* HEADER HERO */}
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#D99532]/10 text-[#D99532] border border-[#D99532]/20">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Genişletilmiş Oyun ve Dijital Ürün Kataloğu</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-inherit">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-inherit">
               Tüm Oyunlar & Kategoriler
             </h1>
 
-            <p className="text-sm text-[#9498A6]">
-              İtemSepeti güvencesiyle 55&apos;ten fazla popüler online oyun, MMORPG sunucuları,
-              e-pinler, cüzdan kodları ve dijital hediye kartları arasında dilediğiniz kategoriyi seçin.
+            <p className="text-xs sm:text-sm text-[#69717D] dark:text-[#8E97A4]">
+              {allGames.length} popüler oyun ve dijital kategoride güvenli emanet korumalı pazar.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-xs text-[#9498A6]">
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-1 text-xs text-[#69717D] dark:text-[#8E97A4]">
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-[#34D399]" /> 24 Saat Escrow Koruması
+                <ShieldCheck className="w-4 h-4 text-[#0D8259]" /> Emanet Koruması
               </span>
               <span>&bull;</span>
               <span className="flex items-center gap-1.5">
-                <Layers className="w-4 h-4 text-[#D99532]" /> {allGames.length} Aktif Oyun / Kategori
+                <Layers className="w-4 h-4 text-[#0F625C] dark:text-[#168B83]" /> {allGames.length} Aktif Kategori
               </span>
             </div>
           </div>
 
           {/* SECTIONS */}
-          <div className="space-y-12">
+          <div className="space-y-10">
             {sections.map((sec, idx) => (
-              <section key={idx} className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-black/[0.08] dark:border-white/[0.08] gap-2">
+              <section key={idx} className="space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2.5 border-b border-[#E5E8EB] dark:border-[#2A313C] gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-sm bg-[#D99532]" />
-                      <h2 className="text-base sm:text-lg font-bold text-inherit">
+                      <span className="w-2 h-2 rounded-full bg-[#0F625C] dark:bg-[#168B83]" />
+                      <h2 className="text-sm sm:text-base font-bold text-inherit">
                         {sec.title}
                       </h2>
                     </div>
-                    <p className="text-xs text-[#9498A6] mt-0.5">{sec.description}</p>
+                    <p className="text-xs text-[#69717D] dark:text-[#8E97A4] mt-0.5">{sec.description}</p>
                   </div>
-                  <span className="self-start sm:self-auto text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#D99532]/10 text-[#D99532] border border-[#D99532]/20">
+                  <span className="self-start sm:self-auto text-[11px] font-semibold px-2.5 py-0.5 rounded-[5px] bg-[#F0F4F3] dark:bg-[#20252D] text-[#0F625C] dark:text-[#168B83] border border-[#E5E8EB] dark:border-[#2A313C]">
                     {sec.badge}
                   </span>
                 </div>
@@ -197,24 +191,24 @@ export default async function AllGamesAndCategoriesPage() {
                     <Link
                       key={g.id}
                       href={`/kategori/${g.slug}`}
-                      className="group p-4 rounded-xl border transition-all duration-200 flex flex-col justify-between h-32 bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] hover:border-[#D99532] dark:hover:border-[#D99532] hover:shadow-md hover:-translate-y-0.5"
+                      className="group p-3.5 rounded-[10px] border transition-all duration-150 flex flex-col justify-between h-28 bg-white dark:bg-[#181C22] border-[#E5E8EB] dark:border-[#2A313C] hover:border-[#0F625C]/60 dark:hover:border-[#168B83]/60 hover:shadow-xs"
                     >
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="w-8 h-8 rounded-lg bg-[#D99532]/10 text-[#D99532] font-black text-xs flex items-center justify-center tracking-tight border border-[#D99532]/20 group-hover:bg-[#D99532] group-hover:text-white transition-colors">
+                          <span className="w-7 h-7 rounded-[6px] bg-[#F0F4F3] dark:bg-[#20252D] text-[#0F625C] dark:text-[#168B83] font-bold text-xs flex items-center justify-center tracking-tight border border-[#E5E8EB] dark:border-[#2A313C] group-hover:bg-[#0F625C] group-hover:text-white transition-colors">
                             {g.name.substring(0, 2).toUpperCase()}
                           </span>
-                          <span className="text-[10px] text-[#9498A6] uppercase tracking-wider font-semibold">
+                          <span className="text-[10px] text-[#8D96A3] uppercase tracking-wider font-semibold">
                             {g.publisher || "Oyun"}
                           </span>
                         </div>
-                        <h3 className="text-xs sm:text-sm font-bold text-inherit group-hover:text-[#D99532] transition-colors line-clamp-2">
+                        <h3 className="text-xs sm:text-sm font-semibold text-inherit group-hover:text-[#0F625C] dark:group-hover:text-[#168B83] transition-colors line-clamp-1">
                           {g.name}
                         </h3>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 text-[11px] text-[#9498A6] group-hover:text-[#D99532] transition-colors border-t border-black/5 dark:border-white/5">
-                        <span className="font-medium">İlanları İncele</span>
+                      <div className="flex items-center justify-between pt-2 text-[11px] text-[#69717D] dark:text-[#8E97A4] group-hover:text-[#0F625C] dark:group-hover:text-[#168B83] transition-colors border-t border-black/5 dark:border-white/5">
+                        <span className="font-medium">İlanları Gör</span>
                         <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </Link>

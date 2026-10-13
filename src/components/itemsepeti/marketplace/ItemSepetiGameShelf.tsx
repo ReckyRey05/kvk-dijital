@@ -139,22 +139,22 @@ export default function ItemSepetiGameShelf({
           <Link
             key={game.slug}
             href={`/kategori/${game.slug}`}
-            className={`group inline-flex items-center gap-2.5 px-3.5 py-2 rounded-[10px] text-xs transition-all whitespace-nowrap border ${
+            className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-xs transition-all whitespace-nowrap border ${
               isActive
-                ? "bg-[#D99532] text-white border-[#D99532] font-bold shadow-sm"
+                ? "bg-[#0F625C] text-white border-[#0F625C] font-semibold shadow-xs"
                 : isDark
-                ? "bg-[#161921] border-[#282C3A] text-[#EDEEF2] hover:border-[#D99532]/50"
-                : "bg-white border-[#DCDDE1] text-[#17191F] hover:border-[#D99532]/50 hover:bg-[#F0F1F3]"
+                ? "bg-[#181C22] border-[#2A313C] text-[#EDEEF2] hover:border-[#0F625C]/50 hover:bg-[#20252D]"
+                : "bg-white border-[#E5E8EB] text-[#15191E] hover:border-[#0F625C]/50 hover:bg-[#F0F4F3]"
             }`}
           >
             {/* GAME MONOGRAM */}
             <span
-              className={`w-6 h-6 rounded-[6px] text-[10px] font-black flex items-center justify-center tracking-tighter ${
+              className={`w-5 h-5 rounded-[4px] text-[10px] font-bold flex items-center justify-center tracking-tighter ${
                 isActive
                   ? "bg-black/20 text-white"
                   : isDark
-                  ? "bg-black/40 text-[#E8A33D]"
-                  : "bg-[#F0F1F3] text-[#D99532]"
+                  ? "bg-black/40 text-[#168B83]"
+                  : "bg-[#F0F4F3] text-[#0F625C]"
               }`}
             >
               {game.name.substring(0, 2).toUpperCase()}
@@ -169,8 +169,8 @@ export default function ItemSepetiGameShelf({
                 isActive
                   ? "text-white/80"
                   : isDark
-                  ? "text-[#9498A6]"
-                  : "text-[#626772]"
+                  ? "text-[#8E97A4]"
+                  : "text-[#69717D]"
               }`}
             >
               {game.shortTag}
@@ -181,8 +181,8 @@ export default function ItemSepetiGameShelf({
               <span
                 className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-[4px] hidden md:inline ${
                   isDark
-                    ? "bg-white/5 text-[#9498A6]"
-                    : "bg-[#F0F1F3] text-[#626772]"
+                    ? "bg-white/5 text-[#8E97A4]"
+                    : "bg-[#F0F4F3] text-[#69717D]"
                 }`}
               >
                 {game.badgeText}

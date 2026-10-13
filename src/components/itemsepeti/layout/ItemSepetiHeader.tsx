@@ -21,8 +21,8 @@ export default function ItemSepetiHeader() {
     <header
       className="sticky top-0 z-40 w-full border-b backdrop-blur-md transition-colors select-none"
       style={{
-        backgroundColor: isDark ? "rgba(18, 20, 26, 0.95)" : "rgba(255, 255, 255, 0.96)",
-        borderColor: isDark ? "#282C3A" : "#DCDDE1",
+        backgroundColor: isDark ? "rgba(16, 19, 23, 0.96)" : "rgba(255, 255, 255, 0.98)",
+        borderColor: isDark ? "#2A313C" : "#E5E8EB",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3 sm:gap-6">
@@ -31,9 +31,9 @@ export default function ItemSepetiHeader() {
           <ItemSepetiLogo size="md" />
         </div>
 
-        {/* PRIMARY FOCAL POINT: LARGE SEARCH */}
+        {/* PRIMARY FOCAL POINT: LARGE CLEAN SEARCH */}
         <div className="flex-1 max-w-xl mx-auto hidden md:block">
-          <ItemSepetiHeaderSearch placeholder="Oyun, item veya ürün ara... (Ctrl+K)" />
+          <ItemSepetiHeaderSearch placeholder="Oyun, item, e-pin veya satıcı ara... (Ctrl+K)" />
         </div>
 
         {/* COMPACT DESKTOP ACTIONS */}
@@ -42,7 +42,7 @@ export default function ItemSepetiHeader() {
           <Link
             href="/nasil-calisir"
             className={`hidden lg:inline-flex text-xs font-semibold px-2.5 py-1.5 rounded-[8px] transition-colors ${
-              isDark ? "text-[#9498A6] hover:text-[#EDEEF2]" : "text-[#626772] hover:text-[#17191F]"
+              isDark ? "text-[#8E97A4] hover:text-[#EDEEF2]" : "text-[#69717D] hover:text-[#15191E]"
             }`}
           >
             Nasıl Çalışır?
@@ -51,14 +51,14 @@ export default function ItemSepetiHeader() {
           {/* İlan Ver Action Button */}
           <Link
             href="/ilan-ver"
-            className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-[8px] transition-transform active:scale-95"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-[8px] transition-all hover:bg-[#F0F4F3] dark:hover:bg-[#20252D] active:scale-95"
             style={{
-              backgroundColor: isDark ? "#2C3140" : "#F0F1F3",
-              color: isDark ? "#EDEEF2" : "#17191F",
-              border: isDark ? "1px solid #383F52" : "1px solid #DCDDE1",
+              backgroundColor: isDark ? "#1E242C" : "#FFFFFF",
+              color: isDark ? "#EDEEF2" : "#15191E",
+              border: isDark ? "1px solid #2A313C" : "1px solid #E5E8EB",
             }}
           >
-            <PlusCircle className="w-3.5 h-3.5 text-[#D99532]" />
+            <PlusCircle className="w-3.5 h-3.5 text-[#0F625C] dark:text-[#168B83]" />
             <span>İlan Ver</span>
           </Link>
 
@@ -71,11 +71,11 @@ export default function ItemSepetiHeader() {
             aria-label={`Tema Değiştir (${isDark ? "Açık Moda Geç" : "Koyu Moda Geç"})`}
             className={`p-2 rounded-[8px] border transition-colors cursor-pointer ${
               isDark
-                ? "border-[#282C3A] bg-[#161921] text-[#9498A6] hover:text-[#EDEEF2]"
-                : "border-[#DCDDE1] bg-white text-[#626772] hover:text-[#17191F]"
+                ? "border-[#2A313C] bg-[#181C22] text-[#8E97A4] hover:text-[#EDEEF2]"
+                : "border-[#E5E8EB] bg-white text-[#69717D] hover:text-[#15191E] hover:bg-[#F0F4F3]"
             }`}
           >
-            {isDark ? <Sun className="w-4 h-4 text-[#D99532]" /> : <Moon className="w-4 h-4" />}
+            {isDark ? <Sun className="w-4 h-4 text-[#168B83]" /> : <Moon className="w-4 h-4" />}
           </button>
 
           {/* Cart Icon */}
@@ -84,14 +84,14 @@ export default function ItemSepetiHeader() {
             aria-label={`Sepetim (${itemCount} ürün)`}
             className={`relative p-2 rounded-[8px] border transition-colors cursor-pointer ${
               isDark
-                ? "border-[#282C3A] bg-[#161921] text-[#9498A6] hover:text-[#EDEEF2]"
-                : "border-[#DCDDE1] bg-white text-[#626772] hover:text-[#17191F]"
+                ? "border-[#2A313C] bg-[#181C22] text-[#8E97A4] hover:text-[#EDEEF2]"
+                : "border-[#E5E8EB] bg-white text-[#69717D] hover:text-[#15191E] hover:bg-[#F0F4F3]"
             }`}
           >
             <ShoppingCart className="w-4 h-4" />
             <span
               className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center text-white"
-              style={{ backgroundColor: "#D99532" }}
+              style={{ backgroundColor: "#0F625C" }}
             >
               {itemCount}
             </span>
@@ -101,8 +101,8 @@ export default function ItemSepetiHeader() {
           {user ? (
             <Link
               href="/profilim"
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-[8px] text-xs font-bold text-white transition-all active:scale-[0.98] shadow-xs"
-              style={{ backgroundColor: "#D99532" }}
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-[8px] text-xs font-semibold text-white transition-all active:scale-[0.98]"
+              style={{ backgroundColor: "#0F625C" }}
             >
               <User className="w-3.5 h-3.5" />
               <span className="max-w-[80px] sm:max-w-[110px] truncate">{user.displayName}</span>
@@ -110,8 +110,8 @@ export default function ItemSepetiHeader() {
           ) : (
             <Link
               href="/giris"
-              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] text-xs font-bold text-white transition-all active:scale-[0.98]"
-              style={{ backgroundColor: "#D99532" }}
+              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[8px] text-xs font-semibold text-white transition-all hover:bg-[#0C4F4A] active:scale-[0.98]"
+              style={{ backgroundColor: "#0F625C" }}
             >
               <User className="w-3.5 h-3.5" />
               <span>Giriş Yap</span>
@@ -125,8 +125,8 @@ export default function ItemSepetiHeader() {
             aria-expanded={mobileMenuOpen}
             className={`md:hidden p-2 rounded-[8px] border transition-colors cursor-pointer ${
               isDark
-                ? "border-[#282C3A] text-[#9498A6] hover:text-[#EDEEF2]"
-                : "border-[#DCDDE1] text-[#626772] hover:text-[#17191F]"
+                ? "border-[#2A313C] text-[#8E97A4] hover:text-[#EDEEF2]"
+                : "border-[#E5E8EB] text-[#69717D] hover:text-[#15191E]"
             }`}
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -134,93 +134,80 @@ export default function ItemSepetiHeader() {
         </div>
       </div>
 
-      {/* BYNOGAME STYLE GAME CATEGORY SUB-NAV BAR (DESKTOP) */}
+      {/* STREAMLINED ESSENTIAL GAME CATEGORIES SUB-NAV BAR (DESKTOP) */}
       <div
         className="hidden md:block border-t text-xs overflow-x-auto no-scrollbar"
         style={{
-          backgroundColor: isDark ? "#161921" : "#FAFAFA",
-          borderColor: isDark ? "#282C3A" : "#ECECEC",
+          backgroundColor: isDark ? "#14171D" : "#FAFBFC",
+          borderColor: isDark ? "#2A313C" : "#E5E8EB",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-6 whitespace-nowrap">
-          <Link
-            href="/kategori/cs2"
-            className="font-bold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#EDEEF2" : "#17191F" }}
-          >
-            <span className="w-2 h-2 rounded-full bg-[#D99532]"></span>
-            <span>CS2 Skin & Kasa</span>
-          </Link>
-          <Link
-            href="/kategori/metin2"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>Metin2 Yang & Won</span>
-          </Link>
-          <Link
-            href="/kategori/valorant"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>Valorant VP</span>
-          </Link>
-          <Link
-            href="/kategori/pubg"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>PUBG Mobile UC</span>
-          </Link>
-          <Link
-            href="/kategori/steam"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>Steam Cüzdan Kodu</span>
-          </Link>
-          <Link
-            href="/kategori/knight-online"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>Knight Online GB</span>
-          </Link>
-          <Link
-            href="/kategori/league-of-legends"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>LoL RP</span>
-          </Link>
-          <Link
-            href="/kategori/rise-online"
-            className="font-semibold hover:text-[#D99532] transition-colors flex items-center gap-1.5"
-            style={{ color: isDark ? "#9498A6" : "#626772" }}
-          >
-            <span>Rise Online</span>
-          </Link>
-          <Link
-            href="/oyunlar"
-            className="font-bold hover:text-[#D99532] transition-colors flex items-center gap-1.5 px-2 py-0.5 rounded bg-black/5 dark:bg-white/5"
-            style={{ color: isDark ? "#EDEEF2" : "#17191F" }}
-          >
-            <span>Tüm Oyunlar & Kategoriler (55+)</span>
-          </Link>
-          <span className="text-gray-300 dark:text-gray-700">|</span>
-          <Link
-            href="/nasil-calisir"
-            className="font-medium hover:text-[#D99532] transition-colors ml-auto text-[11px]"
-            style={{ color: isDark ? "#9498A6" : "#7D8290" }}
-          >
-            Güvenli Alışveriş &bull; 7/24 Destek
-          </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4 whitespace-nowrap">
+          <div className="flex items-center gap-5 sm:gap-6">
+            <Link
+              href="/kategori/cs2"
+              className="font-semibold hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#EDEEF2" : "#15191E" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0F625C] dark:bg-[#168B83]"></span>
+              <span>CS2 Skin</span>
+            </Link>
+            <Link
+              href="/kategori/metin2"
+              className="font-medium hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#8E97A4" : "#69717D" }}
+            >
+              <span>Metin2 Yang</span>
+            </Link>
+            <Link
+              href="/kategori/valorant"
+              className="font-medium hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#8E97A4" : "#69717D" }}
+            >
+              <span>Valorant VP</span>
+            </Link>
+            <Link
+              href="/kategori/pubg"
+              className="font-medium hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#8E97A4" : "#69717D" }}
+            >
+              <span>PUBG Mobile UC</span>
+            </Link>
+            <Link
+              href="/kategori/steam"
+              className="font-medium hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#8E97A4" : "#69717D" }}
+            >
+              <span>Steam Cüzdan Kodu</span>
+            </Link>
+            <Link
+              href="/kategori/knight-online"
+              className="font-medium hover:text-[#0F625C] dark:hover:text-[#168B83] transition-colors flex items-center gap-1.5"
+              style={{ color: isDark ? "#8E97A4" : "#69717D" }}
+            >
+              <span>Knight Online GB</span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/oyunlar"
+              className="font-semibold text-[11px] px-2.5 py-1 rounded-[6px] transition-colors flex items-center gap-1 hover:text-[#0F625C] dark:hover:text-[#168B83]"
+              style={{
+                backgroundColor: isDark ? "rgba(255,255,255,0.04)" : "#F0F4F3",
+                color: isDark ? "#EDEEF2" : "#0F625C",
+                border: isDark ? "1px solid #2A313C" : "1px solid #E5E8EB",
+              }}
+            >
+              <span>Tüm Oyunlar &rarr;</span>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* MOBILE INLINE SEARCH */}
-      <div className="md:hidden px-4 pb-3">
-        <ItemSepetiHeaderSearch placeholder="Oyun, item veya kod ara..." />
+      <div className="md:hidden px-4 pb-3 pt-1">
+        <ItemSepetiHeaderSearch placeholder="Oyun, item, e-pin ara..." />
       </div>
 
       {/* MOBILE DROPDOWN MENU */}
@@ -228,7 +215,7 @@ export default function ItemSepetiHeader() {
         <nav
           aria-label="Mobil Menü"
           className={`md:hidden border-t px-4 py-4 space-y-3 ${
-            isDark ? "bg-[#12141A] border-[#282C3A]" : "bg-[#F7F7F5] border-[#DCDDE1]"
+            isDark ? "bg-[#181C22] border-[#2A313C]" : "bg-white border-[#E5E8EB]"
           }`}
         >
           <Link
@@ -250,7 +237,7 @@ export default function ItemSepetiHeader() {
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-semibold py-1.5"
           >
-            Valorant VP E-Pin
+            Valorant VP
           </Link>
           <Link
             href="/kategori/knight-online"

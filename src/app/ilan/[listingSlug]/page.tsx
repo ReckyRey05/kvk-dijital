@@ -99,15 +99,15 @@ export default async function ListingDetailPage({
 
               {/* PRODUCT HERO IMAGE SURFACE */}
               <div
-                className="relative w-full h-64 sm:h-80 rounded-[18px] overflow-hidden border border-[#DCDDE1] dark:border-[#282C3A] bg-white dark:bg-[#161921] flex items-center justify-center p-2 shadow-xs group"
+                className="relative w-full h-64 sm:h-80 rounded-[10px] overflow-hidden border border-[#E5E8EB] dark:border-[#2A313C] bg-white dark:bg-[#181C22] flex items-center justify-center p-2 shadow-xs group"
               >
-                <div className="w-full h-full relative flex items-center justify-center overflow-hidden rounded-[14px] bg-black/5 dark:bg-black/30">
+                <div className="w-full h-full relative flex items-center justify-center overflow-hidden rounded-[8px] bg-black/5 dark:bg-black/30">
                   <ItemSepetiFallbackImage
                     src={listing.images && listing.images.length > 0 ? listing.images[0] : null}
                     alt={listing.title}
                     gameName={listing.gameName}
                     categoryName={listing.categoryName}
-                    className="w-full h-full object-cover sm:object-contain transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover sm:object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 pointer-events-none">
                     <span className="text-xs text-white/90 font-medium">{listing.title}</span>
@@ -118,15 +118,15 @@ export default async function ListingDetailPage({
               {/* PRODUCT ATTRIBUTES */}
               {listing.attributes && Object.keys(listing.attributes).length > 0 && (
                 <div
-                  className="p-5 rounded-[14px] space-y-3 bg-white dark:bg-[#161921] border border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
+                  className="p-5 rounded-[10px] space-y-3 bg-white dark:bg-[#181C22] border border-[#E5E8EB] dark:border-[#2A313C] shadow-xs"
                 >
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-[#9498A6]">
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-[#69717D] dark:text-[#8E97A4]">
                     Özellikler
                   </h2>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                     {Object.entries(listing.attributes).map(([key, value]) => (
-                      <div key={key} className="p-2.5 rounded-[8px] bg-[#F7F7F5] dark:bg-black/20 border border-black/5 dark:border-white/5 space-y-0.5">
-                        <span className="text-[#9498A6] text-[10px] capitalize block font-medium">{key}</span>
+                      <div key={key} className="p-2.5 rounded-[6px] bg-[#F7F8FA] dark:bg-black/20 border border-[#E5E8EB] dark:border-white/5 space-y-0.5">
+                        <span className="text-[#69717D] dark:text-[#8E97A4] text-[10px] capitalize block font-medium">{key}</span>
                         <span className="text-inherit font-semibold">{String(value)}</span>
                       </div>
                     ))}
@@ -136,18 +136,18 @@ export default async function ListingDetailPage({
 
               {/* LISTING DESCRIPTION */}
               <div
-                className="p-5 rounded-[14px] space-y-3 bg-white dark:bg-[#161921] border border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
+                className="p-5 rounded-[10px] space-y-3 bg-white dark:bg-[#181C22] border border-[#E5E8EB] dark:border-[#2A313C] shadow-xs"
               >
                 <h2 className="text-sm font-bold text-inherit">Açıklama</h2>
                 <div
-                  className="text-xs sm:text-sm text-[#626772] dark:text-[#9498A6] leading-relaxed space-y-2 max-w-[70ch]"
+                  className="text-xs sm:text-sm text-[#69717D] dark:text-[#8E97A4] leading-relaxed space-y-2 max-w-[70ch]"
                   dangerouslySetInnerHTML={{ __html: safeDescription }}
                 />
               </div>
 
               {/* DELIVERY SLA */}
-              <div className="flex items-center gap-3 text-xs text-[#9498A6] px-1">
-                <Clock className="w-4 h-4 text-[#E8A33D] shrink-0" />
+              <div className="flex items-center gap-2 text-xs text-[#69717D] dark:text-[#8E97A4] px-1">
+                <Clock className="w-4 h-4 text-[#0F625C] dark:text-[#168B83] shrink-0" />
                 <span>
                   Teslimat Güvencesi: Satıcı <strong>{listing.deliverySlaHours} saat</strong> içinde teslim etmeyi taahhüt eder.
                 </span>

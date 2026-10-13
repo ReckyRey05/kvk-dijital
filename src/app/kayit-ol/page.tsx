@@ -73,7 +73,7 @@ function RegisterForm() {
           )}
 
           <div
-            className="p-6 sm:p-8 rounded-[16px] border space-y-5 bg-white dark:bg-[#161921] border-[#DCDDE1] dark:border-[#282C3A] shadow-xs"
+            className="p-6 sm:p-8 rounded-[10px] border space-y-5 bg-white dark:bg-[#181C22] border-[#E5E8EB] dark:border-[#2A313C] shadow-xs"
           >
             <form onSubmit={handleSubmit} className="space-y-4">
               <ItemSepetiInput
@@ -119,7 +119,7 @@ function RegisterForm() {
                     type="checkbox"
                     checked={isSeller}
                     onChange={(e) => setIsSeller(e.target.checked)}
-                    className="rounded border-[#DCDDE1] text-[#D99532] focus:ring-[#D99532]"
+                    className="rounded border-[#E5E8EB] text-[#0F625C] focus:ring-[#0F625C]"
                   />
                   <span className="font-semibold text-inherit">
                     Satıcı hesabı açmak ve ilan vermek istiyorum
@@ -132,11 +132,11 @@ function RegisterForm() {
                     checked={acceptedTerms}
                     onChange={(e) => setAcceptedTerms(e.target.checked)}
                     required
-                    className="rounded border-[#DCDDE1] text-[#D99532] focus:ring-[#D99532] mt-0.5"
+                    className="rounded border-[#E5E8EB] text-[#0F625C] focus:ring-[#0F625C] mt-0.5"
                   />
-                  <span className="text-[#626772] dark:text-[#9498A6]">
-                    <Link href="#" className="text-[#D99532] underline">Kullanıcı Sözleşmesi</Link> ve{" "}
-                    <Link href="#" className="text-[#D99532] underline">Gizlilik Politikası</Link>&apos;nı okudum, kabul ediyorum.
+                  <span className="text-[#69717D] dark:text-[#8E97A4]">
+                    <Link href="/kullanim-kosullari" className="text-[#0F625C] dark:text-[#168B83] underline">Kullanıcı Sözleşmesi</Link> ve{" "}
+                    <Link href="/gizlilik-politikasi" className="text-[#0F625C] dark:text-[#168B83] underline">Gizlilik Politikası</Link>&apos;nı okudum, kabul ediyorum.
                   </span>
                 </label>
               </div>

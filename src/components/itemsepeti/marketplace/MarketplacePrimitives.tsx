@@ -11,7 +11,7 @@ export function ItemSepetiPrice({ amount, currency = "TL", size = "md" }: { amou
   };
 
   return (
-    <span className={`inline-flex items-baseline text-[#E8A33D] tracking-tight ${sizeClasses[size]}`}>
+    <span className={`inline-flex items-baseline text-[#0F625C] dark:text-[#168B83] tracking-tight ${sizeClasses[size]}`}>
       <span>{amount.toLocaleString("tr-TR")}</span>
       <span className="text-[10px] sm:text-xs font-semibold ml-1 opacity-90">{currency}</span>
     </span>
@@ -22,10 +22,10 @@ export function ItemSepetiPrice({ amount, currency = "TL", size = "md" }: { amou
 export function ItemSepetiRating({ score, count }: { score: number; count?: number }) {
   return (
     <div className="inline-flex items-center gap-1 text-xs select-none">
-      <Star className="w-3.5 h-3.5 fill-[#E8A33D] text-[#E8A33D]" aria-hidden="true" />
+      <Star className="w-3.5 h-3.5 fill-[#D97706] text-[#D97706]" aria-hidden="true" />
       <span className="font-bold text-inherit">{score.toFixed(1)}</span>
       {count !== undefined && (
-        <span className="text-[#9498A6] text-[11px]">({count})</span>
+        <span className="text-[#69717D] dark:text-[#8E97A4] text-[11px]">({count})</span>
       )}
     </div>
   );
@@ -36,14 +36,14 @@ export function ItemSepetiStockBadge({ stock }: { stock: number }) {
   const inStock = stock > 0;
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[6px] text-[11px] font-semibold border"
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] text-[11px] font-semibold border"
       style={{
-        backgroundColor: inStock ? "rgba(52, 211, 153, 0.12)" : "rgba(248, 113, 113, 0.12)",
-        borderColor: inStock ? "rgba(52, 211, 153, 0.25)" : "rgba(248, 113, 113, 0.25)",
-        color: inStock ? "#34D399" : "#F87171",
+        backgroundColor: inStock ? "rgba(13, 130, 89, 0.08)" : "rgba(239, 68, 68, 0.08)",
+        borderColor: inStock ? "rgba(13, 130, 89, 0.2)" : "rgba(239, 68, 68, 0.2)",
+        color: inStock ? "#0D8259" : "#EF4444",
       }}
     >
-      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: inStock ? "#34D399" : "#F87171" }} />
+      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: inStock ? "#0D8259" : "#EF4444" }} />
       <span>{inStock ? `${stock} adet stokta` : "Tükendi"}</span>
     </span>
   );
@@ -55,14 +55,14 @@ export function ItemSepetiDeliveryBadge({ method, slaHours }: { method: ItemSepe
 
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[6px] text-[11px] font-semibold border"
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] text-[11px] font-semibold border"
       style={{
-        backgroundColor: isAuto ? "rgba(232, 163, 61, 0.12)" : "rgba(148, 152, 166, 0.12)",
-        borderColor: isAuto ? "rgba(232, 163, 61, 0.3)" : "rgba(148, 152, 166, 0.25)",
-        color: isAuto ? "#E8A33D" : "#9498A6",
+        backgroundColor: isAuto ? "rgba(15, 98, 92, 0.08)" : "rgba(105, 113, 125, 0.08)",
+        borderColor: isAuto ? "rgba(15, 98, 92, 0.2)" : "rgba(105, 113, 125, 0.2)",
+        color: isAuto ? "#0F625C" : "#69717D",
       }}
     >
-      {isAuto ? <Zap className="w-3 h-3 text-[#E8A33D]" /> : <Package className="w-3 h-3" />}
+      {isAuto ? <Zap className="w-3 h-3 text-[#0F625C]" /> : <Package className="w-3 h-3" />}
       <span>{isAuto ? "Anında Teslim" : slaHours ? `${slaHours} Saat Teslimat` : "Manuel Teslim"}</span>
     </span>
   );
@@ -73,7 +73,7 @@ export function ItemSepetiSellerBadge({ isVerified }: { isVerified: boolean }) {
   if (!isVerified) return null;
   return (
     <span
-      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#34D399]"
+      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0D8259]"
       title="Onaylı Güvenilir Satıcı"
     >
       <ShieldCheck className="w-3.5 h-3.5" />

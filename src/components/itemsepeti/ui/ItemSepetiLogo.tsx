@@ -25,16 +25,16 @@ export default function ItemSepetiLogo({ size = "md", className = "", href = "/i
       {/* Clean, typographic wordmark without generic gaming/controller icons */}
       <span className={`font-black tracking-tight text-inherit flex items-baseline leading-none ${sizeClasses[size]}`}>
         <span>İtem</span>
-        <span className="text-[#E8A33D] font-extrabold ml-0.5">Sepeti</span>
+        <span className="text-[#0F625C] font-extrabold ml-0.5">Sepeti</span>
       </span>
 
       {/* Subtle marketplace role badge */}
       <span
-        className={`font-semibold rounded-[6px] tracking-wide uppercase leading-none border transition-colors ${badgeSizeClasses[size]}`}
+        className={`font-semibold rounded-[5px] tracking-wide uppercase leading-none border transition-colors ${badgeSizeClasses[size]}`}
         style={{
-          backgroundColor: "rgba(232, 163, 61, 0.12)",
-          borderColor: "rgba(232, 163, 61, 0.25)",
-          color: "#E8A33D",
+          backgroundColor: "rgba(15, 98, 92, 0.08)",
+          borderColor: "rgba(15, 98, 92, 0.2)",
+          color: "#0F625C",
         }}
       >
         Pazar

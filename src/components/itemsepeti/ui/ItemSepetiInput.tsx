@@ -33,8 +33,8 @@ const ItemSepetiInput = forwardRef<HTMLInputElement, ItemSepetiInputProps>(
             disabled={disabled}
             className={`w-full h-11 px-3.5 ${leftIcon ? "pl-10" : ""} ${
               rightElement ? "pr-10" : ""
-            } rounded-[8px] text-sm bg-white dark:bg-black/25 border border-[#DCDDE1] dark:border-[#282C3A] text-[#17191F] dark:text-[#EDEEF2] placeholder:text-[#9498A6] focus:outline-none focus:ring-2 focus:ring-[#E8A33D] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-              error ? "border-[#F87171] focus:ring-[#F87171]" : ""
+            } rounded-[8px] text-sm bg-white dark:bg-black/25 border border-[#E5E8EB] dark:border-[#2A313C] text-[#15191E] dark:text-[#EDEEF2] placeholder:text-[#8D96A3] focus:outline-none focus:ring-2 focus:ring-[#0F625C] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              error ? "border-[#EF4444] focus:ring-[#EF4444]" : ""
             } ${className}`}
             style={style}
             {...props}

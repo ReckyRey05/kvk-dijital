@@ -82,18 +82,31 @@ export default async function CategoryPage({
       <div className="flex flex-col min-h-screen">
         <ItemSepetiHeader />
 
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-7 space-y-5">
+          {/* BREADCRUMB */}
+          <nav aria-label="Ekmek Kırıntısı" className="flex items-center gap-1.5 text-xs text-[#69717D] dark:text-[#8E97A4]">
+            <Link href="/itemsepeti" className="hover:text-inherit transition-colors">
+              Ana Sayfa
+            </Link>
+            <span>/</span>
+            <Link href="/oyunlar" className="hover:text-inherit transition-colors">
+              Oyunlar
+            </Link>
+            <span>/</span>
+            <span className="font-semibold text-[#15191E] dark:text-[#EDEEF2]">{gameName}</span>
+          </nav>
+
           {/* QUICK GAME SWITCHER SHELF */}
           <ItemSepetiGameShelf activeSlug={gameSlug} />
 
           {/* PAGE TITLE & META */}
-          <div className="flex items-baseline justify-between pt-2 border-t border-white/[0.04]">
+          <div className="flex items-baseline justify-between pt-1 border-t border-[#E5E8EB] dark:border-[#2A313C]">
             <div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-inherit">
-                {gameName}
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-inherit">
+                {gameName} Pazarı
               </h1>
-              <p className="text-xs text-[#9498A6]">
-                {listingsToDisplay.length} aktif ilan
+              <p className="text-xs text-[#69717D] dark:text-[#8E97A4] mt-0.5">
+                {listingsToDisplay.length} aktif ilan listeleniyor
               </p>
             </div>
           </div>
@@ -119,13 +132,13 @@ export default async function CategoryPage({
               ))}
             </div>
           ) : (
-            <div className="p-12 text-center text-xs text-[#9498A6] space-y-2">
+            <div className="p-12 text-center rounded-[10px] border border-[#E5E8EB] dark:border-[#2A313C] bg-white dark:bg-[#181C22] text-xs text-[#69717D] dark:text-[#8E97A4] space-y-2">
               <p>Bu kategoride kriterlere uygun ilan bulunamadı.</p>
               <Link
                 href={`/kategori/${gameSlug}`}
-                className="inline-block text-[#E8A33D] font-semibold hover:underline"
+                className="inline-block text-[#0F625C] dark:text-[#168B83] font-semibold hover:underline"
               >
-                Filtreleri Temizle
+                Filtreleri Temizle &rarr;
               </Link>
             </div>
           )}

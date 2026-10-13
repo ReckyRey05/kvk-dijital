@@ -24,70 +24,70 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
       {/* WIDE HERO FEATURED ITEM (7 COLS) */}
       <article
-        className={`lg:col-span-7 flex flex-col justify-between rounded-[16px] border transition-all duration-200 group overflow-hidden ${
+        className={`lg:col-span-7 flex flex-col justify-between rounded-[10px] border transition-all duration-150 group overflow-hidden ${
           isDark
-            ? "bg-[#161921] border-[#282C3A] hover:border-[#D99532]/60 text-[#EDEEF2]"
-            : "bg-white border-[#DCDDE1] hover:border-[#D99532]/70 text-[#17191F] shadow-xs"
+            ? "bg-[#181C22] border-[#2A313C] hover:border-[#0F625C]/50 text-[#EDEEF2]"
+            : "bg-white border-[#E5E8EB] hover:border-[#0F625C]/50 text-[#15191E] shadow-xs"
         }`}
       >
         {/* Featured Image Surface */}
-        <div className="relative w-full h-48 sm:h-60 overflow-hidden bg-black/5 dark:bg-black/40">
+        <div className="relative w-full h-48 sm:h-60 overflow-hidden bg-black/5 dark:bg-black/30">
           <ItemSepetiFallbackImage
             src={featured.images && featured.images.length > 0 ? featured.images[0] : null}
             alt={featured.title}
             gameName={featured.gameName}
             categoryName={featured.categoryName}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute top-3 left-3 pointer-events-none">
-            <span className="px-2.5 py-1 rounded-[6px] text-xs font-bold bg-[#D99532] text-white shadow-sm flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+            <span className="px-2.5 py-1 rounded-[5px] text-xs font-semibold bg-[#0F625C] text-white shadow-xs flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
               Günün Fırsatı
             </span>
           </div>
         </div>
 
-        <div className="p-6 sm:p-7 space-y-3.5 flex-1 flex flex-col justify-between">
-          <div className="space-y-3">
+        <div className="p-5 sm:p-6 space-y-3.5 flex-1 flex flex-col justify-between">
+          <div className="space-y-2.5">
             <div className="flex items-center gap-2 text-xs">
               <span
-                className={`font-bold px-2 py-0.5 rounded-[4px] ${
-                  isDark ? "bg-[#D99532]/20 text-[#E8A33D]" : "bg-[#F0F1F3] text-[#D99532]"
+                className={`font-semibold px-2 py-0.5 rounded-[4px] ${
+                  isDark ? "bg-[#0F625C]/20 text-[#168B83]" : "bg-[#F0F4F3] text-[#0F625C]"
                 }`}
               >
                 {featured.gameName}
               </span>
-              <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>&bull;</span>
-              <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>{featured.categoryName}</span>
+              <span className={isDark ? "text-[#8E97A4]" : "text-[#69717D]"}>&bull;</span>
+              <span className={isDark ? "text-[#8E97A4]" : "text-[#69717D]"}>{featured.categoryName}</span>
               {featured.serverName && (
                 <>
-                  <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>&bull;</span>
-                  <span className={isDark ? "text-[#9498A6]" : "text-[#626772]"}>{featured.serverName}</span>
+                  <span className={isDark ? "text-[#8E97A4]" : "text-[#69717D]"}>&bull;</span>
+                  <span className={isDark ? "text-[#8E97A4]" : "text-[#69717D]"}>{featured.serverName}</span>
                 </>
               )}
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight leading-tight group-hover:text-[#D99532] transition-colors">
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight leading-tight group-hover:text-[#0F625C] dark:group-hover:text-[#168B83] transition-colors">
               <Link href={`/ilan/${featured.id}`} className="focus:outline-none focus-visible:underline">
                 {featured.title}
               </Link>
             </h3>
 
             <p className={`text-xs sm:text-sm line-clamp-2 max-w-[65ch] leading-relaxed ${
-              isDark ? "text-[#9498A6]" : "text-[#626772]"
+              isDark ? "text-[#8E97A4]" : "text-[#69717D]"
             }`}>
               {featured.description}
             </p>
           </div>
 
           <div
-            className={`mt-4 pt-4 flex items-center justify-between border-t ${
-              isDark ? "border-white/[0.06]" : "border-[#DCDDE1]"
+            className={`mt-3 pt-3 flex items-center justify-between border-t ${
+              isDark ? "border-white/[0.06]" : "border-[#E5E8EB]"
             }`}
           >
             <div>
               <span className={`text-[10px] block font-semibold uppercase tracking-wider ${
-                isDark ? "text-[#9498A6]" : "text-[#626772]"
+                isDark ? "text-[#8E97A4]" : "text-[#69717D]"
               }`}>
                 Birim Fiyat
               </span>
@@ -96,10 +96,10 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
 
             <Link
               href={`/ilan/${featured.id}`}
-              className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] text-xs font-bold text-white transition-all hover:brightness-110 active:scale-95 shadow-xs"
-              style={{ backgroundColor: "#D99532" }}
+              className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] text-xs font-semibold text-white transition-all hover:bg-[#0C4F4A] active:scale-95 shadow-xs"
+              style={{ backgroundColor: "#0F625C" }}
             >
-              İlanı İncele
+              Satın Al
             </Link>
           </div>
         </div>
@@ -110,33 +110,33 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
         {sideItems.map((item) => (
           <article
             key={item.id}
-            className={`flex-1 p-3.5 sm:p-4 rounded-[14px] border transition-all duration-200 flex items-center gap-3.5 group overflow-hidden ${
+            className={`flex-1 p-3.5 sm:p-4 rounded-[10px] border transition-all duration-150 flex items-center gap-3.5 group overflow-hidden ${
               isDark
-                ? "bg-[#161921] border-[#282C3A] hover:border-[#D99532]/60 text-[#EDEEF2]"
-                : "bg-white border-[#DCDDE1] hover:border-[#D99532]/70 text-[#17191F] shadow-xs"
+                ? "bg-[#181C22] border-[#2A313C] hover:border-[#0F625C]/50 text-[#EDEEF2]"
+                : "bg-white border-[#E5E8EB] hover:border-[#0F625C]/50 text-[#15191E] shadow-xs"
             }`}
           >
             {/* Small Side Image Thumbnail */}
-            <div className="w-20 h-20 rounded-[10px] overflow-hidden bg-black/5 dark:bg-black/40 shrink-0 border border-black/5 dark:border-white/5">
+            <div className="w-20 h-20 rounded-[8px] overflow-hidden bg-black/5 dark:bg-black/30 shrink-0 border border-black/5 dark:border-white/5">
               <ItemSepetiFallbackImage
                 src={item.images && item.images.length > 0 ? item.images[0] : null}
                 alt={item.title}
                 gameName={item.gameName}
                 categoryName={item.categoryName}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
               />
             </div>
 
             <div className="flex-1 min-w-0 flex flex-col justify-between h-full py-0.5">
               <div className="space-y-1">
                 <div className={`flex items-center justify-between text-[11px] ${
-                  isDark ? "text-[#9498A6]" : "text-[#626772]"
+                  isDark ? "text-[#8E97A4]" : "text-[#69717D]"
                 }`}>
                   <span className="font-semibold truncate max-w-[65%]">{item.gameName}</span>
                   <span className="shrink-0 text-[10px]">{item.categoryName}</span>
                 </div>
 
-                <h4 className="text-sm font-bold line-clamp-1 group-hover:text-[#D99532] transition-colors">
+                <h4 className="text-sm font-semibold line-clamp-1 group-hover:text-[#0F625C] dark:group-hover:text-[#168B83] transition-colors">
                   <Link href={`/ilan/${item.id}`} className="focus:outline-none focus-visible:underline">
                     {item.title}
                   </Link>
@@ -147,9 +147,9 @@ export default function ItemSepetiEditorialGrid({ listings }: EditorialGridProps
                 <ItemSepetiPrice amount={item.unitPrice} size="sm" />
                 <Link
                   href={`/ilan/${item.id}`}
-                  className="text-xs text-[#D99532] font-semibold hover:underline"
+                  className="text-xs text-[#0F625C] dark:text-[#168B83] font-semibold hover:underline"
                 >
-                  Göz At &rarr;
+                  İncele &rarr;
                 </Link>
               </div>
             </div>

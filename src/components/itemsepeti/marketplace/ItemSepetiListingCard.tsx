@@ -87,27 +87,27 @@ export default function ItemSepetiListingCard({
 
   return (
     <article
-      className={`group relative flex flex-col justify-between rounded-[14px] border transition-all duration-200 select-none overflow-hidden hover:shadow-lg ${
+      className={`group relative flex flex-col justify-between rounded-[10px] border transition-all duration-150 select-none overflow-hidden hover:shadow-sm ${
         isDark
-          ? "bg-[#161921] border-[#282C3A] hover:border-[#D99532]/60 text-[#EDEEF2]"
-          : "bg-white border-[#DCDDE1] hover:border-[#D99532]/70 text-[#17191F] shadow-xs"
+          ? "bg-[#181C22] border-[#2A313C] hover:border-[#0F625C]/50 text-[#EDEEF2]"
+          : "bg-white border-[#E5E8EB] hover:border-[#0F625C]/50 text-[#15191E]"
       }`}
     >
       {/* 1. VISUAL THUMBNAIL HEADER WITH HOVER ZOOM & BADGES */}
-      <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-black/5 dark:bg-black/40 flex items-center justify-center">
+      <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-black/5 dark:bg-black/30 flex items-center justify-center">
         <Link href={`/ilan/${listing.slug}`} className="w-full h-full block focus:outline-none">
           <ItemSepetiFallbackImage
             src={listingImage}
             alt={listing.title}
             gameName={listing.gameName}
             categoryName={listing.categoryName}
-            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-200 ease-out group-hover:scale-105"
           />
         </Link>
 
         {/* TOP OVERLAY: GAME BADGE & FAVORITE BUTTON */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
-          <span className="pointer-events-auto text-[10px] font-bold px-2 py-0.5 rounded-[5px] bg-black/70 backdrop-blur-md text-[#E8A33D] border border-white/10 shadow-sm truncate max-w-[70%]">
+          <span className="pointer-events-auto text-[10px] font-bold px-2 py-0.5 rounded-[4px] bg-black/75 backdrop-blur-md text-[#FFFFFF] border border-white/10 shadow-xs truncate max-w-[70%]">
             {listing.gameName} {listing.serverName ? `• ${listing.serverName}` : ""}
           </span>
           <button
@@ -115,7 +115,7 @@ export default function ItemSepetiListingCard({
             onClick={handleFavoriteClick}
             disabled={favLoading}
             aria-label={favorited ? "Favorilerden kaldır" : "Favorilere ekle"}
-            className="pointer-events-auto w-7 h-7 rounded-full bg-black/70 backdrop-blur-md border border-white/10 flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-white/80 hover:text-red-500 focus:outline-none"
+            className="pointer-events-auto w-7 h-7 rounded-full bg-black/70 backdrop-blur-md border border-white/10 flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-white/80 hover:text-red-500 focus:outline-none cursor-pointer"
           >
             <Heart className={`w-3.5 h-3.5 ${favorited ? "fill-red-500 text-red-500" : ""}`} />
           </button>
@@ -133,14 +133,14 @@ export default function ItemSepetiListingCard({
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
         <div className="space-y-1.5">
           {/* LISTING TITLE */}
-          <h3 className="text-sm font-bold tracking-tight line-clamp-2 leading-snug group-hover:text-[#D99532] transition-colors min-h-[2.5rem]">
+          <h3 className="text-sm font-semibold tracking-tight line-clamp-2 leading-snug group-hover:text-[#0F625C] dark:group-hover:text-[#168B83] transition-colors min-h-[2.5rem]">
             <Link href={`/ilan/${listing.slug}`} className="focus:outline-none focus-visible:underline">
               {listing.title}
             </Link>
           </h3>
 
           {/* SELLER IDENTITY WITH STAR RATING */}
-          <div className={`text-xs flex items-center justify-between ${isDark ? "text-[#9498A6]" : "text-[#626772]"}`}>
+          <div className={`text-xs flex items-center justify-between ${isDark ? "text-[#8E97A4]" : "text-[#69717D]"}`}>
             {listing.sellerId ? (
               <Link
                 href={`/satici/${listing.sellerId}`}
@@ -152,7 +152,7 @@ export default function ItemSepetiListingCard({
             ) : (
               <span className="truncate max-w-[65%]">@{listing.sellerName}</span>
             )}
-            <span className="text-[11px] font-semibold text-[#E8A33D] shrink-0">
+            <span className="text-[11px] font-semibold text-[#D97706] shrink-0">
               ★ {listing.sellerRating.toFixed(1)}
             </span>
           </div>
@@ -161,11 +161,11 @@ export default function ItemSepetiListingCard({
         {/* 3. FOOTER: PRICE & BUY ACTION */}
         <div
           className={`pt-3 flex items-center justify-between border-t ${
-            isDark ? "border-white/[0.06]" : "border-[#DCDDE1]"
+            isDark ? "border-white/[0.06]" : "border-[#E5E8EB]"
           }`}
         >
           <div>
-            <span className={`text-[10px] block font-medium ${isDark ? "text-[#9498A6]" : "text-[#626772]"}`}>
+            <span className={`text-[10px] block font-medium ${isDark ? "text-[#8E97A4]" : "text-[#69717D]"}`}>
               Fiyat
             </span>
             <ItemSepetiPrice amount={listing.price} size="md" />
@@ -173,8 +173,8 @@ export default function ItemSepetiListingCard({
 
           <Link
             href={`/ilan/${listing.slug}`}
-            className="inline-flex items-center justify-center h-8 px-3.5 rounded-[8px] text-xs font-bold text-white transition-all hover:brightness-110 active:scale-95 cursor-pointer shadow-xs"
-            style={{ backgroundColor: "#D99532" }}
+            className="inline-flex items-center justify-center h-8 px-3.5 rounded-[8px] text-xs font-semibold text-white transition-all hover:bg-[#0C4F4A] active:scale-95 cursor-pointer shadow-xs"
+            style={{ backgroundColor: "#0F625C" }}
           >
             Satın Al
           </Link>

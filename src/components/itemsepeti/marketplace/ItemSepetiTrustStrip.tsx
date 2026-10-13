@@ -13,13 +13,13 @@ export default function ItemSepetiTrustStrip() {
       aria-label="Güven ve Hizmet Özeti"
       className={`flex flex-wrap items-center justify-center gap-6 sm:gap-10 py-3 text-xs select-none border-y ${
         isDark
-          ? "border-white/[0.06] text-[#9498A6]"
-          : "border-[#DCDDE1] text-[#626772] bg-white/50"
+          ? "border-[#2A313C] text-[#8E97A4] bg-[#181C22]/50"
+          : "border-[#E5E8EB] text-[#69717D] bg-white"
       }`}
     >
       <div className="flex items-center gap-2">
-        <ShieldCheck className="w-4 h-4 text-[#059669]" />
-        <span className="font-semibold text-inherit">Escrow Emanet Koruması</span>
+        <ShieldCheck className="w-4 h-4 text-[#0D8259]" />
+        <span className="font-semibold text-inherit">Emanet Koruması</span>
       </div>
 
       <span className={isDark ? "text-white/10 hidden sm:inline" : "text-black/10 hidden sm:inline"}>
@@ -27,8 +27,8 @@ export default function ItemSepetiTrustStrip() {
       </span>
 
       <div className="flex items-center gap-2">
-        <Zap className="w-4 h-4 text-[#D99532]" />
-        <span className="font-semibold text-inherit">Hızlı Satıcı Teslimatı</span>
+        <Zap className="w-4 h-4 text-[#0F625C] dark:text-[#168B83]" />
+        <span className="font-semibold text-inherit">Satıcı Değerlendirmeleri</span>
       </div>
 
       <span className={isDark ? "text-white/10 hidden sm:inline" : "text-black/10 hidden sm:inline"}>
@@ -36,8 +36,8 @@ export default function ItemSepetiTrustStrip() {
       </span>
 
       <div className="flex items-center gap-2">
-        <Headphones className="w-4 h-4 text-[#626772]" />
-        <span className="font-semibold text-inherit">7/24 Destek Ekibi</span>
+        <Headphones className="w-4 h-4 text-[#69717D]" />
+        <span className="font-semibold text-inherit">Teslimat Bilgileri</span>
       </div>
     </div>
   );
