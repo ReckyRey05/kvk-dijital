@@ -34,15 +34,15 @@ export default function ItemSepetiFallbackImage({
           loading="lazy"
         />
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-black/5 to-black/20 dark:from-black/60 dark:to-black/90 select-none">
-          <span className="w-12 h-12 rounded-full bg-[#D99532]/20 border border-[#D99532]/30 flex items-center justify-center text-[#D99532] font-black text-sm mb-1.5 shadow-inner">
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-[#F7F8FA] dark:bg-[#181C22] select-none">
+          <span className="w-12 h-12 rounded-full bg-[#0F625C]/10 dark:bg-[#168B83]/20 border border-[#0F625C]/20 dark:border-[#168B83]/40 flex items-center justify-center text-[#0F625C] dark:text-[#168B83] font-black text-sm mb-1.5 shadow-xs">
             {gameName ? gameName.substring(0, 2).toUpperCase() : "IS"}
           </span>
-          <span className="text-xs font-bold text-[#17191F] dark:text-white/90 line-clamp-1">
+          <span className="text-xs font-bold text-[#15191E] dark:text-[#EDEEF2] line-clamp-1">
             {gameName || "İtemSepeti"}
           </span>
           {categoryName && (
-            <span className="text-[10px] text-[#626772] dark:text-[#9498A6] line-clamp-1">
+            <span className="text-[10px] text-[#69717D] dark:text-[#8E97A4] font-medium line-clamp-1">
               {categoryName}
             </span>
           )}
